@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisMainContent should render 1`] = `
+<div
+  className="OasisMainContentWrapper"
+>
+  <OasisTabs />
+</div>
+`;
+
+exports[`(Container) OasisMainContent will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisMainContent will receive right props 1`] = `Object {}`;
