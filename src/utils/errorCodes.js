@@ -1,0 +1,3 @@
+export const ERRORS = {
+  NO_CONNECTION : "ERRORS/NO_CONNECTION",
+};
