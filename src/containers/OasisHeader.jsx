@@ -11,7 +11,7 @@ import OasisAccount from '../components/OasisAccount';
 import OasisExpirationDate from '../components/OasisExpirationDate';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object
 };
 
 export class OasisHeaderWrapper extends PureComponent {

@@ -9,10 +9,20 @@ const propTypes = PropTypes && {
 const defaultProps = {};
 
 
+const StatusIndicator = () => (
+    <div className="StatusIndicator"></div>
+);
+
 class OasisStatus extends PureComponent {
   render() {
+    const { networkName, networkStatus } = this.props;
     return (
       <div className={"OasisStatus"}>
+        <div className="NetworkName">{networkName}</div>
+        <div className="NetworkStatus">
+          <StatusIndicator/>
+          {networkStatus}
+        </div>
       </div>
     );
   }

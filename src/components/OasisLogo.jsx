@@ -4,7 +4,6 @@ import { PropTypes } from 'prop-types';
 
 import './OasisLogo.scss';
 
-
 const propTypes = PropTypes && {
 };
 const defaultProps = {};
@@ -13,8 +12,7 @@ const defaultProps = {};
 class OasisLogo extends PureComponent {
   render() {
     return (
-      <div className="OasisLogo">
-      </div>
+      <div className="OasisLogo"></div>
     );
   }
 }

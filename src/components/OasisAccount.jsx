@@ -13,6 +13,7 @@ class OasisAccount extends PureComponent {
   render() {
     return (
       <div className="OasisAccount">
+        OasisAccount
       </div>
     );
   }

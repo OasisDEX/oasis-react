@@ -3,5 +3,7 @@
 exports[`(Component) OasisExpirationDate should render 1`] = `
 <div
   className="OasisExpirationDate"
-/>
+>
+  OasisExpirationDate
+</div>
 `;

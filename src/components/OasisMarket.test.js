@@ -8,9 +8,6 @@ import { shallow } from 'enzyme';
 describe('(Component) OasisMarket', () => {
   it('should render', () => {
     const props = {
-      children: (
-        <span>test</span>
-      )
     };
     const wrapper = shallow(
       <OasisMarket {...props}/>

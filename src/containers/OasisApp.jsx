@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
+import { BrowserRouter } from 'react-router-dom'
+
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -10,18 +12,19 @@ import {OasisMainContentWrapper} from './OasisMainContent';
 import {OasisMessagesSectionWrapper} from './OasisMessagesSection';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object.isRequired
 };
 
 export class OasisAppWrapper extends PureComponent {
   render() {
     return (
-        <div className="container">
-          <OasisHeaderWrapper/>
-          <OasisMessagesSectionWrapper/>
-          <OasisMainContentWrapper/>
-          <OasisFooterWrapper/>
-        </div>
+       <BrowserRouter>
+         <div className="container">
+           <OasisHeaderWrapper/>
+           <OasisMessagesSectionWrapper/>
+           <OasisMainContentWrapper/>
+           <OasisFooterWrapper/>
+         </div>
+       </BrowserRouter>
     );
   }
 }

@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisBuyOrders should render 1`] = `
+<div
+  className="OasisBuyOrders"
+>
+  OasisBuyOrders
+</div>
+`;

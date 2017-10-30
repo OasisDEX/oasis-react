@@ -2,18 +2,14 @@
 /* eslint-disable import/first */
 import React from 'react';
 import { shallow } from 'enzyme';
-import OasisCardContent from './OasisCardContent';
+import OasisBuyMaker from './OasisBuyMaker';
 
 
-describe('(Component) OasisCardContent', () => {
+describe('(Component) OasisBuyMaker', () => {
   it('should render', () => {
-    const props = {
-      children: (
-        <span>test</span>
-      )
-    };
+    const props = {};
     const wrapper = shallow(
-      <OasisCardContent {...props}/>
+      <OasisBuyMaker {...props}/>
     );
 
     expect(wrapper).toMatchSnapshot();

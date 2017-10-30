@@ -3,5 +3,9 @@
 exports[`(Component) OasisMessage should render 1`] = `
 <div
   className="OasisMessage"
-/>
+>
+  <div
+    className="OasisMessageBody"
+  />
+</div>
 `;

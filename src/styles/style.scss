@@ -29,8 +29,8 @@ $color-cancel-order: #A8ACB9;
 
 @font-face {
   font-family: Montserrat;
-  src: url("../fonts/Montserrat-Medium.woff") format('woff'),
-  url("../fonts/Montserrat-Medium.woff2") format('woff2');
+  src: url("./../fonts/Montserrat-Medium.woff") format('woff'),
+  url("./../fonts/Montserrat-Medium.woff2") format('woff2');
   font-weight: 500;
 }
 
@@ -409,14 +409,14 @@ table {
   width: 100%;
 
   .close {
-    background: url(cross_normal.svg) no-repeat;
+    background: url("../assets/cross_normal.svg") no-repeat;
     opacity: 1;
     width: 10px;
     height: 10px;
   }
 
   .close:hover {
-    background: url(cross_pressed.svg) no-repeat;
+    background: url("../assets/cross_pressed.svg") no-repeat;
   }
 
   ul {
@@ -481,13 +481,13 @@ table {
   ul li {
     opacity: 1;
     &:first-child {
-      background: url(counter_1.svg) no-repeat left 1px;
+      background: url("../assets/counter_1.svg") no-repeat left 1px;
     }
     &:nth-child(2) {
-      background: url(counter_2.svg) no-repeat left 1px;
+      background: url("../assets/counter_2.svg") no-repeat left 1px;
     }
     &:nth-child(3) {
-      background: url(counter_3.svg) no-repeat left 1px;
+      background: url("../assets/counter_3.svg") no-repeat left 1px;
     }
 
     span {
@@ -515,7 +515,7 @@ table {
   @extend .div-message;
 
   ul li {
-    background: url(dot_red.svg) no-repeat left 1px;
+    background: url("../assets/dot_red.svg") no-repeat left 1px;
     opacity: 1;
 
     &:last-child {
@@ -1139,12 +1139,12 @@ table {
   }
 
   .dex-icon-add {
-    background-image: url(ic_add_circle_24px.svg);
+    background-image: url("../assets/ic_add_circle_24px.svg");
     @extend .dex-icon;
   }
 
   .dex-icon-subtract {
-    background-image: url(ic_remove_24px.svg);
+    background-image: url("../assets/ic_remove_24px.svg");
     @extend .dex-icon;
   }
 
@@ -1720,7 +1720,7 @@ button.dex-btn-default.sell, button.dex-btn-max.sell {
   }
 
   .transition {
-    background: url('ic_compare_arrows_black_24px.svg') no-repeat 50% 50%;
+    background: url("../assets/ic_compare_arrows_black_24px.svg") no-repeat 50% 50%;
     width: 50px;
     height: 10px;
     display: inline-block;
@@ -2284,12 +2284,12 @@ span.loading-icon {
   width: 24px;
 
   &--wrapped {
-    background: url('eth_circle_icon.svg') no-repeat;
+    background: url("../assets/eth_circle_icon.svg") no-repeat;
     background-size: 100% 100%;
   }
 
   &--unwrapped {
-    background: url('eth_circle_icon_full.svg') no-repeat;
+    background: url("../assets/eth_circle_icon_full.svg") no-repeat;
     background-size: 100% 100%;
   }
 }
@@ -2706,12 +2706,12 @@ a.logo {
   display: block;
   width: 103px;
   height: 37px;
-  background: url(logo-oasis.png);
+  background: url("../assets/logo-oasis.png");
   background-size: 103px 37px;
 }
 
 a.logo:hover {
-  background-image: url(logo-oasis-hover.png);
+  background-image: url("../assets/logo-oasis-hover.png");
 }
 
 .btn.disabled, .btn[disabled], fieldset[disabled] .btn {

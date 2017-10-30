@@ -14,6 +14,7 @@ class OasisMarket extends PureComponent {
   render() {
     return (
       <div className="OasisMarket">
+        OasisMarket
       </div>
     );
   }
