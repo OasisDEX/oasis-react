@@ -4,7 +4,27 @@ exports[`(Container) OasisMainContent should render 1`] = `
 <div
   className="OasisMainContentWrapper"
 >
-  <OasisTabs />
+  <OasisTabs>
+    <Switch>
+      <Redirect
+        from="/"
+        push={false}
+        to="trade"
+      />
+      <Route
+        component={[Function]}
+        path="/trade"
+      />
+      <Route
+        component={[Function]}
+        path="/wrap-unwrap"
+      />
+      <Route
+        component={[Function]}
+        path="/transfer"
+      />
+    </Switch>
+  </OasisTabs>
 </div>
 `;
 

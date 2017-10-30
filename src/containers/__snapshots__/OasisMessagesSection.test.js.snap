@@ -1,6 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`(Container) OasisMessagesSection should render 1`] = `<div />`;
+exports[`(Container) OasisMessagesSection should render 1`] = `
+<div>
+  <OasisMessage />
+  <OasisMessage />
+</div>
+`;
 
 exports[`(Container) OasisMessagesSection will receive right actions 1`] = `
 Object {

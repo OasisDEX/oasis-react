@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisTradeBuySell should render 1`] = `
+<div>
+  <OasisBuyMaker />
+  <OasisSellMaker />
+</div>
+`;
+
+exports[`(Container) OasisTradeBuySell will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisTradeBuySell will receive right props 1`] = `Object {}`;

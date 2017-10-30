@@ -14,6 +14,7 @@ class OasisExpirationDate extends PureComponent {
   render() {
     return (
       <div className="OasisExpirationDate">
+        OasisExpirationDate
       </div>
     );
   }

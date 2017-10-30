@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object
 };
 
 export class OasisFooterWrapper extends PureComponent {

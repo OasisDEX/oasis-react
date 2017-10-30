@@ -3,5 +3,7 @@
 exports[`(Component) OasisMarket should render 1`] = `
 <div
   className="OasisMarket"
-/>
+>
+  OasisMarket
+</div>
 `;

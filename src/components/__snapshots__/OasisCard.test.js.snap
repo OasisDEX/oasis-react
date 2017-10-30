@@ -2,10 +2,15 @@
 
 exports[`(Component) OasisCard should render 1`] = `
 <div
-  className="OasisCard order-section"
+  className="OasisCard"
 >
-  <span>
-    test
-  </span>
+  <h2 />
+  <div
+    className="OasisCardContent"
+  >
+    <span>
+      test
+    </span>
+  </div>
 </div>
 `;

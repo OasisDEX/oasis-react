@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisTransfer should render 1`] = `
+<div>
+  Transfer
+</div>
+`;
+
+exports[`(Container) OasisTransfer will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisTransfer will receive right props 1`] = `Object {}`;
