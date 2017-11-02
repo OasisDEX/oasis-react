@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import './OasisSellOrders.scss';
+import styles from './OasisSellOrders.scss';
 
 
 const propTypes = PropTypes && {
@@ -13,7 +13,7 @@ const defaultProps = {};
 class OasisSellOrders extends PureComponent {
   render() {
     return (
-      <div className="OasisSellOrders">
+      <div className={styles.base}>
         OasisSellOrders
       </div>
     );

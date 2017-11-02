@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import './OasisMessage.scss';
+import styles from './OasisMessage.scss';
 
 export const MSGTYPE_INFO = 'MSGTYPE_INFO';
 export const MSGTYPE_WARNING = 'MSGTYPE_WARNING';
@@ -20,8 +20,8 @@ const defaultProps = {};
 class OasisMessage extends PureComponent {
   render() {
     return (
-      <div className="OasisMessage">
-        <div className="OasisMessageBody">
+      <div className={styles.base}>
+        <div className={styles.OasisMessageBody}>
           {this.props.children}
         </div>
       </div>

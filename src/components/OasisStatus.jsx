@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import './OasisStatus.scss';
+import styles from './OasisStatus.scss';
 
 const propTypes = PropTypes && {
 };
@@ -10,7 +10,7 @@ const defaultProps = {};
 
 
 const StatusIndicator = () => (
-    <div className="StatusIndicator"></div>
+    <div className={styles.base}></div>
 );
 
 class OasisStatus extends PureComponent {

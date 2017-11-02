@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import { NavLink } from 'react-router-dom';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
-import './OasisTabs.scss';
+import styles from './OasisTabs.scss';
 
 
 const propTypes = PropTypes && {
@@ -14,7 +14,7 @@ const defaultProps = {};
 class OasisTabs extends PureComponent {
   render() {
     return (
-      <div className="OasisTabs">
+      <div className={styles.base}>
         <div className="row-tabs">
           <ul className="tabs">
             <li><NavLink to={'/trade'}>Trade</NavLink></li>
