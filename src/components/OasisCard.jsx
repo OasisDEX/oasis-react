@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import './OasisCard.scss';
+import styles from './OasisCard.scss';
 
 const propTypes = PropTypes && {
   children: PropTypes.node,
@@ -15,9 +15,9 @@ class OasisCard extends PureComponent {
   render() {
     const { heading } = this.props;
     return (
-      <div className="OasisCard">
+      <div className={styles.base}>
         <h2>{heading}</h2>
-        <div className="OasisCardContent">
+        <div className={styles.OasisCardContent}>
           {this.props.children}
         </div>
       </div>
