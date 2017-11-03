@@ -2,7 +2,8 @@
 
 exports[`(Container) OasisTransfer should render 1`] = `
 <div>
-  Transfer
+  <OasisTransferTransfer />
+  <OasisTransferHistory />
 </div>
 `;
 
