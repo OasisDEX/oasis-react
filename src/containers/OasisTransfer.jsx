@@ -4,6 +4,8 @@ import { PropTypes } from 'prop-types';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import OasisTransferTransfer from '../components/OasisTransferTransfer';
+import OasisTransferHistory from '../components/OasisTransferHistory';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object
@@ -12,7 +14,10 @@ const propTypes = PropTypes && {
 export class OasisTransferWrapper extends PureComponent {
   render() {
     return (
-      <div>Transfer</div>
+      <div>
+        <OasisTransferTransfer/>
+        <OasisTransferHistory/>
+      </div>
     );
   }
 }

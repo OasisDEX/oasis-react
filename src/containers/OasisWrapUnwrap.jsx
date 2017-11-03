@@ -4,6 +4,10 @@ import { PropTypes } from 'prop-types';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import OasisWrapUnwrapBalances from '../components/OasisWrapUnwrapBalances';
+import OasisWrapUnwrapHistory from '../components/OasisWrapUnwrapHistory';
+import OasisWrapUnwrapWrap from '../components/OasisWrapUnwrapWrap';
+import OasisWrapUnwrapUnwrap from '../components/OasisWrapUnwrapUnwrap';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -12,7 +16,12 @@ const propTypes = PropTypes && {
 export class OasisWrapUnwrapWrapper extends PureComponent {
   render() {
     return (
-      <div>WrapUnwrap</div>
+      <div>
+        <OasisWrapUnwrapBalances/>
+        <OasisWrapUnwrapHistory/>
+        <OasisWrapUnwrapWrap/>
+        <OasisWrapUnwrapUnwrap/>
+      </div>
     );
   }
 }
