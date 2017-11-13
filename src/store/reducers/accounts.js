@@ -1,5 +1,5 @@
 import { createAction, handleActions } from 'redux-actions';
-import Immutable from 'immutable';
+import Immutable                       from 'immutable';
 
 import { fulfilled, pending, rejected } from '../../utils/store';
 
@@ -9,16 +9,16 @@ const INIT = 'ACCOUNTS/INIT';
 
 const Init = createAction(
     INIT,
-    () => null
+    () => null,
 );
 
 const actions = {
-  Init
+  Init,
 };
 
 const reducer = handleActions({}, initialState);
 
 export default {
   actions,
-  reducer
+  reducer,
 };

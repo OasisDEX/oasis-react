@@ -21,6 +21,7 @@ class OasisMessage extends PureComponent {
   render() {
     return (
       <div className={styles.base}>
+        <h3>{this.props.heading}</h3>
         <div className={styles.OasisMessageBody}>
           {this.props.children}
         </div>

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 import { BrowserRouter } from 'react-router-dom'
-
+import platform from './../store/reducers/platform';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -15,6 +15,12 @@ const propTypes = PropTypes && {
 };
 
 export class OasisAppWrapper extends PureComponent {
+
+
+  componentWillMount() {
+    this.props.actions.PlatformInit();
+  }
+
   render() {
     return (
        <BrowserRouter>
@@ -33,7 +39,9 @@ export function mapStateToProps() {
   return {};
 }
 export function mapDispatchToProps(dispatch) {
-  const actions = {};
+  const actions = {
+    PlatformInit: platform.actions.Init
+  };
   return { actions: bindActionCreators(actions, dispatch) };
 }
 

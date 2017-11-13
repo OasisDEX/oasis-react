@@ -29,7 +29,7 @@ export class OasisMessagesSectionWrapper extends PureComponent {
               </li>
             </ul>
           </OasisMessage>
-          <OasisMessage heaing={'Warning!'}>
+          <OasisMessage heading={'Warning!'}>
             Oasis is undergoing alpha testing: Any funds deposited on the exchange could be lost in the event of a security breach.
           </OasisMessage>
         </div>
