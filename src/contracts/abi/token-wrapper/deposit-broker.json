@@ -1,0 +1,22 @@
+{
+  "interface": [
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "clear",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "constructor"
+    }
+  ]
+}

@@ -1,20 +1,21 @@
-import { ERRORS } from "./errorCodes"
+import { ERRORS } from './errorCodes';
 
-import { onMissingConnection } from "./onMissingConnection";
+import { onMissingConnection } from './onMissingConnection';
 
 const handlers = {
-  [ERRORS.NO_CONNECTION]: onMissingConnection
+  [ERRORS.NO_CONNECTION]: onMissingConnection,
 };
 
 class ErrorHandler {
   handle(error) {
-     const handler = handlers[error];
-     if(!handler) {
-       throw new Error("Unknown error:", error);
-     }
+    console.log('ErrorHandler', error);
+    const handler = handlers[error];
+    if (!handler) {
+      throw new Error('Platform error:', error);
+    }
 
-     handler(error);
+    handler(error);
   }
 }
 
-export const errorHandler =  new ErrorHandler();
+export const errorHandler = new ErrorHandler();
