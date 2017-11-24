@@ -4,12 +4,10 @@ import { NavLink } from 'react-router-dom';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 import styles from './OasisTabs.scss';
 
-
 const propTypes = PropTypes && {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 const defaultProps = {};
-
 
 class OasisTabs extends PureComponent {
   render() {

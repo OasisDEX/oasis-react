@@ -4,16 +4,15 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import OasisTransferTransfer from './OasisTransferTransfer';
 
-
 describe('(Component) OasisTransferTransfer', () => {
   it('should render', () => {
     const props = {
       children: (
         <span>test</span>
-      )
+      ),
     };
     const wrapper = shallow(
-      <OasisTransferTransfer {...props}/>
+      <OasisTransferTransfer {...props}/>,
     );
 
     expect(wrapper).toMatchSnapshot();

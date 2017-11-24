@@ -4,11 +4,8 @@ import { PropTypes } from 'prop-types';
 
 import styles from './OasisMyOrders.scss';
 
-
-const propTypes = PropTypes && {
-};
+const propTypes = PropTypes && {};
 const defaultProps = {};
-
 
 class OasisMyOrders extends PureComponent {
   render() {

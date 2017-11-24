@@ -7,11 +7,11 @@ import { bindActionCreators } from 'redux';
 import OasisMarket from '../components/OasisMarket';
 import OasisChart from '../components/OasisChart';
 
-import {OasisTradeBuySellWrapper} from './OasisTradeBuySell';
-import {OasisTradeOrdersWrapper} from './OasisTradeOrders';
+import { OasisTradeBuySellWrapper } from './OasisTradeBuySell';
+import { OasisTradeOrdersWrapper } from './OasisTradeOrders';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object
+  actions: PropTypes.object,
 };
 
 export class OasisTradeWrapper extends PureComponent {
@@ -30,6 +30,7 @@ export class OasisTradeWrapper extends PureComponent {
 export function mapStateToProps() {
   return {};
 }
+
 export function mapDispatchToProps(dispatch) {
   const actions = {};
   return { actions: bindActionCreators(actions, dispatch) };

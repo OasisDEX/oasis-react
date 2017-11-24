@@ -4,10 +4,8 @@ import { PropTypes } from 'prop-types';
 
 import styles from './OasisBuyMaker.scss';
 
-
 const propTypes = PropTypes && {};
 const defaultProps = {};
-
 
 class OasisBuyMaker extends PureComponent {
   render() {

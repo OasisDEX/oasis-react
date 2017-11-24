@@ -6,7 +6,7 @@ import Immutable from 'immutable';
 import {
   OasisTransferWrapper,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './OasisTransfer';
 import { shallow } from 'enzyme';
 
@@ -23,14 +23,13 @@ describe('(Container) OasisTransfer', () => {
     expect(initialProps).toMatchSnapshot();
   });
 
-
   it('will receive right actions', () => {
     expect(initialActions).toMatchSnapshot();
   });
 
   it('should render', () => {
     const wrapper = shallow(
-      <OasisTransferWrapper {...props}/>
+      <OasisTransferWrapper {...props}/>,
     );
     expect(wrapper).toMatchSnapshot();
   });

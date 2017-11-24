@@ -4,15 +4,16 @@ import React from 'react';
 
 import OasisCard from './OasisCard';
 import { shallow } from 'enzyme';
+
 describe('(Component) OasisCard', () => {
   it('should render', () => {
     const props = {
       children: (
         <span>test</span>
-      )
+      ),
     };
     const wrapper = shallow(
-      <OasisCard {...props}/>
+      <OasisCard {...props}/>,
     );
 
     expect(wrapper).toMatchSnapshot();

@@ -6,7 +6,7 @@ import Immutable from 'immutable';
 import {
   OasisTradeBuySellWrapper,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './OasisTradeBuySell';
 import { shallow } from 'enzyme';
 
@@ -23,14 +23,13 @@ describe('(Container) OasisTradeBuySell', () => {
     expect(initialProps).toMatchSnapshot();
   });
 
-
   it('will receive right actions', () => {
     expect(initialActions).toMatchSnapshot();
   });
 
   it('should render', () => {
     const wrapper = shallow(
-      <OasisTradeBuySellWrapper {...props}/>
+      <OasisTradeBuySellWrapper {...props}/>,
     );
     expect(wrapper).toMatchSnapshot();
   });

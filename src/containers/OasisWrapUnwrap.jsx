@@ -10,7 +10,7 @@ import OasisWrapUnwrapWrap from '../components/OasisWrapUnwrapWrap';
 import OasisWrapUnwrapUnwrap from '../components/OasisWrapUnwrapUnwrap';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 };
 
 export class OasisWrapUnwrapWrapper extends PureComponent {
@@ -29,6 +29,7 @@ export class OasisWrapUnwrapWrapper extends PureComponent {
 export function mapStateToProps(state) {
   return {};
 }
+
 export function mapDispatchToProps(dispatch) {
   const actions = {};
   return { actions: bindActionCreators(actions, dispatch) };

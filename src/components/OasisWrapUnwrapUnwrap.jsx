@@ -4,11 +4,8 @@ import { PropTypes } from 'prop-types';
 
 import styles from './OasisWrapUnwrapUnwrap.scss';
 
-
-const propTypes = PropTypes && {
-};
+const propTypes = PropTypes && {};
 const defaultProps = {};
-
 
 class OasisWrapUnwrapUnwrap extends PureComponent {
   render() {

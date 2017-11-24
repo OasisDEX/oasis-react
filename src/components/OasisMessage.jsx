@@ -8,14 +8,12 @@ export const MSGTYPE_INFO = 'MSGTYPE_INFO';
 export const MSGTYPE_WARNING = 'MSGTYPE_WARNING';
 export const MSGTYPE_ERROR = 'MSGTYPE_ERROR';
 
-
 const propTypes = PropTypes && {
   children: PropTypes.node.isRequired,
   heading: PropTypes.string.isRequired,
-  type: PropTypes.oneOf([MSGTYPE_INFO, MSGTYPE_WARNING, MSGTYPE_ERROR])
+  type: PropTypes.oneOf([MSGTYPE_INFO, MSGTYPE_WARNING, MSGTYPE_ERROR]),
 };
 const defaultProps = {};
-
 
 class OasisMessage extends PureComponent {
   render() {

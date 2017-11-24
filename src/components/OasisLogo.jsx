@@ -4,10 +4,8 @@ import { PropTypes } from 'prop-types';
 
 import styles from './OasisLogo.scss';
 
-const propTypes = PropTypes && {
-};
+const propTypes = PropTypes && {};
 const defaultProps = {};
-
 
 class OasisLogo extends PureComponent {
   render() {

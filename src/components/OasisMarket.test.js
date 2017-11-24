@@ -7,10 +7,9 @@ import { shallow } from 'enzyme';
 
 describe('(Component) OasisMarket', () => {
   it('should render', () => {
-    const props = {
-    };
+    const props = {};
     const wrapper = shallow(
-      <OasisMarket {...props}/>
+      <OasisMarket {...props}/>,
     );
 
     expect(wrapper).toMatchSnapshot();

@@ -11,7 +11,7 @@ import OasisMyOrders from '../components/OasisMyOrders';
 import OasisMarketHistory from '../components/OasisMarketHistory';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object
+  actions: PropTypes.object,
 };
 
 export class OasisTradeOrdersWrapper extends PureComponent {
@@ -30,6 +30,7 @@ export class OasisTradeOrdersWrapper extends PureComponent {
 export function mapStateToProps(state) {
   return {};
 }
+
 export function mapDispatchToProps(dispatch) {
   const actions = {};
   return { actions: bindActionCreators(actions, dispatch) };

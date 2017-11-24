@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object
+  actions: PropTypes.object,
 };
 
 export class OasisFooterWrapper extends PureComponent {
@@ -24,6 +24,7 @@ export class OasisFooterWrapper extends PureComponent {
 export function mapStateToProps(state) {
   return {};
 }
+
 export function mapDispatchToProps(dispatch) {
   const actions = {};
   return { actions: bindActionCreators(actions, dispatch) };

@@ -4,11 +4,8 @@ import { PropTypes } from 'prop-types';
 
 import styles from './OasisTransferHistory.scss';
 
-
-const propTypes = PropTypes && {
-};
+const propTypes = PropTypes && {};
 const defaultProps = {};
-
 
 class OasisTransferHistory extends PureComponent {
   render() {

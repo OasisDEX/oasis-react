@@ -4,13 +4,11 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import OasisMarketHistory from './OasisMarketHistory';
 
-
 describe('(Component) OasisMarketHistory', () => {
   it('should render', () => {
-    const props = {
-    };
+    const props = {};
     const wrapper = shallow(
-      <OasisMarketHistory {...props}/>
+      <OasisMarketHistory {...props}/>,
     );
 
     expect(wrapper).toMatchSnapshot();

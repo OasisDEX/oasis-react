@@ -4,11 +4,8 @@ import { PropTypes } from 'prop-types';
 
 import styles from './OasisExpirationDate.scss';
 
-
-const propTypes = PropTypes && {
-};
+const propTypes = PropTypes && {};
 const defaultProps = {};
-
 
 class OasisExpirationDate extends PureComponent {
   render() {

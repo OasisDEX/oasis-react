@@ -6,9 +6,10 @@ import Immutable from 'immutable';
 import {
   OasisMessagesSectionWrapper,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './OasisMessagesSection';
 import { shallow } from 'enzyme';
+
 describe('(Container) OasisMessagesSection', () => {
   const state = Immutable.fromJS({});
   const initialProps = mapStateToProps(state);
@@ -22,14 +23,13 @@ describe('(Container) OasisMessagesSection', () => {
     expect(initialProps).toMatchSnapshot();
   });
 
-
   it('will receive right actions', () => {
     expect(initialActions).toMatchSnapshot();
   });
 
   it('should render', () => {
     const wrapper = shallow(
-      <OasisMessagesSectionWrapper {...props}/>
+      <OasisMessagesSectionWrapper {...props}/>,
     );
     expect(wrapper).toMatchSnapshot();
   });

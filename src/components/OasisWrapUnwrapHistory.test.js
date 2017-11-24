@@ -4,16 +4,15 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import OasisWrapUnwrapHistory from './OasisWrapUnwrapHistory';
 
-
 describe('(Component) OasisWrapUnwrapHistory', () => {
   it('should render', () => {
     const props = {
       children: (
         <span>test</span>
-      )
+      ),
     };
     const wrapper = shallow(
-      <OasisWrapUnwrapHistory {...props}/>
+      <OasisWrapUnwrapHistory {...props}/>,
     );
 
     expect(wrapper).toMatchSnapshot();

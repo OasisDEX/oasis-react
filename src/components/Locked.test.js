@@ -1,15 +1,19 @@
 /* global shallow describe it expect */
 /* eslint-disable import/first */
 import React from 'react';
-
-import OasisMessage from './OasisMessage';
 import { shallow } from 'enzyme';
+import Locked from './Locked';
 
-describe('(Component) OasisMessage', () => {
+
+describe('(Component) Locked', () => {
   it('should render', () => {
-    const props = {};
+    const props = {
+      children: (
+        <span>test</span>
+      )
+    };
     const wrapper = shallow(
-      <OasisMessage {...props}/>,
+      <Locked {...props}/>
     );
 
     expect(wrapper).toMatchSnapshot();

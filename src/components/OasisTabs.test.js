@@ -9,7 +9,7 @@ describe('(Component) OasisTabs', () => {
   it('should render', () => {
     const props = {};
     const wrapper = shallow(
-      <OasisTabs {...props}/>
+      <OasisTabs {...props}/>,
     );
 
     expect(wrapper).toMatchSnapshot();

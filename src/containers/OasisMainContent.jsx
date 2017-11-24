@@ -8,32 +8,29 @@ import {
   Route,
   Switch,
   Redirect,
-  withRouter
-} from 'react-router-dom'
+  withRouter,
+} from 'react-router-dom';
 import { compose } from 'redux';
 
 import OasisTabs from '../components/OasisTabs';
-import {OasisTradeWrapper} from './OasisTrade';
-import {OasisTransferWrapper} from './OasisTransfer';
-import {OasisWrapUnwrapWrapper} from './OasisWrapUnwrap';
+import { OasisTradeWrapper } from './OasisTrade';
+import { OasisTransferWrapper } from './OasisTransfer';
+import { OasisWrapUnwrapWrapper } from './OasisWrapUnwrap';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object
+  actions: PropTypes.object,
 };
-
 
 export class OasisMainContentWrapper extends Component {
 
-
   redirect() {
-    if(document.location.pathname === '/') {
+    if (document.location.pathname === '/') {
       return (
-          <Redirect from={'/'} to={'trade'}></Redirect>
-      )
+        <Redirect from={'/'} to={'trade'}></Redirect>
+      );
     }
     return null;
   }
-
 
   render() {
     return (
@@ -53,14 +50,15 @@ export class OasisMainContentWrapper extends Component {
   /**
    * TODO @Arek implement more performant way.
    */
-  shouldComponentUpdate(nextProps) { return true; }
+  shouldComponentUpdate(nextProps) {
+    return true;
+  }
 }
-
-
 
 export function mapStateToProps(state) {
   return {};
 }
+
 export function mapDispatchToProps(dispatch) {
   const actions = {};
   return { actions: bindActionCreators(actions, dispatch) };
@@ -70,6 +68,6 @@ OasisMainContentWrapper.propTypes = propTypes;
 OasisMainContentWrapper.displayName = 'OasisMainContentWrapper';
 
 export default compose(
-    withRouter,
-    connect(mapStateToProps, mapDispatchToProps)
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
 )(OasisMainContentWrapper);

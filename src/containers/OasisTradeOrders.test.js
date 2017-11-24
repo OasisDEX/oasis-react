@@ -6,7 +6,7 @@ import Immutable from 'immutable';
 import {
   OasisTradeOrdersWrapper,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './OasisTradeOrders';
 import { shallow } from 'enzyme';
 
@@ -23,14 +23,13 @@ describe('(Container) OasisTradeOrders', () => {
     expect(initialProps).toMatchSnapshot();
   });
 
-
   it('will receive right actions', () => {
     expect(initialActions).toMatchSnapshot();
   });
 
   it('should render', () => {
     const wrapper = shallow(
-      <OasisTradeOrdersWrapper {...props}/>
+      <OasisTradeOrdersWrapper {...props}/>,
     );
     expect(wrapper).toMatchSnapshot();
   });

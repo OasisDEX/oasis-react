@@ -4,13 +4,11 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import OasisExpirationDate from './OasisExpirationDate';
 
-
 describe('(Component) OasisExpirationDate', () => {
   it('should render', () => {
-    const props = {
-    };
+    const props = {};
     const wrapper = shallow(
-      <OasisExpirationDate {...props}/>
+      <OasisExpirationDate {...props}/>,
     );
 
     expect(wrapper).toMatchSnapshot();

@@ -8,7 +8,7 @@ import OasisBuyMaker from '../components/OasisBuyMaker';
 import OasisSellMaker from '../components/OasisSellMaker';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object
+  actions: PropTypes.object,
 };
 
 export class OasisTradeBuySellWrapper extends PureComponent {
@@ -25,6 +25,7 @@ export class OasisTradeBuySellWrapper extends PureComponent {
 export function mapStateToProps(state) {
   return {};
 }
+
 export function mapDispatchToProps(dispatch) {
   const actions = {};
   return { actions: bindActionCreators(actions, dispatch) };

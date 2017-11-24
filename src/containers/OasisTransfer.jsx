@@ -8,7 +8,7 @@ import OasisTransferTransfer from '../components/OasisTransferTransfer';
 import OasisTransferHistory from '../components/OasisTransferHistory';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object
+  actions: PropTypes.object,
 };
 
 export class OasisTransferWrapper extends PureComponent {
@@ -25,6 +25,7 @@ export class OasisTransferWrapper extends PureComponent {
 export function mapStateToProps(state) {
   return {};
 }
+
 export function mapDispatchToProps(dispatch) {
   const actions = {};
   return { actions: bindActionCreators(actions, dispatch) };

@@ -6,10 +6,9 @@ import styles from './OasisCard.scss';
 
 const propTypes = PropTypes && {
   children: PropTypes.node,
-  heading: PropTypes.string.isRequired
+  heading: PropTypes.string.isRequired,
 };
 const defaultProps = {};
-
 
 class OasisCard extends PureComponent {
   render() {

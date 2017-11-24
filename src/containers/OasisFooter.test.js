@@ -6,9 +6,10 @@ import Immutable from 'immutable';
 import {
   OasisFooterWrapper,
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 } from './OasisFooter';
 import { shallow } from 'enzyme';
+
 describe('(Container) OasisFooter', () => {
   const state = Immutable.fromJS({});
   const initialProps = mapStateToProps(state);
@@ -22,14 +23,13 @@ describe('(Container) OasisFooter', () => {
     expect(initialProps).toMatchSnapshot();
   });
 
-
   it('will receive right actions', () => {
     expect(initialActions).toMatchSnapshot();
   });
 
   it('should render', () => {
     const wrapper = shallow(
-      <OasisFooterWrapper {...props}/>
+      <OasisFooterWrapper {...props}/>,
     );
     expect(wrapper).toMatchSnapshot();
   });
