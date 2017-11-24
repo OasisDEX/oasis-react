@@ -1,335 +1,291 @@
 import { createAction, handleActions } from 'redux-actions';
-import Immutable                       from 'immutable';
-import web3                            from '../../bootstrap/web3';
+import Immutable from 'immutable';
+import web3 from '../../bootstrap/web3';
+import sessionReducer from './session';
+import offersReducer from './offers';
+import tokensReducer from './tokens';
+import tokenEventsReducer from './tokenEvents';
+import transactionsReducer from './transactions';
+import { find } from 'lodash';
 
-import { fulfilled, pending, rejected } from '../../utils/store';
+import limitsReducer from './limits';
 
-const initialState = Immutable.fromJS({});
+import { createPromiseActions } from '../../utils/createPromiseActions';
+import { Session } from '../../utils/session';
+import { fulfilled, rejected } from '../../utils/store';
+import contractsBootstrap from '../../bootstrap/contracts';
+import platformReducer from './platform';
+import marketBootstrap from '../../bootstrap/market';
 
-const CHECK_ACCOUNTS = 'NETWORK/CHECK_ACCOUNTS';
+import { KOVAN_NET_ID, LIVE_NET_ID } from '../../constants';
+
+const initialState = Immutable.fromJS(
+  {
+    sync: { isPending: false, ts: null },
+    activeNetworkName: null,
+    activeNetworkId: null,
+    latestBlockNumber: null,
+    outOfSync: true,
+    networks: [
+      {
+        id: 100,
+        name: 'private',
+        startingBlock: null,
+        avgBlocksPerDay: null,
+      },
+      {
+        id: 1,
+        name: 'mainnet',
+        startingBlock: null,
+        avgBlocksPerDay: 5760,
+      },
+      {
+        id: 42,
+        name: 'kovan',
+        startingBlock: null,
+        avgBlocksPerDay: 21600,
+      },
+      {
+        id: 3,
+        name: 'Ropsten',
+        startingBlock: null,
+        avgBlocksPerDay: null,
+      },
+    ],
+  });
+
 const CHECK_IF_USER_HAS_BALANCE_IN_OLD_WRAPPER = 'NETWORK/CHECK_IF_USER_HAS_BALANCE_IN_OLD_WRAPPER';
-const CHECK_IF_ORDER_MATCHING_IS_ENABLED = 'NETWORK/CHECK_IF_ORDER_MATCHING_IS_ENABLED';
-const CHECK_IF_BUY_ENABLED = 'NETWORK/CHECK_IF_BUY_ENABLED';
-const DENOTE_PRECISION = 'NETWORK/DENOTE_PRECISION';
 const INIT_NETWORK = 'NETWORK/INIT_NETWORK';
-const CHECK_IF_MARKET_IS_OPEN = 'NETWORK/CHECK_IF_MARKET_IS_OPEN';
 const CHECK_NETWORK = 'NETWORK/CHECK_NETWORK';
+const SYNC_NETWORK = 'NETWORK/SYNC_NETWORK';
+const GET_CONNECTED_NETWORK_ID = 'NETWORK/GET_CONNECTED_NETWORK_ID';
 
 // Check which accounts are available and if defaultAccount is still available,
 // Otherwise set it to localStorage, Session, or first element in accounts
 
-const CheckAccounts = createAction(
-    CHECK_ACCOUNTS,
-    function checkAccounts() {
-      return new Promise((resolve, reject) => {
-        // web3Obj.eth.getAccounts((error, accounts) => {
-        //   if (!error) {
-        //     if (!_.contains(accounts, web3Obj.eth.defaultAccount)) {
-        //       if (_.contains(accounts, localStorage.getItem('address'))) {
-        //         web3Obj.eth.defaultAccount = localStorage.getItem('address');
-        //       } else if (_.contains(accounts, Session.get('address'))) {
-        //         web3Obj.eth.defaultAccount = Session.get('address');
-        //       } else if (accounts.length > 0) {
-        //         web3Obj.eth.defaultAccount = accounts[0];
-        //       } else {
-        //         web3Obj.eth.defaultAccount = undefined;
-        //       }
-        //     }
-        //     localStorage.setItem('address', web3Obj.eth.defaultAccount);
-        //     Session.set('address', web3Obj.eth.defaultAccount);
-        //     Session.set('accounts', accounts);
-        //     resolve(web3Obj.eth.defaultAccount);
-        //   } else {
-        //     reject();
-        //   }
-        // });
-      });
-    },
-);
 
 const CheckIfUserHasBalanceInOldWrapper = createAction(
-    CHECK_IF_USER_HAS_BALANCE_IN_OLD_WRAPPER,
-    function checkIfUserHasBalanceInOldWrapper(userAddress) {
-      // Named the old wrapper - OW-ETH
-      // Dapple.getToken('OW-ETH', (error, token) => {
-      //   if (!error) {
-      //     if (token) {
-      //       token.balanceOf(userAddress, (err, balance) => {
-      //         if (!error) {
-      //           if (balance.toString(10) > 0) {
-      //             $('#wrapperUpdate').modal({
-      //                                         keyboard: false,
-      //                                         show: true,
-      //                                         backdrop: false,
-      //                                       });
-      //             $('#wrapperUpdate').on('shown.bs.modal', () => {
-      //               $('.amount').
-      //                   text(Blaze._globalHelpers.formatBalance(balance, 3, '',
-      //                                                           false,
-      //                   ));
-      //               Session.set('oldWrapperBalance', balance.toString(10));
-      //             });
-      //           }
-      //         } else {
-      //           console.debug(`Couldn't get balance for ${userAddress}.`, error);
-      //         }
-      //       });
-      //     }
-      //   } else {
-      //     console.debug(`Cannot extract information for ${token} `, error);
-      //   }
-      // });
-    }
+  CHECK_IF_USER_HAS_BALANCE_IN_OLD_WRAPPER,
+  function checkIfUserHasBalanceInOldWrapper(userAddress) {
+    // Named the old wrapper - OW-ETH
+    // Dapple.getToken('OW-ETH', (error, token) => {
+    //   if (!error) {
+    //     if (token) {
+    //       token.balanceOf(userAddress, (err, balance) => {
+    //         if (!error) {
+    //           if (balance.toString(10) > 0) {
+    //             $('#wrapperUpdate').modal({
+    //                                         keyboard: false,
+    //                                         show: true,
+    //                                         backdrop: false,
+    //                                       });
+    //             $('#wrapperUpdate').on('shown.bs.modal', () => {
+    //               $('.amount').
+    //                   text(Blaze._globalHelpers.formatBalance(balance, 3, '',
+    //                                                           false,
+    //                   ));
+    //               Session.set('oldWrapperBalance', balance.toString(10));
+    //             });
+    //           }
+    //         } else {
+    //           console.debug(`Couldn't get balance for ${userAddress}.`, error);
+    //         }
+    //       });
+    //     }
+    //   } else {
+    //     console.debug(`Cannot extract information for ${token} `, error);
+    //   }
+    // });
+  },
 );
-
-
-const CheckIfOrderMatchingIsEnabled = createAction(
-    CHECK_IF_ORDER_MATCHING_IS_ENABLED,
-    async function checkIfOrderMatchingEnabled(marketType) {
-      // return new Promise((resolve, reject) => {
-      //   if (marketType !== 'MatchingMarket') {
-      //     Session.set('isMatchingEnabled', false);
-      //     resolve();
-      //   } else {
-      //     Dapple['maker-otc'].objects.otc.matchingEnabled((error, status) => {
-      //       if (!error) {
-      //         Session.set('isMatchingEnabled', status);
-      //         resolve();
-      //       } else {
-      //         console.debug('Cannot identify order matching status. ', error);
-      //         reject(error);
-      //       }
-      //     });
-      //
-      //     Dapple['maker-otc'].objects.otc.LogMatchingEnabled(
-      //         {},
-      //         { fromBlock: 'latest' },
-      //         (err, status) => {
-      //           if (!err) {
-      //             Session.set(
-      //                 'isMatchingEnabled',
-      //                 status.args.isEnabled,
-      //             );
-      //           }
-      //         },
-      //     );
-      //   }
-      // });
-    }
-);
-
-const CheckIfBuyEnabled = createAction(
-    CHECK_IF_BUY_ENABLED,
-    function checkIfBuyEnabled(marketType) {
-      return new Promise((resolve, reject) => {
-        // if (marketType !== 'MatchingMarket') {
-        //   Session.set('isBuyEnabled', true);
-        //   resolve();
-        // } else {
-        //   const abi = Dapple['maker-otc'].objects.otc.abi;
-        //   const addr = Dapple['maker-otc'].environments[Dapple.env].otc.value;
-        //
-        //   const contract = web3Obj.eth.contract(abi).at(addr);
-        //   contract.buyEnabled((error, result) => {
-        //     if (!error) {
-        //       Session.set('isBuyEnabled', result);
-        //       resolve();
-        //     } else {
-        //       reject();
-        //     }
-        //   });
-        //
-        //   Dapple['maker-otc'].objects.otc.LogBuyEnabled({}, { fromBlock: 'latest' },
-        //                                                 (err, status) => {
-        //                                                   if (!err) {
-        //                                                     Session.set(
-        //                                                         'isBuyEnabled',
-        //                                                         status.args.isEnabled,
-        //                                                     );
-        //                                                   }
-        //                                                 },
-        //   );
-        // }
-      });
-    }
-);
-
-const DenotePrecision = createAction(
-    DENOTE_PRECISION,
-    function denotePrecision() {
-      // const basePrecision = Dapple.getTokenSpecs(
-      //     Session.get('baseCurrency')).precision;
-      // const quotePrecision = Dapple.getTokenSpecs(
-      //     Session.get('quoteCurrency')).precision;
-      // const precision = basePrecision < quotePrecision ?
-      //     basePrecision :
-      //     quotePrecision;
-      // Session.set('precision', precision);
-      // // TODO: find away to place ROUNDING_MODE in here.
-      // // Right now no matter where It is put , it's overridden with ROUNDING_MODE: 1 from web3 package config.
-      // BigNumber.config({ DECIMAL_PLACES: precision });
-    }
-);
-
 
 // Initialize everything on new network
 const InitNetwork = createAction(
-    INIT_NETWORK,
-    function initNetwork(newNetwork) {
-      // Dapple.init(newNetwork);
-      // const market = Dapple['maker-otc'].environments.kovan.otc;
-      // checkAccounts().then(checkIfUserHasBalanceInOldWrapper);
-      // const isMatchingEnabled = checkIfOrderMatchingEnabled(market.type);
-      // const isBuyEnabled = checkIfBuyEnabled(market.type);
-      // Promise.all([isMatchingEnabled, isBuyEnabled]).then(() => {
-      //   Session.set('network', newNetwork);
-      //   Session.set('isConnected', true);
-      //   Session.set('latestBlock', 0);
-      //   Session.set('startBlock', 0);
-      //   doHashChange();
-      //   denotePrecision();
-      //   Tokens.sync();
-      //   Limits.sync();
-      //   Offers.sync();
-      // });
-    }
+  INIT_NETWORK,
+  function initNetwork(newNetwork) {
+    // Dapple.init(newNetwork);
+    // checkAccounts().then(checkIfUserHasBalanceInOldWrapper);
+    // const isMatchingEnabled = checkIfOrderMatchingEnabled(market.type);
+    // const isBuyEnabled = checkIfBuyEnabled(market.type);
+    // Promise.all([isMatchingEnabled, isBuyEnabled]).then(() => {
+    //   Session.set('network', newNetwork);
+    //   Session.set('isConnected', true);
+    //   Session.set('latestBlock', 0);
+    //   Session.set('startBlock', 0);
+    //   doHashChange();
+    //   denotePrecision();
+    //   Tokens.sync();
+    //   Limits.sync();
+    //   Offers.sync();
+    // });
+  },
+);
 
-)
-
-// Check the closing time of the market and if it's open now
-const CheckIfMarketIsOpen = createAction(
-    CHECK_IF_MARKET_IS_OPEN,
-    function checkMarketOpen() {
-      // Offers.checkMarketOpen();
-    }
-)
-
-// CHECK FOR NETWORK
-const CheckNetwork = createAction(
-    CHECK_NETWORK,
-    function checkNetwork() {
-      // if (Session.get('web3ObjReady') && typeof web3Obj !== 'undefined') {
-      //   web3Obj.version.getNode((error) => {
-      //     const isConnected = !error;
-      //
-      //     // Check if we are synced
-      //     if (isConnected) {
-      //       web3Obj.eth.getBlock('latest', (e, res) => {
-      //         if (!e) {
-      //           if (res && res.number >= Session.get('latestBlock')) {
-      //             Session.set('outOfSync', e != null ||
-      //                 (new Date().getTime() / 1000) - res.timestamp > 600);
-      //             Session.set('latestBlock', res.number);
-      //             if (Session.get('startBlock') === 0) {
-      //               console.log(`Setting startblock to ${res.number - 6000}`);
-      //               Session.set('startBlock', (res.number - 6000));
-      //             }
-      //           } else {
-      //             // XXX MetaMask frequently returns old blocks
-      //             // https://github.com/MetaMask/metamask-plugin/issues/504
-      //             console.debug('Skipping old block');
-      //           }
-      //         } else {
-      //           console.debug('There is error while getting the latest block! ', e);
-      //         }
-      //       });
-      //     }
-      //
-      //     // Check which network are we connected to
-      //     // https://github.com/ethereum/meteor-dapp-wallet/blob/90ad8148d042ef7c28610115e97acfa6449442e3/app/client/lib/ethereum/walletInterface.js#L32-L46
-      //     if (!Session.equals('isConnected', isConnected)) {
-      //       if (isConnected === true) {
-      //         web3Obj.version.getNetwork((e, res) => {
-      //           let network = false;
-      //           if (!e) {
-      //             switch (res) {
-      //               case '1':
-      //                 network = 'main';
-      //                 Session.set('AVGBlocksPerDay', 5760);
-      //                 break;
-      //               case '42':
-      //                 network = 'kovan';
-      //                 Session.set('AVGBlocksPerDay', 21600);
-      //                 break;
-      //               default:
-      //                 network = 'private';
-      //             }
-      //           }
-      //           if (!Session.equals('network', network)) {
-      //             initNetwork(network, isConnected);
-      //           }
-      //         });
-      //       } else {
-      //         Session.set('isConnected', isConnected);
-      //         Session.set('network', false);
-      //         Session.set('latestBlock', 0);
-      //       }
-      //     }
-      //   });
-      // }
-    }
-)
-
-// $(window).on('hashchange', () => {
-//   const baseBeforeChange = Session.get('baseCurrency');
-//   const quoteBeforeChange = Session.get('quoteCurrency');
-//   doHashChange();
-//   const baseAfterChange = Session.get('baseCurrency');
-//   const quoteAfterChange = Session.get('quoteCurrency');
-//
-//   if (Session.get('isMatchingEnabled')) {
-//     if (baseAfterChange !== baseBeforeChange ||
-//         quoteAfterChange !== quoteBeforeChange) {
-//       Offers.sync();
-//     }
-//   }
-//
-//   denotePrecision();
-// });
-
-/***
- * Moved to session reducer
+/**
+ *
+ *
  */
-// function initSession() {
-//   Session.set('network', false);
-//   Session.set('loading', false);
-//   Session.set('loadingBuyOrders', true);
-//   Session.set('loadingSellOrders', true);
-//   Session.set('loadingProgress', 0);
-//   Session.set('loadingCounter', 0);
-//   Session.set('outOfSync', false);
-//   Session.set('syncing', false);
-//   Session.set('isConnected', false);
-//   Session.set('latestBlock', 0);
-//
-//   Session.set('balanceLoaded', false);
-//   Session.set('allowanceLoaded', false);
-//   Session.set('limitsLoaded', false);
-//
-//   Session.set('ETHDepositProgress', 0);
-//   Session.set('ETHDepositProgressMessage', '');
-//   Session.set('ETHDepositErrorMessage', '');
-//   Session.set('ETHWithdrawProgress', 0);
-//   Session.set('ETHWithdrawProgressMessage', '');
-//   Session.set('ETHWithdrawErrorMessage', '');
-//   Session.set('GNTDepositProgress', 0);
-//   Session.set('GNTDepositProgressMessage', '');
-//   Session.set('GNTDepositErrorMessage', '');
-//   Session.set('GNTWithdrawProgress', 0);
-//   Session.set('GNTWithdrawProgressMessage', '');
-//   Session.set('GNTWithdrawErrorMessage', '');
-//   Session.set('loadingTradeHistory', true);
-//   Session.set('loadingIndividualTradeHistory', false); // this will be loading only if the user filter by closed status of orders
-//   Session.set('AVGBlocksPerDay', null);
-//   Session.set('watchedEvents', false);
-//   if (!Session.get('volumeSelector')) {
-//     Session.set('volumeSelector', 'quote');
-//   }
-// }
 
-const actions = {};
+const syncNetwork = createPromiseActions(
+  SYNC_NETWORK,
+);
 
-const reducer = handleActions({}, initialState);
+/**
+ * TODO @Arek Revise this logic
+ */
+const syncNetworkEpic = () => async (dispatch, getStore) => {
+  const isNetworkSyncPending = getStore().getIn(['network', 'sync', 'isPending']);
+  dispatch(checkNetworkEpic());
+  web3.eth.isSyncing((error, sync) => {
+    if (!error) {
+      dispatch(sessionReducer.actions.SetValue('syncing', sync !== false));
+      // Stop all app activity
+      if (sync === true) {
+        web3.reset(true);
+        dispatch(checkNetworkEpic());
+        // show sync info
+      } else if (sync) {
+        dispatch(sessionReducer.actions.SetValue('startingBlock', sync.startingBlock));
+        dispatch(sessionReducer.actions.SetValue('currentBlock', sync.currentBlock));
+        dispatch(sessionReducer.actions.SetValue('highestBlock', sync.highestBlock));
+      } else {
+        dispatch(sessionReducer.actions.SetValue('highestBlock', sync.highestBlock));
+        dispatch(sessionReducer.actions.SetValue('outOfSync', false));
+        // offersReducer.actions.Sync();
+        // web3.eth.filter('latest', () => {
+        //   tokensReducer.actions.Sync();
+        //   limitsReducer.actions.Sync();
+        //   transactionsReducer.actions.Sync();
+        // });
+      }
+    }
+  });
+};
+
+/**
+ *
+ *
+ */
+
+const CheckNetwork = createPromiseActions(CHECK_NETWORK);
+
+/**
+ * @dev Here we create 3 actions for checking the network status
+ * @type {{pending, fulfilled, rejected}|*}
+ */
+const subscribeLatestBlockFilter = createPromiseActions(
+  'NETWORK/SUBSCRIBE_LATEST_BLOCK_FILTER',
+);
+
+/**
+ * @dev We get latest mined block number
+ */
+const getLatestBlockNumber = createAction(
+  'NETWORK_GET_LATEST_BLOCK_NUMBER',
+  async () => new Promise((resolve, reject) =>
+    web3.eth.getBlockNumber((e, latestBlockNumber) => {
+      if (e) {
+        reject(e);
+      }
+      else {
+        resolve(latestBlockNumber);
+      }
+    }),
+  ),
+);
+
+const getLatestBlock = createAction(
+  'NETWORK_GET_LATEST_BLOCK',
+  async () => new Promise((resolve, reject) =>
+    web3.eth.getBlock('latest', (e, res) => {
+      if (e) {
+        reject(e);
+      }
+      else {
+        resolve(res);
+      }
+    }),
+  ),
+);
+
+const subscribeLatestBlockFilterEpic = () => (dispatch) => {
+  dispatch(subscribeLatestBlockFilter.pending());
+  window.web3p.eth.filter('latest').then(
+    latestBlockHash => dispatch(getLatestBlockNumber(latestBlockHash)),
+    rej => dispatch(subscribeLatestBlockFilter.rejected(rej))
+  );
+  dispatch(subscribeLatestBlockFilter.fulfilled());
+};
+
+const checkNetworkEpic = (providerType) => async (d, getState) => {
+  d(CheckNetwork.pending());
+  const previousNetworkId = getState().getIn(['network', 'activeNetworkId']);
+  const previousProviderType = getState().getIn(['network', 'providerType']);
+  let currentNetworkName = null;
+
+  if (previousProviderType !== providerType) {
+    d(platformReducer.actions.setProviderType(providerType));
+  }
+
+  if (previousNetworkId === null) {
+    d(platformReducer.actions.networkChanged());
+    d(platformReducer.actions.web3Reset());
+    currentNetworkName = getState().getIn(['network', 'activeNetworkName']);
+    await Promise.all([
+      d(platformReducer.actions.contractsLoaded(contractsBootstrap.init(currentNetworkName))),
+      d(platformReducer.actions.marketInitialized(await marketBootstrap.init(d))),
+    ]);
+  } else {
+    const currentNetworkIdAction = await d(getConnectedNetworkId());
+    currentNetworkName = getState().getIn(['network', 'activeNetworkName']);
+
+    if (previousNetworkId !== currentNetworkIdAction.value) {
+      await Promise.all([
+        d(platformReducer.actions.web3Reset()),
+        d(platformReducer.actions.contractsLoaded(contractsBootstrap.init(currentNetworkName))),
+        d(platformReducer.actions.marketInitialized(await marketBootstrap.init(d))),
+      ]);
+    }
+  }
+  d(CheckNetwork.fulfilled);
+};
+
+const getConnectedNetworkId = createAction(
+  GET_CONNECTED_NETWORK_ID,
+  () => window.web3p.version.getNetwork(),
+);
+
+const actions = {
+  checkNetworkEpic,
+  syncNetworkEpic,
+  getLatestBlock,
+  getConnectedNetworkId,
+  subscribeLatestBlockFilterEpic,
+};
+
+
+const reducer = handleActions({
+  [syncNetwork.pending]: (state) =>
+    state
+      .setIn(['sync', 'isPending'], true),
+  [syncNetwork.fulfilled]: (state) => state.setIn(['sync', 'isPending'], true),
+  [fulfilled(getConnectedNetworkId)]: (state, { payload }) =>
+    state
+      .update('activeNetworkId', (nid) => !!payload && nid === payload ? nid : payload)
+      .update('activeNetworkName',
+        (activeNetworkName) => {
+          if (state.get('activeNetworkId')) {
+            return state
+              .get('networks').find(n => n.get('id') === parseInt(payload))
+              .get('name');
+          }
+          return activeNetworkName;
+        },
+      ),
+  [fulfilled(getLatestBlockNumber)]: (state, { payload }) =>
+    state.update('latestBlockNumber', () => payload),
+
+}, initialState);
 
 export default {
   actions,

@@ -1,11 +1,9 @@
 import { createAction, handleActions } from 'redux-actions';
 import Immutable from 'immutable';
 
-import { fulfilled, pending, rejected } from '../../utils/store';
-
 const initialState = Immutable.fromJS({});
 
-const INIT = 'BALANCES/INIT';
+const INIT = 'CONTRACTS/INIT';
 
 const Init = createAction(
   INIT,
