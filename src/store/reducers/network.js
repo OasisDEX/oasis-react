@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import { createAction, handleActions } from 'redux-actions';
 import Immutable from 'immutable';
 import web3 from '../../bootstrap/web3';
@@ -141,7 +142,7 @@ const syncNetworkEpic = () => async (dispatch, getStore) => {
       dispatch(sessionReducer.actions.SetValue('syncing', sync !== false));
       // Stop all app activity
       if (sync === true) {
-        web3.reset(true);
+        window.web3.reset(true);
         dispatch(checkNetworkEpic());
         // show sync info
       } else if (sync) {
@@ -217,29 +218,30 @@ const subscribeLatestBlockFilterEpic = () => (dispatch) => {
   dispatch(subscribeLatestBlockFilter.fulfilled());
 };
 
-const checkNetworkEpic = (providerType) => async (d, getState) => {
+const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (d, getState) => {
   d(CheckNetwork.pending());
   const previousNetworkId = getState().getIn(['network', 'activeNetworkId']);
   const previousProviderType = getState().getIn(['network', 'providerType']);
   let currentNetworkName = null;
-
   if (previousProviderType !== providerType) {
     d(platformReducer.actions.setProviderType(providerType));
   }
-
-  if (previousNetworkId === null) {
+  if (isInitialHealthcheck) {
     d(platformReducer.actions.networkChanged());
-    d(platformReducer.actions.web3Reset());
+    // d(platformReducer.actions.web3Reset());
     currentNetworkName = getState().getIn(['network', 'activeNetworkName']);
-    await Promise.all([
-      d(platformReducer.actions.contractsLoaded(contractsBootstrap.init(currentNetworkName))),
-      d(platformReducer.actions.marketInitialized(await marketBootstrap.init(d))),
-    ]);
+    console.log(currentNetworkName, previousNetworkId)
+    const contractsLoadedAction = d(platformReducer.actions.contractsLoaded(contractsBootstrap.init(currentNetworkName)));
+    const marketInitializedAction = await d(platformReducer.actions.marketInitialized(marketBootstrap.init(d)));
+    await Promise.all([contractsLoadedAction, marketInitializedAction]);
   } else {
+
     const currentNetworkIdAction = await d(getConnectedNetworkId());
     currentNetworkName = getState().getIn(['network', 'activeNetworkName']);
 
+    console.log(previousNetworkId, currentNetworkIdAction.value);
     if (previousNetworkId !== currentNetworkIdAction.value) {
+        console.log('else')
       await Promise.all([
         d(platformReducer.actions.web3Reset()),
         d(platformReducer.actions.contractsLoaded(contractsBootstrap.init(currentNetworkName))),
@@ -274,7 +276,7 @@ const reducer = handleActions({
       .update('activeNetworkId', (nid) => !!payload && nid === payload ? nid : payload)
       .update('activeNetworkName',
         (activeNetworkName) => {
-          if (state.get('activeNetworkId')) {
+          if (payload) {
             return state
               .get('networks').find(n => n.get('id') === parseInt(payload))
               .get('name');
