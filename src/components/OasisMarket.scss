@@ -1,2 +1,31 @@
-.base {
+@import "../styles/modules/labels";
+
+.OasisMarket {
+  @include text(13px);
+  text-align: right;
+
+  & .OasisMarketAddress {
+    border: 1px solid rgba(211, 213, 220, 0.68);
+    border-radius: 100px;
+    font-size: 10px;
+    background-color: transparent;
+    margin-left: 25px;
+    display: inline-block;
+    padding: 0 17px 0 10px;
+    width: 330px;
+
+    & span {
+      color: #D0D0D0;
+      transform: translateX(-10px);
+      padding: 13px 17px;
+      display: inline-block;
+      opacity: 0.68;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+  }
 }

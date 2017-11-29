@@ -1,0 +1,5 @@
+@mixin text($size: 12px, $weight: 500) {
+  font-family: 'Montserrat', sans-serif;
+  font-size: $size;
+  font-weight: $weight;
+}

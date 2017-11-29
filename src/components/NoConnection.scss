@@ -1,11 +1,14 @@
 @import "./../styles/style";
 
 .NoEthereumSection {
+  max-width: 980px;
+  margin: 0 auto;
+
   text-align: center;
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
   color: #222228;
-  font-size: 25px;
+  font-size: 24px;
 
   h2 {
     @extend .montserrat-semibold;
@@ -26,7 +29,7 @@
 
   .HorizontalLine {
     color: #DCDDE0;
-    border: 0px;
+    border: 0;
     border-top: solid 1px #DCDDE0;
   }
 
@@ -101,7 +104,6 @@
       height: 28px;
       width: 28px;
       line-height: 28px;
-      border-radius: 50%;
       -moz-border-radius: 50%;
       text-align: center;
       border: solid 1px #CFD8DC;

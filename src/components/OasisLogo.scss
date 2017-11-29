@@ -1,10 +1,16 @@
-.base {
-  cursor: pointer;
-  height: 37px;
+.OasisLogoWrapper {
+  display: flex;
+  align-items: center;
   width: 103px;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-image: url("./../assets/logo-oasis.png");
+  height: 40px;
+}
+
+.OasisLogo {
+  cursor: pointer;
+  width: 100%;
+  height: 37px;
+  background: url("./../assets/logo-oasis.png") no-repeat;
+  background-size: 100%;
   &:hover {
     background-image: url("./../assets/logo-oasis-hover.png");
   }

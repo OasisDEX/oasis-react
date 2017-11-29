@@ -1,2 +1,26 @@
-.base {
+@import "../styles/modules/labels";
+
+.ClosingTime {
+  @include text(12px);
+
+  color: #4F5362;
+
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+
+  & .Date {
+    display: flex;
+    margin-top: 5px;
+    align-items: center;
+    @include text(13px);
+    color: rgba(79, 83, 98, 0.8);
+
+    &:before {
+      content: "";
+      width: 13px;
+      height: 13px;
+      margin-right: 5px;
+      background: url("../styles/icons/clock.svg");
+    }
+  }
 }
