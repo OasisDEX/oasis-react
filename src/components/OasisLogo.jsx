@@ -3,6 +3,7 @@ import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import styles from './OasisLogo.scss';
+import CSSModules from 'react-css-modules';
 
 const propTypes = PropTypes && {};
 const defaultProps = {};
@@ -10,7 +11,9 @@ const defaultProps = {};
 class OasisLogo extends PureComponent {
   render() {
     return (
-      <div className={styles.base}></div>
+      <a styleName='OasisLogoWrapper' href="http://oasisdex.com">
+        <div styleName='OasisLogo'/>
+      </a>
     );
   }
 }
@@ -18,4 +21,4 @@ class OasisLogo extends PureComponent {
 OasisLogo.displayName = 'OasisLogo';
 OasisLogo.propTypes = propTypes;
 OasisLogo.defaultProps = defaultProps;
-export default OasisLogo;
+export default CSSModules(OasisLogo, styles);

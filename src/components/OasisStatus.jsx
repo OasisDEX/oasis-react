@@ -1,27 +1,29 @@
 import React, { PureComponent } from 'react';
+import CSSModules from 'react-css-modules';
 import { PropTypes } from 'prop-types';
-// import ImmutablePropTypes from 'react-immutable-proptypes';
-
 import styles from './OasisStatus.scss';
+import { ONLINE, OUT_OF_SYNC, CLOSED } from "../constant";
 
 const propTypes = PropTypes && {
-  // networkName: PropTypes.string.isRequired
+  status: PropTypes.string.isRequired
 };
+
 const defaultProps = {};
 
-const StatusIndicator = () => (
-  <div className={styles.base}></div>
-);
+const INDICATORS = {
+  [ONLINE]: {class: 'StatusIndicator--Online', text: 'Connected'},
+  [OUT_OF_SYNC]: {class: 'StatusIndicator--Out-Of-Sync', text: 'Out Of Sync'},
+  [CLOSED]: {class: 'StatusIndicator--Closed', text: 'Closed'}
+};
 
 class OasisStatus extends PureComponent {
   render() {
-    const { networkName, networkStatus } = this.props;
+    const {name, status} = this.props;
     return (
-      <div className={'OasisStatus'}>
-        <div className="NetworkName">{networkName}</div>
-        <div className="NetworkStatus">
-          <StatusIndicator/>
-          {networkStatus}
+      <div styleName='OasisStatus'>
+        <span> {name} </span>
+        <div styleName={`StatusIndicator NetworkStatus ${INDICATORS[status].class}`}>
+          {INDICATORS[status].text}
         </div>
       </div>
     );
@@ -31,4 +33,5 @@ class OasisStatus extends PureComponent {
 OasisStatus.displayName = 'OasisStatus';
 OasisStatus.propTypes = propTypes;
 OasisStatus.defaultProps = defaultProps;
-export default OasisStatus;
+
+export default CSSModules(OasisStatus, styles, {allowMultiple: true});

@@ -1,7 +1,21 @@
-.base {
-}
+@import '../styles/modules/labels';
 
 .StatusIndicator {
+  &--Online:before {
+    background-color: #1ABC9C;
+  }
+
+  &--Out-Of-Sync:before {
+    background-color: #F5BD00;
+  }
+
+  &--Closed:before {
+    background-color: #70737F;
+  }
+}
+
+.StatusIndicator:before {
+  content: "";
   width: 13px;
   height: 13px;
   border-radius: 20px;
@@ -9,3 +23,22 @@
   margin-right: 5px;
   vertical-align: sub;
 }
+
+.OasisStatus {
+  @include text(12px);
+  padding-left: 20px;
+
+  color: #4F5362;
+
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+
+  & .NetworkStatus {
+    display: flex;
+    margin-top: 5px;
+    align-items: center;
+    @include text(13px, 500);
+    color: rgba(79, 83, 98, 0.8);
+  }
+}
+

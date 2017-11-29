@@ -7,11 +7,14 @@ import platformSelectors from './../store/selectors/platform';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { OasisHeaderWrapper } from './OasisHeader';
-import { OasisFooterWrapper } from './OasisFooter';
-import { OasisMainContentWrapper } from './OasisMainContent';
-import { OasisMessagesSectionWrapper } from './OasisMessagesSection';
+import OasisHeaderWrapper from './OasisHeader';
+import OasisFooterWrapper from './OasisFooter';
+import OasisMainContentWrapper from './OasisMainContent';
+import OasisMessagesSectionWrapper from './OasisMessagesSection';
 import Locked from '../components/Locked';
+
+import styles from './OasisApp.scss';
+import CSSModules from 'react-css-modules';
 
 const propTypes = PropTypes && {};
 
@@ -31,7 +34,7 @@ export class OasisAppWrapper extends PureComponent {
       <div>
         {this.accountLocked()}
         <BrowserRouter>
-          <div className="container">
+          <div styleName='container' className="container">
             <OasisHeaderWrapper/>
             <OasisMessagesSectionWrapper/>
             <OasisMainContentWrapper/>
@@ -58,4 +61,4 @@ export function mapDispatchToProps(dispatch) {
 
 OasisAppWrapper.propTypes = propTypes;
 OasisAppWrapper.displayName = 'OasisAppWrapper';
-export default connect(mapStateToProps, mapDispatchToProps)(OasisAppWrapper);
+export default connect(mapStateToProps, mapDispatchToProps)(CSSModules(OasisAppWrapper,styles));
