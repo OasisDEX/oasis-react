@@ -5,7 +5,6 @@ import web3 from '../../bootstrap/web3';
 import { Session } from '../../utils/session';
 import platformReducer from './platform';
 import sessionReducer from './session';
-import { find } from 'lodash';
 
 
 const initialState = Immutable.fromJS({
@@ -31,7 +30,6 @@ const checkAccounts = createAction(
 
 const checkAccountsEpic = () => async (dispatch, getState) => {
   const userAccounts = (await dispatch(checkAccounts())).value;
-  console.log({userAccounts})
   const isMetamaskLocked = getState().getIn(['platform', 'metamaskLocked']);
   const hasUserAccounts = userAccounts.length;
   if(!hasUserAccounts) {
@@ -39,29 +37,25 @@ const checkAccountsEpic = () => async (dispatch, getState) => {
       dispatch(platformReducer.actions.metamaskLocked());
     }
     window.web3.eth.defaultAccount = undefined;
-    return;
   }
-
-  else if (!find(userAccounts, window.web3.eth.defaultAccount)) {
-    if (find(userAccounts, localStorage.getItem('address'))) {
+  else if (!userAccounts.find( acc => acc === window.web3.eth.defaultAccount)) {
+    if ((userAccounts.find( acc => acc === localStorage.getItem('address')) )) {
       window.web3.eth.defaultAccount = localStorage.getItem('address');
-    } else if (find(userAccounts, Session.get('address'))) {
+    } else if (userAccounts.find( acc => acc === Session.get('address'))) {
       window.web3.eth.defaultAccount = Session.get('address');
     } else if (userAccounts.length > 0) {
       window.web3.eth.defaultAccount = userAccounts[0];
     } else {
-      window.web3.eth.defaultAccount = undefined;
+      throw new Error('No default account');
     }
   }
 
   if(isMetamaskLocked) {
     dispatch(platformReducer.actions.metamaskUnlocked())
   }
-
   localStorage.setItem('address', web3.eth.defaultAccount);
   dispatch(sessionReducer.actions.SetValue('address', window.web3.eth.defaultAccount));
   dispatch(sessionReducer.actions.SetValue('accounts', userAccounts))
-  // resolve(window.web3.eth.defaultAccount);
 };
 
 
