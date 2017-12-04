@@ -36,14 +36,19 @@ const init = (networkName) => {
 
   window.contracts = {
     tokens: {
-      WETH, DAI, SAI, MKR,
-      DGD, GNT, WGNT, REP,
-      ICN, _1ST, SNGLS, VSL,
-      PLU, MLN, RHOC, TIME, GUP,
-      BAT, NMR,
+      'W-ETH': WETH,
+      'W-GNT': WGNT,
+      '1ST': _1ST,
+      DAI, SAI, MKR,
+      DGD, GNT, REP,
+      ICN, SNGLS, VSL,
+      PLU, MLN, RHOC,
+      TIME, GUP, BAT, NMR,
     },
     market,
   };
+
+  console.log(window.contracts);
 };
 
 export default {

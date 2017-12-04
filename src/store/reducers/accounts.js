@@ -29,9 +29,9 @@ const checkAccounts = createAction(
 );
 
 
-
 const checkAccountsEpic = () => async (dispatch, getState) => {
   const userAccounts = (await dispatch(checkAccounts())).value;
+  console.log({userAccounts})
   const isMetamaskLocked = getState().getIn(['platform', 'metamaskLocked']);
   const hasUserAccounts = userAccounts.length;
   if(!hasUserAccounts) {

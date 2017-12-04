@@ -2,7 +2,7 @@ import { createAction, handleActions } from 'redux-actions';
 import Immutable from 'immutable';
 import web3 from '../../bootstrap/web3';
 
-import { fulfilled, pending, rejected } from '../../utils/store';
+import { fulfilled } from '../../utils/store';
 import { createPromiseActions } from '../../utils/createPromiseActions';
 
 const CHECK_IF_MARKET_IS_OPEN = 'MARKETS/CHECK_IF_MARKET_IS_OPEN';

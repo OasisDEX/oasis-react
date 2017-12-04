@@ -14,15 +14,18 @@ import { Session } from './utils/session';
 import platformReducer from './store/reducers/platform';
 import networkReducer from './store/reducers/network';
 import accountsReducer from './store/reducers/accounts';
+import limitsReducer from './store/reducers/limits';
 
 const store = configureStore();
 
-const healthCheck = (dispatch) => {
+const healthCheck = (dispatch, isInitialHealtcheck = false ) => {
   Promise.all([Network.checkConnectivity()])
     .then( async (providerType) => {
       const connectedNetworkId = await dispatch(networkReducer.actions.getConnectedNetworkId());
       if(providerType && connectedNetworkId.value) {
-        const CheckNetworkEpicAction = await dispatch(networkReducer.actions.checkNetworkEpic(providerType.join()));
+        const CheckNetworkEpicAction = await dispatch(
+            networkReducer.actions.checkNetworkEpic(providerType.join(), isInitialHealtcheck)
+        );
         await dispatch(accountsReducer.actions.checkAccountsEpic());
         /**
          *  TODO @Georgi
@@ -44,7 +47,7 @@ const healthCheck = (dispatch) => {
 const bootstrap = async () => {
   const { dispatch, getState } = store;
   dispatch(platformReducer.actions.web3Initialized(web3.init()));
-  await healthCheck(dispatch);
+  await healthCheck(dispatch, true);
   Session.init(getState);
 
   // TODO: extract this into a configuration and agree on the value.
