@@ -1,5 +1,85 @@
-.base {
+@import "../styles/modules/labels";
+@import "../styles/modules/shapes";
+
+.MessageBoard {
+  position: relative;
+  height: 100%;
+  background: rgba(215, 215, 215, 0.05);
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  padding: 8px 24px 8px 20px;
+
+  & .Heading {
+    position: relative;
+    padding: 10px 0;
+
+    @include text(13px, 700);
+    text-align: center;
+    letter-spacing: 0.54px;
+    text-transform: uppercase;
+  }
+
+  &--Info {
+    .Heading {
+      color: rgba(26, 188, 156, 0.68);
+    }
+  }
+  &--Warning {
+    .Heading {
+      color: rgba(240, 115, 113, 0.68);
+    }
+  }
+
+  ul {
+    padding-left: 0;
+    list-style-type: none;
+
+    & li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      letter-spacing: 0.58px;
+    }
+  }
+
 }
 
-.OasisMessageBody {
+.Circle {
+  @include circle(14px);
+  margin-right: 24px;
+  border-color: darkgray;
+
+  .Number {
+    color: darkgray;
+    position: relative;
+    left: 0.5px;
+  }
+
+  .FilledCircle {
+    @include circle(8px);
+    background-color: rgba(240, 115, 113, 0.68);;
+  }
+
+  &--Red {
+    border-color: rgba(240, 115, 113, 0.68);
+  }
+}
+
+.Text {
+  display: inline-block;
+  @include text(12px, 700);
+  color: #4F5362;
+  opacity: 0.68;
+  width: calc(100% - 40px);;
+}
+
+.Close {
+  @extend .Cross;
+
+  position: absolute;
+  height: 10px;
+  width: 10px;
+  right: 10px;
+
+  cursor: pointer;
 }
