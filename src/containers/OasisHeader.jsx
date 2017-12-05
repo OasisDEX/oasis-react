@@ -9,7 +9,7 @@ import OasisStatus from '../components/OasisStatus';
 import OasisMarket from '../components/OasisMarket';
 import OasisAccount from '../components/OasisAccount';
 import OasisExpirationDate from '../components/OasisExpirationDate';
-import { ONLINE, KOVAN } from "../constant";
+import { ONLINE, KOVAN } from "../constants";
 
 import styles from './OasisApp.scss';
 import CSSModules from 'react-css-modules';

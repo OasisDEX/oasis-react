@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import CSSModules from 'react-css-modules';
 import { PropTypes } from 'prop-types';
 import styles from './OasisStatus.scss';
-import { ONLINE, OUT_OF_SYNC, CLOSED } from "../constant";
+import { ONLINE, OUT_OF_SYNC, CLOSED } from "../constants";
 
 const propTypes = PropTypes && {
   status: PropTypes.string.isRequired
