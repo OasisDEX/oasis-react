@@ -71,11 +71,11 @@ const web3Initialized = createAction(
 
 const web3Reset = createAction(
   WEB3_RESET,
-  () => window.web3p.reset()
+  () => window.web3.reset()
 );
 const web3ResetKeepSync = createAction(
   WEB3_RESET_KEEP_SYNC,
-  () => window.web3p.reset(true)
+  () => window.web3.reset(true)
 );
 
 const contractsLoaded = createAction(

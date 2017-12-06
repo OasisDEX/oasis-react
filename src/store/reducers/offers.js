@@ -614,7 +614,7 @@ const actions = {
   FetchTradesAcceptedForAddress,
   ListenForNewTradesOfAddress,
   ListenForAcceptedTradesOfAddress,
-  ListenForTheNewSortedOFFERS: ListenForTheNewSortedOffers,
+  ListenForTheNewSortedOffers,
 };
 
 const reducer = handleActions({}, initialState);
