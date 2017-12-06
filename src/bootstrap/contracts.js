@@ -47,8 +47,6 @@ const init = (networkName) => {
     },
     market,
   };
-
-  console.log(window.contracts);
 };
 
 export default {
