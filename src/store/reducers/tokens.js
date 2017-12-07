@@ -1,7 +1,7 @@
 import { createAction, handleActions } from 'redux-actions';
 import Immutable from 'immutable';
 
-import { BASE_TOKENS, QUOTE_TOKENS, TOKEN_MAKER, TOKEN_WRAPPED_ETH } from '../../constant';
+import { BASE_TOKENS, QUOTE_TOKENS, TOKEN_MAKER, TOKEN_WRAPPED_ETH } from '../../constants';
 import { generateTradingPairs } from '../../utils/generateTradingPairs';
 
 const initialState = Immutable.fromJS({

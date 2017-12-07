@@ -1,4 +1,4 @@
-import { TOKEN_MAKER } from '../constant';
+import { TOKEN_MAKER } from '../constants';
 
 export const generateTradingPairs = (baseTokens, quoteTokens) => {
   const TradingPairs = [

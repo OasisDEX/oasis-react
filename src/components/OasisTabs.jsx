@@ -4,9 +4,7 @@ import { NavLink } from 'react-router-dom';
 import styles from './OasisTabs.scss';
 import CSSModules from 'react-css-modules';
 
-const propTypes = PropTypes && {
-  children: PropTypes.node,
-};
+const propTypes = PropTypes && {};
 const defaultProps = {};
 
 class OasisTabs extends PureComponent {
@@ -15,8 +13,8 @@ class OasisTabs extends PureComponent {
       <div styleName="row-tabs">
         <ul styleName="Tabs">
           <li styleName="Tab"><NavLink to={'/trade'}>Trade</NavLink></li>
-          <li styleName="Tab Tab--2x"><NavLink to={'/transfer'}>Wrap / Unwrap</NavLink></li>
-          <li styleName="Tab"><NavLink to={'/wrap-unwrap'}>Transfer</NavLink></li>
+          <li styleName="Tab Tab--2x"><NavLink to={'/wrap-unwrap'}>Wrap / Unwrap</NavLink></li>
+          <li styleName="Tab"><NavLink to={'/transfer'}>Transfer</NavLink></li>
         </ul>
       </div>
     );

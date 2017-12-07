@@ -14,7 +14,7 @@ import { Session } from './utils/session';
 import platformReducer from './store/reducers/platform';
 import networkReducer from './store/reducers/network';
 import accountsReducer from './store/reducers/accounts';
-import { HAS_ACCOUNTS } from './constant';
+import { HAS_ACCOUNTS } from './constants';
 
 const store = configureStore();
 

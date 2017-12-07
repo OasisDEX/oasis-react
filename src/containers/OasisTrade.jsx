@@ -12,7 +12,7 @@ import tokensSelectors from './../store/selectors/tokens';
 import { OasisTradeBuySellWrapper } from './OasisTradeBuySell';
 import { OasisTradeOrdersWrapper } from './OasisTradeOrders';
 import { validateTokenPair } from '../utils/validateTokenPair';
-import { BASE_TOKENS, QUOTE_TOKENS, TOKEN_MAKER, TOKEN_WRAPPED_ETH } from '../constant';
+import { BASE_TOKENS, QUOTE_TOKENS, TOKEN_MAKER, TOKEN_WRAPPED_ETH } from '../constants';
 import tokensReducer from './../store/reducers/tokens';
 import { generateTradingPairs } from '../utils/generateTradingPairs';
 

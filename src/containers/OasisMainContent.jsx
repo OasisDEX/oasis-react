@@ -36,7 +36,8 @@ export class OasisMainContentWrapper extends Component {
     const { defaultTokenPair } = this.props;
     return this.redirect() || (
       <div className="OasisMainContentWrapper">
-        <OasisTabs>
+        <OasisTabs/>
+        <div>
           <Switch>
             <Route
               path={'/trade/:baseToken?/:quoteToken?'}
@@ -45,7 +46,7 @@ export class OasisMainContentWrapper extends Component {
             <Route path={'/wrap-unwrap'} component={OasisWrapUnwrapWrapper}/>
             <Route path={'/transfer'} component={OasisTransferWrapper}/>
           </Switch>
-        </OasisTabs>
+        </div>
       </div>
     );
   }

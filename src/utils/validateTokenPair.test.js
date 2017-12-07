@@ -3,7 +3,7 @@
 import React from 'react';
 import { validateTokenPair } from './validateTokenPair';
 import { generateTradingPairs } from './generateTradingPairs';
-import { BASE_TOKENS, QUOTE_TOKENS } from '../constant';
+import { BASE_TOKENS, QUOTE_TOKENS } from '../constants';
 
 describe('(Util) validateTokenPair', () => {
   it('if provided correct token pair it should return true', () => {
