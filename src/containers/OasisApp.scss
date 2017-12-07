@@ -1,12 +1,9 @@
+@import "../styles/modules/grid";
+
 .container {
-  max-width: 980px;
+  @extend .container;
 }
 
 .row {
-  justify-content: flex-end;
-}
 
-.row-header {
-  margin-bottom: 30px;
-  align-items: center;
 }
