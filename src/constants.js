@@ -34,3 +34,34 @@ export const ETH_UNIT_ETHER = 'ether';  // ether 	1e18 wei 	1,000,000,000,000,00
 
 export const HAS_ACCOUNTS = true;
 export const NO_ACCOUNTS = false;
+
+export const TOKEN_ETHER = 'ETH';
+export const TOKEN_WRAPPED_ETH = 'W-ETH';
+export const TOKEN_WRAPPED_GNT = 'W-GNT';
+export const TOKEN_1ST = '1ST';
+export const TOKEN_DAI = 'DAI';
+export const TOKEN_SAI = 'SAI';
+export const TOKEN_MAKER = 'MKR';
+export const TOKEN_DIGIX = 'DGD';
+export const TOKEN_GNOSIS = 'GNT';
+export const TOKEN_RHOC = 'RHOC';
+export const TOKEN_AUGUR = 'REP';
+export const TOKEN_ICONOMI = 'ICN';
+export const TOKEN_PLUTON = 'PLU';
+export const TOKEN_SINGULARDTV = 'SNGLS';
+export const TOKEN_VSL = 'VSL';
+export const TOKEN_MLN = 'MLN';
+export const TOKEN_TIME = 'TIME';
+export const TOKEN_GUP = 'GUP';
+export const TOKEN_BAT = 'BAT';
+export const TOKEN_NMR = 'NMR';
+
+
+export const QUOTE_TOKENS = [
+  'W-ETH',
+];
+
+export const BASE_TOKENS = [
+  'W-GNT', 'DGD', 'REP', 'ICN', '1ST', 'SNGLS',
+  'VSL', 'PLU', 'MLN', 'RHOC', 'TIME', 'GUP', 'BAT', 'NMR',
+];
