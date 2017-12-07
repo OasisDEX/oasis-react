@@ -17,6 +17,7 @@ export class OasisWrapUnwrapWrapper extends PureComponent {
   render() {
     return (
       <div>
+        __WrapUnwrap__
         <OasisWrapUnwrapBalances/>
         <OasisWrapUnwrapHistory/>
         <OasisWrapUnwrapWrap/>

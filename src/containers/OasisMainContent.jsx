@@ -13,9 +13,10 @@ import {
 import { compose } from 'redux';
 
 import OasisTabs from '../components/OasisTabs';
-import { OasisTradeWrapper } from './OasisTrade';
-import { OasisTransferWrapper } from './OasisTransfer';
-import { OasisWrapUnwrapWrapper } from './OasisWrapUnwrap';
+import OasisTradeWrapper from './OasisTrade';
+import OasisTransferWrapper from './OasisTransfer';
+import OasisWrapUnwrapWrapper from './OasisWrapUnwrap';
+import tokensSelectors from './../store/selectors/tokens';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -26,23 +27,26 @@ export class OasisMainContentWrapper extends Component {
   redirect() {
     if (document.location.pathname === '/') {
       return (
-        <Redirect from={'/'} to={'trade'}></Redirect>
+        <Redirect from={'/'} to={`/trade`}/>
       );
-    }
-    return null;
+    } else { return null; }
   }
 
   render() {
-    return (
+    const { defaultTokenPair } = this.props;
+    return this.redirect() || (
       <div className="OasisMainContentWrapper">
-        <OasisTabs>
+        <OasisTabs/>
+        <div>
           <Switch>
-            {this.redirect()}
-            <Route path={'/trade'} component={OasisTradeWrapper}/>
+            <Route
+              path={'/trade/:baseToken?/:quoteToken?'}
+              render={(props) =>  <OasisTradeWrapper {...props} defaultTokenPair={defaultTokenPair}/>}
+            />
             <Route path={'/wrap-unwrap'} component={OasisWrapUnwrapWrapper}/>
             <Route path={'/transfer'} component={OasisTransferWrapper}/>
           </Switch>
-        </OasisTabs>
+        </div>
       </div>
     );
   }
@@ -56,7 +60,9 @@ export class OasisMainContentWrapper extends Component {
 }
 
 export function mapStateToProps(state) {
-  return {};
+  return {
+    defaultTokenPair: tokensSelectors.defaultTokenPair(state)
+  };
 }
 
 export function mapDispatchToProps(dispatch) {

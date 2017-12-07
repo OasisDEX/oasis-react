@@ -15,6 +15,7 @@ export class OasisTransferWrapper extends PureComponent {
   render() {
     return (
       <div>
+        __OasisTransferWrapper__
         <OasisTransferTransfer/>
         <OasisTransferHistory/>
       </div>

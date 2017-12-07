@@ -24,10 +24,7 @@ const Init = createAction(
 
 const checkAccounts = createAction(
   CHECK_ACCOUNTS,
-  () => {
-    console.log(CHECK_ACCOUNTS);
-    return window.web3p.eth.getAccounts()
-  }
+  () => window.web3p.eth.getAccounts()
 );
 
 
@@ -37,7 +34,6 @@ const checkAccountsEpic = () => async (dispatch, getState) => {
   const isMetamaskLocked = getState().getIn(['platform', 'metamaskLocked']);
   const hasUserAccounts = userAccounts.length;
   if(!hasUserAccounts) {
-    console.log(isMetamaskLocked);
     if(!isMetamaskLocked) {
       dispatch(platformReducer.actions.metamaskLocked());
     }

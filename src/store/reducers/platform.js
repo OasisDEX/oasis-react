@@ -12,7 +12,8 @@ const initialState = Immutable.fromJS(
     contractsLoaded: false,
     metamaskLocked: null,
     lastNetworkSwitchAt: null,
-    providerType: null
+    providerType: null,
+    defaultTokenPair: {baseToken: 'MKR', quoteToken: 'W-ETH'}
   });
 
 export const STATUS_PENDING = 'STATUS_PENDING';

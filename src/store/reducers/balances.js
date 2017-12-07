@@ -4,7 +4,7 @@ import * as BigNumber from 'bignumber.js';
 
 import { createPromiseActions } from '../../utils/createPromiseActions';
 import { fulfilled } from '../../utils/store';
-import { BN_DECIMAL_PRECISION, ETH_UNIT_ETHER } from '../../constant';
+import { BN_DECIMAL_PRECISION, ETH_UNIT_ETHER } from '../../constants';
 
 const initialState = Immutable.fromJS({
   accounts: [],

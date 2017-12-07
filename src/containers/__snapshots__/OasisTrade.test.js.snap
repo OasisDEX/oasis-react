@@ -12,8 +12,32 @@ exports[`(Container) OasisTrade should render 1`] = `
 
 exports[`(Container) OasisTrade will receive right actions 1`] = `
 Object {
-  "actions": Object {},
+  "actions": Object {
+    "setActiveTokenPair": [Function],
+  },
 }
 `;
 
-exports[`(Container) OasisTrade will receive right props 1`] = `Object {}`;
+exports[`(Container) OasisTrade will receive right props 1`] = `
+Object {
+  "validBaseTokensList": Immutable.List [
+    "W-GNT",
+    "DGD",
+    "REP",
+    "ICN",
+    "1ST",
+    "SNGLS",
+    "VSL",
+    "PLU",
+    "MLN",
+    "RHOC",
+    "TIME",
+    "GUP",
+    "BAT",
+    "NMR",
+],
+  "validQuoteTokensList": Immutable.List [
+    "W-ETH",
+],
+}
+`;
