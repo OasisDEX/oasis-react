@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700|Open+Sans:400,600,700');
 @import url('https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css');
 
-@import "./styles/style.scss";
-
 body {
   margin: 0;
   padding: 0;

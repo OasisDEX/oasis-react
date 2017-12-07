@@ -1,0 +1,10 @@
+@import "../styles/modules/grid";
+
+.row {
+  @extend .row;
+}
+
+.row-header {
+  margin-bottom: 30px;
+  align-items: center;
+}

@@ -11,7 +11,7 @@ import OasisAccount from '../components/OasisAccount';
 import OasisExpirationDate from '../components/OasisExpirationDate';
 import { ONLINE, KOVAN } from "../constants";
 
-import styles from './OasisApp.scss';
+import styles from './OasisHeader.scss';
 import CSSModules from 'react-css-modules';
 
 const propTypes = PropTypes && {
