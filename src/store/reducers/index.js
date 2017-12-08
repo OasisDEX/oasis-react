@@ -15,10 +15,12 @@ import weth from './weth';
 import wgnt from './wgnt';
 import session from './session';
 import contracts from './contracts';
+import accounts from './accounts';
 
 export default combineReducers(
   {
     platform: platform.reducer,
+    bootstrap: platform.reducer,
     network: network.reducer,
     markets: markets.reducer,
     balances: balances.reducer,
@@ -33,4 +35,5 @@ export default combineReducers(
     wgnt: wgnt.reducer,
     session: session.reducer,
     contracts: contracts.reducer,
+    accounts: accounts.reducer,
   });

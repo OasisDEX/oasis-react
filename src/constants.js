@@ -10,7 +10,8 @@ export const MAIN = 'main';
  * NETWORK STATUS
  */
 export const ONLINE = 'NETWORK/ONLINE';
-export const OUT_OF_SYNC = 'NETWORK/OUTOFSYNC';
+export const CONNECTING = 'NETWORK/CONNECTING';
+export const OUT_OF_SYNC = 'NETWORK/OUT_OF_SYNC';
 export const CLOSED = 'NETWORK/CLOSED';
 
 /**

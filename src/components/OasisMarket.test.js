@@ -2,7 +2,7 @@
 /* eslint-disable import/first */
 import React from 'react';
 
-import OasisMarket from './OasisMarket';
+import { OasisMarket } from './OasisMarket';
 import { shallow } from 'enzyme';
 
 describe('(Component) OasisMarket', () => {

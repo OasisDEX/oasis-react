@@ -2,8 +2,19 @@
 
 exports[`(Component) OasisAccount should render 1`] = `
 <div
-  className="OasisAccount"
+  styleName="OasisAccount"
 >
-  OasisAccount
+  <span>
+     Account: 
+  </span>
+  <div
+    styleName="AccountSelection"
+  >
+    <select />
+    <span
+      className="glyphicon glyphicon-chevron-down"
+      styleName="glyphicon"
+    />
+  </div>
 </div>
 `;

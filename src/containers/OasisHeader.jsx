@@ -4,15 +4,19 @@ import { PropTypes } from 'prop-types';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import CSSModules from 'react-css-modules';
+
 import OasisLogo from '../components/OasisLogo';
 import OasisStatus from '../components/OasisStatus';
 import OasisMarket from '../components/OasisMarket';
 import OasisAccount from '../components/OasisAccount';
 import OasisExpirationDate from '../components/OasisExpirationDate';
-import { ONLINE, KOVAN } from "../constants";
+
+import markets from './../store/selectors/markets'
+import network from '../store/selectors/network';
+import accounts from '../store/selectors/accounts';
 
 import styles from './OasisHeader.scss';
-import CSSModules from 'react-css-modules';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -23,7 +27,13 @@ const propTypes = PropTypes && {
 export class OasisHeaderWrapper extends PureComponent {
   render() {
 
-    const {networkStatus, networkName} = this.props;
+    const {
+      networkStatus,
+      networkName,
+      marketCloseTime,
+      marketAddress,
+      accounts
+    } = this.props;
 
     return (
       <div styleName="row-header" className="row">
@@ -38,7 +48,7 @@ export class OasisHeaderWrapper extends PureComponent {
                   <OasisStatus status={networkStatus} name={networkName}/>
                 </div>
                 <div className="col-md-6">
-                  <OasisExpirationDate/>
+                  <OasisExpirationDate timestamp={marketCloseTime}/>
                 </div>
               </div>
             </div>
@@ -47,12 +57,12 @@ export class OasisHeaderWrapper extends PureComponent {
         <div className="col-md-6">
           <div styleName="row" className="row">
             <div className="col-md-12">
-              <OasisAccount/>
+              <OasisAccount accounts={accounts}/>
             </div>
           </div>
           <div styleName="row" className="row">
             <div className="col-md-12">
-              <OasisMarket/>
+              <OasisMarket marketAddress={marketAddress}/>
             </div>
           </div>
         </div>
@@ -62,7 +72,14 @@ export class OasisHeaderWrapper extends PureComponent {
 }
 
 export function mapStateToProps(state) {
-  return {networkStatus: ONLINE, networkName: KOVAN};
+  return {
+    accounts: accounts.accounts(state),
+    networkStatus: network.status(state),
+    networkName: network.getActiveNetworkName(state),
+    marketCloseTime: markets.marketCloseTime(state),
+    defaultAccount: accounts.defaultAccount(state),
+    marketAddress: markets.activeMarketAddress(state)
+  };
 }
 
 export function mapDispatchToProps(dispatch) {

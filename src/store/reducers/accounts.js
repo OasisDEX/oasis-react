@@ -13,7 +13,9 @@ const initialState = Immutable.fromJS({
 });
 
 const INIT = 'ACCOUNTS/INIT';
-const CHECK_ACCOUNTS = 'NETWORK/CHECK_ACCOUNTS';
+const CHECK_ACCOUNTS = 'ACCOUNTS/CHECK_ACCOUNTS';
+const SET_DEFAULT_ACCOUNT = 'ACCOUNTS/SET_DEFAULT_ACCOUNT';
+const SET_ACCOUNTS = 'ACCOUNTS/SET_ACCOUNTS';
 
 const Init = createAction(
   INIT,
@@ -21,15 +23,22 @@ const Init = createAction(
 );
 
 
-
 const checkAccounts = createAction(
   CHECK_ACCOUNTS,
   () => window.web3p.eth.getAccounts()
 );
 
+const setDefaultAccount = createAction(
+  SET_DEFAULT_ACCOUNT,
+  (address) => address
+);
+
+const setAccounts = createAction(
+  SET_ACCOUNTS,
+  (accounts) => accounts
+);
 
 const checkAccountsEpic = () => async (dispatch, getState) => {
-
   const userAccounts = (await dispatch(checkAccounts())).value;
   const isMetamaskLocked = getState().getIn(['platform', 'metamaskLocked']);
   const hasUserAccounts = userAccounts.length;
@@ -38,7 +47,7 @@ const checkAccountsEpic = () => async (dispatch, getState) => {
       dispatch(platformReducer.actions.metamaskLocked());
     }
     window.web3.eth.defaultAccount = undefined;
-    return;
+    return false;
   }
   else if (!userAccounts.find( acc => acc === window.web3.eth.defaultAccount)) {
     if ((userAccounts.find( acc => acc === localStorage.getItem('address')) )) {
@@ -48,15 +57,20 @@ const checkAccountsEpic = () => async (dispatch, getState) => {
     } else if (userAccounts.length > 0) {
       window.web3.eth.defaultAccount = userAccounts[0];
     } else {
+      dispatch(setDefaultAccount(null));
+      dispatch(setAccounts([]));
       throw new Error('No default account');
     }
 
+    dispatch(setDefaultAccount(window.web3.eth.defaultAccount));
+    dispatch(setAccounts(userAccounts));
     if(isMetamaskLocked) {
       dispatch(platformReducer.actions.metamaskUnlocked())
     }
     localStorage.setItem('address', web3.eth.defaultAccount);
     dispatch(sessionReducer.actions.SetValue('address', window.web3.eth.defaultAccount));
-    dispatch(sessionReducer.actions.SetValue('accounts', userAccounts))
+    dispatch(sessionReducer.actions.SetValue('accounts', userAccounts));
+    return true;
   }
 
 };
@@ -64,10 +78,14 @@ const checkAccountsEpic = () => async (dispatch, getState) => {
 
 const actions = {
   Init,
-  checkAccountsEpic
+  checkAccountsEpic,
+  setDefaultAccount
 };
 
-const reducer = handleActions({}, initialState);
+const reducer = handleActions({
+  [setDefaultAccount]: (state, { payload }) => state.set('defaultAccount', payload),
+  [setAccounts]: (state, { payload }) => state.set('accounts', payload)
+}, initialState);
 
 export default {
   actions,

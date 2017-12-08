@@ -2,13 +2,77 @@
 
 exports[`(Container) OasisHeader should render 1`] = `
 <div
-  className="OasisHeaderWrapper"
+  className="row"
+  styleName="row-header"
 >
-  <OasisLogo />
-  <OasisStatus />
-  <OasisExpirationDate />
-  <OasisAccount />
-  <OasisMarket />
+  <div
+    className="col-md-6"
+  >
+    <div
+      className="row"
+    >
+      <div
+        className="col-md-3"
+      >
+        <OasisLogo />
+      </div>
+      <div
+        className="col-md-9"
+      >
+        <div
+          className="row"
+        >
+          <div
+            className="col-md-6"
+          >
+            <OasisStatus
+              name="mainnet"
+              status="NETWORK/ONLINE"
+            />
+          </div>
+          <div
+            className="col-md-6"
+          >
+            <OasisExpirationDate
+              timestamp={1536662916}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="col-md-6"
+  >
+    <div
+      className="row"
+      styleName="row"
+    >
+      <div
+        className="col-md-12"
+      >
+        <OasisAccount
+          accounts={
+            Immutable.List [
+              "0x777f9200d6ccdde25b79e1ba028d6fb12637f765",
+            ]
+          }
+        />
+      </div>
+    </div>
+    <div
+      className="row"
+      styleName="row"
+    >
+      <div
+        className="col-md-12"
+      >
+        <OasisMarket
+          marketAddress="0x3aa927a97594c3ab7d7bf0d47c71c3877d1de4a1"
+        />
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -18,4 +82,15 @@ Object {
 }
 `;
 
-exports[`(Container) OasisHeader will receive right props 1`] = `Object {}`;
+exports[`(Container) OasisHeader will receive right props 1`] = `
+Object {
+  "accounts": Immutable.List [
+    "0x777f9200d6ccdde25b79e1ba028d6fb12637f765",
+],
+  "defaultAccount": "0x777f9200d6ccdde25b79e1ba028d6fb12637f765",
+  "marketAddress": "0x3aa927a97594c3ab7d7bf0d47c71c3877d1de4a1",
+  "marketCloseTime": 1536662916,
+  "networkName": "mainnet",
+  "networkStatus": "NETWORK/ONLINE",
+}
+`;

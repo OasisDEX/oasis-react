@@ -5,23 +5,21 @@ import { find } from 'lodash';
 import web3 from '../../bootstrap/web3';
 
 import sessionReducer from './session';
-import tokensReducer from './tokens';
-import limitsReducer from './limits';
 
 import { createPromiseActions } from '../../utils/createPromiseActions';
-import { Session } from '../../utils/session';
-import { fulfilled, rejected } from '../../utils/store';
+import { fulfilled } from '../../utils/store';
 import contractsBootstrap from '../../bootstrap/contracts';
 import platformReducer from './platform';
 import balancesReducer from './balances';
 
 import marketBootstrap from '../../bootstrap/market';
 
-import { KOVAN_NET_ID, LIVE_NET_ID } from '../../constants';
+import { CLOSED, KOVAN_NET_ID, LIVE_NET_ID, ONLINE } from '../../constants';
 
 
 const initialState = Immutable.fromJS(
   {
+    status: CLOSED,
     sync: { isPending: false, ts: null },
     activeNetworkName: null,
     activeNetworkId: null,
@@ -58,6 +56,9 @@ const initialState = Immutable.fromJS(
 const CHECK_IF_USER_HAS_BALANCE_IN_OLD_WRAPPER = 'NETWORK/CHECK_IF_USER_HAS_BALANCE_IN_OLD_WRAPPER';
 const INIT_NETWORK = 'NETWORK/INIT_NETWORK';
 const CHECK_NETWORK = 'NETWORK/CHECK_NETWORK';
+const CONNECTED = 'NETWORK/CONNECTED';
+const CONNECTING = 'NETWORK/CONNECTING';
+const DISCONNECTED = 'NETWORK/DISCONNECTED';
 const SYNC_NETWORK = 'NETWORK/SYNC_NETWORK';
 const GET_CONNECTED_NETWORK_ID = 'NETWORK/GET_CONNECTED_NETWORK_ID';
 
@@ -220,7 +221,6 @@ const subscribeLatestBlockFilterEpic = () => (dispatch) => {
 
 const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch, getState) => {
   dispatch(CheckNetwork.pending());
-
   const previousNetworkId = getState().getIn(['network', 'activeNetworkId']);
   const previousProviderType = getState().getIn(['network', 'providerType']);
   let currentNetworkName = null;
@@ -244,18 +244,24 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
     /**
      * Loading contracts and initializing market
      */
-    await Promise.all([
-      dispatch(platformReducer.actions.contractsLoaded(contractsBootstrap.init(currentNetworkName))),
-      await dispatch(balancesReducer.actions.getDefaultAccountEthBalance()),
-      await dispatch(balancesReducer.actions.subscribeAccountEthBalanceChangeEventEpic(window.web3.eth.defaultAccount)),
-      await dispatch(platformReducer.actions.marketInitialized(marketBootstrap.init(dispatch))),
-      dispatch(balancesReducer.actions.getAllTradedTokensBalances(window.contracts.tokens)),
-      dispatch(balancesReducer.actions.getAllTradedTokensAllowances(window.contracts.tokens, window.contracts.market.address)),
-      dispatch(balancesReducer.actions.subscribeTokenTransfersEventsEpic(window.contracts.tokens))
-    ]);
+    try  {
+      return await Promise.all([
+        dispatch(platformReducer.actions.contractsLoaded(contractsBootstrap.init(currentNetworkName))),
+        await dispatch(balancesReducer.actions.getDefaultAccountEthBalance()),
+        await dispatch(balancesReducer.actions.subscribeAccountEthBalanceChangeEventEpic(window.web3.eth.defaultAccount)),
+        await dispatch(platformReducer.actions.marketInitialized(marketBootstrap.init(dispatch))),
+        dispatch(balancesReducer.actions.getAllTradedTokensBalances(window.contracts.tokens)),
+        dispatch(balancesReducer.actions.getAllTradedTokensAllowances(window.contracts.tokens, window.contracts.market.address)),
+        dispatch(balancesReducer.actions.subscribeTokenTransfersEventsEpic(window.contracts.tokens))
+      ]).then(
+        () => {
+          dispatch(CheckNetwork.fulfilled());
+        }
+      );
+    }
+    catch (e) { console.error(e); }
 
   } else {
-
     const currentNetworkIdAction = await dispatch(getConnectedNetworkId());
     currentNetworkName = getState().getIn(['network', 'activeNetworkName']);
 
@@ -268,7 +274,7 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
        * - load token allowances.
        *
        */
-      await Promise.all([
+    return await Promise.all([
         dispatch(platformReducer.actions.web3Reset()),
         dispatch(platformReducer.actions.contractsLoaded(contractsBootstrap.init(currentNetworkName))),
         await dispatch(balancesReducer.actions.getDefaultAccountEthBalance()),
@@ -276,11 +282,26 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
         dispatch(balancesReducer.actions.getAllTradedTokensBalances(window.contracts.tokens)),
         dispatch(balancesReducer.actions.getAllTradedTokensAllowances(window.contracts.tokens, window.contracts.market.address)),
         dispatch(balancesReducer.actions.subscribeTokenTransfersEventsEpic(window.contracts.tokens))
-      ]);
+      ]).then(
+        p => { console.log('initialize on switch'); dispatch(CheckNetwork.fulfilled); }
+      );
     }
   }
-  dispatch(CheckNetwork.fulfilled);
+
 };
+
+
+const connected = createAction(
+  CONNECTED
+);
+
+const connecting = createAction(
+  CONNECTING
+);
+
+const disconnected = createAction(
+  DISCONNECTED
+);
 
 const getConnectedNetworkId = createAction(
   GET_CONNECTED_NETWORK_ID,
@@ -288,6 +309,9 @@ const getConnectedNetworkId = createAction(
 );
 
 const actions = {
+  connected,
+  connecting,
+  disconnected,
   checkNetworkEpic,
   getLatestBlock,
   getConnectedNetworkId,
@@ -296,6 +320,9 @@ const actions = {
 
 
 const reducer = handleActions({
+  [connected]: state => state.set('status', ONLINE).set('isConnecting', false),
+  [connecting]: state => state.set('isConnecting', true),
+  [disconnected]: state => state.set('status', CLOSED).set('isConnecting', false),
   [syncNetwork.pending]: (state) =>
     state
       .setIn(['sync', 'isPending'], true),

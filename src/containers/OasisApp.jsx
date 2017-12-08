@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 import { BrowserRouter } from 'react-router-dom';
-import platform from './../store/reducers/platform';
-import platformSelectors from './../store/selectors/platform';
+import platformReducer from './../store/reducers/platform';
+import platform from './../store/selectors/platform';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -30,9 +30,8 @@ export class OasisAppWrapper extends PureComponent {
   }
 
   render() {
-    return (
+    return this.accountLocked() || (
       <div>
-        {this.accountLocked()}
         <BrowserRouter>
           <div styleName='container' className="container">
             <OasisHeaderWrapper/>
@@ -48,13 +47,13 @@ export class OasisAppWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
-    isAccountIsLocked: platformSelectors.isAccountLocked(state),
+    isAccountLocked: platform.isAccountLocked(state),
   };
 }
 
 export function mapDispatchToProps(dispatch) {
   const actions = {
-    platformInitEpic: platform.actions.platformInitEpic,
+    platformInitEpic: platformReducer.actions.platformInitEpic,
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

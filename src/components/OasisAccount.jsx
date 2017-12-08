@@ -8,8 +8,9 @@ import CSSModules from 'react-css-modules';
 const propTypes = PropTypes && {};
 const defaultProps = {};
 
-class OasisAccount extends PureComponent {
+export class OasisAccount extends PureComponent {
   render() {
+    const { accounts } = this.props;
     return (
       <div styleName="OasisAccount">
         <span> Account: </span>
@@ -17,7 +18,7 @@ class OasisAccount extends PureComponent {
           <select>
             {/*TODO: Get those accounts from the store of web3 directly or passed as a prop*/}
             {
-              ["0x6cD4471480e2969b3D696fBd17530E85112F3fF6", "0x6cD4471480e2969b3D696fBd17530E85112F3fF5"].map((account) => <option key={account}> {account} </option>)
+              accounts.map((account) => <option key={account}> {account} </option>)
             }
           </select>
           <span styleName="glyphicon" className="glyphicon glyphicon-chevron-down"/>
