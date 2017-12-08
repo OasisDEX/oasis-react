@@ -33,12 +33,8 @@
 
   & .Tab {
     flex-basis: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 40px;
     border-right: 1px solid $gray;
-    @include text();
 
     text-align: center;
     text-transform: uppercase;
@@ -64,6 +60,12 @@
     & a {
       color: $gray;
       text-decoration: none;
+      @include text();
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       &:hover {
         color: $gray-blueish;

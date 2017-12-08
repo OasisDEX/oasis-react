@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
-// import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import styles from './OasisMarket.scss';
 import CSSModules from 'react-css-modules';
