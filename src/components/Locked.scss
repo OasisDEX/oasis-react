@@ -1,2 +1,37 @@
-.base {
+@import "../styles/modules/labels";
+@import "../styles/modules/constants";
+
+//TODO: (georgi) Clean up this and NoConnection.scss
+
+.LockedAccountSection {
+  text-align: center;
+  color: $blue-darkish;
+
+  & .MetamaskLogo {
+    width: 264px;
+    padding-bottom: 30px;
+  }
+
+  & .Separator {
+    color: $lightgray;
+    border: 0;
+    border-top: solid 1px $lightgray;
+  }
+
+  & .Heading {
+    @include text(24px, 700);
+    opacity: 0.8;
+    color: $blue-darkish;
+    letter-spacing: 4px;
+  }
+
+  & .Message{
+    @include text(25px);
+    opacity: 0.50;
+    width: 925px;
+    display: inline-block;
+    margin-top: 50px;
+    margin-bottom: 70px;
+    letter-spacing: 0.6px;
+  }
 }

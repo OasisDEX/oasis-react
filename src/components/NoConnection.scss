@@ -1,4 +1,5 @@
 @import "./../styles/style";
+@import "../styles/modules/constants";
 
 .NoEthereumSection {
   max-width: 980px;
@@ -7,7 +8,7 @@
   text-align: center;
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
-  color: #222228;
+  color: $blue-darkish;
   font-size: 24px;
 
   h2 {
@@ -28,9 +29,9 @@
   }
 
   .HorizontalLine {
-    color: #DCDDE0;
+    color: $lightgray;
     border: 0;
-    border-top: solid 1px #DCDDE0;
+    border-top: solid 1px $lightgray;
   }
 
   .PNotFound {
@@ -61,14 +62,14 @@
     display: flex;
     justify-content: center;
     font-size: 21px;
-    color: #4F5362;
+    color: $gray-blueish;
     margin-bottom: 50px;
     margin-top: 50px;
   }
 
   .DivMetamask,
   .DivMist {
-    background-color: #FFFFFF;
+    background-color: white;
     width: 340px;
     height: 360px;
     padding: 33px 10px 33px 27px;

@@ -26,7 +26,7 @@ export class OasisAppWrapper extends PureComponent {
 
   accountLocked() {
     const { isAccountLocked } = this.props;
-    return isAccountLocked ? (<Locked/>) : null;
+    return isAccountLocked ? (<div styleName='container' className="container"> <Locked/> </div>) : null;
   }
 
   render() {
