@@ -10,7 +10,7 @@ const initialState = Immutable.fromJS(
     errors: [],
     web3Initialized: null,
     contractsLoaded: false,
-    metamaskLocked: null,
+    metamaskLocked: false,
     lastNetworkSwitchAt: null,
     providerType: null,
     defaultTokenPair: {baseToken: 'MKR', quoteToken: 'W-ETH'}
@@ -28,7 +28,7 @@ export const PROVIDER_TYPE_MIST = 'PLATFORM/PROVIDER_TYPE_MIST';
 const SET_PROVIDER_TYPE = 'PLATFORM/SET_PROVIDER_TYPE';
 const SET_PLATFORM_ERRORS = 'PLATFORM/SET_PLATFORM_ERRORS';
 const RESET_PLATFORM_ERRORS = 'PLATFORM/RESET_PLATFORM_ERRORS';
-const WEB3_INITALIZED = 'PLATFORM/WEB3_INITALIZED';
+const WEB3_INITIALIZED = 'PLATFORM/WEB3_INITIALIZED';
 const WEB3_RESET = 'PLATFORM/WEB3_RESET';
 const WEB3_RESET_KEEP_SYNC = 'PLATFORM/WEB3_RESET_KEEP_SYNC';
 const CONTRACTS_LOADED = 'PLATFORM/CONTRACTS_LOADED';
@@ -66,7 +66,7 @@ const resetPlatformErrors = createAction(
 );
 
 const web3Initialized = createAction(
-  WEB3_INITALIZED,
+  WEB3_INITIALIZED,
   p => p,
 );
 

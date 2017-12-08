@@ -4,17 +4,24 @@ import { PropTypes } from 'prop-types';
 
 import styles from './OasisExpirationDate.scss';
 import CSSModules from 'react-css-modules';
+import * as moment from 'moment';
 
-const propTypes = PropTypes && {};
+const propTypes = PropTypes && {
+  timestamp: PropTypes.number.isRequired
+};
 const defaultProps = {};
 
-class OasisExpirationDate extends PureComponent {
+const formatTime = (ts) => ts ? moment.unix(ts).format('DD-M-YYYY'): '-';
+
+export class OasisExpirationDate extends PureComponent {
   render() {
+    const { timestamp } = this.props;
     return (
       <div styleName="ClosingTime">
         <div > CLOSING TIME </div>
-        {/* TODO: Get this date passed to the component*/}
-        <div styleName="Date"> 11-Sep-2018 </div>
+        <div styleName="Date">
+          {formatTime(timestamp)}
+        </div>
       </div>
     );
   }

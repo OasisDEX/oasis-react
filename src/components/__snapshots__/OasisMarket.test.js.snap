@@ -2,8 +2,15 @@
 
 exports[`(Component) OasisMarket should render 1`] = `
 <div
-  className="OasisMarket"
+  styleName="OasisMarket"
 >
-  OasisMarket
+  <span>
+     Market: 
+  </span>
+  <div
+    styleName="OasisMarketAddress"
+  >
+    <span />
+  </div>
 </div>
 `;

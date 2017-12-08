@@ -2,15 +2,16 @@
 
 exports[`(Component) OasisStatus should render 1`] = `
 <div
-  className="OasisStatus"
+  styleName="OasisStatus"
 >
+  <span>
+     
+     
+  </span>
   <div
-    className="NetworkName"
-  />
-  <div
-    className="NetworkStatus"
+    styleName="StatusIndicator NetworkStatus StatusIndicator--Online"
   >
-    <StatusIndicator />
+    Connected
   </div>
 </div>
 `;

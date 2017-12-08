@@ -10,13 +10,14 @@ const propTypes = PropTypes && {
 const defaultProps = {};
 
 
-class OasisMarket extends PureComponent {
+export class OasisMarket extends PureComponent {
   render() {
+    const { marketAddress } = this.props;
     return (
       <div styleName="OasisMarket">
         <span> Market: </span>
         <div styleName="OasisMarketAddress">
-          <span> 0x6cD4471480e2969b3D696fBd17530E85112F3fF6 </span>
+          <span>{marketAddress}</span>
         </div>
       </div>
     );

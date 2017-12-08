@@ -7,7 +7,7 @@ import { createPromiseActions } from '../../utils/createPromiseActions';
 
 const CHECK_IF_MARKET_IS_OPEN = 'MARKETS/CHECK_IF_MARKET_IS_OPEN';
 const CHECK_MARKET_CLOSE_TIME = 'MARKETS/CHECK_MARKET_CLOSE_TIME';
-
+const SET_ACTIVE_MARKET_ADDRESS = 'MARKETS/SET_ACTIVE_MARKET_ADDRESS';
 const CHECK_IF_ORDER_MATCHING_IS_ENABLED = 'NETWORK/CHECK_IF_ORDER_MATCHING_IS_ENABLED';
 const CHECK_IF_BUY_ENABLED = 'MARKETS/CHECK_IF_BUY_ENABLED';
 const DENOTE_PRECISION = 'MARKETS/DENOTE_PRECISION';
@@ -25,7 +25,8 @@ const MARKET_TYPE_MATCHING_MARKET = 'MARKET_TYPE_MATCHING_MARKET';
 const initialState = Immutable.fromJS({
   closeTime: null,
   isMarketOpen: null,
-  isMatchingEnabled: null,
+  isOrderMatchingEnabled: null,
+  activeMarketAddress: null,
   marketType: MARKET_TYPE_MATCHING_MARKET,
 });
 
@@ -70,6 +71,11 @@ const checkIfOrderMatchingIsEnabled = createAction(
       }
     });
   },
+);
+
+const setActiveMarketAddress = createAction(
+  SET_ACTIVE_MARKET_ADDRESS,
+  (address) => address
 );
 
 const checkIfBuyEnabled = createAction(
@@ -123,7 +129,8 @@ const actions = {
   checkMarketCloseTime,
   checkIfOrderMatchingIsEnabled,
   subscribeLogBuyEnabledEventEpic,
-  checkIfBuyEnabled
+  checkIfBuyEnabled,
+  setActiveMarketAddress
 };
 
 const reducer = handleActions({
@@ -131,6 +138,7 @@ const reducer = handleActions({
   [fulfilled(checkMarketCloseTime)]: (state, { payload }) => state.update('closeTime', () => payload),
   [fulfilled(checkIfOrderMatchingIsEnabled)]: (state, { payload }) => state.update('isOrderMatchingEnabled', () => payload),
   [fulfilled(checkIfBuyEnabled)]: (state, { payload }) => state.update('isBuyEnabled', () => payload),
+  [setActiveMarketAddress]: (state, { payload }) => state.set('activeMarketAddress', payload)
 
 }, initialState);
 
