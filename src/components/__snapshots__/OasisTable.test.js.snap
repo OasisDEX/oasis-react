@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisTable should render with example props 1`] = `
+<div>
+  <table>
+    <thead>
+      <tr>
+        <th
+          key="0"
+        >
+          Pair
+        </th>
+        <th
+          key="1"
+        >
+          Price
+        </th>
+        <th
+          key="2"
+        >
+          Weekly volume
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        key="0"
+      >
+        <td
+          key="0"
+        >
+          MKR / W-ETH
+        </td>
+        <td
+          key="1"
+        >
+          N/A
+        </td>
+        <td
+          key="2"
+        >
+          0.00
+        </td>
+      </tr>
+      <tr
+        key="1"
+      >
+        <td
+          key="0"
+        >
+          W-ETH / SAI
+        </td>
+        <td
+          key="1"
+        >
+          0.52
+        </td>
+        <td
+          key="2"
+        >
+          2.43
+        </td>
+      </tr>
+      <tr
+        key="2"
+      >
+        <td
+          key="0"
+        >
+          MKR / SAI
+        </td>
+        <td
+          key="1"
+        >
+          1.12
+        </td>
+        <td
+          key="2"
+        >
+          0.00
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
