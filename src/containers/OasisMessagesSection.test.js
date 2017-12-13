@@ -9,9 +9,21 @@ import {
   mapDispatchToProps,
 } from './OasisMessagesSection';
 import { shallow } from 'enzyme';
+import { MSGTYPE_INFO, MSGTYPE_WARNING } from '../components/OasisMessage';
 
 describe('(Container) OasisMessagesSection', () => {
-  const state = Immutable.fromJS({});
+  const state = Immutable.fromJS({
+    session: {
+      persist: {
+        messages: {
+          [MSGTYPE_WARNING]: {},
+          [MSGTYPE_INFO]: {
+            dismissed: false
+          }
+        }
+      }
+    }
+  });
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
   const props = {

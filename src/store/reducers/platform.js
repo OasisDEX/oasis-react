@@ -3,6 +3,8 @@ import Immutable from 'immutable';
 
 import networkReducer from './network';
 import { fulfilled, pending, rejected } from '../../utils/store';
+import { Session } from '../../utils/session';
+import { MSGTYPE_INFO, MSGTYPE_WARNING } from '../../components/OasisMessage';
 
 const initialState = Immutable.fromJS(
   {
@@ -39,6 +41,7 @@ const METAMASK_LOCKED = 'PLATFORM/METAMASK_LOCKED';
 const METAMASK_UNLOCKED = 'PLATFORM/METAMASK_UNLOCKED';
 const ACTIVE_NETWORK_CHANGED = 'PLATFORM/ACTIVE_NETWORK_CHANGED';
 
+const DISMISS_MESSAGE = 'PLATFORM/DISMISS_MESSAGE';
 
 const INIT = 'PLATFORM/INIT';
 const Init = createAction(
@@ -107,6 +110,15 @@ const networkChanged = createAction(
   ACTIVE_NETWORK_CHANGED
 );
 
+
+const dismissMessage = (
+  msgType,
+  dismissMessageAction = createAction(DISMISS_MESSAGE, msgType => msgType)
+) => (dispatch) => {
+  Session.dismissMessage(dispatch, msgType);
+  dispatch(dismissMessageAction(msgType));
+};
+
 const actions = {
   platformInitEpic,
   web3Initialized,
@@ -121,7 +133,8 @@ const actions = {
   metamaskLocked,
   metamaskUnlocked,
   networkChanged,
-  setProviderType
+  setProviderType,
+  dismissMessage
 };
 
 const reducer = handleActions({
@@ -131,8 +144,7 @@ const reducer = handleActions({
   [metamaskLocked]: (state) => state.set('metamaskLocked', true),
   [metamaskUnlocked]: (state) => state.set('metamaskLocked', false),
   [networkChanged]: (state) => state.set('lastNetworkSwitchAt', Date.now()),
-  [setProviderType]: (state, { payload }) => state.update('providerType', () => payload)
-
+  [setProviderType]: (state, { payload }) => state.update('providerType', () => payload),
 }, initialState);
 
 export default {

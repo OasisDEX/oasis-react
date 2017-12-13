@@ -224,7 +224,6 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
   const previousNetworkId = getState().getIn(['network', 'activeNetworkId']);
   const previousProviderType = getState().getIn(['network', 'providerType']);
   let currentNetworkName = null;
-
   /**
    * We save provider type in store if not already set.
    */
@@ -283,7 +282,7 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
         dispatch(balancesReducer.actions.getAllTradedTokensAllowances(window.contracts.tokens, window.contracts.market.address)),
         dispatch(balancesReducer.actions.subscribeTokenTransfersEventsEpic(window.contracts.tokens))
       ]).then(
-        p => { console.log('initialize on switch'); dispatch(CheckNetwork.fulfilled); }
+        () => { dispatch(CheckNetwork.fulfilled); }
       );
     }
   }
@@ -326,7 +325,7 @@ const reducer = handleActions({
   [syncNetwork.pending]: (state) =>
     state
       .setIn(['sync', 'isPending'], true),
-  [syncNetwork.fulfilled]: (state) => state.setIn(['sync', 'isPending'], true),
+  [syncNetwork.fulfilled]: (state) => state.setIn(['sync', 'isPending'], false),
   [fulfilled(getConnectedNetworkId)]: (state, { payload }) =>
     state
       .update('activeNetworkId', (nid) => !!payload && nid === payload ? nid : payload)
