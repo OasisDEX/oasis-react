@@ -9,7 +9,7 @@ import styles from './OasisTable.scss';
 
 const propTypes = PropTypes && {
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
-  colDefs: PropTypes.arrayOf(PropTypes.object).isRequired
+  col: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 const defaultProps = {};
 
@@ -17,17 +17,17 @@ const defaultProps = {};
 export class OasisTable extends PureComponent {
 
   rowContent(row) {
-    const { colDefs } = this.props;
-    return colDefs.map(
+    const { col } = this.props;
+    return col.map(
       (rowDef, i) => <td key={i}>{row[rowDef.key]}</td>
     );
   }
 
   renderTHeadContent() {
-    const { colDefs } = this.props;
+    const { col } = this.props;
     return (
       <tr>
-        {colDefs.map( (col, i) => (<th key={i}>{col.heading}</th>) )}
+        {col.map( (col, i) => (<th key={i}>{col.heading}</th>) )}
       </tr>
     )
   }

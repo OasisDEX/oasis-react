@@ -8,7 +8,7 @@ import { OasisTable } from './OasisTable';
 describe('(Component) OasisTable', () => {
   it('should render with example props', () => {
     const props = {
-      colDefs: [
+      col: [
         { heading: 'Pair', key: 'tokenPair' },
         { heading: 'Price', key: 'price' },
         { heading: 'Weekly volume', key: 'weeklyVolume' },
