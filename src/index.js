@@ -8,30 +8,45 @@ import OasisAppWrapper from './containers/OasisApp';
 import * as web3 from './bootstrap/web3';
 import * as Network from './bootstrap/network';
 import configureStore from './store';
-import { Session } from './utils/session';
 import platformReducer from './store/reducers/platform';
 import networkReducer from './store/reducers/network';
 import accountsReducer from './store/reducers/accounts';
 import { HAS_ACCOUNTS } from './constants';
+import { Session } from './utils/session';
+import accounts from './store/selectors/accounts';
 
 const store = configureStore();
 
-const healthCheck = (dispatch, isInitialHealhtcheck = false ) => {
-  if(isInitialHealhtcheck) {
-    dispatch(networkReducer.actions.connecting())
+const healthCheck = (dispatch, getState, isInitialHealhtcheck = false) => {
+  if (isInitialHealhtcheck) {
+    dispatch(networkReducer.actions.connecting());
   }
 
   Promise.all([Network.checkConnectivity()])
-    .then( async (providerType) => {
+    .then(async (providerType) => {
       const connectedNetworkId = await dispatch(networkReducer.actions.getConnectedNetworkId());
       dispatch(networkReducer.actions.connected());
-      if(providerType && connectedNetworkId.value) {
-        if(HAS_ACCOUNTS === await dispatch(accountsReducer.actions.checkAccountsEpic())) {
+      if (providerType && connectedNetworkId.value) {
+        const previousDefaultAccount = accounts.defaultAccount(getState());
+        if (HAS_ACCOUNTS === await dispatch(accountsReducer.actions.checkAccountsEpic())) {
+          try {
+            /**
+             *  Initialize session on first run of the healthcheck or when default address changes
+             */
+            const currentDefaultAccount = accounts.defaultAccount(getState());
+            if (isInitialHealhtcheck || previousDefaultAccount !== currentDefaultAccount) {
+              Session.init(dispatch, getState);
+            }
+          } catch (e) {
+            console.error('SESSION:INIT', e);
+          }
+
           await dispatch(
-            networkReducer.actions.checkNetworkEpic(providerType.join(), isInitialHealhtcheck)
+            networkReducer.actions.checkNetworkEpic(providerType.join(), isInitialHealhtcheck),
           );
+
         }
-          /**
+        /**
          *  TODO @Georgi
          *  keep current state of the network connectivity in the store
          *  and only re-render when previous state was false
@@ -47,10 +62,10 @@ const healthCheck = (dispatch, isInitialHealhtcheck = false ) => {
 const bootstrap = async () => {
   const { dispatch, getState } = store;
   dispatch(platformReducer.actions.web3Initialized(web3.init()));
-  await healthCheck(dispatch, true);
-  Session.init(getState);
+  await healthCheck(dispatch, getState, true);
+
   // TODO: extract this into a configuration and agree on the value.
-  setInterval(await healthCheck.bind(null, dispatch), 1000);
+  setInterval(await healthCheck.bind(null, dispatch, getState), 1000);
 };
 
 (async () => {

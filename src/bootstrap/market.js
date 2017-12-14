@@ -11,7 +11,9 @@ const init = async (dispatch) =>
     dispatch(marketsReducer.actions.checkIfBuyEnabled()),
     dispatch(limitsReducer.actions.GetAllTradedTokenMinSellLimits(window.contracts.market, window.contracts.tokens)),
   ]).then(
-    p => { dispatch(platformReducer.actions.marketInitialized()); },
+    () => {
+      dispatch(platformReducer.actions.marketInitialized());
+    },
   );
 
 export default {

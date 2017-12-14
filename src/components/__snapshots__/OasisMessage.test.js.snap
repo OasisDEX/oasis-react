@@ -2,10 +2,17 @@
 
 exports[`(Component) OasisMessage should render 1`] = `
 <div
-  className="OasisMessage"
+  styleName="MessageBoard undefined"
 >
-  <div
-    className="OasisMessageBody"
-  />
+  <h3
+    styleName="Heading"
+  >
+    Hello world
+  </h3>
+  <div>
+    <div>
+      Message content
+    </div>
+  </div>
 </div>
 `;

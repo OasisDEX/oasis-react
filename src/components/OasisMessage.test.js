@@ -2,14 +2,18 @@
 /* eslint-disable import/first */
 import React from 'react';
 
-import OasisMessage from './OasisMessage';
+import { OasisMessage } from './OasisMessage';
 import { shallow } from 'enzyme';
 
 describe('(Component) OasisMessage', () => {
   it('should render', () => {
-    const props = {};
+    const props = {
+      heading: 'Hello world'
+    };
     const wrapper = shallow(
-      <OasisMessage {...props}/>,
+      <OasisMessage {...props}>
+        <div>Message content</div>
+      </OasisMessage>,
     );
 
     expect(wrapper).toMatchSnapshot();

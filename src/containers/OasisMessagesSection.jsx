@@ -9,17 +9,27 @@ import { MSGTYPE_INFO, MSGTYPE_WARNING } from '../components/OasisMessage';
 
 import styles from '../components/OasisMessage.scss';
 import CSSModule from 'react-css-modules';
+import session from '../store/selectors/session';
+import platformReducer from '../store/reducers/platform';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
 };
 
 export class OasisMessagesSectionWrapper extends PureComponent {
+
   render() {
-    return (
+    const { messages, actions, isSessionInitialized } = this.props;
+    return isSessionInitialized ? (
       <div className="row">
         <div className="col-md-7">
-          <OasisMessage type={MSGTYPE_INFO} heading={'Get started!'}>
+          <OasisMessage
+            hidden={messages[MSGTYPE_INFO].dismissed}
+            type={MSGTYPE_INFO}
+            heading={'Get started!'}
+            dismissible={true}
+            onDismiss={actions.dismissMessage}
+          >
             <ul>
               <li>
                 <span styleName="Circle">
@@ -48,8 +58,11 @@ export class OasisMessagesSectionWrapper extends PureComponent {
             </ul>
           </OasisMessage>
         </div>
-        <div className="col-md-5">
-          <OasisMessage type={MSGTYPE_WARNING} heading={'Warning!'}>
+        <div className={messages[MSGTYPE_INFO].dismissed ? 'col-md-12' : 'col-md-5'}>
+          <OasisMessage
+            type={MSGTYPE_WARNING}
+            heading={'Warning!'}
+          >
             <ul>
               <li>
                 <span styleName="Circle Circle--Red">
@@ -64,17 +77,22 @@ export class OasisMessagesSectionWrapper extends PureComponent {
           </OasisMessage>
         </div>
       </div>
-    );
+    ): <OasisMessage heading={'Loading Messages...'} type={MSGTYPE_INFO}><span hidden/></OasisMessage>;
   }
 }
 
 export function mapStateToProps(state) {
-  return {};
+  return {
+    messages: session.messages(state),
+    isSessionInitialized: session.isSessionInitialized(state)
+  };
 }
 
 export function mapDispatchToProps(dispatch) {
-  const actions = {};
-  return {actions: bindActionCreators(actions, dispatch)};
+  const actions = {
+    dismissMessage: platformReducer.actions.dismissMessage
+  };
+  return { actions: bindActionCreators(actions, dispatch) };
 }
 
 OasisMessagesSectionWrapper.propTypes = propTypes;
