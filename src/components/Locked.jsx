@@ -5,6 +5,8 @@ import MetamaskLogo from '../assets/dapphub_icn_metamask.svg';
 import styles from './Locked.scss';
 import CSSModules from 'react-css-modules';
 
+import OasisFooter from '../containers/OasisFooter';
+
 
 const propTypes = PropTypes && {};
 const defaultProps = {};
@@ -22,9 +24,8 @@ class Locked extends PureComponent {
           Unlock your account on the Metamask Extension.
         </p>
         <hr styleName="Separator"/>
-
+        <OasisFooter/>
       </section>
-    //  FOOTER PLACEHOLDER
     );
   }
 }
