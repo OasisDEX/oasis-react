@@ -1,0 +1,32 @@
+@import "../styles/modules/labels";
+
+.OasisFooter {
+  margin-top: 16px;
+  padding: 40px 80px;
+  justify-content: space-evenly;
+}
+
+.LinksSection {
+  display: flex;
+  flex-direction: column;
+
+  & .Heading {
+    margin: 16px 0;
+
+    @include text(16px, 400);
+    text-transform: uppercase;
+    color: #4A4A4A;
+  }
+
+  & .Link {
+    margin: 16px 0;
+
+    @include text(14px, 700);
+    color: #546979;
+    cursor: pointer;
+
+    &:hover, &:active, &:focus {
+      text-decoration: none;
+    }
+  }
+}

@@ -37,6 +37,7 @@ export class OasisAppWrapper extends PureComponent {
             <OasisHeaderWrapper/>
             <OasisMessagesSectionWrapper/>
             <OasisMainContentWrapper/>
+            <hr styleName="FooterSeparator"/>
             <OasisFooterWrapper/>
           </div>
         </BrowserRouter>
