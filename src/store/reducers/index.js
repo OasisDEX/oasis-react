@@ -16,6 +16,8 @@ import wgnt from './wgnt';
 import session from './session';
 import contracts from './contracts';
 import accounts from './accounts';
+import trades from './trades';
+import widgets from './widgets';
 
 export default combineReducers(
   {
@@ -36,4 +38,6 @@ export default combineReducers(
     session: session.reducer,
     contracts: contracts.reducer,
     accounts: accounts.reducer,
+    trades: trades.reducer,
+    widgets: widgets.reducer
   });

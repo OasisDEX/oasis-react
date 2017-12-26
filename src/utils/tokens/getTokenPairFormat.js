@@ -1,0 +1,1 @@
+export default (baseToken, quoteToken) => `${baseToken}/${quoteToken}`;

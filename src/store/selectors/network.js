@@ -12,8 +12,23 @@ const getActiveNetworkName = createSelector(
   s => s.get('activeNetworkName') || '-'
 );
 
+const latestBlockNumber = createSelector(
+  state,
+  (s) =>  s.get('latestBlockNumber')
+);
+
+const getActiveNetworkMeta = createSelector(
+  state,
+  getActiveNetworkName,
+  (s, activeNetworkName) =>
+    activeNetworkName ? s.get('networks').find(n => n.get('name') === activeNetworkName): null
+);
+
+
 export default {
   state,
   status,
   getActiveNetworkName,
+  getActiveNetworkMeta,
+  latestBlockNumber,
 };

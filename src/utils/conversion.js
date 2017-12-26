@@ -1,15 +1,17 @@
-import { Dapple } from 'meteor/makerotc:dapple';
-import { BigNumber } from 'meteor/ethereum:web3';
+import BigNumber from 'bignumber.js';
+import tokens from '../store/selectors/tokens';
+
+let getState = null;
 
 export function convertToTokenPrecision(amount, token) {
   if (typeof token !== 'undefined' && token !== '') {
-    const tokenSpecs = Dapple.getTokenSpecs(token);
+    const tokenSpecs = tokens.getTokenSpecs(getState(), token);
     if (tokenSpecs) {
       let value = amount;
       if (!(amount instanceof BigNumber)) {
         value = new BigNumber(amount);
       }
-      return value.times(new BigNumber(10).pow(tokenSpecs.precision)).valueOf();
+      return value.times(new BigNumber(10).pow(tokenSpecs.get('precision'))).valueOf();
     }
     throw new Error('Precision not found when converting');
   }
@@ -18,7 +20,7 @@ export function convertToTokenPrecision(amount, token) {
 
 export function convertTo18Precision(amount, token) {
   if (typeof token !== 'undefined' && token !== '') {
-    const tokenSpecs = Dapple.getTokenSpecs(token);
+    const tokenSpecs = tokens.getTokenSpecs(getState(),token);
     if (tokenSpecs) {
       if (tokenSpecs.precision === 18) {
         return amount;
@@ -27,9 +29,15 @@ export function convertTo18Precision(amount, token) {
       if (!(amount instanceof BigNumber)) {
         value = new BigNumber(amount);
       }
-      return value.times(new BigNumber(10).pow(18 - tokenSpecs.precision)).valueOf();
+      return value.times(new BigNumber(10).pow(18 - tokenSpecs.get('precision'))).valueOf();
     }
     throw new Error('Precision not found when converting');
   }
   throw new Error('Token not found when converting');
+}
+
+const init = getStateFunction => getState = getStateFunction;
+
+export default  {
+  init
 }

@@ -54,7 +54,7 @@ const setDefaultTokenPair = createAction(
 
 const setActiveTokenPair = createAction(
   'TOKENS/SET_ACTIVE_TOKEN_PAIR',
-  (baseToken, quoteToken) => ({baseToken, quoteToken})
+  tokenPair => tokenPair
 );
 
 const actions = {
@@ -66,6 +66,7 @@ const actions = {
 const reducer = handleActions({
   [setDefaultTokenPair]: (state, { payload }) =>
     state.update('defaultTokenPair', () => payload),
+  [setActiveTokenPair]:(state, { payload }) => state.set('activeTokenPair', payload)
 }, initialState);
 
 export default {

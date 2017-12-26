@@ -1,18 +1,18 @@
 /* global shallow describe it expect */
 /* eslint-disable import/first,no-undef */
 import React from 'react';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 import { shallow } from 'enzyme';
 
-
 import {
-OasisTradeWrapper,
-mapStateToProps,
-mapDispatchToProps,
+  OasisTradeWrapper,
+  mapStateToProps,
+  mapDispatchToProps,
 } from './OasisTrade';
+import { TIME_SPAN_WEEK } from '../utils/timeSpan';
 
 describe('(Container) OasisTrade', () => {
-  const state = Immutable.fromJS({
+  const state = fromJS({
     tokens: {
       allTokens: [
         'W-ETH',
@@ -222,11 +222,13 @@ describe('(Container) OasisTrade', () => {
           format: '0,0.00[0000000000000000]',
         },
       },
-      defaultTokenPair: {
-        baseToken: 'MKR',
-        quoteToken: 'W-ETH',
-      },
       activeTokenPair: null,
+    },
+    trades: {
+      initialMarketHistoryLoaded: false,
+    },
+    platform: {
+      defaultTimeSpan: TIME_SPAN_WEEK,
     },
   });
   const initialProps = mapStateToProps(state);
@@ -235,6 +237,10 @@ describe('(Container) OasisTrade', () => {
     ...initialActions,
     ...initialProps,
     ...{
+      defaultTokenPair: fromJS({
+        baseToken: 'MKR',
+        quoteToken: 'W-ETH',
+      }),
       match: {
         path: '/trade/:baseToken?/:quoteToken?',
         url: '/trade/MKR/W-ETH',
@@ -263,13 +269,12 @@ describe('(Container) OasisTrade', () => {
         block: {},
         listen: {},
       },
-      defaultTokenPair: {},
       validBaseTokensList: {},
       validQuoteTokensList: {},
       actions: {
         setActiveTokenPair: {},
       },
-    }
+    },
   };
 
   it('will receive right props', () => {

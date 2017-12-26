@@ -14,6 +14,9 @@ import accountsReducer from './store/reducers/accounts';
 import { HAS_ACCOUNTS } from './constants';
 import { Session } from './utils/session';
 import accounts from './store/selectors/accounts';
+import timeSpan from './utils/timeSpan';
+import conversion from './utils/conversion';
+import { errorHandler } from './utils/errorHandlers';
 
 const store = configureStore();
 
@@ -26,6 +29,13 @@ const healthCheck = (dispatch, getState, isInitialHealhtcheck = false) => {
     .then(async (providerType) => {
       const connectedNetworkId = await dispatch(networkReducer.actions.getConnectedNetworkId());
       dispatch(networkReducer.actions.connected());
+      if(isInitialHealhtcheck) {
+        /**
+         * We only do this once, since later we subscribe to 'latest' filter
+         * to get notified on new block resolved
+         */
+        dispatch(networkReducer.actions.getLatestBlockNumber());
+      }
       if (providerType && connectedNetworkId.value) {
         const previousDefaultAccount = accounts.defaultAccount(getState());
         if (HAS_ACCOUNTS === await dispatch(accountsReducer.actions.checkAccountsEpic())) {
@@ -40,7 +50,6 @@ const healthCheck = (dispatch, getState, isInitialHealhtcheck = false) => {
           } catch (e) {
             console.error('SESSION:INIT', e);
           }
-
           await dispatch(
             networkReducer.actions.checkNetworkEpic(providerType.join(), isInitialHealhtcheck),
           );
@@ -55,17 +64,19 @@ const healthCheck = (dispatch, getState, isInitialHealhtcheck = false) => {
     })
     .catch((error) => {
       dispatch(networkReducer.actions.disconnected());
-      // errorHandler.handle(error);
+      errorHandler.handle(error);
     });
 };
 
 const bootstrap = async () => {
   const { dispatch, getState } = store;
+  timeSpan.init(getState);
+  conversion.init(getState);
   dispatch(platformReducer.actions.web3Initialized(web3.init()));
   await healthCheck(dispatch, getState, true);
 
   // TODO: extract this into a configuration and agree on the value.
-  setInterval(await healthCheck.bind(null, dispatch, getState), 1000);
+  setInterval(await healthCheck.bind(null, dispatch, getState), 5000);
 };
 
 (async () => {

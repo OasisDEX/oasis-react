@@ -26,6 +26,9 @@ const initialState = Immutable.fromJS({
   closeTime: null,
   isMarketOpen: null,
   isOrderMatchingEnabled: null,
+  activeMarketOriginBlock: {
+    number: null,
+  },
   activeMarketAddress: null,
   marketType: MARKET_TYPE_MATCHING_MARKET,
 });
@@ -122,6 +125,10 @@ const GetTokenPairPrecision = createAction(
   },
 );
 
+const setActiveMarketOriginBlockNumber = createAction(
+  'MARKETS/SET_ACTIVE_MARKET_ORIGIN_BLOCK_NUMBER',
+  blockNumber => blockNumber
+);
 
 
 const actions = {
@@ -130,10 +137,12 @@ const actions = {
   checkIfOrderMatchingIsEnabled,
   subscribeLogBuyEnabledEventEpic,
   checkIfBuyEnabled,
-  setActiveMarketAddress
+  setActiveMarketAddress,
+  setActiveMarketOriginBlockNumber
 };
 
 const reducer = handleActions({
+  [setActiveMarketOriginBlockNumber]: (state, { payload }) => state.setIn(['activeMarketOriginBlock', 'number'], payload),
   [fulfilled(checkIfMarketIsOpen)]: (state, { payload }) => state.set('isMarketOpen', payload),
   [fulfilled(checkMarketCloseTime)]: (state, { payload }) => state.update('closeTime', () => payload),
   [fulfilled(checkIfOrderMatchingIsEnabled)]: (state, { payload }) => state.update('isOrderMatchingEnabled', () => payload),
