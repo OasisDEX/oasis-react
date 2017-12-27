@@ -2,60 +2,57 @@ import { createSelector } from 'reselect';
 import widgets from './widgets';
 import reselect from '../../utils/reselect';
 
-const state = s => s.get('tokens');
+const tokens = state => state.get('tokens');
 
-const defaultTokenPair = createSelector(
-  state,
-  s => s.get('defaultTokenPair'),
+const defaultTradingPair = createSelector(
+  tokens,
+  state => state.get('defaultTradingPair'),
 );
 
-const activeTokenPair = createSelector(
-  state,
-  s => s.get('activeTokenPair'),
+const activeTradingPair = createSelector(
+  tokens,
+  state => state.get('activeTradingPair'),
 );
 
 const validBaseTokensList = createSelector(
-  state,
-  s => s.get('baseTokens'),
+  tokens,
+  state => state.get('baseTokens'),
 );
 
 const validQuoteTokensList = createSelector(
-  state,
-  s => s.get('quoteTokens'),
+  tokens,
+  state => state.get('quoteTokens'),
 );
 
 const tradingPairs = createSelector(
-  state,
-  s => s.get('tradingPairs'),
+  tokens,
+  state => state.get('tradingPairs'),
 );
 
 const getTokenSpecs = createSelector(
-  state,
+  tokens,
   reselect.getProps,
-  (s, p) => {
-    console.log({s, p}, s.getIn(['tokenSpecs', p]));
-    return s.getIn(['tokenSpecs', p])
-  }
+  (state, props) => state.getIn(['tokenSpecs', props])
 );
 
-const getVisibleTokenPairs = createSelector(
-  state,
+const getVisibleTradingPairs = createSelector(
+  tokens,
   widgets.marketWidget,
-  (s, marketWidget) => {
+  (state, marketWidget) => {
     if(marketWidget.get('isExpanded')) {
-      return s.get('tradingPairs');
+      return state.get('tradingPairs');
     } else {
-      return s.get('tradingPairs').filter(tp => tp.get('isDefault'));
+      return state.get('tradingPairs').filter(tp => tp.get('isDefault'));
     }
   }
 );
 
 export default {
-  state,
+  state: tokens,
   getTokenSpecs,
-  getVisibleTokenPairs,
-  defaultTokenPair,
-  activeTokenPair,
+  getVisibleTradingPairs,
+  defaultTradingPair,
+  activeTradingPair,
   validBaseTokensList,
   validQuoteTokensList,
   tradingPairs,

@@ -14,7 +14,7 @@ import accountsReducer from './store/reducers/accounts';
 import { HAS_ACCOUNTS } from './constants';
 import { Session } from './utils/session';
 import accounts from './store/selectors/accounts';
-import timeSpan from './utils/timeSpan';
+import period from './utils/period';
 import conversion from './utils/conversion';
 import { errorHandler } from './utils/errorHandlers';
 
@@ -70,7 +70,7 @@ const healthCheck = (dispatch, getState, isInitialHealhtcheck = false) => {
 
 const bootstrap = async () => {
   const { dispatch, getState } = store;
-  timeSpan.init(getState);
+  period.init(getState);
   conversion.init(getState);
   dispatch(platformReducer.actions.web3Initialized(web3.init()));
   await healthCheck(dispatch, getState, true);

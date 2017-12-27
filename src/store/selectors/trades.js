@@ -1,19 +1,19 @@
 import { createSelector } from 'reselect';
 
-const state = s => s.get('trades');
+const trades = state => state.get('trades');
 
 const initialMarketHistoryLoaded = createSelector(
-  state, s => s.get('initialMarketHistoryLoaded'),
+  trades, state => state.get('initialMarketHistoryLoaded'),
 );
 
 
 const marketHistory = createSelector(
-  state,
-  (s) => s.get('marketHistory')
+  trades,
+  state => state.get('marketHistory')
 );
 
 const marketsData = createSelector(
-  state,
+  trades,
   initialMarketHistoryLoaded,
   marketHistory,
   (s, initialMarketHistoryLoaded, marketHistory) => {
@@ -24,11 +24,12 @@ const marketsData = createSelector(
 );
 
 const volumesLoaded = createSelector(
-  state, s => s.get('volumesLoaded')
+  trades,
+  state => state.get('volumesLoaded')
 );
 
 export default {
-  state,
+  state: trades,
   marketsData,
   initialMarketHistoryLoaded,
   volumesLoaded,

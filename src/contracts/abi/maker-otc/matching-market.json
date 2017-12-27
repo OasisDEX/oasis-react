@@ -161,7 +161,7 @@
           "type": "address"
         }
       ],
-      "name": "addTokenPairWhitelist",
+      "name": "addTradingPairWhitelist",
       "outputs": [
         {
           "name": "",
@@ -184,7 +184,7 @@
           "type": "address"
         }
       ],
-      "name": "remTokenPairWhitelist",
+      "name": "remTradingPairWhitelist",
       "outputs": [
         {
           "name": "",
@@ -650,7 +650,7 @@
           "type": "address"
         }
       ],
-      "name": "isTokenPairWhitelisted",
+      "name": "isTradingPairWhitelisted",
       "outputs": [
         {
           "name": "",
@@ -1432,7 +1432,7 @@
           "type": "address"
         }
       ],
-      "name": "LogAddTokenPairWhitelist",
+      "name": "LogAddTradingPairWhitelist",
       "type": "event"
     },
     {
@@ -1449,7 +1449,7 @@
           "type": "address"
         }
       ],
-      "name": "LogRemTokenPairWhitelist",
+      "name": "LogRemTradingPairWhitelist",
       "type": "event"
     }
   ]

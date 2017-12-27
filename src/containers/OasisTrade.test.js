@@ -9,7 +9,7 @@ import {
   mapStateToProps,
   mapDispatchToProps,
 } from './OasisTrade';
-import { TIME_SPAN_WEEK } from '../utils/timeSpan';
+import { WEEK } from '../utils/period';
 
 describe('(Container) OasisTrade', () => {
   const state = fromJS({
@@ -222,13 +222,13 @@ describe('(Container) OasisTrade', () => {
           format: '0,0.00[0000000000000000]',
         },
       },
-      activeTokenPair: null,
+      activeTradingPair: null,
     },
     trades: {
       initialMarketHistoryLoaded: false,
     },
     platform: {
-      defaultTimeSpan: TIME_SPAN_WEEK,
+      defaultPeriod: WEEK,
     },
   });
   const initialProps = mapStateToProps(state);
@@ -237,7 +237,7 @@ describe('(Container) OasisTrade', () => {
     ...initialActions,
     ...initialProps,
     ...{
-      defaultTokenPair: fromJS({
+      defaultTradingPair: fromJS({
         baseToken: 'MKR',
         quoteToken: 'W-ETH',
       }),
@@ -272,7 +272,7 @@ describe('(Container) OasisTrade', () => {
       validBaseTokensList: {},
       validQuoteTokensList: {},
       actions: {
-        setActiveTokenPair: {},
+        setActiveTradingPair: {},
       },
     },
   };
@@ -286,7 +286,7 @@ describe('(Container) OasisTrade', () => {
   });
 
   it('should render', () => {
-    props.actions.setActiveTokenPair = jest.fn;
+    props.actions.setActiveTradingPair = jest.fn;
     const wrapper = shallow(
       <OasisTradeWrapper {...props}/>,
     );

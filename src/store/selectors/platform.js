@@ -1,31 +1,26 @@
 import { createSelector } from 'reselect';
-import timeSpan from '../../utils/timeSpan';
+import period from '../../utils/period';
 
-const state = s => s.get('platform');
+const platform = state => state.get('platform');
 
 const isAccountLocked = createSelector(
-  state,
-  (s) => {
-    return s.get('metamaskLocked');
-  },
+  platform,
+  state => state.get('metamaskLocked')
 );
 
-const defaultTimeSpan = createSelector(
-  state,
-  (s) => {
-    return s.get('defaultTimeSpan');
-  },
+const defaultPeriod = createSelector(
+  platform,
+  state => state.get('defaultPeriod')
 );
 
-const defaultTimeSpanAvgBlockNumber = createSelector(
-  state,
-  (s) => timeSpan.avgBlockPer(s.get('defaultTimeSpan'))
+const defaultPeriodAvgBlockNumber = createSelector(
+  platform,
+  state => period.avgBlockPer(state.get('defaultPeriod'))
 );
-
 
 export default {
-  state,
+  state: platform,
   isAccountLocked,
-  defaultTimeSpan,
-  defaultTimeSpanAvgBlockNumber
+  defaultPeriod,
+  defaultPeriodAvgBlockNumber
 };

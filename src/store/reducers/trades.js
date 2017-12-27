@@ -114,9 +114,9 @@ const initialMarketHistoryLoaded = createAction(
   'TRADES/INITIAL_MARKET_HISTORY_LOADED',
 );
 
-const updateTokenPairVolume = createAction(
+const updateTradingPairVolume = createAction(
   UPDATE_TOKEN_PAIR_VOLUME,
-  ({ tokenPair, takeAmount }) => ({ tokenPair, takeAmount }),
+  ({ tradingPair, takeAmount }) => ({ tradingPair, takeAmount }),
 );
 
 const fetchLogTakeEventsAction = createPromiseActions(FETCH_LOG_TAKE_EVENTS);
@@ -208,15 +208,15 @@ const actions = {
 const reducer = handleActions({
   [initVolumesAction]: (state, { payload }) => state.set('volumes', payload),
   [initTradesHistoryAction]: (state, { payload }) => state.set('trades', payload),
-  [updateTokenPairVolume]:
-    (state, { payload: { tokenPair, takeAmount, latestPrice } }) =>
+  [updateTradingPairVolume]:
+    (state, { payload: { tradingPair, takeAmount, latestPrice } }) =>
       state
         .updateIn(
-          ['volumes', tokenPair, 'volume'],
+          ['volumes', tradingPair, 'volume'],
           (currentVolume) =>
             new BigNumber(currentVolume).add(new BigNumber(takeAmount)),
         )
-        .setIn(['volumes', tokenPair, 'latestPrice'], latestPrice),
+        .setIn(['volumes', tradingPair, 'latestPrice'], latestPrice),
   [logTakeEvent]: (state, { payload }) => state.setIn(['latestEventsBlocks', 'LogTake'], payload.blockNumber),
   [loadInitialTradeHistory]: (state, { payload }) => state.updateIn(['marketHistory'], () => payload),
   [addTradeHistoryEntry]: (state, { payload }) =>

@@ -1,13 +1,13 @@
 import { createSelector } from 'reselect';
 
-const state = s => s.get('widgets');
+const widgets = state => state.get('widgets');
 
 const marketWidget = createSelector(
-  state,
+  widgets,
   (s) => s.get('OasisMarketWidget')
 );
 
 export default {
-  state,
+  state: widgets,
   marketWidget
 };

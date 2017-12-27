@@ -16,7 +16,6 @@ const init = createAction(
   () => null,
 );
 
-
 const expandWidget = createAction(
   EXPAND_WIDGET,
   widgetName => widgetName
@@ -26,8 +25,6 @@ const contractWidget = createAction(
   CONTRACT_WIDGET,
   widgetName => widgetName
 );
-
-
 
 const actions = {
   init,

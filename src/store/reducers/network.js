@@ -16,7 +16,7 @@ import marketBootstrap from '../../bootstrap/market';
 
 import { CLOSED, KOVAN_NET_ID, LIVE_NET_ID, ONLINE } from '../../constants';
 import tradesReducer from './trades';
-import timeSpan from '../../utils/timeSpan';
+import period from '../../utils/period';
 import network from '../selectors/network';
 
 const initialState = Immutable.fromJS(
@@ -198,23 +198,49 @@ const getLatestBlock = createAction(
  * @dev Here we create 3 actions for checking the network status
  * @type {{pending, fulfilled, rejected}|*}
  */
-const subscribeLatestBlockFilterAction = createPromiseActions(
+const subscribeLatestBlockFilter = createPromiseActions(
   'NETWORK/SUBSCRIBE_LATEST_BLOCK_FILTER',
 );
 const subscribeLatestBlockFilterEpic = () => async (dispatch) => {
-  dispatch(subscribeLatestBlockFilterAction.pending());
+  dispatch(subscribeLatestBlockFilter.pending());
 
   window.web3.eth.filter('latest', (e) => {
     dispatch(getLatestBlockNumber());
-    dispatch(subscribeLatestBlockFilterAction.rejected(e));
+    dispatch(subscribeLatestBlockFilter.rejected(e));
   });
 
-  dispatch(subscribeLatestBlockFilterAction.fulfilled());
-  return subscribeLatestBlockFilterAction;
+  dispatch(subscribeLatestBlockFilter.fulfilled());
+  return subscribeLatestBlockFilter;
 };
 
 const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch, getState) => {
   dispatch(CheckNetworkAction.pending());
+
+
+  const onNetworkCheckCompleted = async () =>
+  {
+    const currentLatestBlock = network.latestBlockNumber(getState());
+    await dispatch(subscribeLatestBlockFilterEpic());
+    /**
+     *  Fetch LogTake events for set historicalRange
+     */
+    dispatch(
+      tradesReducer.actions.fetchLogTakeEventsEpic({
+        fromBlock: currentLatestBlock - period.avgBlockPerDefaultPeriod(),
+        toBlock: currentLatestBlock,
+      }),
+    )
+      .then(
+        () => {
+          dispatch(tradesReducer.actions.initialMarketHistoryLoaded());
+          dispatch(tradesReducer.actions.subscribeLogTakeEventsEpic(currentLatestBlock));
+        },
+      );
+    dispatch(
+      balancesReducer.actions.subscribeTokenTransfersEventsEpic(window.contracts.tokens),
+    );
+    dispatch(CheckNetworkAction.fulfilled());
+  };
 
   const previousNetworkId = getState().getIn(['network', 'activeNetworkId']);
   const previousProviderType = getState().getIn(['network', 'providerType']);
@@ -246,32 +272,7 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
         await dispatch(platformReducer.actions.marketInitialized(marketBootstrap.init(dispatch, currentNetworkName))),
         dispatch(balancesReducer.actions.getAllTradedTokensBalances(window.contracts.tokens)),
         dispatch(balancesReducer.actions.getAllTradedTokensAllowances(window.contracts.tokens, window.contracts.market.address)),
-      ]).then(
-        async () =>
-        {
-          await dispatch(subscribeLatestBlockFilterEpic());
-          const currentLatestBlock = network.latestBlockNumber(getState());
-          /**
-           *  Fetch LogTake events for set historicalRange
-           */
-          dispatch(
-            tradesReducer.actions.fetchLogTakeEventsEpic({
-              fromBlock: currentLatestBlock - timeSpan.avgBlockPerDefaultTimeSpan(),
-              toBlock: currentLatestBlock,
-            }),
-          )
-            .then(
-              (a) => {
-                dispatch(tradesReducer.actions.initialMarketHistoryLoaded());
-                dispatch(tradesReducer.actions.subscribeLogTakeEventsEpic(currentLatestBlock));
-              },
-            );
-          dispatch(
-            balancesReducer.actions.subscribeTokenTransfersEventsEpic(window.contracts.tokens),
-          );
-          dispatch(CheckNetworkAction.fulfilled());
-        },
-      );
+      ]).then(onNetworkCheckCompleted);
     }
     catch (e) {
       console.error(e);
@@ -302,25 +303,7 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
         await dispatch(platformReducer.actions.marketInitialized(marketBootstrap.init(dispatch, currentNetworkName))),
         dispatch(balancesReducer.actions.getAllTradedTokensBalances(window.contracts.tokens)),
         dispatch(balancesReducer.actions.getAllTradedTokensAllowances(window.contracts.tokens, window.contracts.market.address)),
-      ]).then(
-       async () => {
-          const currentLatestBlock = network.latestBlockNumber(getState());
-          await dispatch(subscribeLatestBlockFilterEpic());
-          dispatch(
-            tradesReducer.actions.fetchLogTakeEventsEpic({
-              fromBlock: currentLatestBlock - timeSpan.avgBlockPerDefaultTimeSpan(),
-              toBlock: currentLatestBlock,
-            }),
-          ).then(
-              () => {
-                dispatch(tradesReducer.actions.initialMarketHistoryLoaded());
-                dispatch(tradesReducer.actions.subscribeLogTakeEventsEpic(currentLatestBlock));
-              },
-            );
-          dispatch(balancesReducer.actions.subscribeTokenTransfersEventsEpic(window.contracts.tokens));
-          dispatch(CheckNetworkAction.fulfilled);
-        },
-      );
+      ]).then(onNetworkCheckCompleted);
     }
   }
 

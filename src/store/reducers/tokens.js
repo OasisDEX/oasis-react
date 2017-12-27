@@ -35,8 +35,8 @@ const initialState = Immutable.fromJS({
     BAT: { precision: 18, format: '0,0.00[0000000000000000]' },
     NMR: { precision: 18, format: '0,0.00[0000000000000000]' },
   },
-  defaultTokenPair: { baseToken: TOKEN_MAKER, quoteToken: TOKEN_WRAPPED_ETH },
-  activeTokenPair: null,
+  defaultTradingPair: { baseToken: TOKEN_MAKER, quoteToken: TOKEN_WRAPPED_ETH },
+  activeTradingPair: null,
 });
 
 const INIT = 'TOKENS/INIT';
@@ -47,26 +47,26 @@ const Init = createAction(
   () => null,
 );
 
-const setDefaultTokenPair = createAction(
+const setDefaultTradingPair = createAction(
   SET_DEFAULT_TOKEN_PAIR,
   (baseToken, quoteToken) => ({ baseToken, quoteToken }),
 );
 
-const setActiveTokenPair = createAction(
+const setActiveTradingPair = createAction(
   'TOKENS/SET_ACTIVE_TOKEN_PAIR',
-  tokenPair => tokenPair
+  tradingPair => tradingPair
 );
 
 const actions = {
   Init,
-  setDefaultTokenPair,
-  setActiveTokenPair
+  setDefaultTradingPair,
+  setActiveTradingPair
 };
 
 const reducer = handleActions({
-  [setDefaultTokenPair]: (state, { payload }) =>
-    state.update('defaultTokenPair', () => payload),
-  [setActiveTokenPair]:(state, { payload }) => state.set('activeTokenPair', payload)
+  [setDefaultTradingPair]: (state, { payload }) =>
+    state.update('defaultTradingPair', () => payload),
+  [setActiveTradingPair]:(state, { payload }) => state.set('activeTradingPair', payload)
 }, initialState);
 
 export default {

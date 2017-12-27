@@ -1,17 +1,17 @@
 import { createSelector } from 'reselect';
 
-const state = s => s.get('accounts');
+const acc = s => s.get('accounts');
 
 const defaultAccount = createSelector(
-  state, (s) => s.get('defaultAccount')
+  acc, (s) => s.get('defaultAccount')
 );
 
 const accounts = createSelector(
-  state, (s) => s.get('accounts')
+  acc, (s) => s.get('accounts')
 );
 
 export default {
-  state,
+  state: acc,
   defaultAccount,
   accounts
 }

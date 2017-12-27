@@ -108,7 +108,7 @@ const DenotePrecision = createAction(
 );
 
 
-const GetTokenPairPrecision = createAction(
+const GetTradingPairPrecision = createAction(
   DENOTE_PRECISION,
   () => {
     // const basePrecision = Dapple.getTokenSpecs(
