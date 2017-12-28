@@ -1,19 +1,34 @@
 import { createSelector } from 'reselect';
 
-const state = s => s.get('network');
+const network = state => state.get('network');
 
 const status = createSelector(
-  state,
-    s => s.get('status')
+  network,
+  state => state.get('status')
 );
 
 const getActiveNetworkName = createSelector(
-  state,
-  s => s.get('activeNetworkName') || '-'
+  network,
+  state => state.get('activeNetworkName') || '-'
 );
 
+const latestBlockNumber = createSelector(
+  network,
+  state =>  state.get('latestBlockNumber')
+);
+
+const getActiveNetworkMeta = createSelector(
+  network,
+  getActiveNetworkName,
+  (state, activeNetworkName) =>
+    activeNetworkName ? state.get('networks').find(n => n.get('name') === activeNetworkName): null
+);
+
+
 export default {
-  state,
+  state: network,
   status,
   getActiveNetworkName,
+  getActiveNetworkMeta,
+  latestBlockNumber,
 };

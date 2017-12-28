@@ -9,23 +9,23 @@ describe('(Component) OasisTable', () => {
   it('should render with example props', () => {
     const props = {
       col: [
-        { heading: 'Pair', key: 'tokenPair' },
+        { heading: 'Pair', key: 'tradingPair' },
         { heading: 'Price', key: 'price' },
         { heading: 'Weekly volume', key: 'weeklyVolume' },
       ],
       rows: [
         {
-          tokenPair: 'MKR / W-ETH',
+          tradingPair: 'MKR / W-ETH',
           price: 'N/A',
           weeklyVolume: '0.00'
         },
         {
-          tokenPair: 'W-ETH / SAI',
+          tradingPair: 'W-ETH / SAI',
           price: '0.52',
           weeklyVolume: '2.43'
         },
         {
-          tokenPair: 'MKR / SAI',
+          tradingPair: 'MKR / SAI',
           price: '1.12',
           weeklyVolume: '0.00'
         },

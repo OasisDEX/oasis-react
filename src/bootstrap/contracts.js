@@ -45,7 +45,7 @@ const init = (networkName) => {
       PLU, MLN, RHOC,
       TIME, GUP, BAT, NMR,
     },
-    market,
+    market
   };
 };
 

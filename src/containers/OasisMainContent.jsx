@@ -33,7 +33,7 @@ export class OasisMainContentWrapper extends Component {
   }
 
   render() {
-    const { defaultTokenPair } = this.props;
+    const { defaultTradingPair } = this.props;
     return this.redirect() || (
       <div className="OasisMainContentWrapper">
         <OasisTabs/>
@@ -41,7 +41,7 @@ export class OasisMainContentWrapper extends Component {
           <Switch>
             <Route
               path={'/trade/:baseToken?/:quoteToken?'}
-              render={(props) =>  <OasisTradeWrapper {...props} defaultTokenPair={defaultTokenPair}/>}
+              render={(props) =>  <OasisTradeWrapper {...props} defaultTradingPair={defaultTradingPair}/>}
             />
             <Route path={'/wrap-unwrap'} component={OasisWrapUnwrapWrapper}/>
             <Route path={'/transfer'} component={OasisTransferWrapper}/>
@@ -61,7 +61,7 @@ export class OasisMainContentWrapper extends Component {
 
 export function mapStateToProps(state) {
   return {
-    defaultTokenPair: tokensSelectors.defaultTokenPair(state)
+    defaultTradingPair: tokensSelectors.defaultTradingPair(state)
   };
 }
 

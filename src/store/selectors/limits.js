@@ -1,5 +1,5 @@
-const state = s => s.get('limits');
+const limits = s => s.get('limits');
 
 export default {
-  state,
+  state: limits,
 };

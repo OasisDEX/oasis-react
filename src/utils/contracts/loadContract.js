@@ -1,4 +1,4 @@
-function loadContact(abi, contractAddress) {
+function loadContact(abi, contractAddress, nopromises) {
   try {
     if (!window.web3.isAddress(contractAddress)) {
       throw new Error({
@@ -6,6 +6,7 @@ function loadContact(abi, contractAddress) {
       });
     }
     const contractFactory = window.web3.eth.contract(abi);
+
     const promisify = (inner) =>
       new Promise((resolve, reject) =>
         inner((err, res) => {
@@ -17,8 +18,19 @@ function loadContact(abi, contractAddress) {
     const proxiedWeb3Handler = {
       get: (target, name) => {
         const inner = target[name];
-        if (inner instanceof Function) {
-          return (...args) => promisify(cb => inner(...args, cb));
+        if (inner instanceof Function){
+          if(/^[a-z]/.test(name)) {
+            return (...args) => {
+              return promisify(cb => inner(...args, cb));
+            }
+          } else {
+            return (...args) => {
+              const filterInstance = inner(...args);
+              target['then'] = filterInstance.watch.bind(filterInstance);
+              target['get'] = filterInstance.get.bind(filterInstance);
+              return target;
+            }
+          }
         } else if (typeof inner === 'object') {
           return new window.Proxy(inner, proxiedWeb3Handler);
         } else {

@@ -1,33 +1,33 @@
 import { createSelector } from 'reselect';
 
-const state = s => s.get('session');
+const session = state => state.get('session');
 
 const messages = createSelector(
-  state,
-  s => {
-    if(s.hasIn(['persist', 'messages'])) {
-      return s.getIn(['persist', 'messages']).toJSON()
+  session,
+  state => {
+    if(state.hasIn(['persist', 'messages'])) {
+      return state.getIn(['persist', 'messages']).toJSON()
     }
   }
 );
 
 const sessionData = createSelector(
-  state,
-  s => s.getIn(['session']).toJSON()
+  session,
+  state => state.getIn(['session']).toJSON()
 );
 
 const persistentData = createSelector(
-  state,
-  s => s.getIn(['persist']).toJSON()
+  session,
+  state => state.getIn(['persist']).toJSON()
 );
 
 const isSessionInitialized = createSelector(
-  state,
-  s => s.get('initialized')
+  session,
+  state => state.get('initialized')
 );
 
 export default {
-  state,
+  state: session,
   persistentData,
   sessionData,
   messages,

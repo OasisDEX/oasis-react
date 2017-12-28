@@ -5,6 +5,8 @@ import networkReducer from './network';
 import { fulfilled, pending, rejected } from '../../utils/store';
 import { Session } from '../../utils/session';
 import { MSGTYPE_INFO, MSGTYPE_WARNING } from '../../components/OasisMessage';
+import { DAY, WEEK } from '../../utils/period';
+import { ETH_UNIT_WEI } from '../../constants';
 
 const initialState = Immutable.fromJS(
   {
@@ -15,7 +17,9 @@ const initialState = Immutable.fromJS(
     metamaskLocked: false,
     lastNetworkSwitchAt: null,
     providerType: null,
-    defaultTokenPair: {baseToken: 'MKR', quoteToken: 'W-ETH'}
+    defaultTradingPair: {baseToken: 'MKR', quoteToken: 'W-ETH'},
+    defaultPeriod: WEEK,
+    defaultUnit: ETH_UNIT_WEI,
   });
 
 export const STATUS_PENDING = 'STATUS_PENDING';
@@ -51,7 +55,6 @@ const Init = createAction(
 
 const platformInitEpic = () => async (dispatch) => {
   dispatch(Init());
-  dispatch(networkReducer.actions.subscribeLatestBlockFilterEpic());
 };
 
 

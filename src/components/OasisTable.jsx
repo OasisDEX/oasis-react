@@ -8,7 +8,7 @@ import styles from './OasisTable.scss';
 
 
 const propTypes = PropTypes && {
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.any.isRequired,
   col: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 const defaultProps = {};

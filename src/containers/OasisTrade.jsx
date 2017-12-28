@@ -4,24 +4,34 @@ import { Redirect } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import tokensSelectors from './../store/selectors/tokens';
 
-import { validateTokenPair } from '../utils/validateTokenPair';
+import { validateTradingPair } from '../utils/validateTradingPair';
 import { BASE_TOKENS, QUOTE_TOKENS, TOKEN_MAKER, TOKEN_WRAPPED_ETH } from '../constants';
 import tokensReducer from './../store/reducers/tokens';
 import { generateTradingPairs } from '../utils/generateTradingPairs';
 import OasisMarketWidget from '../components/OasisMarketWidget';
+import trades from '../store/selectors/trades';
+import tokens from './../store/selectors/tokens';
+import platform from '../store/selectors/platform';
+import { DAY, WEEK } from '../utils/period';
+
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
-  defaultTokenPair: PropTypes.object
+  defaultTradingPair: PropTypes.object,
+  defaultPeriod: PropTypes.oneOf([
+    DAY,
+    WEEK,
+  ])
 };
 
 export class OasisTradeWrapper extends PureComponent {
   redirect() {
     const params = this.props.match.params;
-    if (!validateTokenPair(params.baseToken, params.quoteToken, generateTradingPairs(BASE_TOKENS, QUOTE_TOKENS))) {
-      const { baseToken, quoteToken } = this.props.defaultTokenPair.toJSON();
+    const { baseToken, quoteToken } = this.props.defaultTradingPair.toJSON();
+
+    if (!validateTradingPair(params.baseToken, params.quoteToken, generateTradingPairs(BASE_TOKENS, QUOTE_TOKENS))) {
+
       if(baseToken === TOKEN_WRAPPED_ETH && quoteToken === TOKEN_MAKER) {
         return (
           <Redirect to={`/trade/${TOKEN_MAKER}/${TOKEN_WRAPPED_ETH}`}/>
@@ -32,16 +42,24 @@ export class OasisTradeWrapper extends PureComponent {
         );
       }
     } else {
-      this.props.actions.setActiveTokenPair({
-        baseToken: params.baseToken, quoteToken: params.quoteToken
-      });
+      if(!this.props.activeTradingPair) {
+        this.props.actions.setActiveTradingPair({
+          baseToken: params.baseToken, quoteToken: params.quoteToken
+        });
+      }
       return null;
     }
   }
   render() {
+    const { tradedTokens, marketsData, defaultPeriod, loadingTradeHistory } = this.props;
     return this.redirect() || (
       <main>
-        <OasisMarketWidget/>
+        <OasisMarketWidget
+          tradedTokens={tradedTokens}
+          marketData={marketsData}
+          defaultPeriod={defaultPeriod}
+          loadingTradeHistory={loadingTradeHistory}
+        />
       </main>
     );
   }
@@ -49,14 +67,20 @@ export class OasisTradeWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
-    validBaseTokensList: tokensSelectors.validBaseTokensList(state),
-    validQuoteTokensList: tokensSelectors.validQuoteTokensList(state)
+
+    validBaseTokensList: tokens.validBaseTokensList(state),
+    loadingTradeHistory: !trades.initialMarketHistoryLoaded(state),
+    validQuoteTokensList: tokens.validQuoteTokensList(state),
+    marketsData: trades.marketsData(state),
+    activeTradingPair: tokens.activeTradingPair(state),
+    tradedTokens: tokens.tradingPairs(state),
+    defaultPeriod: platform.defaultPeriod(state)
   };
 }
 
 export function mapDispatchToProps(dispatch) {
   const actions = {
-    setActiveTokenPair: tokensReducer.actions.setActiveTokenPair
+    setActiveTradingPair: tokensReducer.actions.setActiveTradingPair,
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

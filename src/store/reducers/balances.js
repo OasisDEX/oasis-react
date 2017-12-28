@@ -154,7 +154,7 @@ const subscribeTokenTransfersEventsEpic = (tokensContractsList, address, config 
        */
       tokenContract.Transfer(config)
         .then(
-          transferEvent => {
+          (err, transferEvent) => {
             const { from, to } = transferEvent.args;
             if (from === address) {
               dispatch(tokenTransferFromEvent(tokenName, address, transferEvent));

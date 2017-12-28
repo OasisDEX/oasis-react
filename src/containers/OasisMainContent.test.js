@@ -221,11 +221,11 @@ describe('(Container) OasisMainContent', () => {
           format: '0,0.00[0000000000000000]'
         }
       },
-      defaultTokenPair: {
+      defaultTradingPair: {
         baseToken: 'MKR',
         quoteToken: 'W-ETH'
       },
-      activeTokenPair: null
+      activeTradingPair: null
     }
   });
   const initialProps = mapStateToProps(state);

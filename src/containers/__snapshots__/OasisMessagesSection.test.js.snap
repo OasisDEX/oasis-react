@@ -1,98 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) OasisMessagesSection should render 1`] = `
-<div
-  className="row"
+<OasisMessage
+  dismissible={false}
+  heading="Loading Messages..."
+  type="MSGTYPE_INFO"
 >
-  <div
-    className="col-md-7"
-  >
-    <OasisMessage
-      dismissible={true}
-      heading="Get started!"
-      hidden={false}
-      onDismiss={[Function]}
-      type="MSGTYPE_INFO"
-    >
-      <ul>
-        <li>
-          <span
-            styleName="Circle"
-          >
-            <span
-              styleName="Number"
-            >
-              1
-            </span>
-          </span>
-          <span
-            styleName="Text"
-          >
-            Go to wrap/unwrap and wrap ETH to turn it into W-ETH.
-          </span>
-        </li>
-        <li>
-          <span
-            styleName="Circle"
-          >
-            <span
-              styleName="Number"
-            >
-              2
-            </span>
-          </span>
-          <span
-            styleName="Text"
-          >
-            Go to Trade and place new orders or trade existing orders by clicking on an open order on the order book to buy/sell into it.
-          </span>
-        </li>
-        <li>
-          <span
-            styleName="Circle"
-          >
-            <span
-              styleName="Number"
-            >
-              3
-            </span>
-          </span>
-          <span
-            styleName="Text"
-          >
-            The first time you make a transaction you will be prompted to set your allowance.
-          </span>
-        </li>
-      </ul>
-    </OasisMessage>
-  </div>
-  <div
-    className="col-md-5"
-  >
-    <OasisMessage
-      dismissible={false}
-      heading="Warning!"
-      type="MSGTYPE_WARNING"
-    >
-      <ul>
-        <li>
-          <span
-            styleName="Circle Circle--Red"
-          >
-            <span
-              styleName="FilledCircle"
-            />
-          </span>
-          <span
-            styleName="Text"
-          >
-            Oasis is undergoing alpha testing: Any funds deposited on the exchange could be lost in the event of a security breach.
-          </span>
-        </li>
-      </ul>
-    </OasisMessage>
-  </div>
-</div>
+  <span
+    hidden={true}
+  />
+</OasisMessage>
 `;
 
 exports[`(Container) OasisMessagesSection will receive right actions 1`] = `
@@ -105,6 +22,7 @@ Object {
 
 exports[`(Container) OasisMessagesSection will receive right props 1`] = `
 Object {
+  "isSessionInitialized": undefined,
   "messages": Object {
     "MSGTYPE_INFO": Object {
       "dismissed": false,

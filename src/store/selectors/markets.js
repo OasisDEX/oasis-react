@@ -1,17 +1,17 @@
 import { createSelector } from 'reselect';
 
-const state = s => s.get('markets');
+const markets = state => state.get('markets');
 
 const marketCloseTime = createSelector(
-  state, (s) => parseInt(s.get('closeTime'))
+  markets, (state) => parseInt(state.get('closeTime'))
 );
 
 const activeMarketAddress = createSelector(
-  state, (s) => s.get('activeMarketAddress')
+  markets, (state) => state.get('activeMarketAddress')
 );
 
 export default {
-  state,
+  state: markets,
   marketCloseTime,
   activeMarketAddress
 }

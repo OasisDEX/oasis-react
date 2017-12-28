@@ -6,16 +6,19 @@ export const generateTradingPairs = (baseTokens, quoteTokens) => {
       base: 'MKR',
       quote: 'W-ETH',
       priority: 10,
+      isDefault: true
     },
     {
       base: 'W-ETH',
       quote: 'SAI',
       priority: 9,
+      isDefault: true
     },
     {
       base: 'MKR',
       quote: 'SAI',
       priority: 8,
+      isDefault: true
     },
   ];
 
@@ -26,6 +29,7 @@ export const generateTradingPairs = (baseTokens, quoteTokens) => {
         base,
         quote,
         priority: 0,
+        isDefault: false
       });
     });
   });

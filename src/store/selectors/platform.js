@@ -1,15 +1,26 @@
 import { createSelector } from 'reselect';
+import period from '../../utils/period';
 
-const state = s => s.get('platform');
+const platform = state => state.get('platform');
 
 const isAccountLocked = createSelector(
-  state,
-  (s) => {
-    return s.get('metamaskLocked');
-  },
+  platform,
+  state => state.get('metamaskLocked')
+);
+
+const defaultPeriod = createSelector(
+  platform,
+  state => state.get('defaultPeriod')
+);
+
+const defaultPeriodAvgBlockNumber = createSelector(
+  platform,
+  state => period.avgBlockPer(state.get('defaultPeriod'))
 );
 
 export default {
-  state,
-  isAccountLocked
+  state: platform,
+  isAccountLocked,
+  defaultPeriod,
+  defaultPeriodAvgBlockNumber
 };
