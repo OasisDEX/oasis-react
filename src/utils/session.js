@@ -2,6 +2,7 @@ import sessionReducer from './../store/reducers/session';
 import accounts from '../store/selectors/accounts';
 import session from '../store/selectors/session';
 import { fromJS } from 'immutable';
+import web3 from '../bootstrap/web3';
 
 let getState = null;
 
@@ -37,20 +38,20 @@ export const Session = {
   set: (dispatchFunction, key, value) => {
     dispatchFunction(sessionReducer.actions.SetValue(key, value));
     sessionStorage.setItem(
-      window.web3.eth.defaultAccount, JSON.stringify(getState().getIn(['session','session']).toJSON()),
+      web3.eth.defaultAccount, JSON.stringify(getState().getIn(['session','session']).toJSON()),
     );
   },
   setPersistent: (dispatchFunction, key, value) => {
     dispatchFunction(sessionReducer.actions.SetValue(key, value));
     localStorage.setItem(
-      window.web3.eth.defaultAccount, JSON.stringify(getState().getIn(['session', 'persist']).toJSON()),
+      web3.eth.defaultAccount, JSON.stringify(getState().getIn(['session', 'persist']).toJSON()),
     );
   },
 
   dismissMessage: (dispatchFunction, msgType) => {
     dispatchFunction(sessionReducer.actions.dismissMessage(msgType));
     localStorage.setItem(
-      window.web3.eth.defaultAccount, JSON.stringify(getState().getIn(['session', 'persist']).toJSON())
+      web3.eth.defaultAccount, JSON.stringify(getState().getIn(['session', 'persist']).toJSON())
     );
   },
 

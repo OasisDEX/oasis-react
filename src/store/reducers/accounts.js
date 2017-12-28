@@ -1,10 +1,8 @@
 import { createAction, handleActions } from 'redux-actions';
 import Immutable from 'immutable';
 
-import web3 from '../../bootstrap/web3';
-import { Session } from '../../utils/session';
+import web3, { web3p } from '../../bootstrap/web3';
 import platformReducer from './platform';
-import sessionReducer from './session';
 
 
 const initialState = Immutable.fromJS({
@@ -27,7 +25,7 @@ const Init = createAction(
 
 const checkAccounts = createAction(
   CHECK_ACCOUNTS,
-  () => window.web3p.eth.getAccounts()
+  () => web3p.eth.getAccounts()
 );
 
 const setDefaultAccount = createAction(
@@ -53,13 +51,13 @@ const checkAccountsEpic = () => async (dispatch, getState) => {
     if(!isMetamaskLocked) {
       dispatch(platformReducer.actions.metamaskLocked());
     }
-    window.web3.eth.defaultAccount = undefined;
+    web3.eth.defaultAccount = undefined;
     return false;
   }
-  else if (!userAccounts.find( acc => acc === window.web3.eth.defaultAccount)) {
-    window.web3.eth.defaultAccount = userAccounts[0];
+  else if (!userAccounts.find( acc => acc === web3.eth.defaultAccount)) {
+    web3.eth.defaultAccount = userAccounts[0];
     dispatch(defaultAccountChanged());
-    dispatch(setDefaultAccount(window.web3.eth.defaultAccount));
+    dispatch(setDefaultAccount(web3.eth.defaultAccount));
     dispatch(setAccounts(userAccounts));
     if(isMetamaskLocked) {
       dispatch(platformReducer.actions.metamaskUnlocked())

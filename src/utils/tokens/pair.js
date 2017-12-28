@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { ETH_UNIT_ETHER } from '../../constants';
+import web3 from '../../bootstrap/web3';
 
 export const PRICE_DECIMAL = 4;
 export const VOLUME_DECIMAL = 2;
@@ -55,7 +56,7 @@ const formatPrice =
 
 
 const formatVolume =
-  (tradingPairVolume) => window.web3.fromWei(tradingPairVolume, ETH_UNIT_ETHER).toFormat(VOLUME_DECIMAL);
+  (tradingPairVolume) => web3.fromWei(tradingPairVolume, ETH_UNIT_ETHER).toFormat(VOLUME_DECIMAL);
 
 export {
   format,

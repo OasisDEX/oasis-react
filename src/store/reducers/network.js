@@ -2,7 +2,7 @@ import { createAction, handleActions } from 'redux-actions';
 import Immutable from 'immutable';
 import { find } from 'lodash';
 
-import web3 from '../../bootstrap/web3';
+import web3, { web3p } from '../../bootstrap/web3';
 
 import sessionReducer from './session';
 
@@ -151,7 +151,7 @@ const syncNetworkEpic = () => async (dispatch, getStore) => {
       dispatch(sessionReducer.actions.SetValue('syncing', sync !== false));
       // Stop all app activity
       if (sync === true) {
-        window.web3.reset(true);
+        web3.reset(true);
         dispatch(checkNetworkEpic());
         // show sync info
       } else if (sync) {
@@ -185,12 +185,12 @@ const CheckNetworkAction = createPromiseActions(CHECK_NETWORK);
  */
 const getLatestBlockNumber = createAction(
   'NETWORK_GET_LATEST_BLOCK_NUMBER',
-  async () => window.web3p.eth.getBlockNumber(),
+  async () => web3p.eth.getBlockNumber(),
 );
 
 const getLatestBlock = createAction(
   'NETWORK_GET_LATEST_BLOCK',
-  async () => window.web3p.eth.getBlock('latest'),
+  async () => web3p.eth.getBlock('latest'),
 );
 
 
@@ -204,7 +204,7 @@ const subscribeLatestBlockFilter = createPromiseActions(
 const subscribeLatestBlockFilterEpic = () => async (dispatch) => {
   dispatch(subscribeLatestBlockFilter.pending());
 
-  window.web3.eth.filter('latest', (e) => {
+  web3.eth.filter('latest', (e) => {
     dispatch(getLatestBlockNumber());
     dispatch(subscribeLatestBlockFilter.rejected(e));
   });
@@ -268,7 +268,7 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
       return await Promise.all([
         dispatch(platformReducer.actions.contractsLoaded(contractsBootstrap.init(currentNetworkName))),
         await dispatch(balancesReducer.actions.getDefaultAccountEthBalance()),
-        await dispatch(balancesReducer.actions.subscribeAccountEthBalanceChangeEventEpic(window.web3.eth.defaultAccount)),
+        await dispatch(balancesReducer.actions.subscribeAccountEthBalanceChangeEventEpic(web3.eth.defaultAccount)),
         await dispatch(platformReducer.actions.marketInitialized(marketBootstrap.init(dispatch, currentNetworkName))),
         dispatch(balancesReducer.actions.getAllTradedTokensBalances(window.contracts.tokens)),
         dispatch(balancesReducer.actions.getAllTradedTokensAllowances(window.contracts.tokens, window.contracts.market.address)),
@@ -323,7 +323,7 @@ const disconnected = createAction(
 
 const getConnectedNetworkId = createAction(
   GET_CONNECTED_NETWORK_ID,
-  () => window.web3p.version.getNetwork(),
+  () => web3p.version.getNetwork(),
 );
 
 const actions = {

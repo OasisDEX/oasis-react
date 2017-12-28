@@ -1,12 +1,10 @@
 import { createAction, handleActions } from 'redux-actions';
 import Immutable from 'immutable';
 
-import networkReducer from './network';
-import { fulfilled, pending, rejected } from '../../utils/store';
 import { Session } from '../../utils/session';
-import { MSGTYPE_INFO, MSGTYPE_WARNING } from '../../components/OasisMessage';
-import { DAY, WEEK } from '../../utils/period';
+import { WEEK } from '../../utils/period';
 import { ETH_UNIT_WEI } from '../../constants';
+import web3 from '../../bootstrap/web3';
 
 const initialState = Immutable.fromJS(
   {
@@ -78,11 +76,11 @@ const web3Initialized = createAction(
 
 const web3Reset = createAction(
   WEB3_RESET,
-  () => window.web3.reset()
+  () => web3.reset()
 );
 const web3ResetKeepSync = createAction(
   WEB3_RESET_KEEP_SYNC,
-  () => window.web3.reset(true)
+  () => web3.reset(true)
 );
 
 const contractsLoaded = createAction(

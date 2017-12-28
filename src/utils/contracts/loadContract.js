@@ -1,11 +1,13 @@
+import web3 from '../../bootstrap/web3';
+
 function loadContact(abi, contractAddress, nopromises) {
   try {
-    if (!window.web3.isAddress(contractAddress)) {
+    if (!web3.isAddress(contractAddress)) {
       throw new Error({
         msg: 'contract address argument is not an valid ethereum address',
       });
     }
-    const contractFactory = window.web3.eth.contract(abi);
+    const contractFactory = web3.eth.contract(abi);
 
     const promisify = (inner) =>
       new Promise((resolve, reject) =>
