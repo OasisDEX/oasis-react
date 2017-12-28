@@ -7,6 +7,7 @@ import tokens from '../selectors/tokens';
 import logTakeToTrade from '../../utils/trades/logTakeToTrade';
 import { first } from 'lodash';
 import { fulfilled } from '../../utils/store';
+import { web3p } from '../../bootstrap/web3';
 
 const initialState = Immutable.fromJS({
   volumes: null,
@@ -91,7 +92,7 @@ const logMakeEvent = createAction('TRADES/EVENT___LOG_MAKE', (logMake) => {
 
 const getTradeHistoryStartingBlockTimestamp = createAction(
   GET_TRADE_HISTORY_BLOCK_STARTING_BLOCK_TIMESTAMP, async blockNumber =>
-    (await window.web3p.eth.getBlock(blockNumber)).timestamp
+    (await web3p.eth.getBlock(blockNumber)).timestamp
 );
 
 const loadInitialTradeHistory = createAction(

@@ -3,6 +3,8 @@ const web3 = new Web3();
 
 export default web3;
 
+let web3p = null;
+
 const settings = require('../settings');
 
 const promisify = (inner) =>
@@ -28,13 +30,12 @@ const proxiedWeb3Handler = {
 
 
 const init = () => {
-  if (window.web3) {
+  if (web3) {
     web3.setProvider(window.web3.currentProvider);
   } else {
     web3.setProvider(new Web3.providers.HttpProvider(settings.nodeURL));
   }
-  window.web3 = web3;
-  window.web3p = new window.Proxy(web3, proxiedWeb3Handler);
+  web3p = new window.Proxy(web3, proxiedWeb3Handler);
 };
 
-export { init };
+export { init, web3p };

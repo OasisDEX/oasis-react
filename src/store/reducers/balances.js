@@ -5,6 +5,7 @@ import * as BigNumber from 'bignumber.js';
 import { createPromiseActions } from '../../utils/createPromiseActions';
 import { fulfilled } from '../../utils/store';
 import { BN_DECIMAL_PRECISION, ETH_UNIT_ETHER } from '../../constants';
+import web3, { web3p } from '../../bootstrap/web3';
 
 const initialState = Immutable.fromJS({
   accounts: [],
@@ -29,8 +30,8 @@ const Init = createAction(
 
 const getDefaultAccountEthBalance = createAction(
   GET_DEFAULT_ACCOUNT_ETH_BALANCE,
-  async () => window.web3p.eth.getBalance(window.web3.eth.defaultAccount)
-    .then(ethBalanceInWei => window.web3.fromWei(ethBalanceInWei, ETH_UNIT_ETHER)),
+  async () => web3p.eth.getBalance(web3.eth.defaultAccount)
+    .then(ethBalanceInWei => web3.fromWei(ethBalanceInWei, ETH_UNIT_ETHER)),
 );
 
 const getAllTradedTokensBalances = createAction(
@@ -43,7 +44,7 @@ const getAllTradedTokensBalances = createAction(
       async ([tokenName, tokenContract]) => {
         if (tokenContract.balanceOf) {
           tokensBalancesPromises.push(
-            tokenContract.balanceOf(window.web3.eth.defaultAccount),
+            tokenContract.balanceOf(web3.eth.defaultAccount),
           );
         }
       },
@@ -73,7 +74,7 @@ const getAllTradedTokensAllowances = createAction(
       async ([tokenName, tokenContract]) => {
         if (tokenContract.allowance) {
           tokensAllowancesPromises.push(
-            tokenContract.allowance(window.web3.eth.defaultAccount, spenderAddress),
+            tokenContract.allowance(web3.eth.defaultAccount, spenderAddress),
           );
         }
       },
@@ -98,10 +99,10 @@ const subscribeAccountEthBalanceChangeEvent = createPromiseActions(
 
 const subscribeAccountEthBalanceChangeEventEpic = (accountAddress) => async (dispatch, getState) => {
   dispatch(subscribeAccountEthBalanceChangeEvent.pending());
-  const allAccountEvents = window.web3.eth.filter('latest', { address: accountAddress });
+  const allAccountEvents = web3.eth.filter('latest', { address: accountAddress });
   allAccountEvents.watch(
     () => {
-      window.web3p.eth.getBalance(accountAddress).then(
+      web3p.eth.getBalance(accountAddress).then(
         accEthBalance => {
           const previousBalance = getState().getIn(['balances', 'defaultAccount', 'ethBalance']);
           if (previousBalance !== null) {
