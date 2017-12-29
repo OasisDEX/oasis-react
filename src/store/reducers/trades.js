@@ -38,6 +38,10 @@ const FETCH_LOG_TAKE_EVENTS = 'TRADES/FETCH_LOG_TAKE_EVENTS';
 const FETCH_LOG_MAKE_EVENTS = 'TRADES/FETCH_LOG_MAKE_EVENTS';
 const FETCH_LOG_TRADE_EVENTS = 'TRADES/FETCH_LOG_TRADE_EVENTS';
 
+export const TRADE_TYPE_BID = 'TRADES/TRADE_TYPE_BID';
+export const TRADE_TYPE_ASK = 'TRADES/TRADE_TYPE_ASK';
+
+
 
 const GET_TRADE_HISTORY_BLOCK_STARTING_BLOCK_TIMESTAMP = 'TRADES/GET_TRADE_HISTORY_BLOCK_STARTING_BLOCK_TIMESTAMP';
 
@@ -221,7 +225,9 @@ const reducer = handleActions({
   [logTakeEvent]: (state, { payload }) => state.setIn(['latestEventsBlocks', 'LogTake'], payload.blockNumber),
   [loadInitialTradeHistory]: (state, { payload }) => state.updateIn(['marketHistory'], () => payload),
   [addTradeHistoryEntry]: (state, { payload }) =>
-    state.update('marketHistory', marketHistory => marketHistory.push(payload)),
+    state.updateIn(['marketHistory'], marketHistory => {
+      marketHistory.push(payload);
+    }),
   [initialMarketHistoryLoaded]: (state) => state.set('initialMarketHistoryLoaded', true),
   [fulfilled(getTradeHistoryStartingBlockTimestamp)]:
     (state, { payload }) => state.set('tradeHistoryStartingBlockTimestamp', payload)

@@ -2,10 +2,15 @@
 
 exports[`(Container) OasisTradeOrders should render 1`] = `
 <div>
-  <OasisBuyOrders />
-  <OasisSellOrders />
-  <OasisMyOrders />
-  <OasisMarketHistory />
+  <OasisMarketHistory
+    activeTradingPair={
+      Immutable.Map {
+        baseToken: "MKR",
+        quoteToken: "W-ETH",
+      }
+    }
+    trades={Array []}
+  />
 </div>
 `;
 
@@ -15,4 +20,13 @@ Object {
 }
 `;
 
-exports[`(Container) OasisTradeOrders will receive right props 1`] = `Object {}`;
+exports[`(Container) OasisTradeOrders will receive right props 1`] = `
+Object {
+  "activeTradingPair": Immutable.Map {
+    baseToken: "MKR",
+    quoteToken: "W-ETH",
+},
+  "initialMarketHistoryLoaded": undefined,
+  "marketData": undefined,
+}
+`;
