@@ -1,10 +1,11 @@
 import BigNumber from 'bignumber.js';
 import { ETH_UNIT_ETHER } from '../../constants';
 import web3 from '../../bootstrap/web3';
-import { TRADE_TYPE_ASK, TRADE_TYPE_BID } from '../../store/reducers/trades';
+import { ASK, BID } from '../../store/reducers/trades';
 
 export const PRICE_DECIMAL = 4;
 export const VOLUME_DECIMAL = 2;
+export const AMOUNT_DECIMAL = 2;
 
 const format = (baseToken, quoteToken) => `${baseToken}/${quoteToken}`;
 const trades = (marketData, baseToken, quoteToken) =>
@@ -51,17 +52,17 @@ const price = (tradeHistoryEntry, baseToken, quoteToken) => {
   return price;
 };
 
-const getBaseAndQuotePrice = (tradeHistoryEntry, baseToken, quoteToken) => {
+const getBaseAndQuoteAmount = (tradeHistoryEntry, baseToken, quoteToken) => {
 
   if (tradeHistoryEntry.buyWhichToken === quoteToken && tradeHistoryEntry.sellWhichToken === baseToken) {
     return {
-      basePrice: new BigNumber(tradeHistoryEntry.sellHowMuch),
-      quotePrice: new BigNumber(tradeHistoryEntry.buyHowMuch),
+      baseAmount: new BigNumber(tradeHistoryEntry.sellHowMuch),
+      quoteAmount: new BigNumber(tradeHistoryEntry.buyHowMuch),
     };
   } else if (tradeHistoryEntry.buyWhichToken === baseToken && tradeHistoryEntry.sellWhichToken === quoteToken) {
     return {
-      basePrice: new BigNumber(tradeHistoryEntry.buyHowMuch),
-      quotePrice:new BigNumber(tradeHistoryEntry.sellHowMuch),
+      baseAmount: new BigNumber(tradeHistoryEntry.buyHowMuch),
+      quoteAmount:new BigNumber(tradeHistoryEntry.sellHowMuch),
     };
   }
 
@@ -75,14 +76,22 @@ const formatPrice = (price, fromWei = false, unit = ETH_UNIT_ETHER) => {
   }
 };
 
+const formatAmount = (price, fromWei = false, unit = ETH_UNIT_ETHER) => {
+  if (!fromWei) {
+    return price ? price.toFormat(AMOUNT_DECIMAL) : null;
+  } else {
+    return price ? web3.fromWei(price, ETH_UNIT_ETHER).toFormat(AMOUNT_DECIMAL): null;
+  }
+};
+
 const formatVolume =
   (tradingPairVolume) => web3.fromWei(tradingPairVolume, ETH_UNIT_ETHER).toFormat(VOLUME_DECIMAL);
 
 const tradeType = (order, baseCurrency) => {
   if (order.buyWhichToken === baseCurrency) {
-    return TRADE_TYPE_ASK;
+    return ASK;
   } else if (order.sellWhichToken === baseCurrency) {
-    return TRADE_TYPE_BID;
+    return BID;
   }
 };
 
@@ -91,9 +100,9 @@ const formatTradeType = (type) => {
     return null;
   } else {
     switch (type) {
-      case TRADE_TYPE_BID:
+      case BID:
         return 'buy';
-      case TRADE_TYPE_ASK:
+      case ASK:
         return 'sell';
     }
   }
@@ -108,5 +117,5 @@ export {
   formatVolume,
   tradeType,
   formatTradeType,
-  getBaseAndQuotePrice,
+  formatAmount
 };

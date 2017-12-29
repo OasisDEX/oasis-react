@@ -1,9 +1,10 @@
-import { orderBy, isArray } from 'lodash';
+import isArray from 'lodash/isArray';
+import orderBy from 'lodash/orderBy';
 
-export const SORT_ASC = 'asc';
-export const SORT_DESC = 'desc';
+export const ASCENDING = 'asc';
+export const DESCENDING = 'desc';
 
-const orderBytTimestamp = (data, sortOrder = SORT_ASC) => {
+const orderByTimestamp = (data, sortOrder = ASCENDING) => {
   if(isArray(data)) {
     return orderBy(data, (el) => parseInt(el.timestamp), sortOrder);
   } else {
@@ -12,5 +13,5 @@ const orderBytTimestamp = (data, sortOrder = SORT_ASC) => {
 };
 
 export {
-  orderBytTimestamp
+  orderByTimestamp
 }

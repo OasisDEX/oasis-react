@@ -5,12 +5,12 @@ import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { trades as tokenPairTrades } from '../utils/tokens/pair';
-import OasisBuyOrders from '../components/OasisBuyOrders';
-import OasisSellOrders from '../components/OasisSellOrders';
-import OasisMyOrders from '../components/OasisMyOrders';
+import { trades } from '../utils/tokens/pair';
+// import OasisBuyOrders from '../components/OasisBuyOrders';
+// import OasisSellOrders from '../components/OasisSellOrders';
+// import OasisMyOrders from '../components/OasisMyOrders';
 import OasisMarketHistory from '../components/OasisMarketHistory';
-import  trades from '../store/selectors/trades';
+import tradesSelectors from '../store/selectors/trades';
 import tokens from '../store/selectors/tokens';
 
 const propTypes = PropTypes && {
@@ -20,14 +20,14 @@ const propTypes = PropTypes && {
 export class OasisTradeOrdersWrapper extends PureComponent {
   render() {
     const { marketData = [], initialMarketHistoryLoaded, activeTradingPair } = this.props;
-    const trades = tokenPairTrades(marketData, activeTradingPair.baseToken, activeTradingPair.quoteToken);
+    const tradesList = trades(marketData, activeTradingPair.baseToken, activeTradingPair.quoteToken);
     return (
       <div>
         {/*<OasisBuyOrders/>*/}
         {/*<OasisSellOrders/>*/}
         {/*<OasisMyOrders/>*/}
         <OasisMarketHistory
-          trades={trades}
+          trades={tradesList}
           activeTradingPair={activeTradingPair}
           initialMarketHistoryLoaded={initialMarketHistoryLoaded}
         />
@@ -39,8 +39,8 @@ export class OasisTradeOrdersWrapper extends PureComponent {
 export function mapStateToProps(state) {
   return {
     activeTradingPair: tokens.activeTradingPair(state),
-    marketData: trades.marketsData(state),
-    initialMarketHistoryLoaded: trades.initialMarketHistoryLoaded(state)
+    marketData: tradesSelectors.marketsData(state),
+    initialMarketHistoryLoaded: tradesSelectors.initialMarketHistoryLoaded(state)
   };
 }
 

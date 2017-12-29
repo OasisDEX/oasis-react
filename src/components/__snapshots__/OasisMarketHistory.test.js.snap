@@ -21,11 +21,11 @@ exports[`(Component) OasisMarketHistory should render 1`] = `
         },
         Object {
           "heading": "W-ETH",
-          "key": "quotePrice",
+          "key": "quoteAmount",
         },
         Object {
           "heading": "MKR",
-          "key": "basePrice",
+          "key": "baseAmount",
         },
       ]
     }
