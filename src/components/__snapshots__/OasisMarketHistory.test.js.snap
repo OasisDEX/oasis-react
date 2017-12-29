@@ -1,9 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Component) OasisMarketHistory should render 1`] = `
-<div
-  className="OasisMarketHistory"
+<OasisWidgetFrame
+  heading="MARKET HISTORY"
 >
-  OasisMarketHistory
-</div>
+  <OasisTable
+    col={
+      Array [
+        Object {
+          "heading": "date",
+          "key": "date",
+        },
+        Object {
+          "heading": "action",
+          "key": "tradeType",
+        },
+        Object {
+          "heading": "price",
+          "key": "price",
+        },
+        Object {
+          "heading": "W-ETH",
+          "key": "quoteAmount",
+        },
+        Object {
+          "heading": "MKR",
+          "key": "baseAmount",
+        },
+      ]
+    }
+    rows={Array []}
+  />
+</OasisWidgetFrame>
 `;

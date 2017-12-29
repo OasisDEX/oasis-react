@@ -11,7 +11,17 @@ import {
 import { shallow } from 'enzyme';
 
 describe('(Container) OasisTradeOrders', () => {
-  const state = Immutable.fromJS({});
+  const state = Immutable.fromJS({
+    tokens: {
+      activeTradingPair: {
+        baseToken: 'MKR',
+        quoteToken: 'W-ETH'
+      }
+    },
+    trades: {
+      marketHistory: []
+    }
+  });
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
   const props = {

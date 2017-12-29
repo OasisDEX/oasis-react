@@ -1,9 +1,11 @@
 import BigNumber from 'bignumber.js';
 import { ETH_UNIT_ETHER } from '../../constants';
 import web3 from '../../bootstrap/web3';
+import { ASK, BID } from '../../store/reducers/trades';
 
 export const PRICE_DECIMAL = 4;
 export const VOLUME_DECIMAL = 2;
+export const AMOUNT_DECIMAL = 2;
 
 const format = (baseToken, quoteToken) => `${baseToken}/${quoteToken}`;
 const trades = (marketData, baseToken, quoteToken) =>
@@ -34,11 +36,11 @@ const volume = (tradingPairTrades, baseToken) => {
       return volume.add(currentTradingPairTrade.sellHowMuch);
     }
   };
-  return tradingPairTrades.reduce(tradingPairTradesToVolume, new BigNumber(0))
+  return tradingPairTrades.reduce(tradingPairTradesToVolume, new BigNumber(0));
 };
 
 const price = (tradeHistoryEntry, baseToken, quoteToken) => {
-  if(!tradeHistoryEntry) {
+  if (!tradeHistoryEntry) {
     return null;
   }
   let price = 0;
@@ -50,13 +52,61 @@ const price = (tradeHistoryEntry, baseToken, quoteToken) => {
   return price;
 };
 
-const formatPrice =
-  (price) =>
-    price ? price.toFormat(PRICE_DECIMAL) : null;
+const getBaseAndQuoteAmount = (tradeHistoryEntry, baseToken, quoteToken) => {
 
+  if (tradeHistoryEntry.buyWhichToken === quoteToken && tradeHistoryEntry.sellWhichToken === baseToken) {
+    return {
+      baseAmount: new BigNumber(tradeHistoryEntry.sellHowMuch),
+      quoteAmount: new BigNumber(tradeHistoryEntry.buyHowMuch),
+    };
+  } else if (tradeHistoryEntry.buyWhichToken === baseToken && tradeHistoryEntry.sellWhichToken === quoteToken) {
+    return {
+      baseAmount: new BigNumber(tradeHistoryEntry.buyHowMuch),
+      quoteAmount:new BigNumber(tradeHistoryEntry.sellHowMuch),
+    };
+  }
+
+};
+
+const formatPrice = (price, fromWei = false, unit = ETH_UNIT_ETHER) => {
+  if (!fromWei) {
+    return price ? price.toFormat(PRICE_DECIMAL) : null;
+  } else {
+    return price ? web3.fromWei(price, ETH_UNIT_ETHER).toFormat(PRICE_DECIMAL): null;
+  }
+};
+
+const formatAmount = (price, fromWei = false, unit = ETH_UNIT_ETHER) => {
+  if (!fromWei) {
+    return price ? price.toFormat(AMOUNT_DECIMAL) : null;
+  } else {
+    return price ? web3.fromWei(price, ETH_UNIT_ETHER).toFormat(AMOUNT_DECIMAL): null;
+  }
+};
 
 const formatVolume =
   (tradingPairVolume) => web3.fromWei(tradingPairVolume, ETH_UNIT_ETHER).toFormat(VOLUME_DECIMAL);
+
+const tradeType = (order, baseCurrency) => {
+  if (order.buyWhichToken === baseCurrency) {
+    return ASK;
+  } else if (order.sellWhichToken === baseCurrency) {
+    return BID;
+  }
+};
+
+const formatTradeType = (type) => {
+  if (!type) {
+    return null;
+  } else {
+    switch (type) {
+      case BID:
+        return 'buy';
+      case ASK:
+        return 'sell';
+    }
+  }
+};
 
 export {
   format,
@@ -64,5 +114,8 @@ export {
   volume,
   price,
   formatPrice,
-  formatVolume
-}
+  formatVolume,
+  tradeType,
+  formatTradeType,
+  formatAmount
+};

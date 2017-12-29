@@ -14,7 +14,7 @@ import trades from '../store/selectors/trades';
 import tokens from './../store/selectors/tokens';
 import platform from '../store/selectors/platform';
 import { DAY, WEEK } from '../utils/period';
-
+import OasisTradeOrdersWrapper from './OasisTradeOrders';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -60,6 +60,7 @@ export class OasisTradeWrapper extends PureComponent {
           defaultPeriod={defaultPeriod}
           loadingTradeHistory={loadingTradeHistory}
         />
+        <OasisTradeOrdersWrapper/>
       </main>
     );
   }

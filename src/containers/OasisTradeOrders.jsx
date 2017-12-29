@@ -5,10 +5,13 @@ import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import OasisBuyOrders from '../components/OasisBuyOrders';
-import OasisSellOrders from '../components/OasisSellOrders';
-import OasisMyOrders from '../components/OasisMyOrders';
+import { trades } from '../utils/tokens/pair';
+// import OasisBuyOrders from '../components/OasisBuyOrders';
+// import OasisSellOrders from '../components/OasisSellOrders';
+// import OasisMyOrders from '../components/OasisMyOrders';
 import OasisMarketHistory from '../components/OasisMarketHistory';
+import tradesSelectors from '../store/selectors/trades';
+import tokens from '../store/selectors/tokens';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -16,19 +19,29 @@ const propTypes = PropTypes && {
 
 export class OasisTradeOrdersWrapper extends PureComponent {
   render() {
+    const { marketData = [], initialMarketHistoryLoaded, activeTradingPair } = this.props;
+    const tradesList = trades(marketData, activeTradingPair.baseToken, activeTradingPair.quoteToken);
     return (
       <div>
-        <OasisBuyOrders/>
-        <OasisSellOrders/>
-        <OasisMyOrders/>
-        <OasisMarketHistory/>
+        {/*<OasisBuyOrders/>*/}
+        {/*<OasisSellOrders/>*/}
+        {/*<OasisMyOrders/>*/}
+        <OasisMarketHistory
+          trades={tradesList}
+          activeTradingPair={activeTradingPair}
+          initialMarketHistoryLoaded={initialMarketHistoryLoaded}
+        />
       </div>
     );
   }
 }
 
 export function mapStateToProps(state) {
-  return {};
+  return {
+    activeTradingPair: tokens.activeTradingPair(state),
+    marketData: tradesSelectors.marketsData(state),
+    initialMarketHistoryLoaded: tradesSelectors.initialMarketHistoryLoaded(state)
+  };
 }
 
 export function mapDispatchToProps(dispatch) {
