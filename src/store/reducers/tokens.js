@@ -3,6 +3,7 @@ import Immutable from 'immutable';
 
 import { BASE_TOKENS, QUOTE_TOKENS, TOKEN_MAKER, TOKEN_WRAPPED_ETH } from '../../constants';
 import { generateTradingPairs } from '../../utils/generateTradingPairs';
+import tokens from '../selectors/tokens';
 
 const initialState = Immutable.fromJS({
   allTokens: [
@@ -12,6 +13,7 @@ const initialState = Immutable.fromJS({
   ],
   baseTokens: BASE_TOKENS,
   quoteTokens: QUOTE_TOKENS,
+  precision: null,
   tradingPairs: generateTradingPairs(BASE_TOKENS, QUOTE_TOKENS),
   tokenSpecs: {
     'OW-ETH': { precision: 18, format: '0,0.00[0000000000000000]' },
@@ -57,16 +59,36 @@ const setActiveTradingPair = createAction(
   tradingPair => tradingPair
 );
 
+
+const setPrecision = createAction(
+  'TOKENS/SET_PRECISION', precision => precision
+);
+
+const denotePrecision = () => (dispatch, getState) => {
+  const { baseToken, quoteToken } = tokens.activeTradingPair(getState());
+  const basePrecision = tokens.getTokenSpecs(getState(), baseToken).get('precision');
+  const quotePrecision = tokens.getTokenSpecs(getState(), quoteToken).get('precision');
+  const precision = basePrecision < quotePrecision ? basePrecision : quotePrecision;
+  dispatch(setPrecision(precision));
+  // Session.set('precision', precision);
+  // // TODO: find away to place ROUNDING_MODE in here.
+  // // Right now no matter where It is put , it's overridden with ROUNDING_MODE: 1 from web3 package config.
+  // BigNumber.config({ DECIMAL_PLACES: precision });
+};
+
+
 const actions = {
   Init,
   setDefaultTradingPair,
-  setActiveTradingPair
+  setActiveTradingPair,
+  denotePrecision
 };
 
 const reducer = handleActions({
   [setDefaultTradingPair]: (state, { payload }) =>
     state.update('defaultTradingPair', () => payload),
-  [setActiveTradingPair]:(state, { payload }) => state.set('activeTradingPair', payload)
+  [setActiveTradingPair]:(state, { payload }) => state.set('activeTradingPair', payload),
+  [setPrecision]: (state, { payload }) => state.set('precision', payload),
 }, initialState);
 
 export default {

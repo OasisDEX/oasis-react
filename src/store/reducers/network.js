@@ -18,6 +18,7 @@ import { CLOSED, KOVAN_NET_ID, LIVE_NET_ID, ONLINE } from '../../constants';
 import tradesReducer from './trades';
 import period from '../../utils/period';
 import network from '../selectors/network';
+import offersReducer from './offers';
 
 const initialState = Immutable.fromJS(
   {
@@ -220,7 +221,12 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
   const onNetworkCheckCompleted = async () =>
   {
     const currentLatestBlock = network.latestBlockNumber(getState());
-    await dispatch(subscribeLatestBlockFilterEpic());
+    dispatch(subscribeLatestBlockFilterEpic());
+
+    /**
+     * Inital offers sync
+     */
+    dispatch(offersReducer.actions.syncOffersEpic());
     /**
      *  Fetch LogTake events for set historicalRange
      */

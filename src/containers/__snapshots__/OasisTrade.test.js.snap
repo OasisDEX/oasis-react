@@ -102,6 +102,7 @@ exports[`(Container) OasisTrade should render 1`] = `
 exports[`(Container) OasisTrade will receive right actions 1`] = `
 Object {
   "actions": Object {
+    "denotePrecision": [Function],
     "setActiveTradingPair": [Function],
   },
 }

@@ -35,6 +35,17 @@ const getTokenSpecs = createSelector(
   (state, props) => state.getIn(['tokenSpecs', props])
 );
 
+const getTokensSpecsObject = createSelector(
+  tokens,
+  state => state.get('tokenSpecs')
+);
+
+const precision = createSelector(
+  tokens,
+  state => state.get('precision')
+);
+
+
 const getVisibleTradingPairs = createSelector(
   tokens,
   widgets.marketWidget,
@@ -56,4 +67,6 @@ export default {
   validBaseTokensList,
   validQuoteTokensList,
   tradingPairs,
+  getTokensSpecsObject,
+  precision
 };
