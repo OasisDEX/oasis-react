@@ -202,10 +202,9 @@ const getLatestBlock = createAction(
 const subscribeLatestBlockFilter = createPromiseActions(
   'NETWORK/SUBSCRIBE_LATEST_BLOCK_FILTER',
 );
-const subscribeLatestBlockFilterEpic = () => async (dispatch) => {
+const subscribeLatestBlockFilterEpic = () => async (dispatch, getState, subscribe) => {
   dispatch(subscribeLatestBlockFilter.pending());
-
-  web3.eth.filter('latest', (e) => {
+  web3.eth.filter('latest', (e, b) => {
     dispatch(getLatestBlockNumber());
     dispatch(subscribeLatestBlockFilter.rejected(e));
   });
@@ -216,8 +215,6 @@ const subscribeLatestBlockFilterEpic = () => async (dispatch) => {
 
 const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch, getState) => {
   dispatch(CheckNetworkAction.pending());
-
-
   const onNetworkCheckCompleted = async () =>
   {
     const currentLatestBlock = network.latestBlockNumber(getState());

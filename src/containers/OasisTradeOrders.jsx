@@ -4,6 +4,7 @@ import { PropTypes } from 'prop-types';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { List } from 'immutable';
 
 import { trades } from '../utils/tokens/pair';
 import OasisBuyOrders from '../components/OasisBuyOrders';
@@ -13,6 +14,7 @@ import OasisMarketHistory from '../components/OasisMarketHistory';
 import tradesSelectors from '../store/selectors/trades';
 import tokens from '../store/selectors/tokens';
 import offers from '../store/selectors/offers';
+import offersReducer from '../store/reducers/offers';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -21,7 +23,7 @@ const propTypes = PropTypes && {
 export class OasisTradeOrdersWrapper extends PureComponent {
   render() {
     const {
-      marketData = [],
+      marketData = List(),
       initialMarketHistoryLoaded,
       activeTradingPair,
       loadingBuyOffers,
@@ -29,7 +31,10 @@ export class OasisTradeOrdersWrapper extends PureComponent {
       buyOfferCount,
       sellOfferCount,
       buyOffers,
-      sellOffers
+      sellOffers,
+      actions: {
+        cancelOffer
+      }
     } = this.props;
 
     const tradesList = trades(marketData, activeTradingPair.baseToken, activeTradingPair.quoteToken);
@@ -40,12 +45,14 @@ export class OasisTradeOrdersWrapper extends PureComponent {
           loadingBuyOffers={loadingBuyOffers}
           buyOfferCount={buyOfferCount}
           buyOffers={buyOffers}
+          cancelOffer={cancelOffer}
         />
         <OasisSellOrders
           activeTradingPair={activeTradingPair}
           loadingSellOffers={loadingSellOffers}
           sellOfferCount={sellOfferCount}
           sellOffers={sellOffers}
+          cancelOffer={cancelOffer}
         />
         {/*<OasisMyOrders/>*/}
         <OasisMarketHistory
@@ -73,7 +80,9 @@ export function mapStateToProps(state) {
 }
 
 export function mapDispatchToProps(dispatch) {
-  const actions = {};
+  const actions = {
+    cancelOffer: offersReducer.actions.cancelOfferEpic
+  };
   return { actions: bindActionCreators(actions, dispatch) };
 }
 

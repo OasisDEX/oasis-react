@@ -1,5 +1,5 @@
 import { createAction, handleActions } from 'redux-actions';
-import Immutable from 'immutable';
+import { fromJS, List, Map } from 'immutable';
 
 import { createPromiseActions } from '../../utils/createPromiseActions';
 import * as BigNumber from 'bignumber.js';
@@ -9,7 +9,7 @@ import { first } from 'lodash';
 import { fulfilled } from '../../utils/store';
 import { web3p } from '../../bootstrap/web3';
 
-const initialState = Immutable.fromJS({
+const initialState = fromJS({
   volumes: null,
   marketHistory: null,
   initialMarketHistoryLoaded: false,
@@ -50,7 +50,7 @@ const Init = createAction(
   () => null,
 );
 
-const initMarketHistoryAction = createAction(INIT_MARKET_HISTORY, imh => Immutable.fromJS(imh));
+const initMarketHistoryAction = createAction(INIT_MARKET_HISTORY, imh => fromJS(imh));
 const initMarketHistory = () => (dispatch) => {
   const initialMarketHistoryData = [];
   dispatch(
@@ -58,7 +58,7 @@ const initMarketHistory = () => (dispatch) => {
   );
 };
 
-const initTradesHistoryAction = createAction(INIT_TRADES_HISTORY, ith => Immutable.fromJS(ith));
+const initTradesHistoryAction = createAction(INIT_TRADES_HISTORY, ith => fromJS(ith));
 const initTradesHistory = () => (dispatch) => {
   const initialTradesData = [];
   dispatch(
@@ -66,7 +66,7 @@ const initTradesHistory = () => (dispatch) => {
   );
 };
 
-const initVolumesAction = createAction(INIT_VOLUMES, iv => Immutable.fromJS(iv));
+const initVolumesAction = createAction(INIT_VOLUMES, iv => fromJS(iv));
 const initializeVolumes = () => (dispatch, getState) => {
   const initialVolumesData = {};
   tokens.tradingPairs(getState()).forEach(tp => initialVolumesData[`${tp.get('base')}/${tp.get('quote')}`] = {
@@ -223,11 +223,11 @@ const reducer = handleActions({
         )
         .setIn(['volumes', tradingPair, 'latestPrice'], latestPrice),
   [logTakeEvent]: (state, { payload }) => state.setIn(['latestEventsBlocks', 'LogTake'], payload.blockNumber),
-  [loadInitialTradeHistory]: (state, { payload }) => state.updateIn(['marketHistory'], () => payload),
+  [loadInitialTradeHistory]: (state, { payload }) => state.updateIn(['marketHistory'], () => List(payload)),
   [addTradeHistoryEntry]: (state, { payload }) =>
-    state.updateIn(['marketHistory'], marketHistory => {
-      marketHistory.push(payload);
-    }),
+    state.updateIn(
+      ['marketHistory'], marketHistory => marketHistory.push(payload)
+    ),
   [initialMarketHistoryLoaded]: (state) => state.set('initialMarketHistoryLoaded', true),
   [fulfilled(getTradeHistoryStartingBlockTimestamp)]:
     (state, { payload }) => state.set('tradeHistoryStartingBlockTimestamp', payload)

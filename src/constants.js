@@ -63,6 +63,6 @@ export const QUOTE_TOKENS = [
 ];
 
 export const BASE_TOKENS = [
-  'W-GNT', 'DGD', 'REP', 'ICN', '1ST', 'SNGLS',
+  'W-GNT', 'DAI', 'DGD', 'REP', 'ICN', '1ST', 'SNGLS',
   'VSL', 'PLU', 'MLN', 'RHOC', 'TIME', 'GUP', 'BAT', 'NMR',
 ];

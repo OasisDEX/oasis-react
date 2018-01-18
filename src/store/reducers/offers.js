@@ -1,5 +1,5 @@
 import { createAction, handleActions } from 'redux-actions';
-import Immutable from 'immutable';
+import { fromJS, Map, List } from 'immutable';
 import BigNumber from 'bignumber.js';
 
 import { fulfilled, pending, rejected } from '../../utils/store';
@@ -8,18 +8,23 @@ import tokens from '../selectors/tokens';
 import getTokenByAddress from '../../utils/tokens/getTokenByAddress';
 import { web3p } from '../../bootstrap/web3';
 import { convertTo18Precision } from '../../utils/conversion';
+import network from '../selectors/network';
+import { getOfferType } from '../../utils/orders';
+import transactions, { TX_OFFER_CANCELLED, TX_STATUS_CANCELLED_BY_USER } from './transactions';
+import offers from '../selectors/offers';
+import findOffer from '../../utils/offers/findOffer';
 
-
-const TYPE_BUY_OFFER = 'OFFERS/TYPE_BUY';
-const TYPE_SELL_OFFER = 'OFFERS/TYPE_SELL';
+export const TYPE_BUY_OFFER = 'OFFERS/TYPE_BUY';
+export const TYPE_SELL_OFFER = 'OFFERS/TYPE_SELL';
 
 const SYNC_STATUS_PENDING = 'OFFERS/SYNC_STATUS_PENDING';
 const SYNC_STATUS_COMPLETED = 'OFFERS/SYNC_STATUS_PENDING';
 const SYNC_STATUS_ERROR = 'OFFERS/SYNC_STATUS_ERROR';
 
-const initialState = Immutable.fromJS({
+const initialState = fromJS({
   offers: {},
-  loadingOffers: null,
+  syncingOffers: [],
+  pendingOffers: [],
   initialSyncStatus: null,
   loadingSellOffers: null,
   loadingBuyOffers: null,
@@ -34,8 +39,6 @@ const initialState = Immutable.fromJS({
 // }
 
 const INIT = 'OFFERS/INIT';
-const LOG_TAKE_TO_TRADE = 'OFFERS/LOG_TAKE_TO_TRADE';
-const GET_LATEST_BLOCK_NUMBER = 'OFFERS/GET_LATEST_BLOCK_NUMBER';
 const FETCH_TRADES_ISSUED_FOR_ADDRESS = 'OFFERS/FETCH_TRADES_ISSUED_FOR_ADDRESS';
 const FETCH_TRADES_ACCEPTED_FOR_ADDRESS = 'OFFERS/FETCH_TRADES_ACCEPTED_FOR_ADDRESS';
 const LISTEN_FOR_NEW_TRADES_OF_ADDRESS = 'OFFERS/LISTEN_FOR_NEW_TRADES_OF_ADDRESS';
@@ -58,14 +61,22 @@ const CANCEL_OFFER = 'OFFERS/CANCEL_OFFER';
 
 const GET_LAST_OFFER_ID = 'ORDERS/GET_LAST_OFFER_ID';
 
-const Status = {
-  PENDING: 'pending',
-  CONFIRMED: 'confirmed',
-  CANCELLED: 'cancelled',
-  BOUGHT: 'bought',
-  OPEN: 'open',
-  CLOSED: 'closed',
-};
+const BUY_GAS = 1000000;
+const CANCEL_GAS = 1000000;
+
+const STATUS_PENDING = 'OFFER_STATUS_PENDING';
+const STATUS_CONFIRMED = 'OFFER_STATUS_CONFIRMED';
+const STATUS_CANCELLED = 'OFFER_STATUS_CANCELLED';
+const STATUS_BOUGHT = 'OFFER_STATUS_BOUGHT';
+const STATUS_OPEN = 'OFFER_STATUS_OPEN';
+const STATUS_CLOSED = 'OFFER_STATUS_CLOSED';
+
+const OFFER_SYNC_TYPE_INITIAL = 'OFFERS/OFFER_SYNC_TYPE_INITIAL';
+const OFFER_SYNC_TYPE_UPDATE = 'OFFERS/OFFER_SYNC_TYPE_UPDATE';
+const OFFER_SYNC_TYPE_NEW_OFFER = 'OFFERS/OFFER_SYNC_NEW_OFFER';
+
+const OFFER_PARTIALLY_FILLED_IN = 'OFFERS/OFFER_PARTIALLY_FILLED_IN';
+const OFFER_COMPLETELY_FILLED_IN = 'OFFERS/OFFER_COMPLETELY_FILLED_IN';
 
 const Init = createAction(
   INIT,
@@ -173,7 +184,7 @@ const ListenForAcceptedTradesOfAddress = createAction(
 
 const ListenForTheNewSortedOffers = createAction(
   LISTEN_FOR_THE_NEW_SORTED_OFFERS,
-  () => web3p.eth.filter(window.contracts.market.LogSortedOffer),
+  () => web3p.eth.filter(window.contracts.market.LogMake()),
 );
 // Dapple['maker-otc'].objects.otc.LogSortedOffer((err, result) => {
 //   if (!err) {
@@ -184,23 +195,6 @@ const ListenForTheNewSortedOffers = createAction(
 //     console.debug('Error placing new sorted offer!', err);
 //   }
 // });
-const CheckMarketOpen = createAction(
-  CHECK_MARKET_OPEN,
-  () => {
-    // Fetch the market close time
-    // Dapple['maker-otc'].objects.otc.close_time((error, t) => {
-    //   if (!error) {
-    //     const closeTime = t.toNumber();
-    //     Session.set('close_time', closeTime);
-    //   }
-    // });
-    // Dapple['maker-otc'].objects.otc.isClosed((error, t) => {
-    //   if (!error) {
-    //     Session.set('market_open', !t);
-    //   }
-    // });
-  },
-);
 
 const GetHistoricalTradesRange = createAction(
   GET_HISTORICAL_TRADE_RANGE,
@@ -359,12 +353,6 @@ const SyncOffersAndTrades = createAction(
   },
 );
 
-const subscribeNewOffers = () => {
-};
-
-const subscribeFilledOrCancelledOffers = () => {
-};
-
 const getBestOffer = createAction(
   GET_BEST_OFFER,
   async (sellToken, buyToken) => {
@@ -380,24 +368,6 @@ const getBestOffer = createAction(
     //     }
     //   });
     // });
-  },
-);
-
-const GetHigherOfferId = createAction(
-  GET_HIGHER_OFFER_ID,
-  function getHigherOfferId(existingId) {
-    return new Promise((resolve, reject) => {
-      // Dapple['maker-otc'].objects.otc.getHigherOfferId(
-      //     existingId,
-      //     (error, id) => {
-      //       if (!error) {
-      //         resolve(id);
-      //       } else {
-      //         reject(error);
-      //       }
-      //     },
-      // );
-    });
   },
 );
 
@@ -617,75 +587,108 @@ const BuyOffer = createAction(
 
 const cancelOffer = createAction(
   CANCEL_OFFER,
-  (idx) => {
-    const id = parseInt(idx, 10);
-    // Offers.update(idx, { $unset: { helper: '' } });
-    // Dapple['maker-otc'].objects.otc.cancel(id, { gas: CANCEL_GAS }, (error, tx) => {
-    //   if (!error) {
-    //     Transactions.add('offer', tx, { id: idx, status: Status.CANCELLED });
-    //     Offers.update(idx, { $set: { tx, status: Status.CANCELLED, helper: 'The order is being cancelled...' } });
-    //   } else {
-    //     Offers.update(idx, { $set: { helper: formatError(error) } });
-    //   }
-    // });
-  },
+  (offerId) =>
+    window.contracts.market.cancel(offerId, { gas: CANCEL_GAS }),
 );
+const cancelOfferEpic = (offer) => async (dispatch, getState) => {
+  const cancelOfferAction = dispatch(cancelOffer(offer.id))
+    .then(
+      async () => {
+        dispatch(
+          transactions.actions.addTransactionEpic({
+            type: TX_OFFER_CANCELLED,
+            txSubjectId: offer.id,
+            txHash: (await cancelOfferAction).value,
+          }),
+        );
+      },
+      () => {
+        alert('tx cancelled by user!');
+        dispatch(
+          transactions.actions.transactionRejected({
+            txType: TX_OFFER_CANCELLED,
+            txStatus: TX_STATUS_CANCELLED_BY_USER,
+            txSubjectId: offer.id,
+            txCancelBlock: network.latestBlockNumber(getState()),
+          }),
+        );
+      },
+    );
+};
 
 const getWorseOffer = createAction(
   'OFFERS/GET_WORSE_OFFER',
   offerId => window.contracts.market.getWorseOffer(offerId),
 );
 
-const getNextOffer = (id, error) => {
-  // if (!error) {
-  //   // const loaded = Session.get('loadingCounter') + 1;
-  //   // const total = Session.get('offersCount');
-  //   // Session.set('loadingCounter', loaded);
-  //
-  //   if (loaded === total) {
-  //     Offers.syncOffer(id.toString(10));
-  //   } else {
-  //     Offers.syncOffer(id.toString(10), total);
-  //   }
-  //   Dapple['maker-otc'].objects.otc.getWorseOffer(id.toString(10), (err, nextId) => {
-  //     if (!err && !nextId.eq(0)) {
-  //       getNextOffer(nextId);
-  //     }
-  //   });
-  // } else {
-  //   console.debug('Trouble getting next offer: ', error);
-  // }
-};
-
 const loadOffer = createAction(
   'OFFERS/LOAD_OFFER',
   async (offerId) => window.contracts.market.offers(offerId),
 );
 
-const syncOffer = (offerId, offerType) => async (dispatch, getState) => {
+const syncOffer = (offerId, syncType = OFFER_SYNC_TYPE_INITIAL, previousOfferState) => async (dispatch, getState) => {
   // const isBuyEnabled = Session.get('isBuyEnabled');
   const { baseToken } = tokens.activeTradingPair(getState());
-  // const base = Session.get('baseCurrency');
-  //
-  // const clearLoadingIndicators = () => {
-  //   Session.set('loading', false);
-  //   Session.set('loadingBuyOrders', false);
-  //   Session.set('loadingSellOrders', false);
-  //   Session.set('loadingCounter', 0);
-  //   Session.set('loadingProgress', 100);
-  // };
-
   const offer = (await dispatch(loadOffer(offerId))).value;
 
-  const idx = offerId.toString();
+  const id = offerId.toString();
   const [
-    sellHowMuch, sellWhichTokenAddress, buyHowMuch, buyWhichTokenAddress, owner, timestamp
+    sellHowMuch, sellWhichTokenAddress, buyHowMuch, buyWhichTokenAddress, owner, timestamp,
   ] = offer;
-  dispatch(
-    updateOfferEpic({
-      idx, sellHowMuch, sellWhichTokenAddress, buyHowMuch, buyWhichTokenAddress, owner, timestamp, offerType
-    })
-  )
+
+  switch (syncType) {
+
+    case OFFER_SYNC_TYPE_INITIAL:
+      dispatch(
+        setOfferEpic({
+          id,
+          sellHowMuch,
+          sellWhichTokenAddress,
+          buyHowMuch,
+          buyWhichTokenAddress,
+          owner,
+          timestamp,
+          offerType: getOfferType(baseToken, { buyWhichTokenAddress, sellWhichTokenAddress }),
+          syncType: OFFER_SYNC_TYPE_INITIAL
+        }),
+      );
+      break;
+
+    case OFFER_SYNC_TYPE_NEW_OFFER:
+      dispatch(
+        setOfferEpic({
+          id,
+          sellHowMuch,
+          sellWhichTokenAddress,
+          buyHowMuch,
+          buyWhichTokenAddress,
+          owner,
+          timestamp,
+          offerType: getOfferType(baseToken, { buyWhichTokenAddress, sellWhichTokenAddress }),
+          syncType: OFFER_SYNC_TYPE_NEW_OFFER
+        }),
+      );
+      break;
+
+    case OFFER_SYNC_TYPE_UPDATE: {
+      dispatch(
+        setOfferEpic({
+          id,
+          sellHowMuch,
+          sellWhichTokenAddress,
+          buyHowMuch,
+          buyWhichTokenAddress,
+          owner,
+          timestamp,
+          offerType: getOfferType(baseToken, { buyWhichTokenAddress, sellWhichTokenAddress }),
+          syncType: OFFER_SYNC_TYPE_UPDATE,
+          previousOfferState
+        }),
+      );
+    }
+
+  }
+
   // const sellToken = getTokenByAddress(sellWhichTokenAddress);
   // if (sellToken === baseToken && Session.get('loadingBuyOrders')) {
   //   // Session.set('loadingBuyOrders', false);
@@ -713,27 +716,28 @@ const syncOffer = (offerId, offerType) => async (dispatch, getState) => {
 };
 
 const loadBuyOffers = createPromiseActions('OFFERS/LOAD_BUY_OFFERS');
-const loadBuyOffersEpic = (offerCount, payToken, getToken) => async (dispatch) => {
-  let currentBuyOfferId = (await dispatch(getBestOffer(getToken, payToken))).value.toNumber();
+const loadBuyOffersEpic = (offerCount, payToken, buyToken) => async (dispatch) => {
+  let currentBuyOfferId = (await dispatch(getBestOffer(buyToken, payToken))).value.toNumber();
   dispatch(loadBuyOffers.pending());
   while (offerCount.buyOfferCount) {
-    dispatch(syncOffer(currentBuyOfferId, TYPE_BUY_OFFER));
+    dispatch(syncOffer(currentBuyOfferId));
     currentBuyOfferId = (await dispatch(getWorseOffer(currentBuyOfferId))).value.toNumber();
     --offerCount.buyOfferCount;
-    if(!offerCount.buyOfferCount) {
+    if (!offerCount.buyOfferCount) {
       dispatch(loadBuyOffers.fulfilled());
     }
   }
   return loadBuyOffers;
 };
+
 const loadSellOffers = createPromiseActions('OFFERS/LOAD_SELL_OFFERS');
-const loadSellOffersEpic = (offerCount, sellToken, getToken) => async (dispatch) => {
-  let currentSellOfferId = (await dispatch(getBestOffer(sellToken, getToken))).value.toNumber();
+const loadSellOffersEpic = (offerCount, sellToken, buyToken) => async (dispatch) => {
+  let currentSellOfferId = (await dispatch(getBestOffer(sellToken, buyToken))).value.toNumber();
   while (offerCount.sellOfferCount) {
-    dispatch(syncOffer(currentSellOfferId, TYPE_SELL_OFFER));
+    dispatch(syncOffer(currentSellOfferId));
     currentSellOfferId = (await dispatch(getWorseOffer(currentSellOfferId))).value.toNumber();
     --offerCount.sellOfferCount;
-    if(!offerCount.sellOfferCount) {
+    if (!offerCount.sellOfferCount) {
       dispatch(loadSellOffers.fulfilled());
     }
   }
@@ -743,51 +747,84 @@ const loadSellOffersEpic = (offerCount, sellToken, getToken) => async (dispatch)
 const syncOffers = createPromiseActions(SYNC_OFFERS);
 const syncOffersEpic = () => async (dispatch, getState) => {
   const { baseToken, quoteToken } = tokens.activeTradingPair(getState());
-    dispatch(syncOffers.pending());
-    dispatch(resetOffers({ baseToken, quoteToken }));
-    const offerCount = (await dispatch(getTradingPairOfferCount(baseToken, quoteToken))).value;
-    Promise.all([
-      dispatch(loadBuyOffersEpic(offerCount, baseToken, quoteToken)).catch(
-        e => dispatch(loadBuyOffers.rejected(e))
-      ),
-      dispatch(loadSellOffersEpic(offerCount, baseToken, quoteToken)).catch(
-        e => dispatch(loadSellOffers.rejected(e))
-      )
-    ]).then(() => dispatch(syncOffers.fulfilled()));
+  dispatch(syncOffers.pending());
+  dispatch(resetOffers({ baseToken, quoteToken }));
+
+  const offerCount = (await dispatch(getTradingPairOfferCount(baseToken, quoteToken))).value;
+  const latestBlockNumber = network.latestBlockNumber(getState());
+
+  dispatch(
+    subscribeNewOffersFilledInEpic(latestBlockNumber),
+  );
+  dispatch(
+    subscribeFilledOrdersEpic(latestBlockNumber),
+  );
+  dispatch(
+    subscribeCancelledOrdersEpic(latestBlockNumber),
+  );
+
+  Promise.all([
+    dispatch(loadBuyOffersEpic(offerCount, baseToken, quoteToken)).catch(
+      e => dispatch(loadBuyOffers.rejected(e)),
+    ),
+    dispatch(loadSellOffersEpic(offerCount, baseToken, quoteToken)).catch(
+      e => dispatch(loadSellOffers.rejected(e)),
+    ),
+  ]).then(() => dispatch(syncOffers.fulfilled()));
+
 };
 
 const setOffer = createAction(
   'OFFERS/SET_OFFER',
-  ({ offer, baseToken, quoteToken, offerType }) => ({ offer, baseToken, quoteToken, offerType })
+  ({ offer, baseToken, quoteToken, offerType }) => ({ offer, baseToken, quoteToken, offerType }),
 );
-const updateOfferEpic = ({
-   idx = null,
+
+const updateOffer = createAction(
+  'OFFERS/UPDATE_OFFER',
+  ({ offer, baseToken, quoteToken, offerType, previousOfferState }) =>
+      ({ offer, baseToken, quoteToken, offerType, previousOfferState }),
+);
+
+
+const setOfferEpic = ({
+   id = null,
    sellHowMuch,
    sellWhichTokenAddress,
    buyHowMuch,
    buyWhichTokenAddress,
    owner,
    status,
-   offerType
-}) => async (dispatch, getState) => {
+   offerType,
+   syncType = OFFER_SYNC_TYPE_INITIAL,
+   previousOfferState
+ }) => async (dispatch, getState) => {
 
   const sellToken = getTokenByAddress(sellWhichTokenAddress);
   const buyToken = getTokenByAddress(buyWhichTokenAddress);
 
-  if( !sellToken  || !buyToken)  { return; }
+  /**
+   * We ignore pairs that we cant find contract for.
+   */
+  if (!sellToken || !buyToken) {
+    return;
+  }
 
   const precision = tokens.precision(getState());
   const { baseToken, quoteToken } = tokens.activeTradingPair(getState());
 
   let sellHowMuchValue = convertTo18Precision(sellHowMuch, sellToken);
   let buyHowMuchValue = convertTo18Precision(buyHowMuch, buyToken);
-  if (!(sellHowMuchValue instanceof BigNumber)) { sellHowMuchValue = new BigNumber(sellHowMuchValue, 10); }
-  if (!(buyHowMuchValue instanceof BigNumber)) { buyHowMuchValue = new BigNumber(buyHowMuchValue, 10); }
+  if (!(sellHowMuchValue instanceof BigNumber)) {
+    sellHowMuchValue = new BigNumber(sellHowMuchValue, 10);
+  }
+  if (!(buyHowMuchValue instanceof BigNumber)) {
+    buyHowMuchValue = new BigNumber(buyHowMuchValue, 10);
+  }
 
   const offer = {
+    id,
     owner,
     status,
-    helper: status === Status.PENDING ? 'Your new order is being placed...' : '',
     buyWhichTokenAddress,
     buyWhichToken: buyToken,
     sellWhichTokenAddress,
@@ -799,14 +836,37 @@ const updateOfferEpic = ({
     ask_price: buyHowMuchValue.div(sellHowMuchValue).valueOf(),
     bid_price: sellHowMuchValue.div(buyHowMuchValue).valueOf(),
     ask_price_sort: new BigNumber(
-      buyHowMuchValue.div(sellHowMuchValue).toFixed(precision < 5 ? 5 : precision, 6), 10
+      buyHowMuchValue.div(sellHowMuchValue).toFixed(precision < 5 ? 5 : precision, 6), 10,
     ).toNumber(),
     bid_price_sort: new BigNumber(
-      sellHowMuchValue.div(buyHowMuchValue).toFixed(precision < 5 ? 5 : precision, 6), 10
+      sellHowMuchValue.div(buyHowMuchValue).toFixed(precision < 5 ? 5 : precision, 6), 10,
     ).toNumber(),
   };
-  dispatch(setOffer({ offer, baseToken, quoteToken, offerType }));
-  // Offers.upsert(idx, { $set: offer });
+
+  switch (syncType) {
+    case OFFER_SYNC_TYPE_NEW_OFFER:
+    case OFFER_SYNC_TYPE_INITIAL:
+      dispatch(setOffer({ offer, baseToken, quoteToken, offerType }));
+    break;
+
+    case OFFER_SYNC_TYPE_UPDATE:
+      if(sellHowMuchValue.toNumber() === 0) {
+        dispatch(
+          offerCompletelyFilledIn(
+            { baseToken, quoteToken, offerType, offerId: id, updatedOffer: offer, previousOfferState }
+          )
+        );
+      } else {
+
+        dispatch(updateOffer({ offer, baseToken, quoteToken, offerType }));
+        dispatch(
+          offerPartiallyFilledIn(
+            { baseToken, quoteToken, offerType, offerId: id, updatedOffer: offer, previousOfferState }
+          )
+        );
+      }
+    break;
+  }
 };
 
 const getTradingPairOfferCount = createAction(
@@ -820,20 +880,164 @@ const getTradingPairOfferCount = createAction(
       sellOfferCount: (await window.contracts.market.getOfferCount(baseAddress, quoteAddress)).toNumber(),
     };
   },
-
-  // function requestOffersFor(firstCurrency, secondCurrency) {
-  //   return new Promise((resolve, reject) => {
-  //     Dapple['maker-otc'].objects.otc.getOfferCount(firstCurrency, secondCurrency, (err, count) => {
-  //       if (!err) {
-  //         resolve(count);
-  //       } else {
-  //         reject(err);
-  //       }
-  //     });
-  //   });
-  // }
-
 );
+
+/**
+ * New offer is filled in
+ * - sync offer
+ *
+ */
+const newOfferFilledIn = createAction('OFFERS/NEW_OFFER_FILLED_IN', offerId => offerId);
+const subscribeNewOffersFilledInEpic = (fromBlock) => async (dispatch, getState) => {
+  window.contracts.market.LogMake({ fromBlock, toBlock: 'latest' })
+    .then((err, LogMakeEvent) => {
+      const newOfferId = parseInt(LogMakeEvent.args.id, 16);
+      dispatch(newOfferFilledIn(newOfferId));
+      const { baseToken, quoteToken } = tokens.activeTradingPair(getState());
+      dispatch(
+        getTradingPairOfferCount(baseToken, quoteToken)
+      )
+    });
+};
+
+const offerCancelledEvent = createAction(
+  'OFFERS/EVENT___OFFER_CANCELLED', data => data,
+);
+
+const subscribeCancelledOrders = createPromiseActions(
+  'OFFERS/SUBSCRIBE_CANCELLED_OFFERS',
+);
+const subscribeCancelledOrdersEpic = (fromBlock) => async (dispatch, getState) => {
+  dispatch(subscribeCancelledOrders.pending());
+  try {
+    window.contracts.market.LogKill({ fromBlock, toBlock: 'latest' }).then(
+      (err, LogKillEvent) => {
+        const {
+          id,
+          pair,
+          maker,
+          pay_gem,
+          buy_gem,
+          pay_amt,
+          buy_amt,
+          timestamp,
+        } = LogKillEvent.args;
+
+        const { baseToken, quoteToken } = tokens.activeTradingPair(getState());
+        dispatch(
+          offerCancelledEvent(
+            {
+              offerType: getOfferType(baseToken, {
+                buyWhichTokenAddress: buy_gem,
+                sellWhichTokenAddress: pay_gem,
+              }),
+              offerId: parseInt(id, 16).toString(),
+              tradingPair: { baseToken, quoteToken },
+            },
+          ),
+        );
+        dispatch(
+          getTradingPairOfferCount(baseToken, quoteToken)
+        )
+
+      },
+    );
+  } catch (e) {
+    dispatch(subscribeCancelledOrders.rejected(e));
+  }
+  dispatch(subscribeCancelledOrders.fulfilled());
+};
+
+const subscribeFilledOrders = createPromiseActions(
+  'OFFERS/SUBSCRIBE_FILLED_OFFERS',
+);
+
+const offerPartiallyFilledIn = createAction(
+  OFFER_PARTIALLY_FILLED_IN,
+  ({offerId, baseToken, quoteToken, offerType, updatedOffer, previousOfferState}) =>
+      ({offerId, baseToken, quoteToken, offerType, updatedOffer, previousOfferState})
+);
+const offerCompletelyFilledIn = createAction(
+  OFFER_COMPLETELY_FILLED_IN,
+  ({offerId, baseToken, quoteToken, offerType,updatedOffer, previousOfferState}) =>
+      ({offerId, baseToken, quoteToken, offerType, updatedOffer, previousOfferState})
+);
+
+
+const checkOfferIsActive = createAction(
+  'OFFERS/CHECK_OFFER_IS_ACTIVE',
+  offerId => window.contracts.market.isActive(offerId)
+);
+
+const subscribeFilledOrdersEpic = () => async (dispatch, getState) => {
+  dispatch(subscribeFilledOrders.pending());
+  window.contracts.market.LogItemUpdate().then(
+    async (err, LogItemUpdateEvent) => {
+      const offerId = LogItemUpdateEvent.args.id.toNumber();
+      const isOfferActive = (await dispatch(checkOfferIsActive(offerId))).value;
+      if (offerId && isOfferActive) {
+
+        /**
+         * Check if offer is already in the store:
+         * - yes -> update offer
+         * - no -> insert into the offer list
+         */
+        const { offer } = findOffer(offerId, getState());
+        if (offer) {
+          dispatch(syncOffer(offerId, OFFER_SYNC_TYPE_UPDATE, offer));
+        } else {
+          dispatch(syncOffer(offerId, OFFER_SYNC_TYPE_NEW_OFFER));
+        }
+      } // else offer is being cancelled ( handled in LogKill )
+
+      const { baseToken, quoteToken } = tokens.activeTradingPair(getState());
+      dispatch(
+        getTradingPairOfferCount(baseToken, quoteToken)
+      )
+    },
+    err => subscribeFilledOrders.rejected(err),
+  );
+  dispatch(subscribeFilledOrders.fulfilled());
+};
+
+const subscribeFilledOrCancelledOrders = () => async (dispatch, getState) => {
+  /** When the order matching is activated we are using ItemUpdate only to listen for events
+   * where a given order is getting cancelled or filled in ( in case of `buy` being enabled.*/
+  // window.contracts.market.LogItemUpdate((err, result) => {
+  //   if (!err) {
+  //     const idx = result.args.id;
+  //     Dapple['maker-otc'].objects.otc.offers(idx.toNumber(), (error, data) => {
+  //       if (!error) {
+  //         const offer = Offers.findOne({ _id: idx.toString() });
+  //
+  //         if (offer) {
+  //           const [, , , , , active] = data;
+  //           Offers.syncOffer(idx.toNumber());
+  /**
+   * When the order matching is enabled there is check on the contract side
+   * before the creating new order.
+   * It checks if the new order is about to match existing one. There are couple of scenarios:
+   *
+   *  - New order is filled in completely but the existing one is completed partially or completely
+   *    = then no order is actually created on the blockchain so the UI has offer is transaction id only.
+   *
+   *  - New order is not filled in completely but fills the existing one completely
+   *    = then new order is created with the remainings after the matching is done.
+   *
+   * Transaction hash of the event in the first case scenario, corresponds to the transaction hash,
+   * used to store the offer on the client. In order to update the UI accordingly, when the first scenario is met
+   * we used the transaction has to remove the new order from the collection.
+   * */
+  // Offers.remove(result.transactionHash);
+  // if (!active) {
+  //   Offers.remove(idx.toString());
+  // }
+  // }
+  // }
+  // });
+  // }
+  // });
+};
 
 const actions = {
   Init,
@@ -845,36 +1049,62 @@ const actions = {
   ListenForAcceptedTradesOfAddress,
   ListenForTheNewSortedOffers,
   getTradingPairOfferCount,
+  cancelOfferEpic,
   syncOffersEpic,
 };
 
 const reducer = handleActions({
   [fulfilled(getTradingPairOfferCount)]:
     (state, { payload: { baseToken, quoteToken, buyOfferCount, sellOfferCount } }) => {
-      return state.setIn(
-        ['offers', Immutable.Map({ baseToken, quoteToken })],
-        Immutable.Map(({ buyOfferCount, sellOfferCount, buyOffers: Immutable.List(), sellOffers: Immutable.List() })),
+      return state.updateIn(
+        ['offers', Map({ baseToken, quoteToken })],
+        tradingPairOffers => {
+          if(!tradingPairOffers) {
+            return Map(({ buyOfferCount, sellOfferCount, buyOffers: List(), sellOffers: List() }));
+          } {
+            return tradingPairOffers
+              .setIn(['buyOfferCount'], buyOfferCount)
+              .setIn(['sellOfferCount'], sellOfferCount)
+          }
+        }
       );
     },
-  [fulfilled(loadOffer)]:
-    (state,
-       // { payload: [sellHowMuch, sellWhichTokenAddress, buyHowMuch, buyWhichTokenAddress, owner, timestamp] }
-     ) => state,
-  [setOffer]: (state, { payload : { offer, baseToken, quoteToken, offerType } }) =>
+  [pending(loadOffer)]: state => state,
+  [fulfilled(loadOffer)]: state => state,
+  [setOffer]: (state, { payload: { offer, baseToken, quoteToken, offerType } }) =>
     state.updateIn(
-      ['offers', Immutable.Map({baseToken, quoteToken})], tradingPairOffers => {
+      ['offers', Map({ baseToken, quoteToken })], tradingPairOffers => {
         switch (offerType) {
           case TYPE_BUY_OFFER :
             return tradingPairOffers.updateIn(['buyOffers'], buyOffers => buyOffers.push(offer));
           case TYPE_SELL_OFFER:
             return tradingPairOffers.updateIn(['sellOffers'], sellOffers => sellOffers.push(offer));
         }
-      }
+      },
+    ),
+  [updateOffer]: (state, { payload: { offer, baseToken, quoteToken, offerType } }) =>
+    state.updateIn(
+      ['offers', Map({ baseToken, quoteToken })], tradingPairOffers => {
+        switch (offerType) {
+          case TYPE_BUY_OFFER :
+            return tradingPairOffers.updateIn(['buyOffers'], buyOffers =>
+              buyOffers.update(buyOffers.findIndex(
+                buyOffer => buyOffer.id == offer.id), () => offer
+              )
+            );
+          case TYPE_SELL_OFFER:
+            return tradingPairOffers.updateIn(['sellOffers'], sellOffers =>
+              sellOffers.update(sellOffers.findIndex(
+                sellOffer => sellOffer.id == offer.id), () => offer
+              )
+            );
+        }
+      },
     ),
   [pending(syncOffers)]: state => state.set('initialSyncStatus', SYNC_STATUS_PENDING),
   [fulfilled(syncOffers)]: state => state.set('initialSyncStatus', SYNC_STATUS_COMPLETED),
   [rejected(syncOffers)]: state => state.set('initialSyncStatus', SYNC_STATUS_ERROR),
-  
+
   [pending(loadBuyOffers)]: state => state.set('loadingBuyOffers', SYNC_STATUS_PENDING),
   [fulfilled(loadBuyOffers)]: state => state.set('loadingBuyOffers', SYNC_STATUS_COMPLETED),
   [rejected(loadBuyOffers)]: state => state.set('loadingBuyOffers', SYNC_STATUS_ERROR),
@@ -882,6 +1112,39 @@ const reducer = handleActions({
   [pending(loadSellOffers)]: state => state.set('loadingSellOffers', SYNC_STATUS_PENDING),
   [fulfilled(loadSellOffers)]: state => state.set('loadingSellOffers', SYNC_STATUS_COMPLETED),
   [rejected(loadSellOffers)]: state => state.set('loadingSellOffers', SYNC_STATUS_ERROR),
+  [offerCancelledEvent]: (state, { payload: { tradingPair, offerType, offerId } }) => {
+    switch (offerType) {
+      case TYPE_BUY_OFFER:
+        return state
+          .updateIn(['offers', Map(tradingPair), 'buyOffers'],
+            buyOfferList => buyOfferList.filter(offer => offer.id !== offerId),
+          );
+      case TYPE_SELL_OFFER:
+        return state
+          .updateIn(['offers', Map(tradingPair), 'sellOffers'],
+            sellOfferList => sellOfferList.filter(offer => offer.id !== offerId),
+          );
+
+    }
+  },
+  // [offerPartiallyFilledIn]:
+  //   (state, { payload: { offerId, tradingPair, offerType, updatedOffer, previousOfferState } }) => state,
+  [offerCompletelyFilledIn]:
+    (state, { payload: { offerId, tradingPair, offerType } }) => {
+    switch (offerType) {
+      case TYPE_BUY_OFFER:
+        return state
+          .updateIn(['offers', Map(tradingPair), 'buyOffers'],
+            buyOfferList => buyOfferList.filter(offer => offer.id !== offerId),
+          );
+      case TYPE_SELL_OFFER:
+        return state
+          .updateIn(['offers', Map(tradingPair), 'sellOffers'],
+            sellOfferList => sellOfferList.filter(offer => offer.id !== offerId),
+          );
+
+    }
+  },
 }, initialState);
 
 export default {

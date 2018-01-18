@@ -25,7 +25,9 @@ class OasisSellOrders extends PureComponent {
     const { activeTradingPair: { baseToken, quoteToken }, sellOffers } = this.props;
     return (
       <OasisWidgetFrame heading={'SELL ORDERS'}>
-        <OasisTable rows={sellOffers.map(toDisplayFormat)} col={colsDefinition(baseToken, quoteToken)}/>
+        <OasisTable
+          rows={sellOffers.sort((p, c) => p.ask_price_sort > c.ask_price_sort? 1 : -1).map(toDisplayFormat)}
+          col={colsDefinition(baseToken, quoteToken)}/>
       </OasisWidgetFrame>
     );
   }

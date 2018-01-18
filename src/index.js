@@ -53,7 +53,6 @@ const healthCheck = (dispatch, getState, isInitialHealhtcheck = false) => {
           await dispatch(
             networkReducer.actions.checkNetworkEpic(providerType.join(), isInitialHealhtcheck),
           );
-
         }
         /**
          *  TODO @Georgi

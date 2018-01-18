@@ -9,7 +9,7 @@ const initialState = Immutable.fromJS({
   allTokens: [
     'W-ETH', 'MKR', 'DGD', 'GNT', 'W-GNT', 'REP',
     'ICN', '1ST', 'SNGLS', 'VSL', 'PLU', 'MLN',
-    'RHOC', 'TIME', 'GUP', 'BAT', 'NMR', 'SAI',
+    'RHOC', 'TIME', 'GUP', 'BAT', 'NMR', 'SAI','DAI'
   ],
   baseTokens: BASE_TOKENS,
   quoteTokens: QUOTE_TOKENS,

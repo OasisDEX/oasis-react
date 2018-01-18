@@ -14,12 +14,26 @@ const propTypes = PropTypes && {
 const defaultProps = {};
 
 
+const getColTemplate = (rowDef, row) => {
+  if(rowDef.template) {
+    return rowDef.template.call(null, row);
+  } else {
+    return (<span>N/A</span>);
+  }
+};
+
 export class OasisTable extends PureComponent {
 
   rowContent(row) {
     const { col } = this.props;
     return col.map(
-      (rowDef, i) => <td key={i}>{row[rowDef.key]}</td>
+      (rowDef, i) => {
+        return (
+          <td key={i}>
+            { row[rowDef.key] || getColTemplate(rowDef, row) }
+          </td>
+        )
+      }
     );
   }
 
