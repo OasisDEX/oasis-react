@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import { last } from 'lodash';
+import { List } from 'immutable';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import OasisWidgetFrame from '../containers/OasisWidgetFrame';
 import { OasisTable } from './OasisTable';
@@ -18,8 +20,8 @@ const periodHeading = {
 const colDefinition = (period) => {
   return [
     { heading: 'pairs', key: 'tradingPair' },
-    { heading: `${periodHeading[period]} volume`, key: 'volume' },
     { heading: 'price', key: 'tradingPairPrice' },
+    { heading: `${periodHeading[period]} volume`, key: 'volume' },
   ];
 };
 
@@ -31,12 +33,12 @@ class OasisMarketWidget extends PureComponent {
   }
 
   transformRow(row) {
-    const { marketData = [] } = this.props;
+    const { marketData = List() } = this.props;
     const [baseToken, quoteToken] = [row.get('base'), row.get('quote')];
 
     if (marketData) {
       const tradingPairTrades = trades(marketData, baseToken, quoteToken);
-      const tradingPairVolume = volume(tradingPairTrades, baseToken);
+      const tradingPairVolume = volume(tradingPairTrades, baseToken, quoteToken);
       const tradingPairPrice = tradingPairVolume.toNumber() ?
         price(last(tradingPairTrades), baseToken, quoteToken) : null;
 
@@ -68,6 +70,6 @@ class OasisMarketWidget extends PureComponent {
 OasisMarketWidget.displayName = 'OasisMarketWidget';
 OasisMarketWidget.propTypes = PropTypes && {
   tradedTokens: PropTypes.object.isRequired,
-  marketData: PropTypes.array,
+  marketData: ImmutablePropTypes.list,
 };
 export default OasisMarketWidget;

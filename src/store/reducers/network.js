@@ -18,6 +18,7 @@ import { CLOSED, KOVAN_NET_ID, LIVE_NET_ID, ONLINE } from '../../constants';
 import tradesReducer from './trades';
 import period from '../../utils/period';
 import network from '../selectors/network';
+import offersReducer from './offers';
 
 const initialState = Immutable.fromJS(
   {
@@ -201,10 +202,9 @@ const getLatestBlock = createAction(
 const subscribeLatestBlockFilter = createPromiseActions(
   'NETWORK/SUBSCRIBE_LATEST_BLOCK_FILTER',
 );
-const subscribeLatestBlockFilterEpic = () => async (dispatch) => {
+const subscribeLatestBlockFilterEpic = () => async (dispatch, getState, subscribe) => {
   dispatch(subscribeLatestBlockFilter.pending());
-
-  web3.eth.filter('latest', (e) => {
+  web3.eth.filter('latest', (e, b) => {
     dispatch(getLatestBlockNumber());
     dispatch(subscribeLatestBlockFilter.rejected(e));
   });
@@ -215,12 +215,15 @@ const subscribeLatestBlockFilterEpic = () => async (dispatch) => {
 
 const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch, getState) => {
   dispatch(CheckNetworkAction.pending());
-
-
   const onNetworkCheckCompleted = async () =>
   {
     const currentLatestBlock = network.latestBlockNumber(getState());
-    await dispatch(subscribeLatestBlockFilterEpic());
+    dispatch(subscribeLatestBlockFilterEpic());
+
+    /**
+     * Inital offers sync
+     */
+    dispatch(offersReducer.actions.syncOffersEpic());
     /**
      *  Fetch LogTake events for set historicalRange
      */

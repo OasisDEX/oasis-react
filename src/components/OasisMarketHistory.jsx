@@ -2,17 +2,16 @@ import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import moment from 'moment';
 import BigNumber from 'bignumber.js';
-
 import OasisWidgetFrame from '../containers/OasisWidgetFrame';
 import { OasisTable } from './OasisTable';
 import { tradeType, price, formatTradeType, formatPrice, formatAmount } from '../utils/tokens/pair';
 import { orderByTimestamp, DESCENDING } from '../utils/sort';
 
-// import ImmutablePropTypes from 'react-immutable-proptypes';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
 const propTypes = PropTypes && {
   activeTradingPair: PropTypes.object.isRequired,
-  trades: PropTypes.array.isRequired,
+  trades: ImmutablePropTypes.list.isRequired,
 };
 const defaultProps = {};
 
@@ -29,7 +28,7 @@ const colsDefinition = (baseToken, quoteToken) => {
 class OasisMarketHistory extends PureComponent {
   render() {
     const { trades, activeTradingPair: { baseToken, quoteToken } } = this.props;
-    const sortedTrades = orderByTimestamp(trades, DESCENDING);
+    const sortedTrades = orderByTimestamp(trades.toJSON(), DESCENDING);
 
     const toHistoricalTrades = (tradeHistoryEntry) => {
       let baseAmount = null, quoteAmount = null;

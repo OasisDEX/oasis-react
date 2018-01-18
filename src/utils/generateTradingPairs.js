@@ -10,14 +10,20 @@ export const generateTradingPairs = (baseTokens, quoteTokens) => {
     },
     {
       base: 'W-ETH',
-      quote: 'SAI',
+      quote: 'DAI',
       priority: 9,
       isDefault: true
     },
     {
       base: 'MKR',
-      quote: 'SAI',
+      quote: 'DAI',
       priority: 8,
+      isDefault: true
+    },
+    {
+      base: 'SAI',
+      quote: 'DAI',
+      priority: 6,
       isDefault: true
     },
   ];

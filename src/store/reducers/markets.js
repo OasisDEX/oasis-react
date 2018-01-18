@@ -4,6 +4,7 @@ import web3 from '../../bootstrap/web3';
 
 import { fulfilled } from '../../utils/store';
 import { createPromiseActions } from '../../utils/createPromiseActions';
+import tokens from '../selectors/tokens';
 
 const CHECK_IF_MARKET_IS_OPEN = 'MARKETS/CHECK_IF_MARKET_IS_OPEN';
 const CHECK_MARKET_CLOSE_TIME = 'MARKETS/CHECK_MARKET_CLOSE_TIME';
@@ -90,40 +91,6 @@ const subscribeLogBuyEnabledEventEpic = () =>
   async () =>
     window.contracts.market.LogBuyEnabled({}, { fromBlock: 'latest' });
 
-const DenotePrecision = createAction(
-  DENOTE_PRECISION,
-  function denotePrecision() {
-    // const basePrecision = Dapple.getTokenSpecs(
-    //     Session.get('baseCurrency')).precision;
-    // const quotePrecision = Dapple.getTokenSpecs(
-    //     Session.get('quoteCurrency')).precision;
-    // const precision = basePrecision < quotePrecision ?
-    //     basePrecision :
-    //     quotePrecision;
-    // Session.set('precision', precision);
-    // // TODO: find away to place ROUNDING_MODE in here.
-    // // Right now no matter where It is put , it's overridden with ROUNDING_MODE: 1 from web3 package config.
-    // BigNumber.config({ DECIMAL_PLACES: precision });
-  },
-);
-
-
-const GetTradingPairPrecision = createAction(
-  DENOTE_PRECISION,
-  () => {
-    // const basePrecision = Dapple.getTokenSpecs(
-    //     Session.get('baseCurrency')).precision;
-    // const quotePrecision = Dapple.getTokenSpecs(
-    //     Session.get('quoteCurrency')).precision;
-    // const precision = basePrecision < quotePrecision ?
-    //     basePrecision :
-    //     quotePrecision;
-    // Session.set('precision', precision);
-    // // TODO: find away to place ROUNDING_MODE in here.
-    // // Right now no matter where It is put , it's overridden with ROUNDING_MODE: 1 from web3 package config.
-    // BigNumber.config({ DECIMAL_PLACES: precision });
-  },
-);
 
 const setActiveMarketOriginBlockNumber = createAction(
   'MARKETS/SET_ACTIVE_MARKET_ORIGIN_BLOCK_NUMBER',

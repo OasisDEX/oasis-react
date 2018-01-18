@@ -46,6 +46,7 @@ export class OasisTradeWrapper extends PureComponent {
         this.props.actions.setActiveTradingPair({
           baseToken: params.baseToken, quoteToken: params.quoteToken
         });
+        this.props.actions.denotePrecision();
       }
       return null;
     }
@@ -75,13 +76,14 @@ export function mapStateToProps(state) {
     marketsData: trades.marketsData(state),
     activeTradingPair: tokens.activeTradingPair(state),
     tradedTokens: tokens.tradingPairs(state),
-    defaultPeriod: platform.defaultPeriod(state)
+    defaultPeriod: platform.defaultPeriod(state),
   };
 }
 
 export function mapDispatchToProps(dispatch) {
   const actions = {
     setActiveTradingPair: tokensReducer.actions.setActiveTradingPair,
+    denotePrecision: tokensReducer.actions.denotePrecision,
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

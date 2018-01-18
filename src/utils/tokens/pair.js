@@ -5,7 +5,7 @@ import { ASK, BID } from '../../store/reducers/trades';
 
 export const PRICE_DECIMAL = 4;
 export const VOLUME_DECIMAL = 2;
-export const AMOUNT_DECIMAL = 2;
+export const AMOUNT_DECIMAL = 3;
 
 const format = (baseToken, quoteToken) => `${baseToken}/${quoteToken}`;
 const trades = (marketData, baseToken, quoteToken) =>
@@ -68,19 +68,19 @@ const getBaseAndQuoteAmount = (tradeHistoryEntry, baseToken, quoteToken) => {
 
 };
 
-const formatPrice = (price, fromWei = false, unit = ETH_UNIT_ETHER) => {
+const formatPrice = (price, fromWei = false, unit = ETH_UNIT_ETHER, decimalPlaces = PRICE_DECIMAL) => {
   if (!fromWei) {
-    return price ? price.toFormat(PRICE_DECIMAL) : null;
+    return price ? new BigNumber(price).toFormat(PRICE_DECIMAL) : null;
   } else {
-    return price ? web3.fromWei(price, ETH_UNIT_ETHER).toFormat(PRICE_DECIMAL): null;
+    return price ? new BigNumber(web3.fromWei(price, ETH_UNIT_ETHER)).toFormat(decimalPlaces): null;
   }
 };
 
 const formatAmount = (price, fromWei = false, unit = ETH_UNIT_ETHER) => {
   if (!fromWei) {
-    return price ? price.toFormat(AMOUNT_DECIMAL) : null;
+    return price ? new BigNumber(price).toFormat(AMOUNT_DECIMAL) : null;
   } else {
-    return price ? web3.fromWei(price, ETH_UNIT_ETHER).toFormat(AMOUNT_DECIMAL): null;
+    return price ? new BigNumber(web3.fromWei(price, ETH_UNIT_ETHER)).toFormat(AMOUNT_DECIMAL): null;
   }
 };
 

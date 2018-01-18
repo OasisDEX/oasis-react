@@ -22,7 +22,6 @@ import widgets from './widgets';
 export default combineReducers(
   {
     platform: platform.reducer,
-    bootstrap: platform.reducer,
     network: network.reducer,
     markets: markets.reducer,
     balances: balances.reducer,

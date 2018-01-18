@@ -1,10 +1,12 @@
 import { createAction, handleActions } from 'redux-actions';
 import Immutable from 'immutable';
-import web3 from '../../bootstrap/web3';
 
 import { fulfilled, pending, rejected } from '../../utils/store';
+import { createPromiseActions } from '../../utils/createPromiseActions';
+import tokens from '../selectors/tokens';
 
-const initialState = Immutable.fromJS({});
+const initialState = Immutable.fromJS({
+});
 
 const INIT = 'ORDERS/INIT';
 
@@ -20,11 +22,22 @@ const Init = createAction(
   () => null,
 );
 
+
+
+
+
 const actions = {
-  Init,
+  Init
 };
 
-const reducer = handleActions({}, initialState);
+const reducer = handleActions({
+  // [pending(loadOffers)]: state => state.set('loading', true),
+  // [fulfilled(getLastOfferId)]: (state, { payload }) => state.set('lastOfferId', payload),
+  // [fulfilled(loadOffers)]: (state, { payload }) => {
+  //   console.log('offers', payload);
+  //   return state;
+  // }
+}, initialState);
 
 export default {
   actions,
