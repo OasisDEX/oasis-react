@@ -3,7 +3,9 @@ import { ETH_UNIT_ETHER } from '../../constants';
 import { TYPE_BUY_OFFER, TYPE_SELL_OFFER } from '../../store/reducers/offers';
 import web3 from '../../bootstrap/web3';
 
+
 const toDisplayFormat = offer => ({
+  tradeType: offer.tradeType,
   ask_price: formatPrice(offer.ask_price),
   bid_price: formatPrice(offer.bid_price),
   sell_how_much: formatAmount(offer.sellHowMuch, true,  ETH_UNIT_ETHER),
@@ -31,5 +33,5 @@ const isOfferOwner = ({ owner }, address ) => {
 export {
   toDisplayFormat,
   getOfferType,
-  isOfferOwner
+  isOfferOwner,
 }

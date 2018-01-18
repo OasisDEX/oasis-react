@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 import { Map, List } from 'immutable';
 import tokens from './tokens';
+import trades from './trades';
 
 const offers = state => state.get('offers');
 
@@ -41,6 +42,20 @@ const activeTradingPairSellOfferCount = createSelector(
   (state, activeTradingPair) => state.getIn(['offers', Map(activeTradingPair), 'sellOfferCount'])
 );
 
+const getUserClosedOffers = createSelector(
+  trades.marketsData,
+  tokens.activeTradingPair,
+  (trades, activeTradingPair) => trades.getIn(['offers', Map(activeTradingPair), 'sellOfferCount'])
+);
+
+const getUserOpenOffers = createSelector(
+  offers,
+  tokens.activeTradingPair,
+  (state, activeTradingPair) => state.getIn(['offers', Map(activeTradingPair), 'sellOfferCount'])
+);
+
+
+
 export default {
   state: offers,
   loadingBuyOffers,
@@ -49,5 +64,6 @@ export default {
   activeTradingPairSellOffers,
   activeTradingPairBuyOfferCount,
   activeTradingPairSellOfferCount,
-
+  getUserOpenOffers,
+  getUserClosedOffers
 }
