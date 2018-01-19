@@ -15,6 +15,7 @@ import tradesSelectors from '../store/selectors/trades';
 import tokens from '../store/selectors/tokens';
 import offers from '../store/selectors/offers';
 import offersReducer from '../store/reducers/offers';
+import OasisMyOrders from '../components/OasisMyOrders';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -54,7 +55,14 @@ export class OasisTradeOrdersWrapper extends PureComponent {
           sellOffers={sellOffers}
           cancelOffer={cancelOffer}
         />
-        {/*<OasisMyOrders/>*/}
+        <OasisMyOrders
+          sellOffers={sellOffers}
+          buyOffers={buyOffers}
+          trades={tradesList}
+          cancelOffer={cancelOffer}
+          activeTradingPair={activeTradingPair}
+          initialMarketHistoryLoaded={initialMarketHistoryLoaded}
+        />
         <OasisMarketHistory
           trades={tradesList}
           activeTradingPair={activeTradingPair}
