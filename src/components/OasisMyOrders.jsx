@@ -102,7 +102,7 @@ class OasisMyOrders extends PureComponent {
         .sort((p, c) => p.bid_price_sort < c.bid_price_sort ? 1 : -1)
         .map(myOrdersDisplayFormat);
 
-    if(myOpenOffers.length) {
+    if(myOpenOffers.count()) {
       return (
         <OasisTable
           rows={myOpenOffers.toArray()}
@@ -144,8 +144,9 @@ class OasisMyOrders extends PureComponent {
       };
     };
     const { trades, activeTradingPair: { baseToken, quoteToken } } = this.props;
-    const marketHistory = orderByTimestamp(trades.filter(myOffersFilter).toJSON(), DESCENDING).map(toHistoricalTrades);
-    if (marketHistory.length) {
+    const myTrades = trades.filter(myOffersFilter);
+    const marketHistory = orderByTimestamp(myTrades.toJSON(), DESCENDING).map(toHistoricalTrades);
+    if (myTrades.count()) {
       return (
         <OasisTable rows={marketHistory} col={tradesHistoryColsDefinition(baseToken, quoteToken)}/>
       );
