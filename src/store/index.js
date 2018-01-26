@@ -3,14 +3,21 @@ import thunk from 'redux-thunk';
 import promiseMiddleware from 'redux-promise-middleware';
 import createDebounce from 'redux-debounced';
 import { Map } from 'immutable';
-// import logger from 'redux-logger'
-
+import createHistory from 'history/createBrowserHistory';
+import { routerReducer, routerMiddleware, push } from 'react-router-redux'
+import logger from 'redux-logger'
 import reducers from './reducers';
+
+
 function initStore(defaultState = Map()) {
+  const history = createHistory();
+  const reactRouterMiddleware = routerMiddleware(history);
+
   let middleware = applyMiddleware(
+    reactRouterMiddleware,
     createDebounce(),
     thunk,
-    promiseMiddleware()
+    promiseMiddleware(),
     // logger
   );
   if (window.devToolsExtension) {
@@ -21,8 +28,7 @@ function initStore(defaultState = Map()) {
   }
 
   const store = createStore(
-    reducers, defaultState,
-    middleware,
+    reducers, defaultState, middleware
   );
 
   if (module.hot) {
@@ -32,7 +38,7 @@ function initStore(defaultState = Map()) {
     });
   }
 
-  return store;
+  return { store, history };
 }
 
 export default initStore;

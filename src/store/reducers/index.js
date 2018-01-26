@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux-immutable';
+import { routerReducer } from 'react-router-redux'
 
 import platform from './platform';
 import network from './network';
@@ -21,6 +22,8 @@ import widgets from './widgets';
 
 export default combineReducers(
   {
+
+    router: routerReducer,
     platform: platform.reducer,
     network: network.reducer,
     markets: markets.reducer,

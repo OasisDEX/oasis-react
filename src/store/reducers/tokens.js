@@ -4,6 +4,9 @@ import Immutable from 'immutable';
 import { BASE_TOKENS, QUOTE_TOKENS, TOKEN_MAKER, TOKEN_WRAPPED_ETH } from '../../constants';
 import { generateTradingPairs } from '../../utils/generateTradingPairs';
 import tokens from '../selectors/tokens';
+import offersReducer from './offers';
+import offers from '../selectors/offers';
+import { STATUS_PRISTINE } from './platform';
 
 const initialState = Immutable.fromJS({
   allTokens: [
@@ -42,7 +45,7 @@ const initialState = Immutable.fromJS({
 });
 
 const INIT = 'TOKENS/INIT';
-const SET_DEFAULT_TOKEN_PAIR = 'TOKENS/SET_DEFAULT_TOKEN_PAIR';
+const SET_DEFAULT_TRADING_PAIR = 'TOKENS/SET_DEFAULT_TRADING_PAIR';
 
 const Init = createAction(
   INIT,
@@ -50,15 +53,27 @@ const Init = createAction(
 );
 
 const setDefaultTradingPair = createAction(
-  SET_DEFAULT_TOKEN_PAIR,
+  SET_DEFAULT_TRADING_PAIR,
   (baseToken, quoteToken) => ({ baseToken, quoteToken }),
 );
 
+
 const setActiveTradingPair = createAction(
-  'TOKENS/SET_ACTIVE_TOKEN_PAIR',
+  'TOKENS/SET_ACTIVE_TRADING_PAIR',
   tradingPair => tradingPair
 );
 
+const setActiveTradingPairEpic = (args, sync = true) => (dispatch, getState) => {
+  const previousActiveTradingPair = tokens.activeTradingPair(getState());
+  if(previousActiveTradingPair === null || previousActiveTradingPair.baseToken !== args.baseToken || previousActiveTradingPair.quoteToken !== args.quoteToken) {
+    dispatch(setActiveTradingPair(args));
+    const currentActiveTradingPair = tokens.activeTradingPair(getState());
+    if(sync && offers.activeTradingPairOffersInitialLoadStatus(getState()) === STATUS_PRISTINE) {
+      dispatch(offersReducer.actions.syncOffersEpic(currentActiveTradingPair));
+    }
+  }
+
+};
 
 const setPrecision = createAction(
   'TOKENS/SET_PRECISION', precision => precision
@@ -80,8 +95,8 @@ const denotePrecision = () => (dispatch, getState) => {
 const actions = {
   Init,
   setDefaultTradingPair,
-  setActiveTradingPair,
-  denotePrecision
+  setActiveTradingPairEpic,
+  denotePrecision,
 };
 
 const reducer = handleActions({

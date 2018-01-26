@@ -272,7 +272,7 @@ describe('(Container) OasisTrade', () => {
       validBaseTokensList: {},
       validQuoteTokensList: {},
       actions: {
-        setActiveTradingPair: {},
+        setActiveTradingPairEpic: {},
       },
     },
   };
@@ -286,7 +286,7 @@ describe('(Container) OasisTrade', () => {
   });
 
   it('should render', () => {
-    props.actions.setActiveTradingPair = jest.fn;
+    props.actions.setActiveTradingPairEpic = jest.fn;
     props.actions.denotePrecision = jest.fn;
 
     const wrapper = shallow(

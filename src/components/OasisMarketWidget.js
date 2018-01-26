@@ -26,10 +26,18 @@ const colDefinition = (period) => {
 };
 
 
+const isCurrentRowActive = (activeTradingPair, baseToken, quoteToken) => {
+  if(!activeTradingPair) {return false; } else {
+    return activeTradingPair.baseToken === baseToken && activeTradingPair.quoteToken === quoteToken;
+  }
+
+};
+
 class OasisMarketWidget extends PureComponent {
   constructor(props) {
     super(props);
     this.transformRow = this.transformRow.bind(this);
+    this.onTableRowClick = this.onTableRowClick.bind(this);
   }
 
   transformRow(row) {
@@ -43,6 +51,7 @@ class OasisMarketWidget extends PureComponent {
         price(last(tradingPairTrades), baseToken, quoteToken) : null;
 
       return {
+        isActive: isCurrentRowActive(this.props.activeTradingPair, baseToken, quoteToken),
         tradingPair: format(baseToken, quoteToken),
         volume: formatVolume(tradingPairVolume),
         tradingPairPrice: formatPrice(tradingPairPrice),
@@ -54,13 +63,20 @@ class OasisMarketWidget extends PureComponent {
     }
   }
 
+  onTableRowClick(ev) {
+    const { setActiveTradingPair, changeRoute } = this.props;
+    const [baseToken, quoteToken] = ev.target.parentElement.getAttribute('data-tradingpair').split('/');
+    setActiveTradingPair({baseToken, quoteToken});
+    changeRoute(`/trade/${baseToken}/${quoteToken}`);
+  }
+
   render() {
     const { tradedTokens, defaultPeriod } = this.props;
     return (
       <OasisWidgetFrame heading="MARKETS">
-        <OasisTable
+        <OasisTable onRowClick={this.onTableRowClick}
           col={colDefinition(defaultPeriod)}
-          rows={tradedTokens.map(this.transformRow)}
+          rows={tradedTokens.map(this.transformRow, this.props.activeTradingPair)}
         />
       </OasisWidgetFrame>
     );
