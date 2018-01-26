@@ -43,14 +43,14 @@ export class OasisTradeOrdersWrapper extends PureComponent {
       <div>
         <OasisBuyOrders
           activeTradingPair={activeTradingPair}
-          loadingBuyOffers={loadingBuyOffers}
+          // loadingBuyOffers={loadingBuyOffers}
           buyOfferCount={buyOfferCount}
           buyOffers={buyOffers}
           cancelOffer={cancelOffer}
         />
         <OasisSellOrders
           activeTradingPair={activeTradingPair}
-          loadingSellOffers={loadingSellOffers}
+          // loadingSellOffers={loadingSellOffers}
           sellOfferCount={sellOfferCount}
           sellOffers={sellOffers}
           cancelOffer={cancelOffer}
@@ -78,8 +78,8 @@ export function mapStateToProps(state) {
     activeTradingPair: tokens.activeTradingPair(state),
     marketData: tradesSelectors.marketsData(state),
     initialMarketHistoryLoaded: tradesSelectors.initialMarketHistoryLoaded(state),
-    loadingBuyOffers: offers.loadingBuyOffers(state),
-    loadingSellOffers: offers.loadingSellOffers(state),
+    // loadingBuyOffers: offers.loadingBuyOffers(state),
+    // loadingSellOffers: offers.loadingSellOffers(state),
     buyOfferCount: offers.activeTradingPairBuyOfferCount(state),
     sellOfferCount: offers.activeTradingPairSellOfferCount(state),
     buyOffers: offers.activeTradingPairBuyOffers(state),

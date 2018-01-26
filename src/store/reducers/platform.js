@@ -1,12 +1,13 @@
 import { createAction, handleActions } from 'redux-actions';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
+import { push } from 'react-router-redux';
 
 import { Session } from '../../utils/session';
 import { WEEK } from '../../utils/period';
 import { ETH_UNIT_WEI } from '../../constants';
 import web3 from '../../bootstrap/web3';
 
-const initialState = Immutable.fromJS(
+const initialState = fromJS(
   {
     sids: [], // currently running setIntevals cancel ids
     errors: [],
@@ -20,6 +21,7 @@ const initialState = Immutable.fromJS(
     defaultUnit: ETH_UNIT_WEI,
   });
 
+export const STATUS_PRISTINE = 'STATUS_PRISTINE';
 export const STATUS_PENDING = 'STATUS_PENDING';
 export const STATUS_COMPLETED = 'STATUS_COMPLETED';
 export const STATUS_ERROR = 'STATUS_ERROR';
@@ -111,6 +113,13 @@ const networkChanged = createAction(
   ACTIVE_NETWORK_CHANGED
 );
 
+const changeRoute = createAction('PLATFORM/CHANGE_ROUTE', route => route);
+const changeRouteEpic = (route) => (dispatch) => {
+  dispatch(changeRoute(route));
+  dispatch(push(route));
+};
+
+
 
 const dismissMessage = (
   msgType,
@@ -125,6 +134,7 @@ const actions = {
   web3Initialized,
   web3Reset,
   web3ResetKeepSync,
+
   contractsLoaded,
   contractsReloaded,
   marketInitialized,
@@ -135,7 +145,8 @@ const actions = {
   metamaskUnlocked,
   networkChanged,
   setProviderType,
-  dismissMessage
+  dismissMessage,
+  changeRouteEpic
 };
 
 const reducer = handleActions({

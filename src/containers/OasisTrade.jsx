@@ -15,6 +15,8 @@ import tokens from './../store/selectors/tokens';
 import platform from '../store/selectors/platform';
 import { DAY, WEEK } from '../utils/period';
 import OasisTradeOrdersWrapper from './OasisTradeOrders';
+import offers from '../store/selectors/offers';
+import platformReducer from '../store/reducers/platform';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -42,20 +44,39 @@ export class OasisTradeWrapper extends PureComponent {
         );
       }
     } else {
-      if(!this.props.activeTradingPair) {
-        this.props.actions.setActiveTradingPair({
+      if(this.props.activeTradingPair == null) {
+        this.props.actions.setActiveTradingPairEpic({
           baseToken: params.baseToken, quoteToken: params.quoteToken
-        });
+        }, false);
         this.props.actions.denotePrecision();
       }
       return null;
     }
   }
-  render() {
-    const { tradedTokens, marketsData, defaultPeriod, loadingTradeHistory } = this.props;
+  render()
+  {
+
+    const paramsTradePair = {
+      baseToken: this.props.match.params.baseToken, quoteToken: this.props.match.params.quoteToken
+    };
+    const {
+      tradedTokens,
+      marketsData,
+      defaultPeriod,
+      loadingTradeHistory,
+      activeTradingPair = paramsTradePair,
+      actions: {
+        setActiveTradingPairEpic,
+        changeRouteEpic
+      }
+    } = this.props;
+
     return this.redirect() || (
       <main>
         <OasisMarketWidget
+          activeTradingPair={activeTradingPair}
+          setActiveTradingPair={setActiveTradingPairEpic}
+          changeRoute={changeRouteEpic}
           tradedTokens={tradedTokens}
           marketData={marketsData}
           defaultPeriod={defaultPeriod}
@@ -77,12 +98,14 @@ export function mapStateToProps(state) {
     activeTradingPair: tokens.activeTradingPair(state),
     tradedTokens: tokens.tradingPairs(state),
     defaultPeriod: platform.defaultPeriod(state),
+    offersInitialized: offers.offersInitialized(state)
   };
 }
 
 export function mapDispatchToProps(dispatch) {
   const actions = {
-    setActiveTradingPair: tokensReducer.actions.setActiveTradingPair,
+    setActiveTradingPairEpic: tokensReducer.actions.setActiveTradingPairEpic,
+    changeRouteEpic: platformReducer.actions.changeRouteEpic,
     denotePrecision: tokensReducer.actions.denotePrecision,
   };
   return { actions: bindActionCreators(actions, dispatch) };

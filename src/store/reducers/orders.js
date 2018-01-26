@@ -34,7 +34,7 @@ const reducer = handleActions({
   // [pending(loadOffers)]: state => state.set('loading', true),
   // [fulfilled(getLastOfferId)]: (state, { payload }) => state.set('lastOfferId', payload),
   // [fulfilled(loadOffers)]: (state, { payload }) => {
-  //   console.log('offers', payload);
+  //   console.log('offersReducer', payload);
   //   return state;
   // }
 }, initialState);

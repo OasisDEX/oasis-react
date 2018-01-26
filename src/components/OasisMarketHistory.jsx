@@ -57,7 +57,7 @@ class OasisMarketHistory extends PureComponent {
     const marketHistory = sortedTrades.map(toHistoricalTrades);
 
     return (
-      <OasisWidgetFrame heading={'MARKET HISTORY'}>
+      <OasisWidgetFrame heading={`MARKET HISTORY (${sortedTrades.length})`}>
         <OasisTable rows={marketHistory} col={colsDefinition(baseToken, quoteToken)}/>
       </OasisWidgetFrame>
     );
