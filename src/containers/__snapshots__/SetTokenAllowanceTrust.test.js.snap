@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
+<div>
+  <h1 />
+  <button
+    onClick={[Function]}
+  >
+    Loading
+  </button>
+</div>
+`;
+
+exports[`(Container) SetTokenAllowanceTrust will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "getDefaultAccountTokenAllowanceForAddress": [Function],
+    "setTokenAllowanceTrustStatus": [Function],
+  },
+}
+`;
+
+exports[`(Container) SetTokenAllowanceTrust will receive right props 1`] = `
+Object {
+  "contractsLoaded": false,
+  "subjectTrustStatus": null,
+}
+`;
