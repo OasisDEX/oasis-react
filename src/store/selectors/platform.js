@@ -13,6 +13,12 @@ const defaultPeriod = createSelector(
   state => state.get('defaultPeriod')
 );
 
+const contractsLoaded = createSelector(
+  platform,
+  state => state.get('contractsLoaded')
+);
+
+
 const defaultPeriodAvgBlockNumber = createSelector(
   platform,
   state => period.avgBlockPer(state.get('defaultPeriod'))
@@ -22,5 +28,6 @@ export default {
   state: platform,
   isAccountLocked,
   defaultPeriod,
-  defaultPeriodAvgBlockNumber
+  defaultPeriodAvgBlockNumber,
+  contractsLoaded
 };
