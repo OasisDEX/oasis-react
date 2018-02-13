@@ -1,5 +1,7 @@
 import { createSelector } from 'reselect';
 import reselect from '../../utils/reselect';
+import balances from './balances';
+import BigNumber from 'bignumber.js';
 
 const transactions = s => s.get('transactions');
 
@@ -36,9 +38,31 @@ const getLimitTransaction = createSelector(
 );
 
 
+
+const defaultGasLimit = createSelector(
+  transactions, s => s.get('defaultGasLimit')
+);
+
+const activeGasLimit = createSelector(
+  transactions, s => s.get('activeGasLimit')
+);
+
+
+const canSendTransaction = createSelector(
+  balances.ethBalance,
+  activeGasLimit,
+  (ethBalance, activeGasLimit) => {
+    const ethBalanceBN = new BigNumber(ethBalance || 0);
+    return ethBalanceBN.gte(activeGasLimit);
+  }
+);
+
+
 export default {
   state: transactions,
+  activeGasLimit,
+  defaultGasLimit,
   getOfferTransaction,
   getTokenTransaction,
-  getLimitTransaction
+  canSendTransaction
 };

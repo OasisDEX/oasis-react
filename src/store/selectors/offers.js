@@ -76,11 +76,11 @@ const offersInitialized = createSelector(
   state => state.get('offersInitialized')
 );
 
+
 const allOffers = createSelector(
   offers,
   state => state.get('offers')
-)
-
+);
 
 export default {
   state: offers,

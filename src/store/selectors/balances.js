@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import reselect from '../../utils/reselect';
 import { formatAmount } from '../../utils/tokens/pair';
 import web3 from '../../bootstrap/web3';
-import { ETH_UNIT_ETHER } from '../../constants';
+import { ETH_UNIT_ETHER, TOKEN_ETHER } from '../../constants';
 import {
   TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED,
   TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED,
@@ -11,12 +11,18 @@ import {
   TOKEN_ALLOWANCE_TRUST_SUBJECT_TYPE_ADDRESS,
   TOKEN_ALLOWANCE_TRUST_SUBJECT_TYPE_MARKET,
 } from '../reducers/balances';
+import tokens from './tokens';
 
 const balances = s => s.get('balances');
 
 const tokenAllowances = createSelector(
   balances, (s) => s.getIn(['defaultAccount', 'tokenAllowances'])
 );
+
+const tokenBalances = createSelector(
+  balances, (s) => s.getIn(['defaultAccount', 'tokenBalances'])
+);
+
 
 const tokenAllowance = createSelector(
   tokenAllowances,
@@ -31,6 +37,22 @@ const tokenAllowance = createSelector(
   }
 );
 
+
+const tokenBalance = createSelector(
+  tokenBalances,
+  reselect.getProps,
+  (s, { tokenName, balanceUnit = ETH_UNIT_ETHER }) => {
+    const tokenBalance = s.getIn([tokenName]);
+    if(tokenBalance) {
+      return web3.fromWei(new BigNumber(s.getIn([tokenName], 10)), balanceUnit);
+    } else {
+      return null;
+    }
+  }
+);
+
+
+
 const tokenAllowanceTrustStatus = createSelector(
   balances,
   reselect.getProps,
@@ -39,7 +61,7 @@ const tokenAllowanceTrustStatus = createSelector(
     if(tokenAllowance) {
       const tokenAllowanceBN = new BigNumber(tokenAllowance);
       const tokenTrustEnabledMinBN = new BigNumber(TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN);
-      if(tokenAllowanceBN.toNumber() >= tokenTrustEnabledMinBN.toNumber()) {
+      if(tokenAllowanceBN.gte(tokenTrustEnabledMinBN)) {
         return TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED;
       } else {
         return TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED;
@@ -49,10 +71,32 @@ const tokenAllowanceTrustStatus = createSelector(
 );
 
 
+const activeBaseTokenBalance = createSelector(
+  tokenBalances,
+  tokens.activeTradingPairBaseToken,
+  (tokenBalances, baseToken) => tokenBalances.get(baseToken)
+);
+
+const ethBalance = createSelector(
+  tokenBalances,
+  (tokenBalances) => tokenBalances.get(TOKEN_ETHER)
+);
+
+
+const activeQuoteTokenBalance = createSelector(
+  tokenBalances,
+  tokens.activeTradingPairQuoteToken,
+  (tokenBalances, quoteToken) => tokenBalances.get(quoteToken)
+);
 
 export default {
   state: balances,
   tokenAllowances,
+  tokenBalances,
   tokenAllowance,
-  tokenAllowanceTrustStatus
+  tokenBalance,
+  ethBalance,
+  tokenAllowanceTrustStatus,
+  activeBaseTokenBalance,
+  activeQuoteTokenBalance
 }

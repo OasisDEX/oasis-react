@@ -50,6 +50,12 @@ const precision = createSelector(
   state => state.get('precision')
 );
 
+const activeTradingPairBaseToken = createSelector(
+  tokens, s => s.getIn(['activeTradingPair', 'baseToken'])
+);
+const activeTradingPairQuoteToken = createSelector(
+  tokens, s => s.getIn(['activeTradingPair', 'quoteToken'])
+);
 
 const getVisibleTradingPairs = createSelector(
   tokens,
@@ -74,5 +80,7 @@ export default {
   tradingPairs,
   getTokensSpecsObject,
   precision,
-  baseTokens
+  baseTokens,
+  activeTradingPairBaseToken,
+  activeTradingPairQuoteToken
 };

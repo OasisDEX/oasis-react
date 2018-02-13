@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) ExceedsGasLimit should render 1`] = `
+<div>
+  <div>
+    Your order exceed gas limit of 
+    <b>
+      4.3 Million
+    </b>
+    .
+  </div>
+  <div>
+    To get a working order use the 
+    <b>
+      Buy Max Button
+    </b>
+  </div>
+</div>
+`;

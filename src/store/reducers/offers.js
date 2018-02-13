@@ -21,7 +21,7 @@ export const TYPE_BUY_OFFER = 'OFFERS/TYPE_BUY';
 export const TYPE_SELL_OFFER = 'OFFERS/TYPE_SELL';
 
 const SYNC_STATUS_PENDING = 'OFFERS/SYNC_STATUS_PENDING';
-const SYNC_STATUS_COMPLETED = 'OFFERS/SYNC_STATUS_PENDING';
+const SYNC_STATUS_COMPLETED = 'OFFERS/SYNC_STATUS_COMPLETED';
 const SYNC_STATUS_ERROR = 'OFFERS/SYNC_STATUS_ERROR';
 
 const initialState = fromJS({
@@ -739,9 +739,9 @@ const syncOffer = (offerId, syncType = OFFER_SYNC_TYPE_INITIAL, previousOfferSta
 };
 
 const loadBuyOffers = createPromiseActions('OFFERS/LOAD_BUY_OFFERS');
-const loadBuyOffersEpic = (offerCount, payToken, buyToken) => async (dispatch) => {
-  let currentBuyOfferId = (await dispatch(getBestOffer(buyToken, payToken))).value.toNumber();
-  const buyOffersTradingPair = { baseToken: payToken, quoteToken: buyToken };
+const loadBuyOffersEpic = (offerCount, sellToken, buyToken) => async (dispatch) => {
+  let currentBuyOfferId = (await dispatch(getBestOffer(buyToken, sellToken))).value.toNumber();
+  const buyOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
   dispatch(loadBuyOffers.pending(buyOffersTradingPair));
   while (offerCount.buyOfferCount) {
     dispatch(syncOffer(currentBuyOfferId));
@@ -764,7 +764,7 @@ const loadSellOffersEpic = (offerCount, sellToken, buyToken) => async (dispatch)
     currentSellOfferId = (await dispatch(getWorseOffer(currentSellOfferId))).value.toNumber();
     --offerCount.sellOfferCount;
     if (!offerCount.sellOfferCount) {
-      dispatch(loadSellOffers.fulfilled());
+      dispatch(loadSellOffers.fulfilled(sellOffersTradingPair));
     }
   }
   return loadSellOffers;
@@ -1018,6 +1018,7 @@ const checkOfferIsActive = createAction(
   offerId => window.contracts.market.isActive(offerId),
 );
 
+
 const subscribeFilledOrdersEpic = (fromBlock, filter = {}) => async (dispatch, getState) => {
   dispatch(subscribeFilledOrders.pending());
   window.contracts.market.LogItemUpdate(filter, { fromBlock, toBlock: 'latest' }).then(
@@ -1125,6 +1126,7 @@ const actions = {
   cancelOfferEpic,
   syncOffersEpic,
   subscribeOffersEventsEpic,
+  checkOfferIsActive
 };
 
 const reducer = handleActions({
@@ -1192,13 +1194,19 @@ const reducer = handleActions({
   // [fulfilled(syncOffers)]: state => state.set('initialSyncStatus', SYNC_STATUS_COMPLETED),
   // [rejected(syncOffers)]: state => state.set('initialSyncStatus', SYNC_STATUS_ERROR),
 
-  [loadBuyOffers.pending]: (state, { payload }) => state.setIn(['offers', Map(payload), 'loadingBuyOffers'], SYNC_STATUS_PENDING),
-  [loadBuyOffers.fulfilled]: (state, { payload }) => state.setIn(['offers', Map(payload), 'loadingBuyOffers'], SYNC_STATUS_COMPLETED),
-  [loadBuyOffers.rejected]: (state, { payload }) => state.setIn(['offers', Map(payload), 'loadingBuyOffers'], SYNC_STATUS_ERROR),
+  [loadBuyOffers.pending]: (state, { payload }) =>
+    state.setIn(['offers', Map(payload), 'loadingBuyOffers'], SYNC_STATUS_PENDING),
+  [loadBuyOffers.fulfilled]: (state, { payload }) =>
+    state.setIn(['offers', Map(payload), 'loadingBuyOffers'], SYNC_STATUS_COMPLETED),
+  [loadBuyOffers.rejected]: (state, { payload }) =>
+    state.setIn(['offers', Map(payload), 'loadingBuyOffers'], SYNC_STATUS_ERROR),
 
-  [loadSellOffers.pending]: (state, { payload }) => state.setIn(['offers', Map(payload), 'loadingSellOffers'], SYNC_STATUS_PENDING),
-  [loadSellOffers.fulfilled]: (state, { payload }) => state.setIn(['offers', Map(payload), 'loadingSellOffers'], SYNC_STATUS_COMPLETED),
-  [loadSellOffers.rejected]: (state, { payload }) => state.setIn(['offers', Map(payload), 'loadingSellOffers'], SYNC_STATUS_ERROR),
+  [loadSellOffers.pending]: (state, { payload }) =>
+    state.setIn(['offers', Map(payload), 'loadingSellOffers'], SYNC_STATUS_PENDING),
+  [loadSellOffers.fulfilled]: (state, { payload }) =>
+    state.setIn(['offers', Map(payload), 'loadingSellOffers'], SYNC_STATUS_COMPLETED),
+  [loadSellOffers.rejected]: (state, { payload }) =>
+    state.setIn(['offers', Map(payload), 'loadingSellOffers'], SYNC_STATUS_ERROR),
   [offerCancelledEvent]: (state, { payload: { tradingPair, offerType, offerId } }) => {
     switch (offerType) {
       case TYPE_BUY_OFFER:

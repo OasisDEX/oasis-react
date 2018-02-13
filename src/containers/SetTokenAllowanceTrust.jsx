@@ -13,6 +13,7 @@ import platform from '../store/selectors/platform';
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
   subjectTrustStatus: PropTypes.bool,
+  tokenName: PropTypes.string.isRequired,
   allowanceSubjectAddress: PropTypes.string.isRequired
 };
 
@@ -21,18 +22,25 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.toggleTokenAllowanceTrustStatus = this.toggleTokenAllowanceTrustStatus.bind(this);
+    this.getAllowanceStatus();
+  }
+
+  getAllowanceStatus(nextProps) {
+    const {
+      actions: { getDefaultAccountTokenAllowanceForAddress },
+      tokenName,
+      allowanceSubjectAddress
+    } = this.props;
+
+    if(nextProps && nextProps.contractsLoaded && nextProps.subjectTrustStatus == null) {
+      getDefaultAccountTokenAllowanceForAddress( tokenName, allowanceSubjectAddress);
+    } else {
+      getDefaultAccountTokenAllowanceForAddress( tokenName, allowanceSubjectAddress)
+    }
   }
 
   componentWillUpdate(nextProps) {
-    const { contractsLoaded, subjectTrustStatus } = nextProps;
-    if(contractsLoaded && subjectTrustStatus == null) {
-      const {
-        actions: { getDefaultAccountTokenAllowanceForAddress },
-        tokenName,
-        allowanceSubjectAddress
-      } = this.props;
-      getDefaultAccountTokenAllowanceForAddress( tokenName, allowanceSubjectAddress)
-    }
+    this.getAllowanceStatus(nextProps);
   }
 
   setTokenAllowanceTrustStatus(newAllowanceTrustStatus) {

@@ -21,6 +21,7 @@ import network from '../selectors/network';
 import offersReducer from './offers';
 import tokens from '../selectors/tokens';
 import findOffer from '../../utils/offers/findOffer';
+import transactionsReducer from './transactions';
 
 const initialState = Immutable.fromJS(
   {
@@ -204,11 +205,12 @@ const getLatestBlock = createAction(
 const subscribeLatestBlockFilter = createPromiseActions(
   'NETWORK/SUBSCRIBE_LATEST_BLOCK_FILTER',
 );
-const subscribeLatestBlockFilterEpic = () => async (dispatch, getState, subscribe) => {
+const subscribeLatestBlockFilterEpic = () => async (dispatch) => {
   dispatch(subscribeLatestBlockFilter.pending());
   web3.eth.filter('latest', (e, b) => {
+    console.log(b);
     dispatch(getLatestBlockNumber());
-    dispatch(subscribeLatestBlockFilter.rejected(e));
+    dispatch(transactionsReducer.actions.getCurrentGasPrice());
   });
 
   dispatch(subscribeLatestBlockFilter.fulfilled());

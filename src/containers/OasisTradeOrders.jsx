@@ -16,12 +16,33 @@ import tokens from '../store/selectors/tokens';
 import offers from '../store/selectors/offers';
 import offersReducer from '../store/reducers/offers';
 import OasisMyOrders from '../components/OasisMyOrders';
+import offerTakesReducer, { TAKE_BUY_OFFER } from '../store/reducers/offerTakes';
+import OasisTakeOfferModalWrapper  from './OasisTakeOfferModal';
+import offerTakes from '../store/selectors/offerTakes';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
 };
 
+
 export class OasisTradeOrdersWrapper extends PureComponent {
+
+  offerTakeModal() {
+
+    const {
+      isOfferTakeModalOpen,
+      activeOfferTakeType,
+      activeOfferTake
+    } = this.props;
+
+    return isOfferTakeModalOpen && (
+      <OasisTakeOfferModalWrapper
+        activeOfferTake={activeOfferTake}
+        offerTakeType={activeOfferTakeType}
+      />
+    )
+  }
+
   render() {
     const {
       marketData = List(),
@@ -34,26 +55,33 @@ export class OasisTradeOrdersWrapper extends PureComponent {
       buyOffers,
       sellOffers,
       actions: {
-        cancelOffer
+        cancelOffer,
+        setOfferTakeModalOpen,
+        setActiveOfferTakeOfferId
       }
     } = this.props;
 
     const tradesList = trades(marketData, activeTradingPair.baseToken, activeTradingPair.quoteToken);
     return (
       <div>
+        <div>{this.offerTakeModal()}</div>
         <OasisBuyOrders
+          onSetOfferTakeModalOpen={setOfferTakeModalOpen}
           activeTradingPair={activeTradingPair}
           // loadingBuyOffers={loadingBuyOffers}
           buyOfferCount={buyOfferCount}
           buyOffers={buyOffers}
           cancelOffer={cancelOffer}
+          onSetActiveOfferTakeOfferId={setActiveOfferTakeOfferId}
         />
         <OasisSellOrders
+          onSetOfferTakeModalOpen={setOfferTakeModalOpen}
           activeTradingPair={activeTradingPair}
           // loadingSellOffers={loadingSellOffers}
           sellOfferCount={sellOfferCount}
           sellOffers={sellOffers}
           cancelOffer={cancelOffer}
+          onSetActiveOfferTakeOfferId={setActiveOfferTakeOfferId}
         />
         <OasisMyOrders
           sellOffers={sellOffers}
@@ -84,12 +112,18 @@ export function mapStateToProps(state) {
     sellOfferCount: offers.activeTradingPairSellOfferCount(state),
     buyOffers: offers.activeTradingPairBuyOffers(state),
     sellOffers: offers.activeTradingPairSellOffers(state),
+    activeOfferTakeType: offerTakes.activeOfferTakeType(state),
+    isOfferTakeModalOpen: offerTakes.isOfferTakeModalOpen(state),
+    activeOfferTake: offerTakes.activeOfferTake(state)
+
   };
 }
 
 export function mapDispatchToProps(dispatch) {
   const actions = {
-    cancelOffer: offersReducer.actions.cancelOfferEpic
+    cancelOffer: offersReducer.actions.cancelOfferEpic,
+    setOfferTakeModalOpen: offerTakesReducer.actions.setOfferTakeModalOpenEpic,
+    setActiveOfferTakeOfferId: offerTakesReducer.actions.setActiveOfferTakeOfferId
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

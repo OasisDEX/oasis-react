@@ -29,9 +29,9 @@ export class OasisTable extends PureComponent {
     this.rowClickHandler = this.rowClickHandler.bind(this);
   }
 
-  rowClickHandler(ev) {
+  rowClickHandler(rowData) {
     const { onRowClick } = this.props;
-    onRowClick && onRowClick(ev);
+    onRowClick && onRowClick(rowData);
   }
 
   rowContent(row) {
@@ -60,7 +60,12 @@ export class OasisTable extends PureComponent {
     const { rows } = this.props;
     return rows.map( (row, i) => {
       return (
-        <tr className={row.isActive ? 'active' : null} key={i} data-tradingpair={row.tradingPair} onClick={this.rowClickHandler}>
+        <tr
+          className={row.isActive ? 'active' : null}
+          key={i}
+          data-tradingpair={row.tradingPair}
+          onClick={this.rowClickHandler.bind(null, row)}
+        >
           {this.rowContent(row)}
         </tr>
       )

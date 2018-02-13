@@ -1,14 +1,20 @@
 import { createAction, handleActions } from 'redux-actions';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 import { web3p } from '../../bootstrap/web3';
 import { createPromiseActions } from '../../utils/createPromiseActions';
 import network from '../selectors/network';
+import { fulfilled } from '../../utils/store';
 
-const initialState = Immutable.fromJS({
+export const DEFAULT_GAS_LIMIT = '1000000';
+
+const initialState = fromJS({
   offersTransactions: [],
   tokensTransactions: [],
   limitsTransactions: [],
   pendingTransactions: [],
+  defaultGasLimit: DEFAULT_GAS_LIMIT,
+  activeGasLimit:  DEFAULT_GAS_LIMIT,
+  currentGasPrice: null
 });
 
 const INIT = 'TX/INIT';
@@ -16,6 +22,10 @@ const ADD_TRANSACTION = 'TX/ADD_TRANSACTION';
 const SYNC_TRANSACTION = 'TX/SYNC_TRANSACTION';
 const OBSERVE_REMOVED = 'TX/OBSERVE_REMOVED';
 const SYNC_TRANSACTIONS = 'TX/SYNC_TRANSACTIONS';
+const TX_GET_CURRENT_GAS_PRICE = 'TX/GET_CURRENT_GAS_PRICE';
+
+const TX_TRANSACTION_REJECTED = 'TX/TRANSACTION_REJECTED';
+
 
 export const TX__GROUP__OFFERS = 'TRANSACTIONS/GROUP__OFFERS/';
 export const TX__GROUP__TOKENS = 'TX/GROUP__TOKENS/';
@@ -31,6 +41,7 @@ export const TX_STATUS_CONFIRMED = 'TX/STATUS_AWAITING_CONFIRMED';
 export const TX_STATUS_CANCELLED_BY_USER = 'TX/STATUS_CANCELLED_BY_USER';
 
 const TX_STATUS_REJECTED = 'TX/STATUS_REJECTED';
+
 
 export const getTransactionGroup = (transactionType) => {
   if (0 === transactionType.indexOf(TX__GROUP__OFFERS)) {
@@ -133,8 +144,14 @@ const SyncTransactions = createAction(
 );
 
 const transactionRejected = createAction(
-  'TX/TRANSACTION_REJECTED',
+  TX_TRANSACTION_REJECTED,
   err => err,
+);
+
+
+const getCurrentGasPrice = () => createAction(
+  TX_GET_CURRENT_GAS_PRICE,
+  () => web3p.eth.getGasPrice()
 );
 
 const actions = {
@@ -143,6 +160,7 @@ const actions = {
   transactionRejected,
   ObserveRemoved,
   syncTransaction,
+  getCurrentGasPrice
 };
 
 const reducer = handleActions({
@@ -208,6 +226,7 @@ const reducer = handleActions({
         );
     }
   },
+  [fulfilled(getCurrentGasPrice)]: (state, { payload }) => state.set('currentGasPriceInWei', payload)
 
 }, initialState);
 
