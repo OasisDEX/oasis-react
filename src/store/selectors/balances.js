@@ -78,15 +78,17 @@ const activeBaseTokenBalance = createSelector(
 );
 
 const ethBalance = createSelector(
-  tokenBalances,
-  (tokenBalances) => tokenBalances.get(TOKEN_ETHER)
+  balances,
+  s => s.getIn(['defaultAccount', 'ethBalance'])
 );
 
 
 const activeQuoteTokenBalance = createSelector(
   tokenBalances,
   tokens.activeTradingPairQuoteToken,
-  (tokenBalances, quoteToken) => tokenBalances.get(quoteToken)
+  (tokenBalances, quoteToken) => {
+    return tokenBalances.get(quoteToken)
+  }
 );
 
 export default {

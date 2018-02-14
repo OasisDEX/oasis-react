@@ -52,7 +52,7 @@ const canSendTransaction = createSelector(
   balances.ethBalance,
   activeGasLimit,
   (ethBalance, activeGasLimit) => {
-    const ethBalanceBN = new BigNumber(ethBalance || 0);
+    const ethBalanceBN = new BigNumber(ethBalance);
     return ethBalanceBN.gte(activeGasLimit);
   }
 );

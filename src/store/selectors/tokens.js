@@ -51,10 +51,10 @@ const precision = createSelector(
 );
 
 const activeTradingPairBaseToken = createSelector(
-  tokens, s => s.getIn(['activeTradingPair', 'baseToken'])
+  tokens, s => s.getIn(['activeTradingPair']).baseToken
 );
 const activeTradingPairQuoteToken = createSelector(
-  tokens, s => s.getIn(['activeTradingPair', 'quoteToken'])
+  tokens, s => s.getIn(['activeTradingPair']).quoteToken
 );
 
 const getVisibleTradingPairs = createSelector(

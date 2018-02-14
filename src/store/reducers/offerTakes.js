@@ -46,18 +46,33 @@ const Init = createAction(
 
 
 const buyMaxEpic = () => (dispatch, getState) => {
-  const baseTokenBalanceBN = new web3.toBigNumber(balances.activeBaseTokenBalance(getState()));
-  dispatch(
-    change('takeOffer', 'total')
-  )
+  const usersQuoteTokenBalanceBN = web3.toBigNumber(balances.activeQuoteTokenBalance(getState()));
+  const activeOfferTakeData = offerTakes.activeOfferTakeOfferData(getState());
+  const volume = activeOfferTakeData.get('buyHowMuch');
+  const priceBN = web3.toBigNumber(activeOfferTakeData.get('ask_price'));
+  if(usersQuoteTokenBalanceBN.gte(priceBN.mul(volume))) {
+    dispatch(change('takeOffer', 'total', web3.fromWei(priceBN.mul(volume), ETH_UNIT_ETHER)));
+    dispatch(change('takeOffer', 'volume', web3.fromWei(volume, ETH_UNIT_ETHER)));
+  } else {
+    dispatch(change('takeOffer', 'total', web3.fromWei(usersQuoteTokenBalanceBN, ETH_UNIT_ETHER)));
+    dispatch(change('takeOffer', 'volume', web3.fromWei(usersQuoteTokenBalanceBN.div(priceBN), ETH_UNIT_ETHER)));
+  }
 };
 
 
 const sellMaxEpic = () => (dispatch, getState) => {
-  const baseTokenBalanceBN = new web3.toBigNumber(balances.activeBaseTokenBalance(getState()));
-  dispatch(
-    change('takeOffer', 'total')
-  )
+  const usersBaseTokenBalanceBN = web3.toBigNumber(balances.activeBaseTokenBalance(getState()));
+  const activeOfferTakeData = offerTakes.activeOfferTakeOfferData(getState());
+  const volume = activeOfferTakeData.get('buyHowMuch');
+  const priceBN = web3.toBigNumber(activeOfferTakeData.get('bid_price'));
+  if(usersBaseTokenBalanceBN.gte(volume)) {
+    dispatch(change('takeOffer', 'total', web3.fromWei(priceBN.mul(volume), ETH_UNIT_ETHER)));
+    dispatch(change('takeOffer', 'volume', web3.fromWei(volume, ETH_UNIT_ETHER)));
+  } else {
+    dispatch(change('takeOffer', 'total', web3.fromWei(usersBaseTokenBalanceBN.mul(priceBN), ETH_UNIT_ETHER)));
+    dispatch(change('takeOffer', 'volume', web3.fromWei(usersBaseTokenBalanceBN, ETH_UNIT_ETHER)));
+  }
+
 };
 
 const resetActiveOfferTake = createAction('OFFER_TAKES/RESET_CURRENT_OFFER_TAKE');
@@ -77,7 +92,7 @@ const setActiveOfferTakeEpic = () => (dispatch, getState) => {
 
   }
   if(offer) {
-    const { sellToken, buyToken } = getBuyAndSellTokens( tokens.activeTradingPair(getState()), offerTakeType);
+    const { sellToken, buyToken } = getBuyAndSellTokens(tokens.activeTradingPair(getState()), offerTakeType);
     dispatch(
       setActiveOfferTake(
         currentOfferTakeInitialValue
@@ -166,10 +181,6 @@ const setActiveOfferTakeOfferId = createAction('OFFER_TAKES/SET_ACTIVE_OFFER_TAK
 const resetActiveOfferTakeOfferId = createAction('OFFER_TAKES/RESET_ACTIVE_OFFER_TAKE_OFFER_ID');
 
 
-
-const setMaxTakeAmount = createAction('OFFER_TAKES/SET_MAX_TAKE_AMOUNT');
-const setMaxTakeAmountEpic = () => (dispatch) => {};
-
 const checkIfOfferTakeSubjectIsActive = createPromiseActions('OFFER_TAKES/CHECK_IF_OFFER_TAKE_SUBJECT_IS_ACTIVE');
 const checkIfOfferTakeSubjectStillActiveEpic = () => async (dispatch, getState) => {
   const activeOfferTakeOfferId = offerTakes.activeOfferTakeOfferId(getState());
@@ -202,10 +213,11 @@ const actions = {
   setActiveOfferTakeType,
   setActiveOfferTakeOfferId,
   resetActiveOfferTakeOfferId,
-  setMaxTakeAmountEpic,
   checkIfOfferTakeSubjectStillActiveEpic,
   volumeFieldValueChangedEpic,
-  totalFieldValueChangedEpic
+  totalFieldValueChangedEpic,
+  buyMaxEpic,
+  sellMaxEpic
 };
 
 

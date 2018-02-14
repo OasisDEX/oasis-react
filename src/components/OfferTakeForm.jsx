@@ -18,6 +18,8 @@ const defaultProps = {};
 
 const box = { border: '1px solid black', padding: 20, marginTop: 20 };
 const label = { width: '30%', display: 'inline-block' };
+const fieldStyle = {textAlign: 'right'};
+
 
 const normalize =
   (value, previousValue) =>
@@ -84,6 +86,7 @@ export class OfferTakeForm extends PureComponent {
           <div style={box}>
             <span style={label}>Price:</span>
             <Field
+              style={fieldStyle}
               name="price" component="input"
               format={formatValue}
               normalize={normalize} disabled type="number"/>
@@ -92,9 +95,10 @@ export class OfferTakeForm extends PureComponent {
           <div style={box}>
             <span style={label}>Volume:</span>
             <Field
+              style={fieldStyle}
               onChange={this.onVolumeFieldChange}
               normalize={normalize}
-              format={formatValue}
+              onBlur={formatValue}
               name="volume"
               component="input"
               type="text"
@@ -105,10 +109,11 @@ export class OfferTakeForm extends PureComponent {
           <div style={box}>
             <span style={label}>Total:</span>
             <Field
+              style={fieldStyle}
               min={0}
               onChange={this.onTotalFieldChange}
               normalize={normalize}
-              format={formatValue}
+              onBlur={formatValue}
               name="total"
               component="input"
               type="text"

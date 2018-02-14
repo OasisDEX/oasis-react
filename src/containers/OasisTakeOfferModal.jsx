@@ -17,7 +17,6 @@ import tokens from '../store/selectors/tokens';
 import { formatAmount } from '../utils/tokens/pair';
 import { getFormValues, getFormSyncErrors } from 'redux-form';
 import SetTokenAllowanceTrustWrapper from './SetTokenAllowanceTrust';
-import OfferTakeAmountBelowLimitWrapper  from './OfferTakeAmountBelowLimit';
 
 
 const BtnStyle = {
@@ -35,8 +34,6 @@ const closeModalBtnStyle = {
 const OfferNotAvailable = (
   <div>Offer is not available anymore</div>
 );
-
-
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -78,19 +75,33 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     super(props);
     this.onBuyOffer = this.onBuyOffer.bind(this);
     this.onCancel = this.onCancel.bind(this);
-    this.onSetMaxTakeAmount = this.onSetMaxTakeAmount.bind(this);
+    this.onSetBuyMax = this.onSetBuyMax.bind(this);
+    this.onSetSellMax = this.onSetSellMax.bind(this);
+
   }
 
   onCancel() {
     this.props.actions.setOfferTakeModalClosed();
   }
 
-  onSetMaxTakeAmount() {
-    this.props.actions.setMaxTakeAmount(123456);
-  }
+  onSetBuyMax() {  this.props.actions.buyMax(); }
+  onSetSellMax() { this.props.actions.sellMax(); }
 
   onBuyOffer() {
     this.props.actions.takeOffer();
+  }
+
+  setMaxButton() {
+    switch (this.props.activeOfferTakeType) {
+      case TAKE_BUY_OFFER:
+        return (
+          <button onClick={this.onSetSellMax}>Sell max</button>
+        );
+      case TAKE_SELL_OFFER:
+        return (
+          <button onClick={this.onSetBuyMax}>Buy max</button>
+        );
+    }
   }
 
   render() {
@@ -122,7 +133,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
           <div>
             <OfferTakeForm/>
             <div>
-              <button style={BtnStyle} onClick={this.onSetMaxTakeAmount}>Buy all</button>
+              {this.setMaxButton()}
             </div>
           </div>
           <div className="statusSection">
@@ -180,7 +191,8 @@ export function mapDispatchToProps(dispatch) {
   const actions = {
     checkIfOfferIsActive: offerTakesReducer.actions.checkIfOfferTakeSubjectStillActiveEpic,
     setOfferTakeModalClosed: offerTakesReducer.actions.setOfferTakeModalClosedEpic,
-    setMaxTakeAmount: offerTakesReducer.actions.setMaxTakeAmountEpic,
+    buyMax: offerTakesReducer.actions.buyMaxEpic,
+    sellMax: offerTakesReducer.actions.sellMaxEpic,
     takeOffer: offerTakesReducer.actions.takeOfferEpic
   };
   return { actions: bindActionCreators(actions, dispatch) };
