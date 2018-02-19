@@ -3,7 +3,9 @@ import { fromJS } from 'immutable';
 import { web3p } from '../../bootstrap/web3';
 import { createPromiseActions } from '../../utils/createPromiseActions';
 import network from '../selectors/network';
-import { fulfilled } from '../../utils/store';
+import { fulfilled, pending } from '../../utils/store';
+import web3 from '../../bootstrap/web3';
+import { ETH_UNIT_ETHER, ETH_UNIT_GWEI } from '../../constants';
 
 export const DEFAULT_GAS_LIMIT = '1000000';
 
@@ -14,7 +16,7 @@ const initialState = fromJS({
   pendingTransactions: [],
   defaultGasLimit: DEFAULT_GAS_LIMIT,
   activeGasLimit:  DEFAULT_GAS_LIMIT,
-  currentGasPrice: null
+  currentGasPriceInWei: null
 });
 
 const INIT = 'TX/INIT';
@@ -149,9 +151,9 @@ const transactionRejected = createAction(
 );
 
 
-const getCurrentGasPrice = () => createAction(
+const getCurrentGasPrice = createAction(
   TX_GET_CURRENT_GAS_PRICE,
-  () => web3p.eth.getGasPrice()
+  async () => web3p.eth.getGasPrice()
 );
 
 const actions = {
@@ -226,8 +228,7 @@ const reducer = handleActions({
         );
     }
   },
-  [fulfilled(getCurrentGasPrice)]: (state, { payload }) => state.set('currentGasPriceInWei', payload)
-
+  [fulfilled(getCurrentGasPrice)]: (state, { payload }) => state.set('currentGasPriceInWei', payload.toString()),
 }, initialState);
 
 export default {

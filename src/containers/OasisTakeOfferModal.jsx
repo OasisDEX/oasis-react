@@ -15,9 +15,9 @@ import OfferTakeForm from '../components/OfferTakeForm';
 import balances from '../store/selectors/balances';
 import tokens from '../store/selectors/tokens';
 import { formatAmount } from '../utils/tokens/pair';
-import { getFormValues, getFormSyncErrors } from 'redux-form';
-import SetTokenAllowanceTrustWrapper from './SetTokenAllowanceTrust';
-
+import { getFormValues, getFormSyncErrors } from 'redux-form/immutable';
+import OasisTransactionDetailsWrapper  from './OasisTransactionDetails';
+import web3 from '../bootstrap/web3';
 
 const BtnStyle = {
   padding: '10px 15px',
@@ -75,35 +75,34 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     super(props);
     this.onBuyOffer = this.onBuyOffer.bind(this);
     this.onCancel = this.onCancel.bind(this);
-    this.onSetBuyMax = this.onSetBuyMax.bind(this);
-    this.onSetSellMax = this.onSetSellMax.bind(this);
-
   }
 
   onCancel() {
     this.props.actions.setOfferTakeModalClosed();
   }
 
-  onSetBuyMax() {  this.props.actions.buyMax(); }
-  onSetSellMax() { this.props.actions.sellMax(); }
-
   onBuyOffer() {
-    this.props.actions.takeOffer();
+   this.props.actions.takeOffer();
   }
 
-  setMaxButton() {
-    switch (this.props.activeOfferTakeType) {
-      case TAKE_BUY_OFFER:
-        return (
-          <button onClick={this.onSetSellMax}>Sell max</button>
-        );
-      case TAKE_SELL_OFFER:
-        return (
-          <button onClick={this.onSetBuyMax}>Buy max</button>
-        );
+
+  getUsersSoldAndReceivedAmounts() {
+    const { offerTakeType, offerTakeFormValues } = this.props;
+    if(!offerTakeFormValues.get('price') || !offerTakeFormValues.get('total') || !offerTakeFormValues.get('volume')) {
+      return {amountReceived: 'N/A', amountSold: 'N/A'}
+    }
+    const volumeBN = web3.toBigNumber(offerTakeFormValues.get('volume') );
+    const totalBN = web3.toBigNumber(offerTakeFormValues.get('total') );
+
+    switch (offerTakeType) {
+      case TAKE_SELL_OFFER: return {
+        amountReceived: formatAmount(volumeBN), amountSold: formatAmount(totalBN)
+      };
+      case TAKE_BUY_OFFER: return {
+        amountReceived: formatAmount(totalBN), amountSold: formatAmount(volumeBN)
+      };
     }
   }
-
   render() {
     const {
       offerTakeType,
@@ -112,6 +111,11 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
       activeOfferTakeOfferOwner,
       sellToken,
       buyToken,
+      activeOfferTakeOfferId,
+      transactionGasCostEstimate,
+      actions: {
+        getTransactionGasCostEstimate
+      }
     } = this.props;
 
     return (
@@ -132,14 +136,17 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
         <div>
           <div>
             <OfferTakeForm/>
-            <div>
-              {this.setMaxButton()}
-            </div>
           </div>
           <div className="statusSection">
-            <SetTokenAllowanceTrustWrapper
-              allowanceSubjectAddress={activeOfferTakeOfferOwner}
-              tokenName={buyToken}
+            <OasisTransactionDetailsWrapper
+              {...this.getUsersSoldAndReceivedAmounts()}
+              buyToken={buyToken}
+              sellToken={sellToken}
+              offerOwner={activeOfferTakeOfferOwner}
+              offerId={activeOfferTakeOfferId}
+              transactionGasCostEstimate={transactionGasCostEstimate}
+              getTransactionGasCostEstimate={getTransactionGasCostEstimate}
+
             />
           </div>
           <div className="cancelBuyActionsSection" style={{ display: 'flex' }}>
@@ -147,7 +154,6 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
               <button style={BtnStyle} onClick={this.onCancel}>Cancel</button>
             </div>
             <div className="notificationsSection">
-              {/*<OfferTakeAmountBelowLimitWrapper/>*/}
             </div>
             <div>
               <button disabled={!canBuyOffer} style={BtnStyle} onClick={this.onBuyOffer}>
@@ -177,13 +183,14 @@ export function mapStateToProps(state) {
     isOfferTakeModalOpen: offerTakes.isOfferTakeModalOpen(state),
     userBalances: balances.tokenBalances(state),
     activeTradingPair: tokens.activeTradingPair(state),
-    offerTakeFormValues: getFormValues('offerTake')(state),
+    offerTakeFormValues: getFormValues('takeOffer')(state, [ 'total', 'volume', 'price' ]),
     activeOfferTakeOfferOwner: offerTakes.activeOfferTakeOfferOwner(state),
     canBuyOffer: offerTakes.canBuyOffer(state),
     buyToken: offerTakes.activeOfferTakeBuyToken(state),
     sellToken: offerTakes.activeOfferTakeSellToken(state),
     activeOfferTakeOfferId: offerTakes.activeOfferTakeOfferId(state),
-    formErrors: getFormSyncErrors('offerTake')(state)
+    formErrors: getFormSyncErrors('takeOffer')(state),
+    transactionGasCostEstimate: offerTakes.transactionGasCostEstimate(state)
   };
 }
 
@@ -191,9 +198,8 @@ export function mapDispatchToProps(dispatch) {
   const actions = {
     checkIfOfferIsActive: offerTakesReducer.actions.checkIfOfferTakeSubjectStillActiveEpic,
     setOfferTakeModalClosed: offerTakesReducer.actions.setOfferTakeModalClosedEpic,
-    buyMax: offerTakesReducer.actions.buyMaxEpic,
-    sellMax: offerTakesReducer.actions.sellMaxEpic,
-    takeOffer: offerTakesReducer.actions.takeOfferEpic
+    takeOffer: offerTakesReducer.actions.takeOfferEpic,
+    getTransactionGasCostEstimate: offerTakesReducer.actions.getTransactionGasCostEstimateEpic
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

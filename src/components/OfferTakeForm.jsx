@@ -21,6 +21,16 @@ const label = { width: '30%', display: 'inline-block' };
 const fieldStyle = {textAlign: 'right'};
 
 
+
+const VolumeIsOverTheOfferMax = ({ offerMax }) => (
+  <div style={{marginTop: 20,padding: 10, textAlign: 'center', backgroundColor:'black', color:'#fff' }}>
+    Current volume is greater than offer maximum  of <b>{offerMax}</b>
+  </div>
+);
+
+VolumeIsOverTheOfferMax.propTypes = { offerMax: PropTypes.string.isRequired };
+
+
 const normalize =
   (value, previousValue) =>
     value == 0 ? value :
@@ -30,14 +40,14 @@ const formatValue = (value) =>  isFinite(value) ?  web3.toBigNumber(value).toFor
 
 const numericFormatValidator = value => {
   if(!/^(\d+\.?\d*|\.\d+)$/.test(value)) {
-    return `Doesn't match expected format`;
-  } else { return null; }
+    return `VALIDATOR_ERROR/NOT_NUMERIC_FORMAT`;
+  }
 };
 
 const greaterThanZeroValidator = value => {
-  if(isFinite(value) && web3.toBigNumber(value).gt(0)) {
+  if(!(isFinite(value) && web3.toBigNumber(value).gt(0)) ) {
     return `VALIDATOR_ERROR/MUST_BE_GREATER_THAN_ZERO`;
-  } else { return null; }
+  }
 };
 
 const validateVolume = [greaterThanZeroValidator, numericFormatValidator];
@@ -48,7 +58,13 @@ export class OfferTakeForm extends PureComponent {
     super(props);
     this.onVolumeFieldChange = this.onVolumeFieldChange.bind(this);
     this.onTotalFieldChange =  this.onTotalFieldChange.bind(this);
+    this.onSetBuyMax = this.onSetBuyMax.bind(this);
+    this.onSetSellMax = this.onSetSellMax.bind(this);
   }
+
+  onSetBuyMax() {  this.props.actions.buyMax(); }
+  onSetSellMax() { this.props.actions.sellMax(); }
+
 
   onVolumeFieldChange(event, newValue, previousValue) {
     const { volumeFieldValueChanged } = this.props.actions;
@@ -64,8 +80,21 @@ export class OfferTakeForm extends PureComponent {
     }
   }
 
+  setMaxButton() {
+    switch (this.props.offerTakeType) {
+      case TAKE_BUY_OFFER:
+        return (
+          <button type="button" onClick={this.onSetSellMax}>Sell max</button>
+        );
+      case TAKE_SELL_OFFER:
+        return (
+          <button type="button" onClick={this.onSetBuyMax}>Buy max</button>
+        );
+    }
+  }
+
   render() {
-    const { offerTakeType, handleSubmit, buyToken, sellToken } = this.props;
+    const { offerTakeType, handleSubmit, buyToken, sellToken, isVolumeGreaterThanOfferMax } = this.props;
     let volumeToken = null, totalToken = null, priceToken = null;
     switch (offerTakeType) {
 
@@ -89,7 +118,7 @@ export class OfferTakeForm extends PureComponent {
               style={fieldStyle}
               name="price" component="input"
               format={formatValue}
-              normalize={normalize} disabled type="number"/>
+              normalize={normalize} disabled type="text"/>
             {priceToken}
           </div>
           <div style={box}>
@@ -105,8 +134,12 @@ export class OfferTakeForm extends PureComponent {
               validate={validateVolume}
               min={0}
             /> {volumeToken}
+            <div>
+              {isVolumeGreaterThanOfferMax && <VolumeIsOverTheOfferMax offerMax={isVolumeGreaterThanOfferMax}/>}
+            </div>
           </div>
           <div style={box}>
+            {this.setMaxButton()}
             <span style={label}>Total:</span>
             <Field
               style={fieldStyle}
@@ -129,13 +162,6 @@ export class OfferTakeForm extends PureComponent {
 OfferTakeForm.displayName = 'OfferTakeForm';
 OfferTakeForm.propTypes = propTypes;
 OfferTakeForm.defaultProps = defaultProps;
-export function mapDispatchToProps(dispatch) {
-  const actions = {
-    volumeFieldValueChanged: offerTakesReducer.actions.volumeFieldValueChangedEpic,
-    totalFieldValueChanged:  offerTakesReducer.actions.totalFieldValueChangedEpic
-  };
-  return { actions: bindActionCreators(actions, dispatch) };
-}
 
 export function mapStateToProps(state) {
   return {
@@ -143,8 +169,19 @@ export function mapStateToProps(state) {
     buyToken: offerTakes.activeOfferTakeBuyToken(state),
     sellToken: offerTakes.activeOfferTakeSellToken(state),
     offerTakeType: offerTakes.activeOfferTakeType(state),
-    activeTradingPairPrecision: tokens.precision(state)
+    activeTradingPairPrecision: tokens.precision(state),
+    isVolumeGreaterThanOfferMax: offerTakes.isVolumeGreaterThanOfferMax(state)
   };
+}
+
+export function mapDispatchToProps(dispatch) {
+  const actions = {
+    volumeFieldValueChanged: offerTakesReducer.actions.volumeFieldValueChangedEpic,
+    totalFieldValueChanged:  offerTakesReducer.actions.totalFieldValueChangedEpic,
+    buyMax: offerTakesReducer.actions.buyMaxEpic,
+    sellMax: offerTakesReducer.actions.sellMaxEpic,
+  };
+  return { actions: bindActionCreators(actions, dispatch) };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(

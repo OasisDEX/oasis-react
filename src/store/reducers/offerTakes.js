@@ -12,13 +12,12 @@ import { change, formValueSelector } from 'redux-form/immutable';
 import web3 from '../../bootstrap/web3';
 import { ETH_UNIT_ETHER } from '../../constants';
 import balances from '../selectors/balances';
-
+import { fulfilled } from '../../utils/store';
 
 export const TAKE_BUY_OFFER = 'OFFER_TAKES/TAKE_BUY_OFFER';
 export const TAKE_SELL_OFFER = 'OFFER_TAKES/TAKE_SELL_OFFER';
 
-
-const currentOfferTakeInitialValue =  fromJS(
+const currentOfferTakeInitialValue = fromJS(
   {
     offerData: null,
     checkingIfOfferActive: null,
@@ -26,7 +25,7 @@ const currentOfferTakeInitialValue =  fromJS(
     buyToken: null,
     sellToken: null,
     baseToken: null,
-    quoteToken: null
+    quoteToken: null,
   },
 );
 
@@ -35,7 +34,8 @@ const initialState = fromJS({
   activeOfferTakeType: null,
   isOfferTakeModalOpen: false,
   activeOfferTakeOfferId: null,
-  minOrderLimitInWei: '100000000000000000'
+  minOrderLimitInWei: '100000000000000000',
+  transactionGasCostEstimate: null,
 });
 
 const INIT = 'OFFER_TAKES/INIT';
@@ -44,13 +44,12 @@ const Init = createAction(
   INIT, () => null,
 );
 
-
 const buyMaxEpic = () => (dispatch, getState) => {
   const usersQuoteTokenBalanceBN = web3.toBigNumber(balances.activeQuoteTokenBalance(getState()));
   const activeOfferTakeData = offerTakes.activeOfferTakeOfferData(getState());
   const volume = activeOfferTakeData.get('buyHowMuch');
   const priceBN = web3.toBigNumber(activeOfferTakeData.get('ask_price'));
-  if(usersQuoteTokenBalanceBN.gte(priceBN.mul(volume))) {
+  if (usersQuoteTokenBalanceBN.gte(priceBN.mul(volume))) {
     dispatch(change('takeOffer', 'total', web3.fromWei(priceBN.mul(volume), ETH_UNIT_ETHER)));
     dispatch(change('takeOffer', 'volume', web3.fromWei(volume, ETH_UNIT_ETHER)));
   } else {
@@ -59,13 +58,12 @@ const buyMaxEpic = () => (dispatch, getState) => {
   }
 };
 
-
 const sellMaxEpic = () => (dispatch, getState) => {
   const usersBaseTokenBalanceBN = web3.toBigNumber(balances.activeBaseTokenBalance(getState()));
   const activeOfferTakeData = offerTakes.activeOfferTakeOfferData(getState());
   const volume = activeOfferTakeData.get('buyHowMuch');
   const priceBN = web3.toBigNumber(activeOfferTakeData.get('bid_price'));
-  if(usersBaseTokenBalanceBN.gte(volume)) {
+  if (usersBaseTokenBalanceBN.gte(volume)) {
     dispatch(change('takeOffer', 'total', web3.fromWei(priceBN.mul(volume), ETH_UNIT_ETHER)));
     dispatch(change('takeOffer', 'volume', web3.fromWei(volume, ETH_UNIT_ETHER)));
   } else {
@@ -85,13 +83,15 @@ const setActiveOfferTakeEpic = () => (dispatch, getState) => {
   switch (offerTakeType) {
     case TAKE_BUY_OFFER: {
       offer = offers.activeTradingPairBuyOffers(getState()).find(offer => offer.id === offerId);
-    }break;
+    }
+      break;
     case TAKE_SELL_OFFER: {
-      offer = offers.activeTradingPairSellOffers(getState()).find(offer => offer.id === offerId)
-    }break;
+      offer = offers.activeTradingPairSellOffers(getState()).find(offer => offer.id === offerId);
+    }
+      break;
 
   }
-  if(offer) {
+  if (offer) {
     const { sellToken, buyToken } = getBuyAndSellTokens(tokens.activeTradingPair(getState()), offerTakeType);
     dispatch(
       setActiveOfferTake(
@@ -100,32 +100,30 @@ const setActiveOfferTakeEpic = () => (dispatch, getState) => {
           .set('sellToken', sellToken)
           .set('buyToken', buyToken)
           .set('baseToken', baseToken)
-          .set('quoteToken', quoteToken)
-      )
-    )
+          .set('quoteToken', quoteToken),
+      ),
+    );
   }
 };
-
 
 const sendBuyTransaction = createAction(
   'OFFER_TAKES/MARKET_BUY',
   (offerId, amount, gasLimit) =>
-    window.contracts.market.buy(offerId, amount, { gas: gasLimit || DEFAULT_GAS_LIMIT })
+    window.contracts.market.buy(offerId, amount, { gasLimit: gasLimit || DEFAULT_GAS_LIMIT }),
 );
 
 const takeOffer = createPromiseActions('OFFER_TAKES/TAKE_OFFER');
 
 const takeOfferEpic = () => async (dispatch, getState) => {
-  const { total } = formValueSelector('takeOffer')(getState(), 'total');
-  const totalInWei = web3.toWei(total, ETH_UNIT_ETHER);
+  const volume = formValueSelector('takeOffer')(getState(), 'volume');
+  const volumeInWei = web3.toWei(volume, ETH_UNIT_ETHER);
   const activeOfferTakeOfferId = offerTakes.activeOfferTakeOfferId(getState());
   dispatch(takeOffer.pending());
-  dispatch(sendBuyTransaction(activeOfferTakeOfferId, totalInWei));
+  dispatch(sendBuyTransaction(activeOfferTakeOfferId, volumeInWei));
 };
 
 const setActiveOfferTakeType = createAction('OFFER_TAKES/SET_ACTIVE_OFFER_TAKE_TYPE', takeType => takeType);
 const resetActiveOfferTakeType = createAction('OFFER_TAKES/RESET_ACTIVE_OFFER_TAKE_TYPE');
-
 
 const setOfferTakeModalOpen = createAction('OFFER_TAKES/SET_MODAL_OPEN');
 const setOfferTakeModalOpenEpic = ({ offerId, offerTakeType }) => (dispatch) => {
@@ -157,14 +155,15 @@ const initializeOfferTakeFormEpic = () => (dispatch, getState) => {
         activeOfferTake.getIn(['offerData', 'sellHowMuch']),
       ];
       break;
-    default: throw new Error('No offer take type provided!')
+    default:
+      throw new Error('No offer take type provided!');
   }
   dispatch(
     initialize('takeOffer', {
       price,
       volume: web3.fromWei(volume, ETH_UNIT_ETHER, { precision: activeTradingPairPrecision }).toString(),
-      total: web3.fromWei(total, ETH_UNIT_ETHER, { precision: activeTradingPairPrecision }).toString()
-    })
+      total: web3.fromWei(total, ETH_UNIT_ETHER, { precision: activeTradingPairPrecision }).toString(),
+    }),
   );
   dispatch(initializeOfferTakeForm());
 };
@@ -175,11 +174,11 @@ const setOfferTakeModalClosedEpic = () => (dispatch) => {
   dispatch(setOfferTakeModalClosed());
   dispatch(resetActiveOfferTakeType());
   dispatch(resetActiveOfferTakeOfferId());
-  dispatch(resetActiveOfferTake())
+  dispatch(resetActiveOfferTake());
+  dispatch(resetActiveOfferTakeGasCostEstimate());
 };
 const setActiveOfferTakeOfferId = createAction('OFFER_TAKES/SET_ACTIVE_OFFER_TAKE_OFFER_ID');
 const resetActiveOfferTakeOfferId = createAction('OFFER_TAKES/RESET_ACTIVE_OFFER_TAKE_OFFER_ID');
-
 
 const checkIfOfferTakeSubjectIsActive = createPromiseActions('OFFER_TAKES/CHECK_IF_OFFER_TAKE_SUBJECT_IS_ACTIVE');
 const checkIfOfferTakeSubjectStillActiveEpic = () => async (dispatch, getState) => {
@@ -187,22 +186,59 @@ const checkIfOfferTakeSubjectStillActiveEpic = () => async (dispatch, getState) 
   dispatch(checkIfOfferTakeSubjectIsActive.pending());
   const isActive = (await dispatch(offersReducer.actions.checkOfferIsActive(activeOfferTakeOfferId))).value;
   dispatch(
-    checkIfOfferTakeSubjectIsActive.fulfilled(isActive)
+    checkIfOfferTakeSubjectIsActive.fulfilled(isActive),
   );
 };
 
-
 const volumeFieldValueChangedEpic = (value) => (dispatch, getState) => {
   const { price } = formValueSelector('takeOffer')(getState(), 'volume', 'total', 'price');
-  dispatch(change('takeOffer', 'total', web3.toBigNumber(value).mul(price).toString() ));
+  dispatch(change('takeOffer', 'total', web3.toBigNumber(value).mul(price).toString()));
 
 };
 
-const totalFieldValueChangedEpic =  (value) => (dispatch, getState) => {
+const totalFieldValueChangedEpic = (value) => (dispatch, getState) => {
   const { price } = formValueSelector('takeOffer')(getState(), 'volume', 'total', 'price');
-  dispatch(change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toString() ));
+  dispatch(change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toString()));
 };
 
+const resetActiveOfferTakeGasCostEstimate = createAction('OFFER_TAKES/RESET_TRANSACTION_GAS_ESTIMATE');
+
+const getTransactionGasCostEstimate = createAction(
+  'OFFER_TAKES/GET_TRANSACTION_GAS_ESTIMATE',
+  ({ offerId, amount, offerOwner, activeOfferData }) => new Promise((resolve, reject) => {
+    window.contracts.marketNoProxy.buy.estimateGas(
+      offerId, amount, { to: offerOwner, gasLimit: DEFAULT_GAS_LIMIT },
+      (e, estimation) => {
+        if (e) {
+          reject({
+            offerId, amount, to: offerOwner, activeOfferData
+          });
+        } else {
+          resolve(estimation);
+        }
+      },
+    );
+  }),
+);
+
+const getTransactionGasCostEstimateEpic = () => async (dispatch, getState) => {
+  const offerId = offerTakes.activeOfferTakeOfferId(getState());
+  const volume = offerTakes.takeFormValuesSelector(getState(), 'volume');
+  if (!offerTakes.canBuyOffer(getState()) || !volume) {
+    return null;
+  }
+  const offerOwner = offerTakes.activeOfferTakeOfferOwner(getState());
+  await dispatch(
+    getTransactionGasCostEstimate(
+      {
+        offerId,
+        amount: web3.toWei(volume, ETH_UNIT_ETHER).toString(),
+        offerOwner,
+        activeOfferData: offerTakes.activeOfferTakeOfferData(getState())
+      },
+    ),
+  );
+};
 
 const actions = {
   Init,
@@ -217,9 +253,9 @@ const actions = {
   volumeFieldValueChangedEpic,
   totalFieldValueChangedEpic,
   buyMaxEpic,
-  sellMaxEpic
+  sellMaxEpic,
+  getTransactionGasCostEstimateEpic,
 };
-
 
 const reducer = handleActions({
   [setOfferTakeModalOpen]: state => state.set('isOfferTakeModalOpen', true),
@@ -231,12 +267,13 @@ const reducer = handleActions({
   [setActiveOfferTakeOfferId]: (state, { payload }) => state.set('activeOfferTakeOfferId', payload),
   [resetActiveOfferTakeOfferId]: state => state.set('activeOfferTakeOfferId', null),
   [checkIfOfferTakeSubjectIsActive.pending]: state => state.setIn(['activeOfferTake', 'checkingIfOfferActive'], true),
-  [checkIfOfferTakeSubjectIsActive.fulfilled]:
-    (state, { payload }) =>
-      state
-        .setIn(['activeOfferTake', 'isOfferActive'], payload)
-        .setIn(['activeOfferTake', 'checkingIfOfferActive'], true)
+  [checkIfOfferTakeSubjectIsActive.fulfilled]: (state, { payload }) => state
+    .setIn(['activeOfferTake', 'isOfferActive'], payload)
+    .setIn(['activeOfferTake', 'checkingIfOfferActive'], true)
   ,
+  [fulfilled(getTransactionGasCostEstimate)]:
+    (state, { payload }) => state.set('transactionGasCostEstimate', payload.toString()),
+  [resetActiveOfferTakeGasCostEstimate]: state => state.set('transactionGasCostEstimate', null),
 
 }, initialState);
 

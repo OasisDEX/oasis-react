@@ -1,7 +1,9 @@
 import { createSelector } from 'reselect';
 import reselect from '../../utils/reselect';
 import balances from './balances';
-import BigNumber from 'bignumber.js';
+import { ETH_UNIT_ETHER } from '../../constants';
+import web3 from '../../bootstrap/web3';
+import { DEFAULT_GAS_LIMIT } from '../reducers/transactions';
 
 const transactions = s => s.get('transactions');
 
@@ -47,14 +49,16 @@ const activeGasLimit = createSelector(
   transactions, s => s.get('activeGasLimit')
 );
 
+const currentGasPriceWei = createSelector(
+  transactions, s => s.get('currentGasPriceInWei')
+)
+
 
 const canSendTransaction = createSelector(
   balances.ethBalance,
-  activeGasLimit,
-  (ethBalance, activeGasLimit) => {
-    const ethBalanceBN = new BigNumber(ethBalance);
-    return ethBalanceBN.gte(activeGasLimit);
-  }
+  reselect.getProps,
+  (ethBalance, gasCost) =>
+    web3.toBigNumber(web3.toWei(ethBalance, ETH_UNIT_ETHER)).gte(gasCost || DEFAULT_GAS_LIMIT)
 );
 
 
@@ -64,5 +68,6 @@ export default {
   defaultGasLimit,
   getOfferTransaction,
   getTokenTransaction,
-  canSendTransaction
+  canSendTransaction,
+  currentGasPriceWei
 };

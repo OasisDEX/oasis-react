@@ -32,6 +32,7 @@ const initialState = Immutable.fromJS(
     latestBlockNumber: null,
     outOfSync: true,
     tokenAddresses: null,
+    latestEthereumPrice: null,
     networks: [
       {
         id: 100,
@@ -183,7 +184,6 @@ const syncNetworkEpic = () => async (dispatch, getStore) => {
 
 const CheckNetworkAction = createPromiseActions(CHECK_NETWORK);
 
-
 /**
  * @dev We get latest mined block number
  */
@@ -197,7 +197,6 @@ const getLatestBlock = createAction(
   async () => web3p.eth.getBlock('latest'),
 );
 
-
 /**
  * @dev Here we create 3 actions for checking the network status
  * @type {{pending, fulfilled, rejected}|*}
@@ -205,11 +204,21 @@ const getLatestBlock = createAction(
 const subscribeLatestBlockFilter = createPromiseActions(
   'NETWORK/SUBSCRIBE_LATEST_BLOCK_FILTER',
 );
-const subscribeLatestBlockFilterEpic = () => async (dispatch) => {
+const subscribeLatestBlockFilterEpic = () => async (dispatch, getState) => {
   dispatch(subscribeLatestBlockFilter.pending());
+
+  const tid = setInterval(() => {
+    // const previousBlockNumber = network.latestBlockNumber(getState());
+    dispatch(getLatestBlockNumber());
+    dispatch(fetchEthereumPrice());
+    dispatch(transactionsReducer.actions.getCurrentGasPrice());
+  }, 5000);
+
   web3.eth.filter('latest', (e, b) => {
     console.log(b);
+    clearInterval(tid);
     dispatch(getLatestBlockNumber());
+    dispatch(fetchEthereumPrice());
     dispatch(transactionsReducer.actions.getCurrentGasPrice());
   });
 
@@ -219,8 +228,7 @@ const subscribeLatestBlockFilterEpic = () => async (dispatch) => {
 
 const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch, getState) => {
   dispatch(CheckNetworkAction.pending());
-  const onNetworkCheckCompleted = async () =>
-  {
+  const onNetworkCheckCompleted = async () => {
     const currentLatestBlock = network.latestBlockNumber(getState());
     dispatch(subscribeLatestBlockFilterEpic());
 
@@ -230,7 +238,7 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
 
     dispatch(offersReducer.actions.subscribeOffersEventsEpic());
     dispatch(offersReducer.actions.syncOffersEpic(
-      tokens.activeTradingPair(getState())
+      tokens.activeTradingPair(getState()),
     ));
 
     /**
@@ -273,7 +281,6 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
     currentNetworkName = getState().getIn(['network', 'activeNetworkName']);
     dispatch(setTokenAddresses(currentNetworkName));
     dispatch(offersReducer.actions.initOffersEpic());
-
     /**
      * Loading contracts and initializing market
      */
@@ -322,6 +329,11 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
 
 };
 
+const fetchEthereumPrice = createAction(
+  'NETWORK/FETCH_ETHEREUM_PRICE',
+  () => fetch('https://api.coinmarketcap.com/v1/ticker/ethereum/').then(res => res.json()),
+);
+
 const connected = createAction(
   CONNECTED,
 );
@@ -347,6 +359,7 @@ const actions = {
   getLatestBlock,
   getLatestBlockNumber,
   getConnectedNetworkId,
+  fetchEthereumPrice,
 };
 
 const reducer = handleActions({
@@ -373,6 +386,7 @@ const reducer = handleActions({
   [setTokenAddresses]: (state, { payload }) => state.set('tokenAddresses', payload),
   [fulfilled(getLatestBlockNumber)]: (state, { payload }) =>
     state.update('latestBlockNumber', () => payload),
+  [fulfilled(fetchEthereumPrice)]: (state, { payload }) => state.set('latestEthereumPrice', payload[0]),
 
 }, initialState);
 
