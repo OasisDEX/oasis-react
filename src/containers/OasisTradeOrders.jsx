@@ -57,7 +57,9 @@ export class OasisTradeOrdersWrapper extends PureComponent {
       actions: {
         cancelOffer,
         setOfferTakeModalOpen,
-        setActiveOfferTakeOfferId
+        setActiveOfferTakeOfferId,
+        checkOfferIsActive,
+        resetCompletedOfferCheck
       }
     } = this.props;
 
@@ -73,6 +75,8 @@ export class OasisTradeOrdersWrapper extends PureComponent {
           buyOffers={buyOffers}
           cancelOffer={cancelOffer}
           onSetActiveOfferTakeOfferId={setActiveOfferTakeOfferId}
+          onCheckOfferIsActive={checkOfferIsActive}
+          onResetCompletedOfferCheck={resetCompletedOfferCheck}
         />
         <OasisSellOrders
           onSetOfferTakeModalOpen={setOfferTakeModalOpen}
@@ -82,6 +86,8 @@ export class OasisTradeOrdersWrapper extends PureComponent {
           sellOffers={sellOffers}
           cancelOffer={cancelOffer}
           onSetActiveOfferTakeOfferId={setActiveOfferTakeOfferId}
+          onCheckOfferIsActive={checkOfferIsActive}
+          onResetCompletedOfferCheck={resetCompletedOfferCheck}
         />
         <OasisMyOrders
           sellOffers={sellOffers}
@@ -123,7 +129,9 @@ export function mapDispatchToProps(dispatch) {
   const actions = {
     cancelOffer: offersReducer.actions.cancelOfferEpic,
     setOfferTakeModalOpen: offerTakesReducer.actions.setOfferTakeModalOpenEpic,
-    setActiveOfferTakeOfferId: offerTakesReducer.actions.setActiveOfferTakeOfferId
+    setActiveOfferTakeOfferId: offerTakesReducer.actions.setActiveOfferTakeOfferId,
+    checkOfferIsActive: offerTakesReducer.actions.checkIfOfferTakeSubjectStillActiveEpic,
+    resetCompletedOfferCheck: offerTakesReducer.actions.resetCompletedOfferCheck
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

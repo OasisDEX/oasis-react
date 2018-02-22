@@ -17,7 +17,10 @@ import tokens from '../store/selectors/tokens';
 import { formatAmount } from '../utils/tokens/pair';
 import { getFormValues, getFormSyncErrors } from 'redux-form/immutable';
 import OasisTransactionDetailsWrapper  from './OasisTransactionDetails';
-import web3 from '../bootstrap/web3';
+import transactions from '../store/selectors/transactions';
+import { TX__GROUP__OFFERS, TX_OFFER_TAKE, TX_STATUS_CONFIRMED } from '../store/reducers/transactions';
+import getUsersSoldAndReceivedAmounts from '../utils/offers/getUsersSoldAndReceivedAmounts';
+import WithTimer from './WithTimer';
 
 const BtnStyle = {
   padding: '10px 15px',
@@ -31,9 +34,13 @@ const closeModalBtnStyle = {
   right: 20
 };
 
-const OfferNotAvailable = (
-  <div>Offer is not available anymore</div>
+const OfferNotAvailable = () => (
+  <div>
+    <div>Offer is not available anymore</div>
+    <div>Will close shortly</div>
+  </div>
 );
+
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -63,6 +70,9 @@ const style = {
   },
 };
 
+export const isTransactionConfirmed = (transaction) =>
+  transaction && transaction.get('txStatus') === TX_STATUS_CONFIRMED;
+
 export class OasisTakeOfferModalWrapper extends PureComponent {
 
   static takeOfferBtnLabel(offerTakeType, { buyToken, sellToken }) {
@@ -71,38 +81,26 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
       case TAKE_BUY_OFFER:  return `Sell ${sellToken}`;
     }
   }
+
   constructor(props) {
     super(props);
     this.onBuyOffer = this.onBuyOffer.bind(this);
     this.onCancel = this.onCancel.bind(this);
   }
 
-  onCancel() {
-    this.props.actions.setOfferTakeModalClosed();
+  onCancel() { this.props.actions.setOfferTakeModalClosed(); }
+
+  async onBuyOffer() {
+    const { actions } = this.props;
+    actions.checkIfOfferIsActive().then(
+      (isActive) => {
+        if(isActive) { actions.takeOffer() }
+      }
+    )
+
   }
 
-  onBuyOffer() {
-   this.props.actions.takeOffer();
-  }
 
-
-  getUsersSoldAndReceivedAmounts() {
-    const { offerTakeType, offerTakeFormValues } = this.props;
-    if(!offerTakeFormValues.get('price') || !offerTakeFormValues.get('total') || !offerTakeFormValues.get('volume')) {
-      return {amountReceived: 'N/A', amountSold: 'N/A'}
-    }
-    const volumeBN = web3.toBigNumber(offerTakeFormValues.get('volume') );
-    const totalBN = web3.toBigNumber(offerTakeFormValues.get('total') );
-
-    switch (offerTakeType) {
-      case TAKE_SELL_OFFER: return {
-        amountReceived: formatAmount(volumeBN), amountSold: formatAmount(totalBN)
-      };
-      case TAKE_BUY_OFFER: return {
-        amountReceived: formatAmount(totalBN), amountSold: formatAmount(volumeBN)
-      };
-    }
-  }
   render() {
     const {
       offerTakeType,
@@ -112,17 +110,17 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
       sellToken,
       buyToken,
       activeOfferTakeOfferId,
-      transactionGasCostEstimate,
+      currentOfferTakeTransaction,
+      isCurrentTransactionValid,
+      isCurrentOfferActive,
+      offerTakeFormValues,
       actions: {
         getTransactionGasCostEstimate
       }
     } = this.props;
 
     return (
-      <ReactModal
-        style={style}
-        isOpen={true}
-      >
+      <ReactModal ariaHideApp={false} style={style} isOpen={true}>
         <div>
           <h3>{getOfferTitle(offerTakeType)}</h3>
           <button style={{...BtnStyle, ...closeModalBtnStyle }} onClick={this.onCancel}>x</button>
@@ -135,25 +133,31 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
         </div>
         <div>
           <div>
-            <OfferTakeForm/>
+            <OfferTakeForm estimateGas={getTransactionGasCostEstimate}/>
           </div>
           <div className="statusSection">
             <OasisTransactionDetailsWrapper
-              {...this.getUsersSoldAndReceivedAmounts()}
+              transactionSubectType={TX_OFFER_TAKE}
+              isTransactionValid={isCurrentTransactionValid}
+              {...getUsersSoldAndReceivedAmounts(offerTakeType, offerTakeFormValues)}
               buyToken={buyToken}
+              transaction={currentOfferTakeTransaction}
               sellToken={sellToken}
               offerOwner={activeOfferTakeOfferOwner}
               offerId={activeOfferTakeOfferId}
-              transactionGasCostEstimate={transactionGasCostEstimate}
               getTransactionGasCostEstimate={getTransactionGasCostEstimate}
-
             />
           </div>
-          <div className="cancelBuyActionsSection" style={{ display: 'flex' }}>
+          <div
+            className="cancelBuyActionsSection"
+            style={{ display: 'flex' }}
+            hidden={currentOfferTakeTransaction}
+          >
             <div>
-              <button style={BtnStyle} onClick={this.onCancel}>Cancel</button>
+              <button  style={BtnStyle} onClick={this.onCancel}>Cancel</button>
             </div>
             <div className="notificationsSection">
+              { !isCurrentOfferActive && <OfferNotAvailable/>}
             </div>
             <div>
               <button disabled={!canBuyOffer} style={BtnStyle} onClick={this.onBuyOffer}>
@@ -171,6 +175,18 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     const currentBlockNumber = nextProps.latestBlockNumber;
     if (prevBlockNumber !== currentBlockNumber) {
       this.props.actions.checkIfOfferIsActive();
+    }
+
+    if(isTransactionConfirmed(nextProps.currentOfferTakeTransaction)) {
+      setTimeout(
+        () => { this.props.actions.setOfferTakeModalClosed(); }, 10000
+      )
+    }
+
+    if(this.props.isCurrentOfferActive === false) {
+      setTimeout(
+        () => { this.props.actions.setOfferTakeModalClosed(); }, 10000
+      )
     }
   }
 }
@@ -190,7 +206,11 @@ export function mapStateToProps(state) {
     sellToken: offerTakes.activeOfferTakeSellToken(state),
     activeOfferTakeOfferId: offerTakes.activeOfferTakeOfferId(state),
     formErrors: getFormSyncErrors('takeOffer')(state),
-    transactionGasCostEstimate: offerTakes.transactionGasCostEstimate(state)
+    isCurrentTransactionValid: !offerTakes.isVolumeEmptyOrZero(state),
+    currentOfferTakeTransaction: transactions.getOfferTransaction(
+      state, { offerId: offerTakes.activeOfferTakeOfferId(state) }
+    ),
+    isCurrentOfferActive: offerTakes.isOfferActive(state) === true,
   };
 }
 

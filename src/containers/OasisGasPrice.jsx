@@ -10,6 +10,9 @@ import web3 from '../bootstrap/web3';
 import { ETH_UNIT_ETHER } from '../constants';
 import { formatAmount } from '../utils/tokens/pair';
 
+
+const style = { padding: '4px 7px', background: '#fff' };
+
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
   transactionGasCostEstimate: PropTypes.string
@@ -28,17 +31,27 @@ export class OasisGasPriceWrapper extends PureComponent {
           <span style={{marginLeft: 20}}>{formatAmount(cost.mul(latestEthereumPrice.price_usd))} USD</span>
         </div>
       )
-    } else {
-      return (<b>-</b>);
     }
   }
 
+  renderContent() {
+    const { gasEstimatePending, gasEstimateError } = this.props;
+    if(gasEstimateError) {
+      return (<b>estimate error</b>);
+    }
+    else if(gasEstimatePending) {
+      return (<b>estimate pending...</b>);
+    } else {
+      return (
+        <div>
+          {this.getGasCostEstimate()}
+        </div>
+      );
+    }
+
+  }
   render() {
-    return (
-      <div>
-        {this.getGasCostEstimate()}
-      </div>
-    );
+    return (<div style={style}>{this.renderContent()}</div>)
   }
 }
 

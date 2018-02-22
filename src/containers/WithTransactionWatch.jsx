@@ -1,30 +1,37 @@
+/* eslint-disable react/prop-types */
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { compose } from 'redux';
+import network from '../store/selectors/network';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
 };
 
-export class WithTransactionWatchWrapper extends PureComponent {
-  render() {
-    return (
-      <div></div>
-    );
-  }
+function withTransactionWatchers (WrappedComponent) {
+
+  return class WithTransactionWatchWrapper extends PureComponent {
+
+    render() {
+      return <WrappedComponent {...this.props}/>
+    }
+
+    componentWillUpdate(nextProps) {}
+  };
 }
 
+
 export function mapStateToProps(state) {
-  return {};
+  return {
+    latestBlockNumber: network.latestBlockNumber(state)
+  };
 }
 export function mapDispatchToProps(dispatch) {
   const actions = {};
-  return { actions: bindActionCreators(actions, dispatch) };
+  return { subscribers: bindActionCreators(actions, dispatch) };
 }
-
-WithTransactionWatchWrapper.propTypes = propTypes;
-WithTransactionWatchWrapper.displayName = 'WithTransactionWatch';
-export default connect(mapStateToProps, mapDispatchToProps)(WithTransactionWatchWrapper);
+export default compose(connect(mapStateToProps, mapDispatchToProps), withTransactionWatchers);

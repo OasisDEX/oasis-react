@@ -18,6 +18,7 @@ import accounts from './store/selectors/accounts';
 import period from './utils/period';
 import conversion from './utils/conversion';
 import { errorHandler } from './utils/errorHandlers';
+import timers from './bootstrap/timers';
 
 const { store, history } = configureStore();
 
@@ -74,6 +75,7 @@ const bootstrap = async () => {
   const { dispatch, getState } = store;
   period.init(getState);
   conversion.init(getState);
+  timers.init(dispatch);
   dispatch(platformReducer.actions.web3Initialized(web3.init()));
   await healthCheck(dispatch, getState, true);
   // TODO: extract this into a configuration and agree on the value.

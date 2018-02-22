@@ -5,10 +5,17 @@ import OasisTable from './OasisTable';
 import { isOfferOwner, toDisplayFormat } from '../utils/orders';
 import { LoadProgressSection } from '../utils/offers/loadProgress';
 import { TAKE_SELL_OFFER } from '../store/reducers/offerTakes';
+import offerTakesReducer from '../store/reducers/offerTakes';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 
-const propTypes = PropTypes && {};
+const propTypes = PropTypes && {
+  onSetOfferTakeModalOpen: PropTypes.func.isRequired,
+  onSetActiveOfferTakeOfferId: PropTypes.func.isRequired,
+  onCheckOfferIsActive: PropTypes.func.isRequired,
+  onResetCompletedOfferCheck: PropTypes.func.isRequired,
+};
+
 const defaultProps = {};
 
 const actionsColumnTemplate = function(offer) {
@@ -36,11 +43,17 @@ class OasisSellOrders extends PureComponent {
     super(props);
     this.onTableRowClick = this.onTableRowClick.bind(this);
   }
+
   onTableRowClick(rowData) {
-    const {
-      onSetOfferTakeModalOpen
-    } = this.props;
-    onSetOfferTakeModalOpen({offerTakeType: TAKE_SELL_OFFER, offerId: rowData.id });
+
+    const { onSetOfferTakeModalOpen, onCheckOfferIsActive, onResetCompletedOfferCheck } = this.props;
+    onCheckOfferIsActive(rowData.id)
+      .then(
+        isActive =>
+          isActive === true ?
+            onSetOfferTakeModalOpen({ offerTakeType: TAKE_SELL_OFFER, offerId: rowData.id }):
+            onResetCompletedOfferCheck()
+      );
   }
 
   render() {

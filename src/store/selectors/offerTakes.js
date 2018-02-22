@@ -73,8 +73,7 @@ const hasSufficientTokenAmount = createSelector(
 const currentFormVolume = createSelector(
   rootState => takeFormValuesSelector(rootState, 'volume'),
   volume => volume
-)
-
+);
 
 const isVolumeEmptyOrZero = createSelector(
   rootState => takeFormValuesSelector(rootState, 'volume'),
@@ -94,7 +93,6 @@ const isVolumeGreaterThanOfferMax = createSelector(
     }
   }
 );
-
 
 const canBuyOffer = createSelector(
   hasSufficientTokenAmount,
@@ -127,10 +125,26 @@ const canBuyOffer = createSelector(
   },
 );
 
+const isOfferActive = createSelector(
+  offerTakes, s => s.get('isOfferActive')
+);
+
 const transactionGasCostEstimate = createSelector(
   offerTakes,
   s => s.get('transactionGasCostEstimate')
 );
+
+const checkingIfOfferIsActive = createSelector(
+  offerTakes,
+  s => s.get('checkingIfOfferActive')
+);
+
+const gasEstimatePending = createSelector(
+  offerTakes,
+  s => s.get('transactionGasCostEstimatePending')
+);
+
+
 
 export default {
   state: offerTakes,
@@ -147,5 +161,9 @@ export default {
   takeFormValuesSelector,
   hasSufficientTokenAmount,
   transactionGasCostEstimate,
-  isVolumeGreaterThanOfferMax
+  isVolumeGreaterThanOfferMax,
+  isVolumeEmptyOrZero,
+  isOfferActive,
+  checkingIfOfferIsActive,
+  gasEstimatePending
 };

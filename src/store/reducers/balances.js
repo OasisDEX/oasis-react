@@ -14,8 +14,15 @@ import {
 } from '../../constants';
 import web3, { web3p } from '../../bootstrap/web3';
 import balances from '../selectors/balances';
-import { TX_STATUS_CANCELLED_BY_USER } from './transactions';
+import {
+  TX_ALLOWANCE_TRUST_DISABLE,
+  TX_ALLOWANCE_TRUST_ENABLE,
+  TX_OFFER_TAKE,
+  TX_STATUS_CANCELLED_BY_USER,
+} from './transactions';
 import accounts from '../selectors/accounts';
+import transactionsReducer from './transactions';
+import { Map } from 'immutable';
 
 const initialState = Immutable.fromJS({
   accounts: [],
@@ -277,10 +284,25 @@ const setTokenAllowanceTrustEpic = (tokenName,
             dispatch(
               setTokenTrustAddressEnabled(tokenName, allowanceSubjectAddress)
             ).then(
-              txReceipt => {
+              txHash => {
                 dispatch(
-                  setTokenAllowanceTrustStatus.fulfilled({ txReceipt }),
+                  setTokenAllowanceTrustStatus.fulfilled({ txHash }),
                 );
+
+                dispatch(
+                  transactionsReducer.actions.addTransactionEpic({
+                    txType: TX_ALLOWANCE_TRUST_ENABLE,
+                    txSubjectId: {
+                      tokenName,
+                      account:  allowanceSubjectAddress,
+                      // nonce: transactions.getAllowanceTxNonce(
+                      //   getState(), { tokenName, account:  allowanceSubjectAddress }
+                      // )
+                    },
+                    txHash
+                  })
+                );
+
                 dispatch(
                   getAccountTokenAllowanceForAddress(tokenName, defaultAccountAddress, allowanceSubjectAddress)
                 );
@@ -298,9 +320,23 @@ const setTokenAllowanceTrustEpic = (tokenName,
             dispatch(
               setTokenTrustAddressDisabled(tokenName, allowanceSubjectAddress)
             ).then(
-              txReceipt => {
+              txHash => {
+
                 dispatch(
-                  setTokenAllowanceTrustStatus.fulfilled({ txReceipt }),
+                  transactionsReducer.actions.addTransactionEpic({
+                    txType: TX_ALLOWANCE_TRUST_ENABLE,
+                    txSubjectId: {
+                      tokenName,
+                      account:  allowanceSubjectAddress,
+                      // nonce: transactions.getAllowanceTxNonce(
+                      //   getState(), { tokenName, account:  allowanceSubjectAddress }
+                      // )
+                    },
+                    txHash
+                  })
+                );
+                dispatch(
+                  setTokenAllowanceTrustStatus.fulfilled({ txHash }),
                 );
                 dispatch(
                   getAccountTokenAllowanceForAddress(tokenName, defaultAccountAddress, allowanceSubjectAddress)
@@ -325,6 +361,7 @@ const setTokenAllowanceTrustEpic = (tokenName,
     }
 
   } catch (e) {
+
     console.log(TX_STATUS_CANCELLED_BY_USER);
   }
 

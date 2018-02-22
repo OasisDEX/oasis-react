@@ -6,14 +6,16 @@ import OasisWidgetFrame from '../containers/OasisWidgetFrame';
 import OasisTable from './OasisTable';
 import { isOfferOwner, toDisplayFormat } from '../utils/orders';
 import { LoadProgressSection } from '../utils/offers/loadProgress';
-import { TAKE_BUY_OFFER } from '../store/reducers/offerTakes';
+import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from '../store/reducers/offerTakes';
 import OasisTakeOfferModalWrapper from '../containers/OasisTakeOfferModal';
 
 const propTypes = PropTypes && {
   onSetOfferTakeModalOpen: PropTypes.func.isRequired,
-  onSetActiveOfferTakeOfferId: PropTypes.func.isRequired
-
+  onSetActiveOfferTakeOfferId: PropTypes.func.isRequired,
+  onCheckOfferIsActive: PropTypes.func.isRequired,
+  onResetCompletedOfferCheck: PropTypes.func.isRequired,
 };
+
 const defaultProps = {};
 
 const actionsColumnTemplate = function(offer) {
@@ -40,10 +42,15 @@ class OasisBuyOrders extends PureComponent {
   }
 
   onTableRowClick(rowData) {
-    const {
-      onSetOfferTakeModalOpen
-    } = this.props;
-    onSetOfferTakeModalOpen({offerTakeType: TAKE_BUY_OFFER, offerId: rowData.id });
+
+    const { onSetOfferTakeModalOpen, onCheckOfferIsActive, onResetOfferTake } = this.props;
+    onCheckOfferIsActive(rowData.id)
+      .then(
+        isActive =>
+          isActive === true ?
+            onSetOfferTakeModalOpen({ offerTakeType: TAKE_BUY_OFFER, offerId: rowData.id }) :
+            onResetOfferTake()
+      );
   }
 
   render() {

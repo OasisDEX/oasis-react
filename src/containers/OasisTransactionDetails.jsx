@@ -7,17 +7,27 @@ import { bindActionCreators } from 'redux';
 import SetTokenAllowanceTrustWrapper  from './SetTokenAllowanceTrust';
 import tokens from '../store/selectors/tokens';
 import OasisGasPriceWrapper  from './OasisGasPrice';
-import web3 from '../bootstrap/web3';
 import network from '../store/selectors/network';
 import offerTakes from '../store/selectors/offerTakes';
 import OasisInsufficientAmountOfToken from '../components/OasisInsufficientAmountOfToken';
-import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from '../store/reducers/offerTakes';
+import WithTransactionWatch from './WithTransactionWatch';
+import {
+  TX_OFFER_MAKE,
+  TX_STATUS_AWAITING_CONFIRMATION,
+  TX_STATUS_CANCELLED_BY_USER,
+  TX_STATUS_CONFIRMED,
+} from '../store/reducers/transactions';
+import TransactionTimer from '../components/TransactionTimer';
+import { gasEstimateError, isGasEstimatePending, transactionGasCostEstimate } from '../store/selectors';
+import TransactionStatus from '../components/TransactionStatus';
 
 const propTypes = PropTypes && {
+  transactionSubectType: PropTypes.string.isRequired,
   actions: PropTypes.object.isRequired,
   buyToken: PropTypes.string.isRequired,
   sellToken: PropTypes.string.isRequired,
-  offerOwner: PropTypes.string.isRequired
+  offerOwner: PropTypes.string.isRequired,
+  gasEstimatePending: PropTypes.bool
 };
 
 
@@ -43,12 +53,12 @@ TokenSoldAmount.propTypes = {
   tokenAmount: PropTypes.string,
 };
 
-
 export class OasisTransactionDetailsWrapper extends PureComponent {
   constructor(props) {
     super(props);
-    props.getTransactionGasCostEstimate()
+    props.getTransactionGasCostEstimate();
   }
+
   renderTransactionDetails() {
     const {
       offerOwner,
@@ -57,7 +67,10 @@ export class OasisTransactionDetailsWrapper extends PureComponent {
       amountSold,
       amountReceived,
       baseToken,
-      transactionGasCostEstimate
+      transaction,
+      transactionGasCostEstimate,
+      isGasEstimatePending,
+      gasEstimateError
     } = this.props;
     return (
       <div style={{ display: 'flex' }}>
@@ -69,24 +82,48 @@ export class OasisTransactionDetailsWrapper extends PureComponent {
           <div>
             trading of <b>{baseToken}</b>
           </div>
-          <OasisGasPriceWrapper transactionGasCostEstimate={transactionGasCostEstimate}/>
+          <OasisGasPriceWrapper
+            gasEstimateError={gasEstimateError}
+            gasEstimatePending={isGasEstimatePending}
+            transactionGasCostEstimate={transactionGasCostEstimate}
+          />
           <SetTokenAllowanceTrustWrapper
             allowanceSubjectAddress={offerOwner}
             tokenName={buyToken}
           />
+          <div>
+            {transaction && <TransactionStatus transaction={transaction}/>}
+          </div>
+
         </div>
       </div>
     )
   }
+
   renderInSufficientAmount() {
     const { sellToken } = this.props;
     return <OasisInsufficientAmountOfToken tokenName={sellToken}/>
   }
+
+  static renderTransactionIsInvalid() {
+    return <div>Invalid transaction</div>
+  }
+
+  renderContent() {
+    const { hasSufficientTokenAmount, isTransactionValid } = this.props;
+    if(isTransactionValid) {
+      return (
+        hasSufficientTokenAmount ? this.renderTransactionDetails() : this.renderInSufficientAmount()
+      )
+    } else {
+      return OasisTransactionDetailsWrapper.renderTransactionIsInvalid();
+    }
+  }
+
   render() {
-    const { hasSufficientTokenAmount } = this.props;
     return (
       <div style={{backgroundColor: 'lightgray', padding: 10, margin: '20px 0' }}>
-        { hasSufficientTokenAmount ? this.renderTransactionDetails() : this.renderInSufficientAmount()}
+        {this.renderContent()}
       </div>
     );
   }
@@ -102,11 +139,14 @@ export class OasisTransactionDetailsWrapper extends PureComponent {
 
 }
 
-export function mapStateToProps(state) {
+export function mapStateToProps(state, { transactionSubectType }) {
   return {
     baseToken: tokens.activeTradingPairBaseToken(state),
     latestBlockNumber: network.latestBlockNumber(state),
     hasSufficientTokenAmount: offerTakes.hasSufficientTokenAmount(state),
+    isGasEstimatePending: isGasEstimatePending(state, transactionSubectType),
+    gasEstimateError: gasEstimateError(state, transactionSubectType),
+    transactionGasCostEstimate: transactionGasCostEstimate(state, transactionSubectType)
   };
 }
 export function mapDispatchToProps(dispatch) {
@@ -116,4 +156,4 @@ export function mapDispatchToProps(dispatch) {
 
 OasisTransactionDetailsWrapper.propTypes = propTypes;
 OasisTransactionDetailsWrapper.displayName = 'OasisTransactionDetails';
-export default connect(mapStateToProps, mapDispatchToProps)(OasisTransactionDetailsWrapper);
+export default WithTransactionWatch(connect(mapStateToProps, mapDispatchToProps)(OasisTransactionDetailsWrapper));

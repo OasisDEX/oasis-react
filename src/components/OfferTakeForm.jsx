@@ -1,25 +1,42 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
-// import ImmutablePropTypes from 'react-immutable-proptypes';
+import ImmutablePropTypes from 'react-immutable-proptypes';
+import throttle from 'lodash/throttle';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Field, reduxForm } from 'redux-form/immutable'
 
-import offerTakes from '../store/selectors/offerTakes';
 import web3 from '../bootstrap/web3';
+
+import offerTakes from '../store/selectors/offerTakes';
 import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from '../store/reducers/offerTakes';
 import offerTakesReducer from '../store/reducers/offerTakes';
 import tokens from '../store/selectors/tokens';
+import balances from '../store/selectors/balances';
+import { formatValue, greaterThanZeroValidator, normalize, numericFormatValidator } from '../utils/forms/offers';
+
+/**
+ * Remove this styling TODO
+ */
+const box = { border: '1px solid black', padding: 20, marginTop: 20 };
+const label = { width: '30%', display: 'inline-block' };
+const fieldStyle = { textAlign: 'right' };
+
+
 
 
 const propTypes = PropTypes && {
+  activeOfferTakeOfferData: ImmutablePropTypes.map.isRequired,
+  buyToken: PropTypes.string.isRequired,
+  sellToken: PropTypes.string.isRequired,
+  offerTakeType: PropTypes.string.isRequired,
+  activeTradingPairPrecision: PropTypes.number.isRequired,
+  isVolumeGreaterThanOfferMax: PropTypes.bool.isRequired,
+  activeBaseTokenBalance: PropTypes.string.isRequired
 };
+
+
 const defaultProps = {};
-
-const box = { border: '1px solid black', padding: 20, marginTop: 20 };
-const label = { width: '30%', display: 'inline-block' };
-const fieldStyle = {textAlign: 'right'};
-
 
 
 const VolumeIsOverTheOfferMax = ({ offerMax }) => (
@@ -31,27 +48,11 @@ const VolumeIsOverTheOfferMax = ({ offerMax }) => (
 VolumeIsOverTheOfferMax.propTypes = { offerMax: PropTypes.string.isRequired };
 
 
-const normalize =
-  (value, previousValue) =>
-    value == 0 ? value :
-    !isFinite(value) ? previousValue: value.replace(/[^\d.-]/g, '').toString();
 
-const formatValue = (value) =>  isFinite(value) ?  web3.toBigNumber(value).toFormat(5): 'its not finite';
+const validateVolume = [ greaterThanZeroValidator, numericFormatValidator ];
+const validateTotal  = [ greaterThanZeroValidator, numericFormatValidator ];
 
-const numericFormatValidator = value => {
-  if(!/^(\d+\.?\d*|\.\d+)$/.test(value)) {
-    return `VALIDATOR_ERROR/NOT_NUMERIC_FORMAT`;
-  }
-};
 
-const greaterThanZeroValidator = value => {
-  if(!(isFinite(value) && web3.toBigNumber(value).gt(0)) ) {
-    return `VALIDATOR_ERROR/MUST_BE_GREATER_THAN_ZERO`;
-  }
-};
-
-const validateVolume = [greaterThanZeroValidator, numericFormatValidator];
-const validateTotal  = [greaterThanZeroValidator, numericFormatValidator];
 export class OfferTakeForm extends PureComponent {
 
   constructor(props) {
@@ -60,37 +61,55 @@ export class OfferTakeForm extends PureComponent {
     this.onTotalFieldChange =  this.onTotalFieldChange.bind(this);
     this.onSetBuyMax = this.onSetBuyMax.bind(this);
     this.onSetSellMax = this.onSetSellMax.bind(this);
+    this.estimateGas = throttle(this.props.estimateGas, 500);
   }
 
-  onSetBuyMax() {  this.props.actions.buyMax(); }
-  onSetSellMax() { this.props.actions.sellMax(); }
+  onSetBuyMax() {
+    this.props.actions.buyMax();
+    this.estimateGas();
+  }
+  onSetSellMax() {
+    this.props.actions.sellMax();
+    this.estimateGas();
+  }
 
 
   onVolumeFieldChange(event, newValue, previousValue) {
     const { volumeFieldValueChanged } = this.props.actions;
-    if(parseFloat(newValue) > 0 && (newValue.toString() !== previousValue.toString())){
+    if((newValue.toString() !== previousValue.toString())){
       volumeFieldValueChanged(newValue);
+      if(parseFloat(newValue)) {
+        this.estimateGas();
+      }
     }
 
   }
   onTotalFieldChange(event, newValue, previousValue) {
     const { totalFieldValueChanged } = this.props.actions;
-    if(parseFloat(newValue) > 0 && (newValue.toString() !== previousValue.toString())){
+    if((newValue.toString() !== previousValue.toString())){
       totalFieldValueChanged(newValue);
+      if(parseFloat(newValue)) {
+        this.estimateGas();
+      }
     }
   }
 
   setMaxButton() {
-    switch (this.props.offerTakeType) {
-      case TAKE_BUY_OFFER:
-        return (
-          <button type="button" onClick={this.onSetSellMax}>Sell max</button>
-        );
-      case TAKE_SELL_OFFER:
-        return (
-          <button type="button" onClick={this.onSetBuyMax}>Buy max</button>
-        );
-    }
+    if(web3.toBigNumber(this.props.activeBaseTokenBalance).gt(0)) {
+
+      switch (this.props.offerTakeType) {
+        case TAKE_BUY_OFFER:
+          return (
+            <button type="button" onClick={this.onSetSellMax}>Sell max</button>
+          );
+        case TAKE_SELL_OFFER:
+          return (
+            <button type="button" onClick={this.onSetBuyMax}>Buy max</button>
+          );
+      }
+
+    } else { return null; }
+
   }
 
   render() {
@@ -118,6 +137,7 @@ export class OfferTakeForm extends PureComponent {
               style={fieldStyle}
               name="price" component="input"
               format={formatValue}
+              placeholder={0}
               normalize={normalize} disabled type="text"/>
             {priceToken}
           </div>
@@ -133,14 +153,17 @@ export class OfferTakeForm extends PureComponent {
               type="text"
               validate={validateVolume}
               min={0}
+              placeholder={0}
             /> {volumeToken}
             <div>
               {isVolumeGreaterThanOfferMax && <VolumeIsOverTheOfferMax offerMax={isVolumeGreaterThanOfferMax}/>}
             </div>
           </div>
           <div style={box}>
-            {this.setMaxButton()}
             <span style={label}>Total:</span>
+            <span style={{position: 'absolute', left: 100 }}>
+              {this.setMaxButton()}
+            </span>
             <Field
               style={fieldStyle}
               min={0}
@@ -151,11 +174,16 @@ export class OfferTakeForm extends PureComponent {
               component="input"
               type="text"
               validate={validateTotal}
+              placeholder={0}
             /> {totalToken}
           </div>
         </form>
       </div>
     );
+  }
+
+  componentDidMount() {
+     setTimeout(()=> this.props.estimateGas(), 500)
   }
 }
 
@@ -170,7 +198,8 @@ export function mapStateToProps(state) {
     sellToken: offerTakes.activeOfferTakeSellToken(state),
     offerTakeType: offerTakes.activeOfferTakeType(state),
     activeTradingPairPrecision: tokens.precision(state),
-    isVolumeGreaterThanOfferMax: offerTakes.isVolumeGreaterThanOfferMax(state)
+    isVolumeGreaterThanOfferMax: offerTakes.isVolumeGreaterThanOfferMax(state),
+    activeBaseTokenBalance: balances.activeBaseTokenBalance(state)
   };
 }
 

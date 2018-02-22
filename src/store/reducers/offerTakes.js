@@ -7,12 +7,14 @@ import tokens from '../selectors/tokens';
 import offerTakes from '../selectors/offerTakes';
 import offersReducer from './offers';
 import { initialize } from 'redux-form';
-import { DEFAULT_GAS_LIMIT } from './transactions';
+import { DEFAULT_GAS_LIMIT, TX_OFFER_TAKE, TX_STATUS_CANCELLED_BY_USER } from './transactions';
 import { change, formValueSelector } from 'redux-form/immutable';
 import web3 from '../../bootstrap/web3';
 import { ETH_UNIT_ETHER } from '../../constants';
 import balances from '../selectors/balances';
-import { fulfilled } from '../../utils/store';
+import { fulfilled, pending, rejected } from '../../utils/store';
+import transactions from './transactions';
+import network from '../selectors/network';
 
 export const TAKE_BUY_OFFER = 'OFFER_TAKES/TAKE_BUY_OFFER';
 export const TAKE_SELL_OFFER = 'OFFER_TAKES/TAKE_SELL_OFFER';
@@ -20,8 +22,6 @@ export const TAKE_SELL_OFFER = 'OFFER_TAKES/TAKE_SELL_OFFER';
 const currentOfferTakeInitialValue = fromJS(
   {
     offerData: null,
-    checkingIfOfferActive: null,
-    isOfferActive: null,
     buyToken: null,
     sellToken: null,
     baseToken: null,
@@ -36,6 +36,9 @@ const initialState = fromJS({
   activeOfferTakeOfferId: null,
   minOrderLimitInWei: '100000000000000000',
   transactionGasCostEstimate: null,
+  checkingIfOfferActive: null,
+  isOfferActive: null,
+
 });
 
 const INIT = 'OFFER_TAKES/INIT';
@@ -106,6 +109,8 @@ const setActiveOfferTakeEpic = () => (dispatch, getState) => {
   }
 };
 
+const resetCompletedOfferCheck = createAction('OFFER_TAKES/RESET_COMPLETED_OFFER_CHECK');
+
 const sendBuyTransaction = createAction(
   'OFFER_TAKES/MARKET_BUY',
   (offerId, amount, gasLimit) =>
@@ -119,7 +124,43 @@ const takeOfferEpic = () => async (dispatch, getState) => {
   const volumeInWei = web3.toWei(volume, ETH_UNIT_ETHER);
   const activeOfferTakeOfferId = offerTakes.activeOfferTakeOfferId(getState());
   dispatch(takeOffer.pending());
-  dispatch(sendBuyTransaction(activeOfferTakeOfferId, volumeInWei));
+  try {
+    const pendingBuyAction = dispatch(
+      sendBuyTransaction(activeOfferTakeOfferId, volumeInWei),
+    );
+
+    const transactionHash = (await pendingBuyAction).value;
+    dispatch(
+      transactions.actions.addTransactionEpic({
+        txType: TX_OFFER_TAKE,
+        txHash: transactionHash,
+        txSubjectId: activeOfferTakeOfferId,
+      }),
+    );
+  } catch (e) {
+    dispatch(
+      transactions.actions.addTransactionEpic({
+        txType: TX_OFFER_TAKE,
+        txSubjectId: activeOfferTakeOfferId,
+      }),
+    );
+    dispatch(takeOffer.rejected());
+    dispatch(
+      transactions.actions.transactionCancelledByUser({
+        txType: TX_OFFER_TAKE,
+        txStatus: TX_STATUS_CANCELLED_BY_USER,
+        txSubjectId: activeOfferTakeOfferId,
+        txStats: {
+          txEndBlockNumber: network.latestBlockNumber(getState()),
+          txEndTimestamp: parseInt(Date.now() / 1000),
+        },
+      }),
+    );
+
+    setTimeout(() => {
+      dispatch(setOfferTakeModalClosedEpic());
+    }, 5000);
+  }
 };
 
 const setActiveOfferTakeType = createAction('OFFER_TAKES/SET_ACTIVE_OFFER_TAKE_TYPE', takeType => takeType);
@@ -176,32 +217,44 @@ const setOfferTakeModalClosedEpic = () => (dispatch) => {
   dispatch(resetActiveOfferTakeOfferId());
   dispatch(resetActiveOfferTake());
   dispatch(resetActiveOfferTakeGasCostEstimate());
+  dispatch(resetCompletedOfferCheck());
 };
 const setActiveOfferTakeOfferId = createAction('OFFER_TAKES/SET_ACTIVE_OFFER_TAKE_OFFER_ID');
 const resetActiveOfferTakeOfferId = createAction('OFFER_TAKES/RESET_ACTIVE_OFFER_TAKE_OFFER_ID');
 
 const checkIfOfferTakeSubjectIsActive = createPromiseActions('OFFER_TAKES/CHECK_IF_OFFER_TAKE_SUBJECT_IS_ACTIVE');
-const checkIfOfferTakeSubjectStillActiveEpic = () => async (dispatch, getState) => {
-  const activeOfferTakeOfferId = offerTakes.activeOfferTakeOfferId(getState());
+const checkIfOfferTakeSubjectStillActiveEpic = (offerId) => async (dispatch, getState) => {
+  const activeOfferTakeOfferId = offerId || offerTakes.activeOfferTakeOfferId(getState());
   dispatch(checkIfOfferTakeSubjectIsActive.pending());
   const isActive = (await dispatch(offersReducer.actions.checkOfferIsActive(activeOfferTakeOfferId))).value;
   dispatch(
     checkIfOfferTakeSubjectIsActive.fulfilled(isActive),
   );
+  return isActive;
 };
 
 const volumeFieldValueChangedEpic = (value) => (dispatch, getState) => {
   const { price } = formValueSelector('takeOffer')(getState(), 'volume', 'total', 'price');
-  dispatch(change('takeOffer', 'total', web3.toBigNumber(value).mul(price).toString()));
+  if (parseFloat(value) === 0) {
+    dispatch(change('takeOffer', 'total', '0'));
+  } else {
+    dispatch(change('takeOffer', 'total', web3.toBigNumber(value).mul(price).toString()));
+  }
 
 };
 
 const totalFieldValueChangedEpic = (value) => (dispatch, getState) => {
   const { price } = formValueSelector('takeOffer')(getState(), 'volume', 'total', 'price');
-  dispatch(change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toString()));
+  if (parseFloat(value) === 0) {
+    dispatch(change('takeOffer', 'total', '0'));
+  } else {
+    dispatch(change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toString()));
+  }
 };
 
-const resetActiveOfferTakeGasCostEstimate = createAction('OFFER_TAKES/RESET_TRANSACTION_GAS_ESTIMATE');
+const resetActiveOfferTakeGasCostEstimate = createAction(
+  'OFFER_TAKES/RESET_TRANSACTION_GAS_ESTIMATE',
+);
 
 const getTransactionGasCostEstimate = createAction(
   'OFFER_TAKES/GET_TRANSACTION_GAS_ESTIMATE',
@@ -211,7 +264,7 @@ const getTransactionGasCostEstimate = createAction(
       (e, estimation) => {
         if (e) {
           reject({
-            offerId, amount, to: offerOwner, activeOfferData
+            offerId, amount, to: offerOwner, activeOfferData,
           });
         } else {
           resolve(estimation);
@@ -228,16 +281,19 @@ const getTransactionGasCostEstimateEpic = () => async (dispatch, getState) => {
     return null;
   }
   const offerOwner = offerTakes.activeOfferTakeOfferOwner(getState());
-  await dispatch(
+  const gasCost = await dispatch(
     getTransactionGasCostEstimate(
       {
         offerId,
         amount: web3.toWei(volume, ETH_UNIT_ETHER).toString(),
         offerOwner,
-        activeOfferData: offerTakes.activeOfferTakeOfferData(getState())
+        activeOfferData: offerTakes.activeOfferTakeOfferData(getState()),
       },
     ),
-  );
+  ).catch(e => {
+    console.log('[offer takes] estimate error');
+  });
+  return gasCost;
 };
 
 const actions = {
@@ -255,6 +311,7 @@ const actions = {
   buyMaxEpic,
   sellMaxEpic,
   getTransactionGasCostEstimateEpic,
+  resetCompletedOfferCheck,
 };
 
 const reducer = handleActions({
@@ -266,14 +323,33 @@ const reducer = handleActions({
   [resetActiveOfferTakeType]: state => state.set('activeOfferTakeType', null),
   [setActiveOfferTakeOfferId]: (state, { payload }) => state.set('activeOfferTakeOfferId', payload),
   [resetActiveOfferTakeOfferId]: state => state.set('activeOfferTakeOfferId', null),
-  [checkIfOfferTakeSubjectIsActive.pending]: state => state.setIn(['activeOfferTake', 'checkingIfOfferActive'], true),
+  [checkIfOfferTakeSubjectIsActive.pending]: state => state.set('checkingIfOfferActive', true),
   [checkIfOfferTakeSubjectIsActive.fulfilled]: (state, { payload }) => state
-    .setIn(['activeOfferTake', 'isOfferActive'], payload)
-    .setIn(['activeOfferTake', 'checkingIfOfferActive'], true)
+    .set('isOfferActive', payload)
+    .set('checkingIfOfferActive', false)
   ,
+  [pending(getTransactionGasCostEstimate)]:
+    state => state.set('transactionGasCostEstimatePending', true),
   [fulfilled(getTransactionGasCostEstimate)]:
-    (state, { payload }) => state.set('transactionGasCostEstimate', payload.toString()),
-  [resetActiveOfferTakeGasCostEstimate]: state => state.set('transactionGasCostEstimate', null),
+    (state, { payload }) =>
+      state
+        .set('transactionGasCostEstimate', payload.toString())
+        .set('transactionGasCostEstimatePending', false),
+  [rejected(getTransactionGasCostEstimate)]:
+    state =>
+      state
+        .set('transactionGasCostEstimateError', true)
+        .set('transactionGasCostEstimatePending', false),
+  [resetActiveOfferTakeGasCostEstimate]:
+    state => state
+      .set('transactionGasCostEstimate', null)
+      .set('transactionGasCostEstimateError', null)
+      .set('transactionGasCostEstimatePending', null),
+
+  [resetCompletedOfferCheck]:
+    state => state
+      .set('checkingIfOfferActive', null)
+      .set('isOfferActive', null),
 
 }, initialState);
 

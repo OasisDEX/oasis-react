@@ -21,6 +21,8 @@ import trades from './trades';
 import widgets from './widgets';
 import offerTakes from './offerTakes';
 import { reducer as formReducer } from 'redux-form/immutable'
+import transactionWatchers from './transactionWatchers';
+import timers from './timers';
 
 export default combineReducers(
   {
@@ -45,5 +47,7 @@ export default combineReducers(
     trades: trades.reducer,
     widgets: widgets.reducer,
     offerTakes: offerTakes.reducer,
-    form: formReducer
+    form: formReducer,
+    transactionWatchers: transactionWatchers.reducer,
+    timers: timers.reducer
   });

@@ -9,6 +9,7 @@ import balancesReducer, {
   TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED, TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED,
 } from '../store/reducers/balances';
 import platform from '../store/selectors/platform';
+import transactions from '../store/selectors/transactions';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -60,7 +61,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
     if(subjectTrustStatus === TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED) {
       this.setTokenAllowanceTrustStatus(TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED);
     } else if (subjectTrustStatus === TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED) {
-      this.setTokenAllowanceTrustStatus(TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED)
+      this.setTokenAllowanceTrustStatus(TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED);
     }
   }
 
@@ -86,7 +87,8 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
 export function mapStateToProps(props, { allowanceSubjectAddress, tokenName }) {
   return {
     subjectTrustStatus: balances.tokenAllowanceTrustStatus(props, { allowanceSubjectAddress, tokenName }),
-    contractsLoaded: platform.contractsLoaded(props)
+    contractsLoaded: platform.contractsLoaded(props),
+    currentTransaction: transactions.limitsTransactions
   };
 }
 export function mapDispatchToProps(dispatch) {
