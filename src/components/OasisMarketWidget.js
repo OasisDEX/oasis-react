@@ -63,9 +63,9 @@ class OasisMarketWidget extends PureComponent {
     }
   }
 
-  onTableRowClick(ev) {
+  onTableRowClick(rowData) {
     const { setActiveTradingPair, changeRoute } = this.props;
-    const [baseToken, quoteToken] = ev.target.parentElement.getAttribute('data-tradingpair').split('/');
+    const [baseToken, quoteToken] = rowData.tradingPair.split('/');
     setActiveTradingPair({baseToken, quoteToken});
     changeRoute(`/trade/${baseToken}/${quoteToken}`);
   }

@@ -1,10 +1,8 @@
 import { createAction, handleActions } from 'redux-actions';
 import Immutable from 'immutable';
-import web3 from '../../bootstrap/web3';
 
 import { fulfilled } from '../../utils/store';
 import { createPromiseActions } from '../../utils/createPromiseActions';
-import tokens from '../selectors/tokens';
 
 const CHECK_IF_MARKET_IS_OPEN = 'MARKETS/CHECK_IF_MARKET_IS_OPEN';
 const CHECK_MARKET_CLOSE_TIME = 'MARKETS/CHECK_MARKET_CLOSE_TIME';
@@ -27,6 +25,7 @@ const initialState = Immutable.fromJS({
   closeTime: null,
   isMarketOpen: null,
   isOrderMatchingEnabled: null,
+  isBuyEnabled: null,
   activeMarketOriginBlock: {
     number: null,
   },
@@ -79,7 +78,7 @@ const checkIfOrderMatchingIsEnabled = createAction(
 
 const setActiveMarketAddress = createAction(
   SET_ACTIVE_MARKET_ADDRESS,
-  (address) => address
+  address => address
 );
 
 const checkIfBuyEnabled = createAction(
@@ -87,9 +86,12 @@ const checkIfBuyEnabled = createAction(
   () => window.contracts.market.buyEnabled()
 );
 
-const subscribeLogBuyEnabledEventEpic = () =>
-  async () =>
-    window.contracts.market.LogBuyEnabled({}, { fromBlock: 'latest' });
+const isBuyEnabled = createAction('MARKETS/IS_BUY_ENABLED', isEnabled => isEnabled);
+const subscribeLogBuyEnabledEventEpic = () => async (dispatch) => {
+    window.contracts.market.LogBuyEnabled({}, { fromBlock: 'latest' }).then(
+      ({ args }) => { dispatch(isBuyEnabled(args)); }
+    )
+  };
 
 
 const setActiveMarketOriginBlockNumber = createAction(
@@ -113,7 +115,7 @@ const reducer = handleActions({
   [fulfilled(checkIfMarketIsOpen)]: (state, { payload }) => state.set('isMarketOpen', payload),
   [fulfilled(checkMarketCloseTime)]: (state, { payload }) => state.update('closeTime', () => payload),
   [fulfilled(checkIfOrderMatchingIsEnabled)]: (state, { payload }) => state.update('isOrderMatchingEnabled', () => payload),
-  [fulfilled(checkIfBuyEnabled)]: (state, { payload }) => state.update('isBuyEnabled', () => payload),
+  [fulfilled(checkIfBuyEnabled)]: (state, { payload }) => state.set('isBuyEnabled', payload),
   [setActiveMarketAddress]: (state, { payload }) => state.set('activeMarketAddress', payload)
 
 }, initialState);

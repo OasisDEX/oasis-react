@@ -10,8 +10,13 @@ const activeMarketAddress = createSelector(
   markets, (state) => state.get('activeMarketAddress')
 );
 
+const isBuyEnabled = createSelector(
+  markets, s => s.get('isBuyEnabled')
+);
+
 export default {
   state: markets,
   marketCloseTime,
-  activeMarketAddress
+  activeMarketAddress,
+  isBuyEnabled
 }

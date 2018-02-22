@@ -4,10 +4,18 @@ import OasisWidgetFrame from '../containers/OasisWidgetFrame';
 import OasisTable from './OasisTable';
 import { isOfferOwner, toDisplayFormat } from '../utils/orders';
 import { LoadProgressSection } from '../utils/offers/loadProgress';
+import { TAKE_SELL_OFFER } from '../store/reducers/offerTakes';
+import offerTakesReducer from '../store/reducers/offerTakes';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 
-const propTypes = PropTypes && {};
+const propTypes = PropTypes && {
+  onSetOfferTakeModalOpen: PropTypes.func.isRequired,
+  onSetActiveOfferTakeOfferId: PropTypes.func.isRequired,
+  onCheckOfferIsActive: PropTypes.func.isRequired,
+  onResetCompletedOfferCheck: PropTypes.func.isRequired,
+};
+
 const defaultProps = {};
 
 const actionsColumnTemplate = function(offer) {
@@ -29,6 +37,25 @@ const colsDefinition = (baseToken, quoteToken, orderActions) => {
 
 
 class OasisSellOrders extends PureComponent {
+
+
+  constructor(props) {
+    super(props);
+    this.onTableRowClick = this.onTableRowClick.bind(this);
+  }
+
+  onTableRowClick(rowData) {
+
+    const { onSetOfferTakeModalOpen, onCheckOfferIsActive, onResetCompletedOfferCheck } = this.props;
+    onCheckOfferIsActive(rowData.id)
+      .then(
+        isActive =>
+          isActive === true ?
+            onSetOfferTakeModalOpen({ offerTakeType: TAKE_SELL_OFFER, offerId: rowData.id }):
+            onResetCompletedOfferCheck()
+      );
+  }
+
   render() {
     const { activeTradingPair: { baseToken, quoteToken }, sellOffers, sellOfferCount, cancelOffer } = this.props;
     const orderActions = { cancelOffer };
@@ -38,6 +65,7 @@ class OasisSellOrders extends PureComponent {
         loadProgressSection={<LoadProgressSection loadedOffersList={sellOffers} offersTotalCount={sellOfferCount}/>}
       >
         <OasisTable
+          onRowClick={this.onTableRowClick}
           rows={sellOffers.sort((p, c) => p.ask_price_sort > c.ask_price_sort? 1 : -1).map(toDisplayFormat)}
           col={colsDefinition(baseToken, quoteToken, orderActions)}/>
       </OasisWidgetFrame>

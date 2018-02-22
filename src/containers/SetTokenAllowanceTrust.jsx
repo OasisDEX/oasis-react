@@ -9,10 +9,12 @@ import balancesReducer, {
   TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED, TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED,
 } from '../store/reducers/balances';
 import platform from '../store/selectors/platform';
+import transactions from '../store/selectors/transactions';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
   subjectTrustStatus: PropTypes.bool,
+  tokenName: PropTypes.string.isRequired,
   allowanceSubjectAddress: PropTypes.string.isRequired
 };
 
@@ -21,18 +23,25 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.toggleTokenAllowanceTrustStatus = this.toggleTokenAllowanceTrustStatus.bind(this);
+    this.getAllowanceStatus();
+  }
+
+  getAllowanceStatus(nextProps) {
+    const {
+      actions: { getDefaultAccountTokenAllowanceForAddress },
+      tokenName,
+      allowanceSubjectAddress
+    } = this.props;
+
+    if(nextProps && nextProps.contractsLoaded && nextProps.subjectTrustStatus == null) {
+      getDefaultAccountTokenAllowanceForAddress( tokenName, allowanceSubjectAddress);
+    } else {
+      getDefaultAccountTokenAllowanceForAddress( tokenName, allowanceSubjectAddress)
+    }
   }
 
   componentWillUpdate(nextProps) {
-    const { contractsLoaded, subjectTrustStatus } = nextProps;
-    if(contractsLoaded && subjectTrustStatus == null) {
-      const {
-        actions: { getDefaultAccountTokenAllowanceForAddress },
-        tokenName,
-        allowanceSubjectAddress
-      } = this.props;
-      getDefaultAccountTokenAllowanceForAddress( tokenName, allowanceSubjectAddress)
-    }
+    this.getAllowanceStatus(nextProps);
   }
 
   setTokenAllowanceTrustStatus(newAllowanceTrustStatus) {
@@ -52,7 +61,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
     if(subjectTrustStatus === TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED) {
       this.setTokenAllowanceTrustStatus(TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED);
     } else if (subjectTrustStatus === TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED) {
-      this.setTokenAllowanceTrustStatus(TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED)
+      this.setTokenAllowanceTrustStatus(TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED);
     }
   }
 
@@ -78,7 +87,8 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
 export function mapStateToProps(props, { allowanceSubjectAddress, tokenName }) {
   return {
     subjectTrustStatus: balances.tokenAllowanceTrustStatus(props, { allowanceSubjectAddress, tokenName }),
-    contractsLoaded: platform.contractsLoaded(props)
+    contractsLoaded: platform.contractsLoaded(props),
+    currentTransaction: transactions.limitsTransactions
   };
 }
 export function mapDispatchToProps(dispatch) {

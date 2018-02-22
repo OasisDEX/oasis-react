@@ -33,6 +33,7 @@ const init = (networkName) => {
   const NMR =  loadContact(erc20Abi.interface, tokencontractsDeploymentAdressessList['NMR']);
 
   const market = loadContact(MatchingMarketAbi.interface, marketDeploymentAddress);
+  const marketNoProxy = loadContact(MatchingMarketAbi.interface, marketDeploymentAddress, true);
 
   window.contracts = {
     tokens: {
@@ -45,7 +46,8 @@ const init = (networkName) => {
       PLU, MLN, RHOC,
       TIME, GUP, BAT, NMR,
     },
-    market
+    market,
+    marketNoProxy
   };
 };
 

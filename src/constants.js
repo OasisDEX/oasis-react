@@ -32,7 +32,6 @@ export const ETH_UNIT_MILIETHER = 'milliether';  // milliether (finney) 	1e15 we
 export const ETH_UNIT_ETHER = 'ether';  // ether 	1e18 wei 	1,000,000,000,000,000,000
 
 
-
 export const HAS_ACCOUNTS = true;
 export const NO_ACCOUNTS = false;
 

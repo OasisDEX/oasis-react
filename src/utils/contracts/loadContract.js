@@ -1,6 +1,6 @@
 import web3 from '../../bootstrap/web3';
 
-function loadContact(abi, contractAddress, nopromises) {
+function loadContact(abi, contractAddress, noProxy) {
   try {
     if (!web3.isAddress(contractAddress)) {
       throw new Error({
@@ -8,6 +8,9 @@ function loadContact(abi, contractAddress, nopromises) {
       });
     }
     const contractFactory = web3.eth.contract(abi);
+    if(noProxy) {
+      return contractFactory.at(contractAddress);
+    }
 
     const promisify = (inner) =>
       new Promise((resolve, reject) =>

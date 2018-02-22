@@ -76,11 +76,11 @@ const formatPrice = (price, fromWei = false, unit = ETH_UNIT_ETHER, decimalPlace
   }
 };
 
-const formatAmount = (price, fromWei = false, unit = ETH_UNIT_ETHER) => {
+const formatAmount = (price, fromWei = false, unit = ETH_UNIT_ETHER, decimalPlaces) => {
   if (!fromWei) {
-    return price ? new BigNumber(price).toFormat(AMOUNT_DECIMAL) : null;
+    return price ? new BigNumber(price).toFormat(decimalPlaces || AMOUNT_DECIMAL) : null;
   } else {
-    return price ? new BigNumber(web3.fromWei(price, ETH_UNIT_ETHER)).toFormat(AMOUNT_DECIMAL): null;
+    return price ? new BigNumber(web3.fromWei(price, ETH_UNIT_ETHER)).toFormat(decimalPlaces || AMOUNT_DECIMAL): null;
   }
 };
 
