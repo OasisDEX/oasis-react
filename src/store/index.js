@@ -23,7 +23,17 @@ function initStore(defaultState = Map()) {
   if (window.devToolsExtension) {
     middleware = compose(
       middleware,
-      window.devToolsExtension && window.devToolsExtension(),
+      window.devToolsExtension && window.devToolsExtension({
+        actionsBlacklist: [
+          "TIMERS/UPDATE_TIMESTAMP",
+          "NETWORK_GET_LATEST_BLOCK_NUMBER_PENDING",
+          "NETWORK_GET_LATEST_BLOCK_NUMBER_FULFILLED",
+          "NETWORK/GET_CONNECTED_NETWORK_ID_PENDING",
+          "NETWORK/GET_CONNECTED_NETWORK_ID_FULFILLED",
+          "NETWORK/CHECK_NETWORK_PENDING",
+          "NETWORK/CHECK_NETWORK_FULFILLED"
+        ]
+      }),
     );
   }
 

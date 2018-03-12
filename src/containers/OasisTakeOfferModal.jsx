@@ -114,6 +114,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
       isCurrentTransactionValid,
       isCurrentOfferActive,
       offerTakeFormValues,
+      hasSufficientTokenAmount,
       actions: {
         getTransactionGasCostEstimate
       }
@@ -123,7 +124,11 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
       <ReactModal ariaHideApp={false} style={style} isOpen={true}>
         <div>
           <h3>{getOfferTitle(offerTakeType)}</h3>
-          <button style={{...BtnStyle, ...closeModalBtnStyle }} onClick={this.onCancel}>x</button>
+          <button
+            hidden={currentOfferTakeTransaction}
+            style={{...BtnStyle, ...closeModalBtnStyle }}
+            onClick={this.onCancel}>x
+          </button>
         </div>
         <div>
           <b>Available:</b>
@@ -137,13 +142,14 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
           </div>
           <div className="statusSection">
             <OasisTransactionDetailsWrapper
+              hasSufficientTokenAmount={hasSufficientTokenAmount}
               transactionSubectType={TX_OFFER_TAKE}
               isTransactionValid={isCurrentTransactionValid}
               {...getUsersSoldAndReceivedAmounts(offerTakeType, offerTakeFormValues)}
               buyToken={buyToken}
               transaction={currentOfferTakeTransaction}
               sellToken={sellToken}
-              offerOwner={activeOfferTakeOfferOwner}
+              transactionSubjectAddress={activeOfferTakeOfferOwner}
               offerId={activeOfferTakeOfferId}
               getTransactionGasCostEstimate={getTransactionGasCostEstimate}
             />
@@ -211,6 +217,7 @@ export function mapStateToProps(state) {
       state, { offerId: offerTakes.activeOfferTakeOfferId(state) }
     ),
     isCurrentOfferActive: offerTakes.isOfferActive(state) === true,
+    hasSufficientTokenAmount: offerTakes.hasSufficientTokenAmount(state)
   };
 }
 

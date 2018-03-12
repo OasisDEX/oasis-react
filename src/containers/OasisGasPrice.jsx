@@ -27,7 +27,7 @@ export class OasisGasPriceWrapper extends PureComponent {
       const cost = web3.fromWei(currentGasPriceBN.mul(transactionGasCostEstimate), ETH_UNIT_ETHER);
       return (
         <div>
-          <span>{formatAmount(cost)} ETH</span>
+          <span>{formatAmount(cost,false, null, 5)} ETH</span>
           <span style={{marginLeft: 20}}>{formatAmount(cost.mul(latestEthereumPrice.price_usd))} USD</span>
         </div>
       )

@@ -152,12 +152,14 @@ const tokenTransferEvent = createAction(
 
 const tokenTransferFromEvent = createAction(
   'BALANCES/EVENT___TOKEN_TRANSFER_FROM',
-  (tokenName, userAddress, event) => ({ tokenName, userAddress, event }),
+  (tokenName, userAddress, event, addressIsDefaultAccount) =>
+    ({ tokenName, userAddress, event, addressIsDefaultAccount }),
 );
 
 const tokenTransferToEvent = createAction(
   'BALANCES/EVENT___TOKEN_TRANSFER_TO',
-  (tokenName, userAddress, event) => ({ tokenName, userAddress, event }),
+  (tokenName, userAddress, event, addressIsDefaultAccount) =>
+    ({ tokenName, userAddress, event, addressIsDefaultAccount }),
 );
 
 const subscribeTokenTransfersEvents = createPromiseActions(
@@ -172,8 +174,9 @@ const etherBalanceChanged = createAction(
   'BALANCES/ETHER_BALANCE_CHANGED',
 );
 
-const subscribeTokenTransfersEventsEpic = (tokensContractsList, address, config = {}) => async (dispatch) => {
+const subscribeTokenTransfersEventsEpic = (tokensContractsList, address, config = {}) => async (dispatch, getState) => {
   dispatch(subscribeTokenTransfersEvents.pending());
+  const addressIsDefaultAccount = address === accounts.defaultAccount(getState());
   Object.entries(tokensContractsList).forEach(
     ([tokenName, tokenContract]) => {
       /**
@@ -182,11 +185,12 @@ const subscribeTokenTransfersEventsEpic = (tokensContractsList, address, config 
       tokenContract.Transfer(config)
         .then(
           (err, transferEvent) => {
+            console.log(transferEvent);
             const { from, to } = transferEvent.args;
             if (from === address) {
-              dispatch(tokenTransferFromEvent(tokenName, address, transferEvent));
+              dispatch(tokenTransferFromEvent(tokenName, address, transferEvent, addressIsDefaultAccount));
             } else if (to === address) {
-              dispatch(tokenTransferToEvent(tokenName, address, transferEvent));
+              dispatch(tokenTransferToEvent(tokenName, address, transferEvent, addressIsDefaultAccount));
             }
           },
         );
@@ -407,13 +411,24 @@ const reducer = handleActions({
         );
         return allowances;
       }),
-  [fulfilled(tokenTransferFromEvent)]: (state, { payload: { tokenName, event } }) => {
-    return state.updateIn(['tokenBalances', tokenName], (balance) =>
-      new BigNumber(balance).sub(event.args.value)).toString();
+  [tokenTransferFromEvent]: (state, { payload: { tokenName, event, addressIsDefaultAccount } }) => {
+    const path = addressIsDefaultAccount ?
+      ['defaultAccount','tokenBalances', tokenName] :
+      ['accounts', event.args.from.toString(), 'tokenBalances', tokenName];
+
+    return state.updateIn(path, (balance) => {
+      return new BigNumber(balance).sub(event.args.value).toString();
+    })
   },
-  [fulfilled(tokenTransferToEvent)]: (state, { payload: { tokenName, event } }) => {
-    return state.updateIn(['tokenBalances', tokenName], (balance) =>
-      new BigNumber(balance).add(event.args.value)).toString();
+  [tokenTransferToEvent]: (state, { payload: { tokenName, event, addressIsDefaultAccount } }) => {
+    const path = addressIsDefaultAccount ?
+      ['defaultAccount','tokenBalances', tokenName] :
+      ['accounts', event.args.to.toString(), 'tokenBalances', tokenName];
+
+    return state.updateIn(path, (balance) => {
+      return new BigNumber(balance).add(event.args.value).toString();
+    })
+
   },
   [etherBalanceChanged]: (state, { payload }) =>
     state.updateIn(['defaultAccount', 'ethBalance'], () => payload),

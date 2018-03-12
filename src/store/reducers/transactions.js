@@ -4,6 +4,8 @@ import { web3p } from '../../bootstrap/web3';
 import { createPromiseActions } from '../../utils/createPromiseActions';
 import network from '../selectors/network';
 import { fulfilled } from '../../utils/store';
+import web3 from '../../bootstrap/web3';
+import accounts from '../selectors/accounts';
 
 export const DEFAULT_GAS_LIMIT = '10000000';
 export const DEFAULT_GAS_PRICE = '1000000';
@@ -15,6 +17,7 @@ const initialState = fromJS({
   defaultGasPrice: DEFAULT_GAS_PRICE,
   activeGasPrice: DEFAULT_GAS_PRICE,
   currentGasPriceInWei: null,
+  txNonce: null
 });
 
 const INIT = 'TX/INIT';
@@ -23,6 +26,8 @@ const SYNC_TRANSACTION = 'TX/SYNC_TRANSACTION';
 const OBSERVE_REMOVED = 'TX/OBSERVE_REMOVED';
 const SYNC_TRANSACTIONS = 'TX/SYNC_TRANSACTIONS';
 const TX_GET_CURRENT_GAS_PRICE = 'TX/GET_CURRENT_GAS_PRICE';
+const TX_GET_CURRENT_TX_NONCE = 'TX/GET_CURRENT_TX_NONCE';
+
 
 const TX_TRANSACTION_REJECTED = 'TX/TRANSACTION_REJECTED';
 
@@ -182,6 +187,16 @@ const getCurrentGasPrice = createAction(
   async () => web3p.eth.getGasPrice(),
 );
 
+const getCurrentTxNonce = createAction(
+  TX_GET_CURRENT_TX_NONCE,
+  async (accountAddress) => web3p.eth.getTransactionCount(accountAddress || web3.eth.defaultAccount)
+);
+
+const getCurrentTxNonceEpic = (address) => (dispatch, getState) => {
+  const subjectAddress = address || accounts.defaultAccount(getState());
+  dispatch(getCurrentTxNonce(subjectAddress));
+};
+
 const actions = {
   Init,
   addTransactionEpic,
@@ -189,7 +204,8 @@ const actions = {
   ObserveRemoved,
   syncTransaction,
   getCurrentGasPrice,
-  transactionCancelledByUser
+  transactionCancelledByUser,
+  getCurrentTxNonceEpic
 };
 
 const reducer = handleActions({
@@ -254,6 +270,7 @@ const reducer = handleActions({
     );
 
   },
+  [fulfilled(getCurrentTxNonce)]: (state, { payload }) => state.set('txNonce', parseInt(payload) + 1 ),
   [fulfilled(getCurrentGasPrice)]: (state, { payload }) => state.set('currentGasPriceInWei', payload.toString()),
 }, initialState);
 

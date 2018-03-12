@@ -1,5 +1,5 @@
 import { createAction, handleActions } from 'redux-actions';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 import { find } from 'lodash';
 
 import web3, { web3p } from '../../bootstrap/web3';
@@ -20,10 +20,11 @@ import period from '../../utils/period';
 import network from '../selectors/network';
 import offersReducer from './offers';
 import tokens from '../selectors/tokens';
-import findOffer from '../../utils/offers/findOffer';
 import transactionsReducer from './transactions';
+import { HEALTHCHECK_INTERVAL_MS } from '../../index';
+import accounts from '../selectors/accounts';
 
-const initialState = Immutable.fromJS(
+const initialState = fromJS(
   {
     status: CLOSED,
     sync: { isPending: false, ts: null },
@@ -73,7 +74,7 @@ const GET_CONNECTED_NETWORK_ID = 'NETWORK/GET_CONNECTED_NETWORK_ID';
 const SET_TOKEN_ADDRESSES = 'NETWORK/SET_TOKEN_ADDRESSES';
 
 const setTokenAddresses = createAction(
-  SET_TOKEN_ADDRESSES, (activeNetwork) => require('../../configs').tokens[activeNetwork],
+  SET_TOKEN_ADDRESSES, (activeNetwork) => fromJS(require('../../configs').tokens[activeNetwork]),
 );
 
 // Check which accounts are available and if defaultAccount is still available,
@@ -204,7 +205,7 @@ const getLatestBlock = createAction(
 const subscribeLatestBlockFilter = createPromiseActions(
   'NETWORK/SUBSCRIBE_LATEST_BLOCK_FILTER',
 );
-const subscribeLatestBlockFilterEpic = () => async (dispatch, getState) => {
+const subscribeLatestBlockFilterEpic = () => async dispatch => {
   dispatch(subscribeLatestBlockFilter.pending());
 
   const tid = setInterval(() => {
@@ -212,12 +213,13 @@ const subscribeLatestBlockFilterEpic = () => async (dispatch, getState) => {
     dispatch(getLatestBlockNumber());
     dispatch(fetchEthereumPrice());
     dispatch(transactionsReducer.actions.getCurrentGasPrice());
-  }, 5000);
+  }, HEALTHCHECK_INTERVAL_MS);
 
   web3.eth.filter('latest', (e, b) => {
     console.log(b);
     clearInterval(tid);
     dispatch(getLatestBlockNumber());
+    dispatch(transactionsReducer.actions.getCurrentTxNonceEpic());
     dispatch(fetchEthereumPrice());
     dispatch(transactionsReducer.actions.getCurrentGasPrice());
   });
@@ -256,8 +258,12 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
           dispatch(tradesReducer.actions.subscribeLogTakeEventsEpic(currentLatestBlock));
         },
       );
+
     dispatch(
-      balancesReducer.actions.subscribeTokenTransfersEventsEpic(window.contracts.tokens),
+      balancesReducer.actions.subscribeTokenTransfersEventsEpic(
+        window.contracts.tokens,
+        accounts.defaultAccount(getState())
+      ),
     );
     dispatch(CheckNetworkAction.fulfilled());
   };

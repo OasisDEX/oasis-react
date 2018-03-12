@@ -8,13 +8,16 @@ const getOfferTradingPairAndType = ({ sellWhichTokenAddress, buyWhichTokenAddres
   const offerSellToken = getTokenByAddress(sellWhichTokenAddress);
 
   const offerTradingPair = tradingPairs.find(tp => {
-    const base =tp .get('base');
+    const base =  tp .get('base');
     const quote = tp.get('quote');
     return (base === offerBuyToken && offerSellToken === quote) || (base ===offerSellToken && offerBuyToken === quote);
   });
 
   if(!offerTradingPair) {
     debugger;
+  }
+  if(!sellWhichTokenAddress) {
+    console.log(sellWhichTokenAddress, buyWhichTokenAddress);
   }
 
   if(log) {

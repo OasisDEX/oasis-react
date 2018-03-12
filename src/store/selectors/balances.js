@@ -41,10 +41,14 @@ const tokenAllowance = createSelector(
 const tokenBalance = createSelector(
   tokenBalances,
   reselect.getProps,
-  (s, { tokenName, balanceUnit = ETH_UNIT_ETHER }) => {
-    const tokenBalance = s.getIn([tokenName]);
+  (s, { tokenName, balanceUnit = ETH_UNIT_ETHER, toBigNumber = true }) => {
+    const tokenBalance = s.get(tokenName);
     if(tokenBalance) {
-      return web3.fromWei(new BigNumber(s.getIn([tokenName], 10)), balanceUnit);
+      if(toBigNumber) {
+        return web3.fromWei(new BigNumber(s.get(tokenName), 10), balanceUnit);
+      } else {
+        return web3.fromWei(s.get(tokenName), balanceUnit);
+      }
     } else {
       return null;
     }
@@ -86,9 +90,7 @@ const ethBalance = createSelector(
 const activeQuoteTokenBalance = createSelector(
   tokenBalances,
   tokens.activeTradingPairQuoteToken,
-  (tokenBalances, quoteToken) => {
-    return tokenBalances.get(quoteToken)
-  }
+  (tokenBalances, quoteToken) => tokenBalances.get(quoteToken)
 );
 
 export default {

@@ -19,6 +19,8 @@ import OasisMyOrders from '../components/OasisMyOrders';
 import offerTakesReducer, { TAKE_BUY_OFFER } from '../store/reducers/offerTakes';
 import OasisTakeOfferModalWrapper  from './OasisTakeOfferModal';
 import offerTakes from '../store/selectors/offerTakes';
+import OasisMakeBuyOfferWrapper  from './OasisMakeBuyOffer';
+import OasisMakeSellOfferWrapper  from './OasisMakeSellOffer';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -66,6 +68,10 @@ export class OasisTradeOrdersWrapper extends PureComponent {
     const tradesList = trades(marketData, activeTradingPair.baseToken, activeTradingPair.quoteToken);
     return (
       <div>
+        <div>
+          <OasisMakeBuyOfferWrapper/>
+          <OasisMakeSellOfferWrapper/>
+        </div>
         <div>{this.offerTakeModal()}</div>
         <OasisBuyOrders
           onSetOfferTakeModalOpen={setOfferTakeModalOpen}
