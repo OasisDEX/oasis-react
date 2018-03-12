@@ -608,7 +608,6 @@ const cancelOfferEpic = (offer) => async (dispatch, getState) => {
         );
       },
       () => {
-        alert('tx cancelled by user!');
         dispatch(
           transactions.actions.transactionRejected({
             txType: TX_OFFER_CANCELLED,

@@ -2,11 +2,13 @@ import web3 from '../../bootstrap/web3';
 
 
 const normalize =
-  (value, previousValue) =>
-    parseFloat(value) === 0 ? value :
+  (value, previousValue) => {
+    return parseFloat(value) === 0 ? value :
       !isFinite(value) ? previousValue: value.replace(/[^\d.-]/g, '').toString();
+  }
 
-const formatValue = (value) =>  isFinite(value) ?  web3.toBigNumber(value).toFormat(5): 'its not finite';
+
+const formatValue = (value) =>  isFinite(value) ?  web3.toBigNumber(value).toFormat(5): '0';
 
 
 

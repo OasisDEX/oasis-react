@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import reselect from '../../utils/reselect';
 
 const network = state => state.get('network');
 
@@ -27,7 +28,19 @@ const getActiveNetworkMeta = createSelector(
 const latestEthereumPrice = createSelector(
   network,
   s => s.get('latestEthereumPrice')
-)
+);
+
+const tokenAddresses = createSelector(
+  network,
+    state => state.get('tokenAddresses')
+);
+
+
+const getTokenAddress = createSelector(
+  network,
+  reselect.getProps,
+  (state, tokenName) => state.getIn(['tokenAddresses', tokenName])
+);
 
 export default {
   state: network,
@@ -35,5 +48,7 @@ export default {
   getActiveNetworkName,
   getActiveNetworkMeta,
   latestBlockNumber,
-  latestEthereumPrice
+  latestEthereumPrice,
+  getTokenAddress,
+  tokenAddresses
 };

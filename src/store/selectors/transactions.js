@@ -98,6 +98,10 @@ const getAllowanceTxNonce = createSelector(
 );
 
 
+const currentTxNonce = createSelector(
+  transactions,
+  s => s.get('txNonce')
+);
 
 export default {
   state: transactions,
@@ -112,5 +116,6 @@ export default {
   canSendTransaction,
   currentGasPriceWei,
   getTransactionByTxHash,
-  getAllowanceTxNonce
+  getAllowanceTxNonce,
+  currentTxNonce,
 };

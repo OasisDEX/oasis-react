@@ -31,7 +31,10 @@ const propTypes = PropTypes && {
   sellToken: PropTypes.string.isRequired,
   offerTakeType: PropTypes.string.isRequired,
   activeTradingPairPrecision: PropTypes.number.isRequired,
-  isVolumeGreaterThanOfferMax: PropTypes.bool.isRequired,
+  isVolumeGreaterThanOfferMax: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.string
+  ]).isRequired,
   activeBaseTokenBalance: PropTypes.string.isRequired
 };
 
@@ -134,6 +137,7 @@ export class OfferTakeForm extends PureComponent {
           <div style={box}>
             <span style={label}>Price:</span>
             <Field
+              autoComplete="off"
               style={fieldStyle}
               name="price" component="input"
               format={formatValue}
@@ -144,6 +148,7 @@ export class OfferTakeForm extends PureComponent {
           <div style={box}>
             <span style={label}>Volume:</span>
             <Field
+              autoComplete="off"
               style={fieldStyle}
               onChange={this.onVolumeFieldChange}
               normalize={normalize}
@@ -165,6 +170,7 @@ export class OfferTakeForm extends PureComponent {
               {this.setMaxButton()}
             </span>
             <Field
+              autoComplete="off"
               style={fieldStyle}
               min={0}
               onChange={this.onTotalFieldChange}

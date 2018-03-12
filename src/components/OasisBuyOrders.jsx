@@ -6,8 +6,7 @@ import OasisWidgetFrame from '../containers/OasisWidgetFrame';
 import OasisTable from './OasisTable';
 import { isOfferOwner, toDisplayFormat } from '../utils/orders';
 import { LoadProgressSection } from '../utils/offers/loadProgress';
-import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from '../store/reducers/offerTakes';
-import OasisTakeOfferModalWrapper from '../containers/OasisTakeOfferModal';
+import { TAKE_BUY_OFFER } from '../store/reducers/offerTakes';
 
 const propTypes = PropTypes && {
   onSetOfferTakeModalOpen: PropTypes.func.isRequired,
@@ -19,10 +18,11 @@ const propTypes = PropTypes && {
 const defaultProps = {};
 
 const actionsColumnTemplate = function(offer) {
-  const onCancel = () => this.cancelOffer(offer);
-  return (
-    isOfferOwner(offer) ? (<button onClick={onCancel}>cancel</button>) : null
-  );
+  return null;
+  // const onCancel = () => this.cancelOffer(offer);
+  // return (
+  //   isOfferOwner(offer) ? (<button onClick={onCancel}>cancel</button>) : null
+  // );
 };
 
 const colsDefinition = (baseToken, quoteToken, orderActions) => {

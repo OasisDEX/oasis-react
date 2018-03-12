@@ -2,7 +2,7 @@ import { createAction, handleActions } from 'redux-actions';
 import { fromJS } from 'immutable';
 import { createPromiseActions } from '../../utils/createPromiseActions';
 import offers from '../selectors/offers';
-import getBuyAndSellTokens from '../../utils/tokens/getBuyAndSellTokens';
+import getOfferTakeBuyAndSellTokens from '../../utils/tokens/getOfferTakeBuyAndSellTokens';
 import tokens from '../selectors/tokens';
 import offerTakes from '../selectors/offerTakes';
 import offersReducer from './offers';
@@ -95,7 +95,7 @@ const setActiveOfferTakeEpic = () => (dispatch, getState) => {
 
   }
   if (offer) {
-    const { sellToken, buyToken } = getBuyAndSellTokens(tokens.activeTradingPair(getState()), offerTakeType);
+    const { sellToken, buyToken } = getOfferTakeBuyAndSellTokens(tokens.activeTradingPair(getState()), offerTakeType);
     dispatch(
       setActiveOfferTake(
         currentOfferTakeInitialValue

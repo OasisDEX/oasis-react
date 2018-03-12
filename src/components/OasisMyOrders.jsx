@@ -4,7 +4,6 @@ import BigNumber from  'bignumber.js';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import moment from 'moment';
 
-import styles from './OasisMyOrders.scss';
 import { DESCENDING, orderByTimestamp } from '../utils/sort';
 import { formatAmount, formatPrice, formatTradeType, price, tradeType } from '../utils/tokens/pair';
 import { OasisTable } from './OasisTable';
@@ -40,17 +39,30 @@ const myOrdersDisplayFormat = offer => {
   });
 };
 
-const myOffersFilter = ({owner}) => {
+
+const myOpenOffersFilter = (entry) => {
   const myAccountAddress = web3.eth.defaultAccount;
-  return (owner === myAccountAddress);
+  return (entry.owner.toString() === myAccountAddress.toString());
+};
+
+const myOffersFilter = (entry) => {
+  const myAccountAddress = web3.eth.defaultAccount;
+  const isOfferMaker = (entry.maker.toString() === myAccountAddress.toString());
+  const isOfferTaker = (entry.taker.toString() === myAccountAddress.toString());
+  return isOfferMaker || isOfferTaker;
 };
 
 const actionsColumnTemplate = function(offer) {
+  let cancelPending = false;
   const onCancel = () => {
     this.cancelOffer(offer);
+    cancelPending = true;
   };
   return (
-    isOfferOwner(offer) ? (<button onClick={onCancel}>cancel</button>): null
+    isOfferOwner(offer) ?
+      (
+        <button disabled={cancelPending} onClick={onCancel}>{cancelPending?'cancelling': 'cancel'}</button>
+      ) : null
   );
 };
 
@@ -98,7 +110,7 @@ class OasisMyOrders extends PureComponent {
       sellOffers
         .map(so => ({...so, tradeType: formatTradeType(ASK), price: so.ask_price }) )
         .concat(buyOffers.map(bo => ({...bo, tradeType: formatTradeType(BID), price: bo.bid_price }) ))
-        .filter(myOffersFilter)
+        .filter(myOpenOffersFilter)
         .sort((p, c) => p.bid_price_sort < c.bid_price_sort ? 1 : -1)
         .map(myOrdersDisplayFormat);
 
@@ -114,8 +126,6 @@ class OasisMyOrders extends PureComponent {
         <div>You currently have no active offers</div>
       )
     }
-
-
   }
 
   renderTradesHistory() {

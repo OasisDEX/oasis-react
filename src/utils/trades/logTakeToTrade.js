@@ -14,8 +14,8 @@ export default (logTake) => {
       sellHowMuch: convertTo18Precision(logTake.args.take_amt.toString(10), sellWhichToken),
       timestamp: logTake.args.timestamp.toNumber(),
       transactionHash: logTake.transactionHash,
-      issuer: logTake.args.maker,
-      counterParty: logTake.args.taker,
+      maker: logTake.args.maker,
+      taker: logTake.args.taker
     };
   }
   return false;

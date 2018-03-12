@@ -20,7 +20,7 @@ class EthercanLink extends PureComponent {
     const { txHash, label, networkName } = this.props;
     const address = `https://${networkName}.etherscan.io/tx/${txHash}`;
     return (
-      <span >
+      <span>
         <a style={{ textOverflow: 'elipsis',maxWidth: '80%' }} href={address}>{label||txHash}</a>
       </span>
     );
