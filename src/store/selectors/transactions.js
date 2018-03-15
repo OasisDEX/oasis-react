@@ -7,7 +7,7 @@ import {
   getTransactionGroup,
   TX__GROUP__LIMITS,
   TX__GROUP__OFFERS,
-  TX__GROUP__TOKENS,
+  TX__GROUP__TOKENS, TX__GROUP__TRANSFERS,
 } from '../reducers/transactions';
 
 import balances from './balances';
@@ -38,6 +38,14 @@ const limitsTransactions = createSelector(
   )
 );
 
+
+const transferTransactions = createSelector(
+  transactionsList,
+  s => s.filter(
+    offer => getTransactionGroup(offer.get('txType')) === TX__GROUP__TRANSFERS
+  )
+);
+
 const getOfferTransaction = createSelector(
   offersTransactions,
   reselect.getProps,
@@ -61,6 +69,16 @@ const getLimitTransaction = createSelector(
   (limitsTransactionsList, { address }) =>
     limitsTransactionsList.find(
       txEl => txEl.get('txSubjectId') === address
+    )
+);
+
+
+const getTransferTransaction = createSelector(
+  transferTransactions,
+  reselect.getProps,
+  (transfersTransactionsList, txSubjectId) =>
+    transfersTransactionsList.find(
+      txEl => txEl.get('txSubjectId') === txSubjectId
     )
 );
 
@@ -118,4 +136,5 @@ export default {
   getTransactionByTxHash,
   getAllowanceTxNonce,
   currentTxNonce,
+  getTransferTransaction
 };

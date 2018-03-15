@@ -6,7 +6,7 @@ import { fulfilled, pending, rejected } from '../../utils/store';
 
 const initialState = Immutable.fromJS({});
 
-const INIT = 'HISTORY/INIT';
+const INIT = 'TRANSFER_HISTORY/INIT';
 
 const Init = createAction(
   INIT,
