@@ -48,6 +48,7 @@ const makeTransferEpic = () => async (dispatch, getState) => {
   const txSubjectId = generateTxSubjectId();
   dispatch(setPendingTransferSubjectId(txSubjectId));
 
+  const txMeta = { recipient, tokenAmount, token };
   try {
     const pendingTokenTransferAction = dispatch(
       transferTransaction(token, recipient, tokenAmount)
@@ -57,9 +58,7 @@ const makeTransferEpic = () => async (dispatch, getState) => {
     dispatch(
       transactionsReducer.actions.addTransactionEpic({
         txType: TX_TRANSFER_FROM,
-        txMeta: {
-          recipient, tokenAmount, token
-        },
+        txMeta,
         txHash: transactionHash,
         txSubjectId
       }),
@@ -68,9 +67,7 @@ const makeTransferEpic = () => async (dispatch, getState) => {
     dispatch(
       transactionsReducer.actions.addTransactionEpic({
         txType: TX_TRANSFER_FROM,
-        txMeta: {
-          recipient, tokenAmount, token
-        },
+        txMeta,
         txSubjectId
       }),
     );
@@ -78,9 +75,7 @@ const makeTransferEpic = () => async (dispatch, getState) => {
     dispatch(
       transactionsReducer.actions.transactionCancelledByUser({
         txType: TX_TRANSFER_FROM,
-        txMeta: {
-          recipient, tokenAmount, token
-        },
+        txMeta,
         txStatus: TX_STATUS_CANCELLED_BY_USER,
         txSubjectId,
         txStats: {

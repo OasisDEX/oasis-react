@@ -18,6 +18,7 @@ const initialState = fromJS(
     providerType: null,
     defaultTradingPair: {baseToken: 'MKR', quoteToken: 'W-ETH'},
     defaultPeriod: WEEK,
+    activePeriod: WEEK,
     defaultUnit: ETH_UNIT_WEI,
   });
 

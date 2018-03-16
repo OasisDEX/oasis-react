@@ -14,7 +14,7 @@ import { compose } from 'redux';
 
 import OasisTabs from '../components/OasisTabs';
 import OasisTradeWrapper from './OasisTrade';
-import OasisTransferWrapper from './OasisTransfer';
+import OasisTransferWrapper from './OasisTransferMainWrapper';
 import OasisWrapUnwrapWrapper from './OasisWrapUnwrap';
 import tokensSelectors from './../store/selectors/tokens';
 

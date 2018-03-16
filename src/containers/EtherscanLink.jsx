@@ -4,15 +4,17 @@ import { PropTypes } from 'prop-types';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import EtherscanLink from '../components/EtherscanLink';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object.isRequired
+  // actions: PropTypes.object.isRequired,
+  address: PropTypes.string.isRequired
 };
 
 export class EthercanLinkWrapper extends PureComponent {
   render() {
     return (
-      <div></div>
+      <EtherscanLink/>
     );
   }
 }
@@ -27,4 +29,5 @@ export function mapDispatchToProps(dispatch) {
 
 EthercanLinkWrapper.propTypes = propTypes;
 EthercanLinkWrapper.displayName = 'EthercanLink';
+
 export default connect(mapStateToProps, mapDispatchToProps)(EthercanLinkWrapper);

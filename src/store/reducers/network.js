@@ -198,6 +198,11 @@ const getLatestBlock = createAction(
   async () => web3p.eth.getBlock('latest'),
 );
 
+const getBlock = createAction(
+  'NETWORK_GET_LATEST_BLOCK',
+  async (blockNumber) => web3p.eth.getBlock(blockNumber),
+);
+
 /**
  * @dev Here we create 3 actions for checking the network status
  * @type {{pending, fulfilled, rejected}|*}
@@ -362,6 +367,7 @@ const actions = {
   connecting,
   disconnected,
   checkNetworkEpic,
+  getBlock,
   getLatestBlock,
   getLatestBlockNumber,
   getConnectedNetworkId,

@@ -18,10 +18,6 @@ const propTypes = PropTypes && {
 };
 
 
-const formFieldStyle = {
-  margin: '20px'
-};
-
 export class TokenTransferFormWrapper extends PureComponent {
   render() {
     const { handleSubmit, valid, makeTransfer, disabled } = this.props;

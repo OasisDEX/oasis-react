@@ -83,12 +83,13 @@ const transactionCancelledByUser = createAction(
 );
 
 const addTransaction = createPromiseActions(ADD_TRANSACTION);
-const addTransactionEpic = ({ txStatus, txType, txHash, txSubjectId }) => async (dispatch, getState) => {
+const addTransactionEpic = ({ txStatus, txType, txHash, txSubjectId, txMeta }) => async (dispatch, getState) => {
   let previousBlockNumber = network.latestBlockNumber(getState());
   dispatch(
     addTransaction.pending({
       txHash,
       txType,
+      txMeta,
       txStatus: TX_STATUS_AWAITING_CONFIRMATION,
       txSubjectId,
       txStats: {

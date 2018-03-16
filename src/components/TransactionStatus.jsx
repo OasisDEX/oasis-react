@@ -8,7 +8,7 @@ import {
   TX_STATUS_CONFIRMED, TX_STATUS_REJECTED,
 } from '../store/reducers/transactions';
 import TransactionTimer from './TransactionTimer';
-import EthercanLink from './EthercanLink';
+import EthercanLink from './EtherscanLink';
 
 
 const propTypes = PropTypes && {

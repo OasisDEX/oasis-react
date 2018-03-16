@@ -4,19 +4,20 @@ import { PropTypes } from 'prop-types';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import OasisTransferTransfer from '../components/OasisTransferTransfer';
-import OasisTransferHistory from '../components/OasisTransferHistory';
-import { OasisTokenTransferHistoryWrapper } from './OasisTokenTransferHistory';
+import OasisTokenTransferHistoryWrapper  from './OasisTokenTransferHistory';
+import OasisTokenTransferWrapper  from './OasisTokenTransfer';
+import transfers from '../store/selectors/transfers';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
 };
 
-export class OasisTransferWrapper extends PureComponent {
+export class OasisTransferMainWrapper extends PureComponent {
   render() {
+    const { selectedToken } = this.props;
     return (
       <div>
-        __OasisTransferWrapper__
+        <OasisTokenTransferWrapper selectedToken={selectedToken}/>
         <OasisTokenTransferHistoryWrapper/>
       </div>
     );
@@ -24,7 +25,9 @@ export class OasisTransferWrapper extends PureComponent {
 }
 
 export function mapStateToProps(state) {
-  return {};
+  return {
+    selectedToken: transfers.selectedToken(state),
+  };
 }
 
 export function mapDispatchToProps(dispatch) {
@@ -32,6 +35,6 @@ export function mapDispatchToProps(dispatch) {
   return { actions: bindActionCreators(actions, dispatch) };
 }
 
-OasisTransferWrapper.propTypes = propTypes;
-OasisTransferWrapper.displayName = 'OasisTransfer';
-export default connect(mapStateToProps, mapDispatchToProps)(OasisTransferWrapper);
+OasisTransferMainWrapper.propTypes = propTypes;
+OasisTransferMainWrapper.displayName = 'OasisTransfer';
+export default connect(mapStateToProps, mapDispatchToProps)(OasisTransferMainWrapper);

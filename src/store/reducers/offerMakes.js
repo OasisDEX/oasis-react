@@ -136,8 +136,8 @@ const resetActiveOfferMakeTxSubjectId = createAction(
   'OFFER_MAKES/RESET_ACTIVE_OFFER_MAKE_TX_SUBJECT_ID', (offerMakeType) => offerMakeType
 );
 
-const sendMakeOfferTransaction = createAction(
-  'OFFER_MAKES/MAKE_OFFER',
+const makeOfferTransaction = createAction(
+  'OFFER_MAKES/MAKE_OFFER_TRANSACTION',
   ({ payAmount, payToken, buyAmount, buyToken, gasLimit }) =>
     window.contracts.market.offer(payAmount, payToken, buyAmount, buyToken, 0, { gasLimit: gasLimit || DEFAULT_GAS_LIMIT }),
 );
@@ -163,18 +163,20 @@ const makeOfferEpic = (offerMakeType) => async (dispatch, getState) => {
 
   try {
     const pendingMakeOfferAction = dispatch(
-      sendMakeOfferTransaction(makeOfferPayload),
+      makeOfferTransaction(makeOfferPayload),
     );
 
-    const transactionHash = (await pendingMakeOfferAction).value;
-    dispatch(
-      transactionsReducer.actions.addTransactionEpic({
-        txType: TX_OFFER_MAKE,
-        txMeta: { offerMakeType },
-        txHash: transactionHash,
-        txSubjectId
-      }),
-    );
+    pendingMakeOfferAction.then((e, transactionHash) => {
+      dispatch(
+        transactionsReducer.actions.addTransactionEpic({
+          txType: TX_OFFER_MAKE,
+          txMeta: { offerMakeType },
+          txHash: transactionHash,
+          txSubjectId
+        }),
+      );
+    });
+
   } catch (e) {
     dispatch(
       transactionsReducer.actions.addTransactionEpic({
@@ -250,7 +252,6 @@ const setOfferMakeModalClosed = createAction(
 );
 
 const setOfferMakeModalClosedEpic = (offerMakeType) => (dispatch) => {
-  console.log('setOfferMakeModalClosedEpic', offerMakeType);
   dispatch(setOfferMakeModalClosed(offerMakeType));
   dispatch(resetActiveOfferMakeType());
   dispatch(resetActiveOfferMakeTxSubjectId(offerMakeType));
