@@ -9,13 +9,15 @@ import balances from '../store/selectors/balances';
 import { ETH_UNIT_ETHER } from '../constants';
 
 const propTypes = PropTypes && {
-  tokenName: PropTypes.string.isRequired,
-  decimalPlaces: PropTypes.number
+  tokenName: PropTypes.string,
+  decimalPlaces: PropTypes.number,
+  fromWei: PropTypes.bool,
+  balanceUnit: PropTypes.string
 };
 
 export class OasisTokenBalanceWrapper extends PureComponent {
   render() {
-    const { balance, tokenName } = this.props;
+    const { balance, tokenName, fromWei, balanceUnit } = this.props;
     if(!balance) {
       return (
         <div style={{ display: 'inline-block', padding: '5px 0' }}>[LOADING]</div>
@@ -24,7 +26,12 @@ export class OasisTokenBalanceWrapper extends PureComponent {
     } else {
       return (
         <div style={{ display: 'inline-block' }}>
-          <span>{ formatAmount(balance) } <b>{tokenName}</b></span>
+          <span>
+          { formatAmount(balance, fromWei, balanceUnit ||  ETH_UNIT_ETHER, this.props.decimalPlaces) }
+          </span>
+          <span style={{ padding: '0 5px', fontSize: '10px', lineHeight: '18px', verticalAlign: 'middle' }}>
+            <b>{tokenName}</b>
+          </span>
         </div>
       );
     }

@@ -4,13 +4,13 @@ import React from 'react';
 import Immutable from 'immutable';
 
 import {
-  EthercanLinkWrapper,
+  OasisTokenSelectWrapper,
   mapStateToProps,
   mapDispatchToProps
-} from './EtherscanLink';
+} from './OasisTokenSelect';
 import { shallow } from 'enzyme';
 
-describe('(Container) EthercanLink', () => {
+describe('(Container) OasisTokenSelect', () => {
   const state = Immutable.fromJS({});
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
@@ -30,7 +30,7 @@ describe('(Container) EthercanLink', () => {
 
   it('should render', () => {
     const wrapper = shallow(
-      <EthercanLinkWrapper {...props}/>
+      <OasisTokenSelectWrapper {...props}/>
     );
     expect(wrapper).toMatchSnapshot();
   });

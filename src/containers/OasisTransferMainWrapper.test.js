@@ -4,13 +4,13 @@ import React from 'react';
 import Immutable from 'immutable';
 
 import {
-  EthercanLinkWrapper,
+  OasisTransferMainWrapper,
   mapStateToProps,
-  mapDispatchToProps
-} from './EtherscanLink';
+  mapDispatchToProps,
+} from './OasisTransferMainWrapper';
 import { shallow } from 'enzyme';
 
-describe('(Container) EthercanLink', () => {
+describe('(Container) OasisTransferMainWrapper', () => {
   const state = Immutable.fromJS({});
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
@@ -23,14 +23,13 @@ describe('(Container) EthercanLink', () => {
     expect(initialProps).toMatchSnapshot();
   });
 
-
   it('will receive right actions', () => {
     expect(initialActions).toMatchSnapshot();
   });
 
   it('should render', () => {
     const wrapper = shallow(
-      <EthercanLinkWrapper {...props}/>
+      <OasisTransferMainWrapper {...props}/>,
     );
     expect(wrapper).toMatchSnapshot();
   });

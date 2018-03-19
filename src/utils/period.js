@@ -25,6 +25,8 @@ export const TWO_YEARS = 'TIME_SPAN/TWO_YEARS';
 export const getNumberOfDaysInTheYear = (year) => isLeapYear(year) ? 366 : 365;
 const avgBlockPerDefaultPeriod = () => avgBlockPer(platform.defaultPeriod(getState()));
 
+const avgBlockPerActivePeriod = () => avgBlockPer(platform.activePeriod(getState()));
+
 const avgBlockPer = (period) => {
   const avgBlocksPerDay = getActiveNetworkAvgBlocksPerDay();
   switch (period) {
@@ -35,11 +37,10 @@ const avgBlockPer = (period) => {
   }
 };
 
-
-
 export default {
   init,
   avgBlockPer,
+  avgBlockPerActivePeriod,
   avgBlockPerDefaultPeriod
 }
 

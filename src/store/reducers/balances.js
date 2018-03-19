@@ -199,6 +199,9 @@ const subscribeTokenTransfersEventsEpic = (tokensContractsList, address, config 
   dispatch(subscribeTokenTransfersEvents.fulfilled());
 };
 
+
+
+
 const setAllowance = createAction(
   SET_ALLOWANCE,
   (tokenName, spenderAddress, newAllowance) =>

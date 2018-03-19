@@ -6,7 +6,7 @@ import network from './network';
 import markets from './markets';
 import balances from './balances';
 import orders from './orders';
-import history from './history';
+import history from './transferHistory';
 import limits from './limits';
 import offers from './offers';
 import tokenEvents from './tokenEvents';
@@ -24,6 +24,10 @@ import { reducer as formReducer } from 'redux-form/immutable'
 import transactionWatchers from './transactionWatchers';
 import timers from './timers';
 import offerMakes from './offerMakes';
+import transferHistory from './transferHistory';
+import transfers from './transfers';
+import tokenSelectors from './tokenSelectors';
+
 
 export default combineReducers(
   {
@@ -51,5 +55,8 @@ export default combineReducers(
     offerMakes: offerMakes.reducer,
     form: formReducer,
     transactionWatchers: transactionWatchers.reducer,
-    timers: timers.reducer
+    timers: timers.reducer,
+    transferHistory: transferHistory.reducer,
+    transfers: transfers.reducer,
+    tokenSelectors: tokenSelectors.reducer
   });

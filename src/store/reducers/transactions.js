@@ -12,6 +12,7 @@ export const DEFAULT_GAS_PRICE = '1000000';
 
 const initialState = fromJS({
   txList: [],
+  pendingTxSubjectIds: [],
   defaultGasLimit: DEFAULT_GAS_LIMIT,
   activeGasLimit: DEFAULT_GAS_LIMIT,
   defaultGasPrice: DEFAULT_GAS_PRICE,
@@ -34,9 +35,13 @@ const TX_TRANSACTION_REJECTED = 'TX/TRANSACTION_REJECTED';
 export const TX__GROUP__OFFERS = 'TRANSACTIONS/GROUP__OFFERS/';
 export const TX__GROUP__TOKENS = 'TX/GROUP__TOKENS/';
 export const TX__GROUP__LIMITS = 'TX/GROUP__LIMITS/';
+export const TX__GROUP__TRANSFERS = 'TX/GROUP__TRANSFERS/';
 
 export const TX_OFFER_MAKE = TX__GROUP__OFFERS + 'OFFER_MAKE';
 export const TX_OFFER_TAKE = TX__GROUP__OFFERS + 'OFFER_TAKE';
+
+export const TX_TRANSFER_FROM = TX__GROUP__TRANSFERS + 'TRANSFER_FROM';
+export const TX_TRANSFER_TO = TX__GROUP__TRANSFERS + 'TRANSFER_TO';
 
 export const TX_OFFER_CANCELLED = TX__GROUP__OFFERS + 'OFFER_CANCELLED';
 
@@ -44,7 +49,8 @@ export const TX_OFFER_PARTIALLY_FULFILLED = TX__GROUP__OFFERS + 'OFFER_FULFILLED
 export const TX_OFFER_FULFILLED_COMPLETELY = TX__GROUP__OFFERS + 'OFFER_FULFILLED_COMPLETELY';
 
 
-export const TX_STATUS_AWAITING_CONFIRMATION = 'TX/STATUS_AWAITING_CONFIRMATION';
+export const TX_STATUS_AWAITING_USER_ACCEPTANCE = 'TX/STATUS_AWAITING_USER_ACCEPTANCE'; // PENDING
+export const TX_STATUS_AWAITING_CONFIRMATION = 'TX/STATUS_AWAITING_CONFIRMATION'; // PENDING
 export const TX_STATUS_CONFIRMED = 'TX/STATUS_CONFIRMED';
 export const TX_STATUS_CANCELLED_BY_USER = 'TX/STATUS_CANCELLED_BY_USER';
 export const TX_STATUS_REJECTED = 'TX/STATUS_REJECTED';
@@ -60,6 +66,8 @@ export const getTransactionGroup = (transactionType) => {
     return TX__GROUP__TOKENS;
   } else if (0 === transactionType.indexOf(TX__GROUP__LIMITS)) {
     return TX__GROUP__LIMITS;
+  } else if (0 === transactionType.indexOf(TX__GROUP__TRANSFERS)) {
+    return TX__GROUP__TRANSFERS;
   }
 };
 
@@ -75,12 +83,13 @@ const transactionCancelledByUser = createAction(
 );
 
 const addTransaction = createPromiseActions(ADD_TRANSACTION);
-const addTransactionEpic = ({ txStatus, txType, txHash, txSubjectId }) => async (dispatch, getState) => {
+const addTransactionEpic = ({ txStatus, txType, txHash, txSubjectId, txMeta }) => async (dispatch, getState) => {
   let previousBlockNumber = network.latestBlockNumber(getState());
   dispatch(
     addTransaction.pending({
       txHash,
       txType,
+      txMeta,
       txStatus: TX_STATUS_AWAITING_CONFIRMATION,
       txSubjectId,
       txStats: {
@@ -211,7 +220,7 @@ const actions = {
 const reducer = handleActions({
   [addTransaction.pending]:
     (
-      state, { payload: { txHash, txSubjectId, txType, txStats } },
+      state, { payload: { txHash, txSubjectId, txType, txStats, txMeta } },
     ) => {
 
       const txPayload = fromJS({
@@ -221,6 +230,7 @@ const reducer = handleActions({
         txType,
         txStatus : TX_STATUS_AWAITING_CONFIRMATION,
         txStats,
+        txMeta
       });
       return state.updateIn(
         ['txList'], txList => txList.push(txPayload),

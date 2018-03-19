@@ -2,10 +2,10 @@
 /* eslint-disable import/first */
 import React from 'react';
 import { shallow } from 'enzyme';
-import EthercanLink from './EthercanLink';
+import EtherscanLink from './EtherscanLink';
 
 
-describe('(Component) EthercanLink', () => {
+describe('(Component) EtherscanLink', () => {
   it('should render', () => {
     const props = {
       children: (
@@ -13,7 +13,7 @@ describe('(Component) EthercanLink', () => {
       )
     };
     const wrapper = shallow(
-      <EthercanLink {...props}/>
+      <EtherscanLink {...props}/>
     );
 
     expect(wrapper).toMatchSnapshot();

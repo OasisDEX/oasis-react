@@ -29,6 +29,16 @@ const tradingPairs = createSelector(
   state => state.get('tradingPairs'),
 );
 
+const defaultBaseToken = createSelector(
+  tokens,
+  state => state.get('defaultBaseToken'),
+);
+
+const defaultQuoteToken = createSelector(
+  tokens,
+  state => state.get('defaultQuoteToken'),
+);
+
 const baseTokens = createSelector(
   tokens,
   state => state.get('tradingPairs').map(tp => tp.get('base')),
@@ -53,6 +63,7 @@ const precision = createSelector(
 const activeTradingPairBaseToken = createSelector(
   tokens, s => s.getIn(['activeTradingPair']).baseToken
 );
+
 const activeTradingPairQuoteToken = createSelector(
   tokens, s => s.getIn(['activeTradingPair']).quoteToken
 );
@@ -72,6 +83,8 @@ const getVisibleTradingPairs = createSelector(
 export default {
   state: tokens,
   getTokenSpecs,
+  defaultBaseToken,
+  defaultQuoteToken,
   getVisibleTradingPairs,
   defaultTradingPair,
   activeTradingPair,

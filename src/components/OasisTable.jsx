@@ -18,7 +18,7 @@ const getColTemplate = (rowDef, row) => {
   if(rowDef.template) {
     return rowDef.template.call(null, row);
   } else {
-    return (<span>N/A</span>);
+    return (<span style={{fontSize: '10px'}}>N/A</span>);
   }
 };
 
@@ -30,8 +30,8 @@ export class OasisTable extends PureComponent {
   }
 
   rowClickHandler(rowData) {
-    const { onRowClick } = this.props;
-    onRowClick && onRowClick(rowData);
+    const { onRowClick, metadata } = this.props;
+    onRowClick && onRowClick(rowData, metadata);
   }
 
   rowContent(row) {
@@ -63,6 +63,7 @@ export class OasisTable extends PureComponent {
         <tr
           className={row.isActive ? 'active' : null}
           key={i}
+          style={{ cursor: this.props.onRowClick ? 'pointer' : '', borderBottom: '1px solid lightgray', lineHeight:'25px' }}
           data-tradingpair={row.tradingPair}
           onClick={this.rowClickHandler.bind(null, row)}
         >

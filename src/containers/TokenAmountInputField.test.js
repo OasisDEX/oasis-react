@@ -4,13 +4,13 @@ import React from 'react';
 import Immutable from 'immutable';
 
 import {
-  EthercanLinkWrapper,
+  TokenAmountInputFieldWrapper,
   mapStateToProps,
   mapDispatchToProps
-} from './EtherscanLink';
+} from './TokenAmountInputField';
 import { shallow } from 'enzyme';
 
-describe('(Container) EthercanLink', () => {
+describe('(Container) TokenAmountInputField', () => {
   const state = Immutable.fromJS({});
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
@@ -30,7 +30,7 @@ describe('(Container) EthercanLink', () => {
 
   it('should render', () => {
     const wrapper = shallow(
-      <EthercanLinkWrapper {...props}/>
+      <TokenAmountInputFieldWrapper {...props}/>
     );
     expect(wrapper).toMatchSnapshot();
   });

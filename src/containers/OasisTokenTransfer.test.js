@@ -4,13 +4,13 @@ import React from 'react';
 import Immutable from 'immutable';
 
 import {
-  OasisTransferWrapper,
+  OasisTokenTransferWrapper,
   mapStateToProps,
-  mapDispatchToProps,
-} from './OasisTransfer';
+  mapDispatchToProps
+} from './OasisTokenTransfer';
 import { shallow } from 'enzyme';
 
-describe('(Container) OasisTransfer', () => {
+describe('(Container) OasisTokenTransfer', () => {
   const state = Immutable.fromJS({});
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
@@ -23,13 +23,14 @@ describe('(Container) OasisTransfer', () => {
     expect(initialProps).toMatchSnapshot();
   });
 
+
   it('will receive right actions', () => {
     expect(initialActions).toMatchSnapshot();
   });
 
   it('should render', () => {
     const wrapper = shallow(
-      <OasisTransferWrapper {...props}/>,
+      <OasisTokenTransferWrapper {...props}/>
     );
     expect(wrapper).toMatchSnapshot();
   });
