@@ -4,10 +4,10 @@ import { PropTypes } from 'prop-types';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import OasisWrapUnwrapBalances from '../components/OasisWrapUnwrapBalances';
 import OasisWrapUnwrapHistory from '../components/OasisWrapUnwrapHistory';
 import OasisWrapUnwrapWrap from '../components/OasisWrapUnwrapWrap';
 import OasisWrapUnwrapUnwrap from '../components/OasisWrapUnwrapUnwrap';
+import OasisWrapUnwrapBalancesWrapper  from './OasisWrapUnwrapBalances';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -18,7 +18,7 @@ export class OasisWrapUnwrapWrapper extends PureComponent {
     return (
       <div>
         __WrapUnwrap__
-        <OasisWrapUnwrapBalances/>
+        <OasisWrapUnwrapBalancesWrapper/>
         <OasisWrapUnwrapHistory/>
         <OasisWrapUnwrapWrap/>
         <OasisWrapUnwrapUnwrap/>

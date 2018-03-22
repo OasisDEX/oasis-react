@@ -1,63 +1,47 @@
 import { createAction, handleActions } from 'redux-actions';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
+import { TOKEN_ETHER, TOKEN_GNOSIS, TOKEN_WRAPPED_ETH, TOKEN_WRAPPED_GNT } from '../../constants';
 
-const initialState = Immutable.fromJS({
-  limitsLoaded: false,
-
-  ETHDepositProgress: null,
-  ETHWithdrawProgress: null,
-
-  GNTDepositProgress: null,
-  GNTWithdrawProgress: null,
+const initialState = fromJS({
+  wrapperTokenPairs: [
+    {
+      unwrapped: TOKEN_ETHER,
+      wrapper: TOKEN_WRAPPED_ETH
+    },
+    {
+      unwrapped: TOKEN_GNOSIS,
+      wrapper: TOKEN_WRAPPED_GNT
+    }
+  ]
 });
 
 const INIT = 'WRAP_UNWRAP/INIT';
-const WRAP_TOKEN = 'WRAP_UNWRAP/WRAP_TOKEN';
-const UNWRAP_TOKEN = 'WRAP_UNWRAP/UNWRAP_TOKEN';
+const WRAP_ETH_TOKEN = 'WRAP_UNWRAP/WRAP_ETH_TOKEN';
+const UNWRAP_ETH_TOKEN = 'WRAP_UNWRAP/UNWRAP_ETH_TOKEN';
+
+const WRAP_GNT_TOKEN = 'WRAP_UNWRAP/WRAP_GNT_TOKEN';
+const UNWRAP_GNT_TOKEN = 'WRAP_UNWRAP/UNWRAP_GNT_TOKEN';
 
 
-const STATUS_SIGNING = 'WRAP_UNWRAP/STATUS_SIGNING';
-const STATUS_AWAITING_CONFIRMATION = 'WRAP_UNWRAP/AWAITING_CONFIRMATION';
-const STATUS_CONFIRMED = 'WRAP_UNWRAP/STATUS_CONFIRMED';
 
-// ETHDepositProgress: 0,
-//   ETHDepositProgressMessage: '',
-//   ETHDepositErrorMessage: '',
+const Init = createAction(INIT, () => null);
 
-// ETHWithdrawProgress: 0,
-//   ETHWithdrawProgressMessage: '',
-//   ETHWithdrawErrorMessage: '',
 
-// GNTDepositProgress: 0,
-//   GNTDepositProgressMessage: '',
-//   GNTDepositErrorMessage: '',
-//   GNTWithdrawProgress: 0,
-//   GNTWithdrawProgressMessage: '',
-//   GNTWithdrawErrorMessage: '',
+const WrapETHToken = createAction(WRAP_ETH_TOKEN, () => async (amount) => null);
+const WrapETHTokenEpic = () => () => {};
 
-const Init = createAction(
-  INIT,
-  () => null,
-);
+const UnwrapETHToken = createAction(UNWRAP_ETH_TOKEN, () => async (amount) => null);
+const UnwrapETHTokenEpic = () => () => {};
 
-/**
- *
- */
-const WrapToken = createAction(
-  WRAP_TOKEN,
-  () => async (token, amount) => null,
-);
 
-const UnwrapToken = createAction(
-  UNWRAP_TOKEN,
-  () => async (token, amount) => null,
-);
+const WrapGNTToken = createAction(WRAP_GNT_TOKEN, () => async (amount) => null);
+const WrapGNTTokenEpic = () => () => {};
 
-const actions = {
-  Init,
-  WrapToken,
-  UnwrapToken,
-};
+const UnwrapGNTToken = createAction(UNWRAP_GNT_TOKEN, () => async (amount) => null);
+const UnwrapGNTTokenEpic = () => () => {};
+
+
+const actions = {};
 
 const reducer = handleActions({}, initialState);
 
