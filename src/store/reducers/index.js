@@ -23,6 +23,7 @@ import offerMakes from './offerMakes';
 import transferHistory from './transferHistory';
 import transfers from './transfers';
 import tokenSelectors from './tokenSelectors';
+import wrapUnwrap from './wrapUnwrap';
 
 export default combineReducers({
     router: routerReducer,
@@ -47,5 +48,6 @@ export default combineReducers({
     timers: timers.reducer,
     transferHistory: transferHistory.reducer,
     transfers: transfers.reducer,
-    tokenSelectors: tokenSelectors.reducer
+    tokenSelectors: tokenSelectors.reducer,
+    wrapUnwrap: wrapUnwrap.reducer
   });

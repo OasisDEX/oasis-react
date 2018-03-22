@@ -418,7 +418,7 @@ const reducer = handleActions({
 
   },
   [etherBalanceChanged]: (state, { payload }) =>
-    state.updateIn(['defaultAccount', 'ethBalance'], () => payload),
+    state.updateIn(['defaultAccount', 'ethBalance'], () => payload.toString()),
   [fulfilled(getDefaultAccountTokenAllowanceForAddress)]: (state, { payload, meta: { tokenName, spenderAddress } }) =>
     state.setIn(['tokenAllowances', tokenName, spenderAddress], payload)
   ,
