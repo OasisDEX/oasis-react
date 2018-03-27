@@ -28,6 +28,7 @@ import transferHistory from './transferHistory';
 import transfers from './transfers';
 import tokenSelectors from './tokenSelectors';
 import wrapUnwrap from './wrapUnwrap';
+import wrapUnwrapHistory from './wrapUnwrapHistory';
 
 
 export default combineReducers(
@@ -60,5 +61,6 @@ export default combineReducers(
     transferHistory: transferHistory.reducer,
     transfers: transfers.reducer,
     tokenSelectors: tokenSelectors.reducer,
-    wrapUnwrap: wrapUnwrap.reducer
+    wrapUnwrap: wrapUnwrap.reducer,
+    wrapUnwrapHistory: wrapUnwrapHistory.reducer,
   });

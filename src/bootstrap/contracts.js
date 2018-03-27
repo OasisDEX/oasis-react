@@ -1,16 +1,24 @@
 import loadContact from '../utils/contracts/loadContract';
+import createContractInstance from '../utils/contracts/createContractInstance';
 
 const config = require('./../configs');
 
+
+
+const erc20Abi = require('./../contracts/abi/standard-token/erc20.json');
+const WEthAbi = require('./../contracts/abi/standard-token/ds-eth-token.json');
+const TokenWrapperAbi = require('./../contracts/abi/token-wrapper/token-wrapper.json');
+const MatchingMarketAbi = require('./../contracts/abi/maker-otc/matching-market');
+const DepositBrokerAbi = require('./../contracts/abi/token-wrapper/deposit-broker');
+import  { fromJS } from 'immutable';
+import web3 from './web3';
+
 const init = (networkName) => {
+
+  const brokers = fromJS({});
 
   const tokencontractsDeploymentAdressessList = config['tokens'][networkName];
   const marketDeploymentAddress = config['market'][networkName]['address'];
-
-  const erc20Abi = require('./../contracts/abi/standard-token/erc20.json');
-  const WEthAbi = require('./../contracts/abi/standard-token/ds-eth-token.json');
-  const TokenWrapperAbi = require('./../contracts/abi/token-wrapper/token-wrapper.json');
-  const MatchingMarketAbi = require('./../contracts/abi/maker-otc/matching-market');
 
   const WETH = loadContact(WEthAbi.interface, tokencontractsDeploymentAdressessList['W-ETH']);
   const DAI =  loadContact(erc20Abi.interface, tokencontractsDeploymentAdressessList['DAI']);
@@ -34,6 +42,23 @@ const init = (networkName) => {
 
   const market = loadContact(MatchingMarketAbi.interface, marketDeploymentAddress);
   const marketNoProxy = loadContact(MatchingMarketAbi.interface, marketDeploymentAddress, true);
+  const WGNTNoProxy = loadContact(TokenWrapperAbi.interface, tokencontractsDeploymentAdressessList['W-GNT'], true);
+
+  const getDepositBroker = (address) => {
+    if (!web3.isAddress(address)) {
+      throw  new Error('This is not Ethereum address!')
+    }
+    if (!brokers.has(address)) {
+      return brokers.set(address, loadContact(DepositBrokerAbi, address));
+    } else { return brokers.get(address); }
+  };
+
+  const abiList =  Object.freeze({
+    erc20Abi,
+    WEthAbi,
+    TokenWrapperAbi,
+    DepositBrokerAbi
+  });
 
   window.contracts = {
     tokens: {
@@ -47,10 +72,13 @@ const init = (networkName) => {
       TIME, GUP, BAT, NMR,
     },
     market,
-    marketNoProxy
+    marketNoProxy,
+    WGNTNoProxy,
+    abiList,
+    getDepositBroker,
+    createContractInstance
   };
 };
-
 export default {
-  init,
+  init
 };

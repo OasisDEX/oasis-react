@@ -1,14 +1,8 @@
 import { createSelector } from 'reselect';
-import { formValueSelector } from 'redux-form/immutable';
 import reselect from '../../utils/reselect';
 import { TRANSFER_HISTORY_LOAD_STATUS_PENDING } from '../reducers/transferHistory';
 
 const transferHistory = s => s.get('transferHistory');
-
-const getMakeTransferFormValues = createSelector(
-  rootState => formValueSelector('tokenTransfer')(rootState, 'token' , 'tokenAmount', 'recipient'),
-  formValues => formValues
-);
 
 const getTokenTransferHistoryStatus = createSelector(
   transferHistory,
@@ -38,6 +32,5 @@ export default {
   state: transferHistory,
   getTokenTransferHistoryStatus,
   isTokenTransferHistoryLoading,
-  tokenTransferHistory,
-  getMakeTransferFormValues
+  tokenTransferHistory
 }

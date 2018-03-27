@@ -17,7 +17,10 @@ export class OasisWrapUnwrapBalancesWrapper extends PureComponent {
   render() {
     const { wrapUnwrapBalances, actions: { changeRoute } } = this.props;
     return (
-      <OasisWrapUnwrapBalances changeRoute={changeRoute}  wrapUnwrapBalances={wrapUnwrapBalances}/>
+      <OasisWrapUnwrapBalances
+        changeRoute={changeRoute}
+        wrapUnwrapBalances={wrapUnwrapBalances}
+      />
     );
   }
 }
