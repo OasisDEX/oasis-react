@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 import balances from './balances';
 import { fromJS } from 'immutable';
 import { TOKEN_ETHER } from '../../constants';
+import reselect from '../../utils/reselect';
 
 const wrapUnwrap = state => state.get('wrapUnwrap');
 
@@ -31,8 +32,15 @@ const wrapUnwrapBalances = createSelector(
     ),
 );
 
+const getBrokerAddress = createSelector(
+  wrapUnwrap,
+  reselect.getProps,
+  (s, tokenName) => s.getIn(['brokers', tokenName])
+);
+
 export default {
   state: wrapUnwrap,
   wrapperTokenPairs,
   wrapUnwrapBalances,
+  getBrokerAddress
 };
