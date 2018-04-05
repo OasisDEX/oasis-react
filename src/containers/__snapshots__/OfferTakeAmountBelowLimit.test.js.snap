@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OfferTakeAmountBelowLimit should render 1`] = `
+<div>
+  Your 
+  Sell
+   order is below the
+  <b>
+    minimum of 
+  </b>
+  <span />
+</div>
+`;
+
+exports[`(Container) OfferTakeAmountBelowLimit will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OfferTakeAmountBelowLimit will receive right props 1`] = `
+Object {
+  "isOfferBelowLimit": undefined,
+  "offerTakeBaseToken": undefined,
+  "offerTakeType": "OFFER_TAKES/TAKE_SELL_OFFER",
+}
+`;

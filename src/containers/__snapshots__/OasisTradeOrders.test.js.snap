@@ -1,0 +1,162 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisTradeOrders should render 1`] = `
+<div>
+  <div>
+    <Connect(OasisMakeBuyOffer) />
+    <Connect(OasisMakeSellOffer) />
+  </div>
+  <div>
+    <Connect(OasisTakeOfferModal)
+      activeOfferTake={
+        Immutable.Map {
+          offerData: Immutable.Map {
+            buyHowMuch_filter: 1.951718560884e+21,
+            buyWhichToken: "W-ETH",
+            ask_price: "2",
+            sellWhichTokenAddress: "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+            bid_price: "0.5",
+            sellHowMuch: "975859280442000000000",
+            sellHowMuch_filter: 975859280442000000000,
+            sellWhichToken: "MKR",
+            buyWhichTokenAddress: "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+            owner: "0xdb33dfd3d61308c33c63209845dad3e6bfb2c674",
+            bid_price_sort: 0.5,
+            buyHowMuch: "1.951718560884e+21",
+            ask_price_sort: 2,
+            id: "7",
+          },
+          buyToken: "MKR",
+          sellToken: "W-ETH",
+          baseToken: "MKR",
+          quoteToken: "W-ETH",
+        }
+      }
+      offerTakeType="OFFER_TAKES/TAKE_SELL_OFFER"
+    />
+  </div>
+  <OasisBuyOrders
+    activeTradingPair={
+      Immutable.Map {
+        baseToken: "MKR",
+        quoteToken: "DAI",
+      }
+    }
+    buyOffers={
+      Immutable.List [
+      ]
+    }
+    cancelOffer={[Function]}
+    onCheckOfferIsActive={[Function]}
+    onResetCompletedOfferCheck={[Function]}
+    onSetActiveOfferTakeOfferId={[Function]}
+    onSetOfferTakeModalOpen={[Function]}
+  />
+  <OasisSellOrders
+    activeTradingPair={
+      Immutable.Map {
+        baseToken: "MKR",
+        quoteToken: "DAI",
+      }
+    }
+    cancelOffer={[Function]}
+    onCheckOfferIsActive={[Function]}
+    onResetCompletedOfferCheck={[Function]}
+    onSetActiveOfferTakeOfferId={[Function]}
+    onSetOfferTakeModalOpen={[Function]}
+    sellOffers={
+      Immutable.List [
+      ]
+    }
+  />
+  <OasisMyOrders
+    activeTradingPair={
+      Immutable.Map {
+        baseToken: "MKR",
+        quoteToken: "DAI",
+      }
+    }
+    buyOffers={
+      Immutable.List [
+      ]
+    }
+    cancelOffer={[Function]}
+    initialMarketHistoryLoaded={true}
+    sellOffers={
+      Immutable.List [
+      ]
+    }
+    trades={
+      Immutable.List [
+      ]
+    }
+  />
+  <OasisMarketHistory
+    activeTradingPair={
+      Immutable.Map {
+        baseToken: "MKR",
+        quoteToken: "DAI",
+      }
+    }
+    initialMarketHistoryLoaded={true}
+    trades={
+      Immutable.List [
+      ]
+    }
+  />
+</div>
+`;
+
+exports[`(Container) OasisTradeOrders will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "cancelOffer": [Function],
+    "checkOfferIsActive": [Function],
+    "resetCompletedOfferCheck": [Function],
+    "setActiveOfferTakeOfferId": [Function],
+    "setOfferTakeModalOpen": [Function],
+  },
+}
+`;
+
+exports[`(Container) OasisTradeOrders will receive right props 1`] = `
+Object {
+  "activeOfferTake": Immutable.Map {
+    offerData: Immutable.Map {
+        buyHowMuch_filter: 1.951718560884e+21,
+        buyWhichToken: "W-ETH",
+        ask_price: "2",
+        sellWhichTokenAddress: "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        bid_price: "0.5",
+        sellHowMuch: "975859280442000000000",
+        sellHowMuch_filter: 975859280442000000000,
+        sellWhichToken: "MKR",
+        buyWhichTokenAddress: "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        owner: "0xdb33dfd3d61308c33c63209845dad3e6bfb2c674",
+        bid_price_sort: 0.5,
+        buyHowMuch: "1.951718560884e+21",
+        ask_price_sort: 2,
+        id: "7",
+    },
+    buyToken: "MKR",
+    sellToken: "W-ETH",
+    baseToken: "MKR",
+    quoteToken: "W-ETH",
+},
+  "activeOfferTakeType": "OFFER_TAKES/TAKE_SELL_OFFER",
+  "activeTradingPair": Immutable.Map {
+    baseToken: "MKR",
+    quoteToken: "DAI",
+},
+  "buyOfferCount": undefined,
+  "buyOffers": Immutable.List [
+],
+  "initialMarketHistoryLoaded": true,
+  "isOfferTakeModalOpen": true,
+  "marketData": Immutable.List [
+],
+  "sellOfferCount": undefined,
+  "sellOffers": Immutable.List [
+],
+}
+`;

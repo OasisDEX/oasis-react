@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) EthereumAddressInputField should render 1`] = `
+<Field
+  component={[Function]}
+  required={true}
+  validate={[Function]}
+/>
+`;
+
+exports[`(Container) EthereumAddressInputField will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) EthereumAddressInputField will receive right props 1`] = `Object {}`;

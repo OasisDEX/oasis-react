@@ -6,7 +6,9 @@ import OasisBuyOrders from './OasisBuyOrders';
 
 describe('(Component) OasisBuyOrders', () => {
   it('should render', () => {
-    const props = {};
+    const props = {
+
+    };
     const wrapper = shallow(
       <OasisBuyOrders {...props}/>,
     );

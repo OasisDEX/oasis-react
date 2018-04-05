@@ -8,7 +8,6 @@ import OasisWrapUnwrapWrap from '../components/OasisWrapUnwrapWrap';
 import OasisWrapUnwrapUnwrap from '../components/OasisWrapUnwrapUnwrap';
 import OasisWrapUnwrapBalancesWrapper  from './OasisWrapUnwrapBalances';
 import OasisWrapUnwrapHistoryWrapper from './OasisWrapUnwrapHistory';
-import wrapUnwrapReducer from '../store/reducers/wrapUnwrap';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,

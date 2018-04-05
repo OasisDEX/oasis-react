@@ -14,6 +14,7 @@ import platform from '../store/selectors/platform';
 import network from '../store/selectors/network';
 import transferHistory from '../store/selectors/transferHistory';
 import { formatAmount } from '../utils/tokens/pair';
+import { Map } from 'immutable';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -52,7 +53,7 @@ export class OasisTokenTransferHistoryWrapper extends PureComponent {
   }
 
   render() {
-    const { transferHistoryList = [], activeNetworkName } = this.props;
+    const { transferHistoryList = Map(), activeNetworkName } = this.props;
     return (
       <OasisWidgetFrame heading="History">
         <div>

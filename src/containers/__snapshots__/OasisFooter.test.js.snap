@@ -3,16 +3,107 @@
 exports[`(Container) OasisFooter should render 1`] = `
 <div
   className="row"
+  styleName="OasisFooter"
 >
   <div
-    className="col-sm-4"
-  />
+    key="0"
+  >
+    <div
+      className="row"
+    >
+      <div
+        styleName="LinksSection"
+      >
+        <h4
+          styleName="Heading"
+        >
+          Information
+        </h4>
+        <a
+          href="https://github.com/MakerDAO/maker-market/wiki"
+          key="0"
+          styleName="Link"
+          target="_blank"
+        >
+          Documentation
+        </a>
+        <a
+          href="https://makerdao.github.io/markets/"
+          key="1"
+          styleName="Link"
+          target="_blank"
+        >
+          Market Data
+        </a>
+      </div>
+    </div>
+  </div>
   <div
-    className="col-sm-4"
-  />
+    key="1"
+  >
+    <div
+      className="row"
+    >
+      <div
+        styleName="LinksSection"
+      >
+        <h4
+          styleName="Heading"
+        >
+          MakerDAO
+        </h4>
+        <a
+          href="https://chat.makerdao.com/channel/maker-market"
+          key="0"
+          styleName="Link"
+          target="_blank"
+        >
+          Chat
+        </a>
+        <a
+          href="https://www.reddit.com/r/MakerDAO/"
+          key="1"
+          styleName="Link"
+          target="_blank"
+        >
+          Reddit
+        </a>
+      </div>
+    </div>
+  </div>
   <div
-    className="col-sm-4"
-  />
+    key="2"
+  >
+    <div
+      className="row"
+    >
+      <div
+        styleName="LinksSection"
+      >
+        <h4
+          styleName="Heading"
+        >
+          OasisDex
+        </h4>
+        <a
+          href="https://github.com/OasisDEX/oasis/issues/new"
+          key="0"
+          styleName="Link"
+          target="_blank"
+        >
+          Report Issues
+        </a>
+        <a
+          href="https://github.com/OasisDEX/oasis/projects/1"
+          key="1"
+          styleName="Link"
+          target="_blank"
+        >
+          Project
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 

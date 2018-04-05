@@ -1,5 +1,4 @@
 import loadContact from '../utils/contracts/loadContract';
-import createContractInstance from '../utils/contracts/createContractInstance';
 
 const config = require('./../configs');
 
@@ -75,8 +74,7 @@ const init = (networkName) => {
     marketNoProxy,
     WGNTNoProxy,
     abiList,
-    getDepositBroker,
-    createContractInstance
+    getDepositBroker
   };
 };
 export default {

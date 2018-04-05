@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisTokenTransfer should render 1`] = `
+<OasisWidgetFrame
+  heading="Transfer"
+>
+  <div>
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "marginBottom": "20px",
+        }
+      }
+    >
+      <span
+        style={
+          Object {
+            "textTransform": "uppercase",
+            "width": "50%",
+          }
+        }
+      >
+        Wallet
+      </span>
+      <Connect(OasisTokenBalance)
+        decimalPlaces={5}
+        style={
+          Object {
+            "width": "50%",
+          }
+        }
+        tokenName="MKR"
+      />
+    </div>
+    <hr />
+    <div>
+      <Connect(OasisTokenSelect)
+        name="tokenTransfer"
+      />
+      <Connect(ReduxForm)
+        onSubmit={[Function]}
+      />
+    </div>
+    <div>
+      <hr />
+      <Connect(TokenTransferStatus) />
+    </div>
+  </div>
+</OasisWidgetFrame>
+`;
+
+exports[`(Container) OasisTokenTransfer will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "makeTransfer": [Function],
+  },
+}
+`;
+
+exports[`(Container) OasisTokenTransfer will receive right props 1`] = `
+Object {
+  "selectedToken": "MKR",
+  "transaction": undefined,
+}
+`;

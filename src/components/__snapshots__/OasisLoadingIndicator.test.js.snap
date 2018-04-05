@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisLoadingIndicator should render 1`] = `
+<span
+  style={
+    Object {
+      "fontSize": 10,
+    }
+  }
+>
+  [L]
+</span>
+`;

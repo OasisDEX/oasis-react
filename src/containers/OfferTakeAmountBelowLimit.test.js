@@ -11,7 +11,7 @@ import {
 import { shallow } from 'enzyme';
 
 describe('(Container) OfferTakeAmountBelowLimit', () => {
-  const state = Immutable.fromJS({});
+  const state = Immutable.fromJS(global.storeMock);
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
   const props = {
