@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisTokenBalance should render 1`] = `
+<div
+  style={
+    Object {
+      "display": "inline-block",
+    }
+  }
+>
+  <span>
+    0.000
+  </span>
+  <span
+    style={
+      Object {
+        "fontSize": "10px",
+        "lineHeight": "18px",
+        "padding": "0 5px",
+        "verticalAlign": "middle",
+      }
+    }
+  >
+    <b />
+  </span>
+</div>
+`;
+
+exports[`(Container) OasisTokenBalance will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisTokenBalance will receive right props 1`] = `
+Object {
+  "balance": "0",
+}
+`;

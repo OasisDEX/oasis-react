@@ -1,10 +1,9 @@
 
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
+import { connect } from 'react-redux';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 import moment from 'moment';
-
-import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import OasisWidgetFrame from '../containers/OasisWidgetFrame';
 import OasisTable from '../components/OasisTable';
@@ -14,6 +13,7 @@ import platform from '../store/selectors/platform';
 import network from '../store/selectors/network';
 import transferHistory from '../store/selectors/transferHistory';
 import { formatAmount } from '../utils/tokens/pair';
+import { Map } from 'immutable';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -52,7 +52,7 @@ export class OasisTokenTransferHistoryWrapper extends PureComponent {
   }
 
   render() {
-    const { transferHistoryList = [], activeNetworkName } = this.props;
+    const { transferHistoryList = Map(), activeNetworkName } = this.props;
     return (
       <OasisWidgetFrame heading="History">
         <div>

@@ -2,6 +2,9 @@ import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
+export const ETHERSCAN_LINK_TYPE_ADDRESS = 'ETHERSCAN_LINK_TYPE_ADDRESS';
+export const ETHERSCAN_LINK_TYPE_TRANSACTION = 'ETHERSCAN_LINK_TYPE_TRANSACTION';
+
 const propTypes = PropTypes && {
   label: PropTypes.string,
   networkName: PropTypes.string,
@@ -18,8 +21,7 @@ const defaultProps = {
   networkName: 'kovan'
 };
 
-export const ETHERSCAN_LINK_TYPE_ADDRESS = 'ETHERSCAN_LINK_TYPE_ADDRESS';
-export const ETHERSCAN_LINK_TYPE_TRANSACTION = 'ETHERSCAN_LINK_TYPE_TRANSACTION';
+
 
 
 const linkStyle = { maxWidth:'100px', textOverflow: 'ellipsis', display: 'inline-block', overflow: 'hidden' };

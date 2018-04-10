@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisOfferMakeForm should render 1`] = `
+<Connect(ReduxForm)
+  actions={
+    Object {
+      "buyMax": [Function],
+      "sellMax": [Function],
+      "totalFieldValueChanged": [Function],
+      "volumeFieldValueChanged": [Function],
+    }
+  }
+  activeOfferTakeOfferData={
+    Immutable.Map {
+      buyHowMuch_filter: 1.951718560884e+21,
+      buyWhichToken: "W-ETH",
+      ask_price: "2",
+      sellWhichTokenAddress: "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+      bid_price: "0.5",
+      sellHowMuch: "975859280442000000000",
+      sellHowMuch_filter: 975859280442000000000,
+      sellWhichToken: "MKR",
+      buyWhichTokenAddress: "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+      owner: "0xdb33dfd3d61308c33c63209845dad3e6bfb2c674",
+      bid_price_sort: 0.5,
+      buyHowMuch: "1.951718560884e+21",
+      ask_price_sort: 2,
+      id: "7",
+    }
+  }
+  activeTradingPairPrecision={18}
+  buyToken="MKR"
+  isVolumeGreaterThanOfferMax={false}
+  offerTakeType="OFFER_TAKES/TAKE_SELL_OFFER"
+  sellToken="W-ETH"
+/>
+`;
+
+exports[`(Container) OasisOfferMakeForm will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "buyMax": [Function],
+    "sellMax": [Function],
+    "totalFieldValueChanged": [Function],
+    "volumeFieldValueChanged": [Function],
+  },
+}
+`;
+
+exports[`(Container) OasisOfferMakeForm will receive right props 1`] = `
+Object {
+  "activeBaseTokenBalance": undefined,
+  "activeOfferTakeOfferData": Immutable.Map {
+    buyHowMuch_filter: 1.951718560884e+21,
+    buyWhichToken: "W-ETH",
+    ask_price: "2",
+    sellWhichTokenAddress: "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+    bid_price: "0.5",
+    sellHowMuch: "975859280442000000000",
+    sellHowMuch_filter: 975859280442000000000,
+    sellWhichToken: "MKR",
+    buyWhichTokenAddress: "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+    owner: "0xdb33dfd3d61308c33c63209845dad3e6bfb2c674",
+    bid_price_sort: 0.5,
+    buyHowMuch: "1.951718560884e+21",
+    ask_price_sort: 2,
+    id: "7",
+},
+  "activeTradingPairPrecision": 18,
+  "buyToken": "MKR",
+  "isVolumeGreaterThanOfferMax": false,
+  "offerTakeType": "OFFER_TAKES/TAKE_SELL_OFFER",
+  "sellToken": "W-ETH",
+}
+`;

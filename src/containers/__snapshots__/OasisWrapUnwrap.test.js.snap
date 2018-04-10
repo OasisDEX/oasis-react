@@ -2,6 +2,7 @@
 
 exports[`(Container) OasisWrapUnwrap should render 1`] = `
 <div>
+  __WrapUnwrap__
   <OasisWrapUnwrapBalances />
   <OasisWrapUnwrapHistory />
   <OasisWrapUnwrapWrap />

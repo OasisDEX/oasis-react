@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) SetTokenAllowance should render 1`] = `<div />`;
+
+exports[`(Container) SetTokenAllowance will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) SetTokenAllowance will receive right props 1`] = `Object {}`;

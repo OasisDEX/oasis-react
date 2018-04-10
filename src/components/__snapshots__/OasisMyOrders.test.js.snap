@@ -1,9 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Component) OasisMyOrders should render 1`] = `
-<div
-  className="OasisMyOrders"
+<OasisWidgetFrame
+  heading="MY ORDERS"
 >
-  OasisMyOrders
-</div>
+  <div>
+    <select
+      onChange={[Function]}
+      value="Open"
+    >
+      <option
+        value="Open"
+      >
+        Open
+      </option>
+      <option
+        value="Closed"
+      >
+        Closed
+      </option>
+    </select>
+  </div>
+  <div>
+    <div>
+      You currently have no active offers
+    </div>
+  </div>
+</OasisWidgetFrame>
 `;

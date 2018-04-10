@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import throttle from 'lodash/throttle';
 import { connect } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
+import { bindActionCreators } from 'redux';
 import { Field, reduxForm } from 'redux-form/immutable';
 
 import offerMakes from '../store/selectors/offerMakes';

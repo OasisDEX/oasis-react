@@ -1,17 +1,18 @@
 /* global shallow describe it expect */
 /* eslint-disable import/first */
 import React from 'react';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
+
+import WithTransactionWatchWrapper from './WithTransactionWatch';
 
 import {
-  WithTransactionWatchWrapper,
   mapStateToProps,
   mapDispatchToProps
 } from './WithTransactionWatch';
 import { shallow } from 'enzyme';
 
 describe('(Container) WithTransactionWatch', () => {
-  const state = Immutable.fromJS({});
+  const state = fromJS(global.storeMock);
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
   const props = {

@@ -3,10 +3,15 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import OasisMyOrders from './OasisMyOrders';
+import { fromJS } from 'immutable';
 
 describe('(Component) OasisMyOrders', () => {
   it('should render', () => {
-    const props = {};
+    const props = {
+      activeTradingPair: { baseToken: "MKR", quoteToken: "W-ETH" },
+      sellOffers: fromJS([]),
+      buyOffers: fromJS([])
+    };
     const wrapper = shallow(
       <OasisMyOrders {...props}/>,
     );

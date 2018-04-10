@@ -2,9 +2,8 @@
 /* eslint-disable import/first */
 import React from 'react';
 import Immutable from 'immutable';
-
+import WithTimerWrapper from './WithTimer';
 import {
-  WithTimerWrapper,
   mapStateToProps,
   mapDispatchToProps
 } from './WithTimer';

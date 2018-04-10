@@ -2,42 +2,44 @@
 
 exports[`(Component) OasisTabs should render 1`] = `
 <div
-  className="OasisTabs"
+  styleName="row-tabs"
 >
-  <div
-    className="row-tabs"
+  <ul
+    styleName="Tabs"
   >
-    <ul
-      className="tabs"
+    <li
+      styleName="Tab"
     >
-      <li>
-        <NavLink
-          activeClassName="active"
-          ariaCurrent="true"
-          to="/trade"
-        >
-          Trade
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          activeClassName="active"
-          ariaCurrent="true"
-          to="/wrap-unwrap"
-        >
-          Wrap / Unwrap
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          activeClassName="active"
-          ariaCurrent="true"
-          to="/transfer"
-        >
-          Transfer
-        </NavLink>
-      </li>
-    </ul>
-  </div>
+      <NavLink
+        activeClassName="active"
+        ariaCurrent="true"
+        to="/trade"
+      >
+        Trade
+      </NavLink>
+    </li>
+    <li
+      styleName="Tab Tab--2x"
+    >
+      <NavLink
+        activeClassName="active"
+        ariaCurrent="true"
+        to="/wrap-unwrap"
+      >
+        Wrap / Unwrap
+      </NavLink>
+    </li>
+    <li
+      styleName="Tab"
+    >
+      <NavLink
+        activeClassName="active"
+        ariaCurrent="true"
+        to="/transfer"
+      >
+        Transfer
+      </NavLink>
+    </li>
+  </ul>
 </div>
 `;

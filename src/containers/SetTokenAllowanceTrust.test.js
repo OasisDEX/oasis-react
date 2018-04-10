@@ -1,7 +1,7 @@
 /* global shallow describe it expect */
 /* eslint-disable import/first */
 import React from 'react';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 
 import {
   SetTokenAllowanceTrustWrapper,
@@ -12,34 +12,7 @@ import { shallow } from 'enzyme';
 import { TOKEN_WRAPPED_ETH } from '../constants';
 
 describe('(Container) SetTokenAllowanceTrust', () => {
-  const state = Immutable.fromJS({
-    platform: {
-      contractsLoaded: false,
-    },
-    balances: {
-      tokenAllowances: {
-        DGD: '0',
-        GUP: '0',
-        'W-ETH': '232222',
-        RHOC: '0',
-        DAI: '0',
-        GNT: '0',
-        TIME: '0',
-        VSL: '0',
-        MLN: '0',
-        '1ST': '0',
-        NMR: '0',
-        SNGLS: '0',
-        ICN: '0',
-        MKR: '100',
-        BAT: '0',
-        'W-GNT': '0',
-        PLU: '0',
-        SAI: '330000000000000000',
-        REP: '0'
-      }
-    }
-  });
+  const state = fromJS(global.storeMock);
   const initialProps = mapStateToProps(state, {});
   const initialActions = mapDispatchToProps(x => x);
   const props = {

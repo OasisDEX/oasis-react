@@ -1,16 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Component) OasisCard should render 1`] = `
-<div
-  className="OasisCard"
->
-  <h2 />
-  <div
-    className="OasisCardContent"
-  >
-    <span>
-      test
-    </span>
-  </div>
+<div>
+  <h2>
+    Example heading
+  </h2>
+  <div />
 </div>
 `;

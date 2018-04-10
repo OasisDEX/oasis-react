@@ -1,7 +1,7 @@
 /* global shallow describe it expect */
 /* eslint-disable import/first */
 import React from 'react';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 
 import {
   OasisTakeOfferModalWrapper,
@@ -9,14 +9,16 @@ import {
   mapDispatchToProps
 } from './OasisTakeOfferModal';
 import { shallow } from 'enzyme';
+import { TAKE_BUY_OFFER } from '../store/reducers/offerTakes';
 
 describe('(Container) OasisTakeOfferModal', () => {
-  const state = Immutable.fromJS({});
+  const state = fromJS(global.storeMock);
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,
-    ...initialProps
+    ...initialProps,
+    offerTakeType: TAKE_BUY_OFFER
   };
 
   it('will receive right props', () => {

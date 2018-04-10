@@ -1,11 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`(Container) WithTransactionWatch should render 1`] = `<div />`;
+exports[`(Container) WithTransactionWatch should render 1`] = `undefined`;
 
 exports[`(Container) WithTransactionWatch will receive right actions 1`] = `
 Object {
-  "actions": Object {},
+  "subscribers": Object {},
 }
 `;
 
-exports[`(Container) WithTransactionWatch will receive right props 1`] = `Object {}`;
+exports[`(Container) WithTransactionWatch will receive right props 1`] = `
+Object {
+  "latestBlockNumber": 6716998,
+}
+`;

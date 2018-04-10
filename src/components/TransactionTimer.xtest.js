@@ -7,11 +7,7 @@ import TransactionTimer from './TransactionTimer';
 
 describe('(Component) TransactionTimer', () => {
   it('should render', () => {
-    const props = {
-      children: (
-        <span>test</span>
-      )
-    };
+    const props = {};
     const wrapper = shallow(
       <TransactionTimer {...props}/>
     );

@@ -1,0 +1,288 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisTrade should render 1`] = `
+<main>
+  <OasisMarketWidget
+    activeTradingPair={
+      Immutable.Map {
+        baseToken: "MKR",
+        quoteToken: "DAI",
+      }
+    }
+    defaultPeriod="TIME_SPAN/WEEK"
+    loadingTradeHistory={false}
+    marketData={
+      Immutable.List [
+      ]
+    }
+    setActiveTradingPair={[Function]}
+    tradedTokens={
+      Immutable.List [
+        Immutable.Map {
+          base: "MKR",
+          quote: "W-ETH",
+          priority: 10,
+          isDefault: true,
+        },
+        Immutable.Map {
+          base: "W-ETH",
+          quote: "DAI",
+          priority: 9,
+          isDefault: true,
+        },
+        Immutable.Map {
+          base: "MKR",
+          quote: "DAI",
+          priority: 8,
+          isDefault: true,
+        },
+        Immutable.Map {
+          base: "SAI",
+          quote: "DAI",
+          priority: 6,
+          isDefault: true,
+        },
+        Immutable.Map {
+          base: "W-GNT",
+          quote: "W-ETH",
+          priority: 0,
+          isDefault: false,
+        },
+        Immutable.Map {
+          base: "DGD",
+          quote: "W-ETH",
+          priority: 0,
+          isDefault: false,
+        },
+        Immutable.Map {
+          base: "REP",
+          quote: "W-ETH",
+          priority: 0,
+          isDefault: false,
+        },
+        Immutable.Map {
+          base: "ICN",
+          quote: "W-ETH",
+          priority: 0,
+          isDefault: false,
+        },
+        Immutable.Map {
+          base: "1ST",
+          quote: "W-ETH",
+          priority: 0,
+          isDefault: false,
+        },
+        Immutable.Map {
+          base: "SNGLS",
+          quote: "W-ETH",
+          priority: 0,
+          isDefault: false,
+        },
+        Immutable.Map {
+          base: "VSL",
+          quote: "W-ETH",
+          priority: 0,
+          isDefault: false,
+        },
+        Immutable.Map {
+          base: "PLU",
+          quote: "W-ETH",
+          priority: 0,
+          isDefault: false,
+        },
+        Immutable.Map {
+          base: "MLN",
+          quote: "W-ETH",
+          priority: 0,
+          isDefault: false,
+        },
+        Immutable.Map {
+          base: "RHOC",
+          quote: "W-ETH",
+          priority: 0,
+          isDefault: false,
+        },
+        Immutable.Map {
+          base: "TIME",
+          quote: "W-ETH",
+          priority: 0,
+          isDefault: false,
+        },
+        Immutable.Map {
+          base: "GUP",
+          quote: "W-ETH",
+          priority: 0,
+          isDefault: false,
+        },
+        Immutable.Map {
+          base: "BAT",
+          quote: "W-ETH",
+          priority: 0,
+          isDefault: false,
+        },
+        Immutable.Map {
+          base: "NMR",
+          quote: "W-ETH",
+          priority: 0,
+          isDefault: false,
+        },
+      ]
+    }
+  />
+  <Connect(OasisTradeOrders) />
+</main>
+`;
+
+exports[`(Container) OasisTrade will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "changeRouteEpic": [Function],
+    "denotePrecision": [Function],
+    "setActiveTradingPairEpic": [Function],
+  },
+}
+`;
+
+exports[`(Container) OasisTrade will receive right props 1`] = `
+Object {
+  "activeTradingPair": Immutable.Map {
+    baseToken: "MKR",
+    quoteToken: "DAI",
+},
+  "defaultPeriod": "TIME_SPAN/WEEK",
+  "loadingTradeHistory": false,
+  "marketsData": Immutable.List [
+],
+  "offersInitialized": undefined,
+  "tradedTokens": Immutable.List [
+    Immutable.Map {
+        base: "MKR",
+        quote: "W-ETH",
+        priority: 10,
+        isDefault: true,
+    },
+    Immutable.Map {
+        base: "W-ETH",
+        quote: "DAI",
+        priority: 9,
+        isDefault: true,
+    },
+    Immutable.Map {
+        base: "MKR",
+        quote: "DAI",
+        priority: 8,
+        isDefault: true,
+    },
+    Immutable.Map {
+        base: "SAI",
+        quote: "DAI",
+        priority: 6,
+        isDefault: true,
+    },
+    Immutable.Map {
+        base: "W-GNT",
+        quote: "W-ETH",
+        priority: 0,
+        isDefault: false,
+    },
+    Immutable.Map {
+        base: "DGD",
+        quote: "W-ETH",
+        priority: 0,
+        isDefault: false,
+    },
+    Immutable.Map {
+        base: "REP",
+        quote: "W-ETH",
+        priority: 0,
+        isDefault: false,
+    },
+    Immutable.Map {
+        base: "ICN",
+        quote: "W-ETH",
+        priority: 0,
+        isDefault: false,
+    },
+    Immutable.Map {
+        base: "1ST",
+        quote: "W-ETH",
+        priority: 0,
+        isDefault: false,
+    },
+    Immutable.Map {
+        base: "SNGLS",
+        quote: "W-ETH",
+        priority: 0,
+        isDefault: false,
+    },
+    Immutable.Map {
+        base: "VSL",
+        quote: "W-ETH",
+        priority: 0,
+        isDefault: false,
+    },
+    Immutable.Map {
+        base: "PLU",
+        quote: "W-ETH",
+        priority: 0,
+        isDefault: false,
+    },
+    Immutable.Map {
+        base: "MLN",
+        quote: "W-ETH",
+        priority: 0,
+        isDefault: false,
+    },
+    Immutable.Map {
+        base: "RHOC",
+        quote: "W-ETH",
+        priority: 0,
+        isDefault: false,
+    },
+    Immutable.Map {
+        base: "TIME",
+        quote: "W-ETH",
+        priority: 0,
+        isDefault: false,
+    },
+    Immutable.Map {
+        base: "GUP",
+        quote: "W-ETH",
+        priority: 0,
+        isDefault: false,
+    },
+    Immutable.Map {
+        base: "BAT",
+        quote: "W-ETH",
+        priority: 0,
+        isDefault: false,
+    },
+    Immutable.Map {
+        base: "NMR",
+        quote: "W-ETH",
+        priority: 0,
+        isDefault: false,
+    },
+],
+  "validBaseTokensList": Immutable.List [
+    "W-GNT",
+    "DAI",
+    "DGD",
+    "REP",
+    "ICN",
+    "1ST",
+    "SNGLS",
+    "VSL",
+    "PLU",
+    "MLN",
+    "RHOC",
+    "TIME",
+    "GUP",
+    "BAT",
+    "NMR",
+],
+  "validQuoteTokensList": Immutable.List [
+    "W-ETH",
+],
+}
+`;

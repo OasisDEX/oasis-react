@@ -67,7 +67,6 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
 
 
   render() {
-    console.log({allowanceSubjectAddress: this.props.allowanceSubjectAddress})
     const { subjectTrustStatus } = this.props;
     let btnLabel;
     switch (subjectTrustStatus) {
