@@ -28,7 +28,6 @@ import transferHistory from './transferHistory';
 import transfers from './transfers';
 import tokenSelectors from './tokenSelectors';
 
-
 export default combineReducers(
   {
 

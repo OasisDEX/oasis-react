@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) Locked should render 1`] = `
+<section
+  styleName="LockedAccountSection"
+>
+  <img
+    alt="Metamask Fox Logo"
+    src="dapphub_icn_metamask.svg"
+    styleName="MetamaskLogo"
+  />
+  <hr
+    styleName="Separator"
+  />
+  <h2
+    styleName="Heading"
+  >
+    METAMASK ACCOUNT LOCKED
+  </h2>
+  <p
+    styleName="Message"
+  >
+    You are trying to access OasisDEX without an unlocked account.
+    <br />
+    Unlock your account on the Metamask Extension.
+  </p>
+  <hr
+    styleName="Separator"
+  />
+  <Connect(OasisFooterWrapper) />
+</section>
+`;

@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisMakeSellOffer should render 1`] = `
+<OasisWidgetFrame
+  heading="Sell W-ETH"
+>
+  <div
+    style={
+      Object {
+        "textTransform": "uppercase",
+      }
+    }
+  >
+    Available 
+    <Connect(OasisTokenBalance)
+      tokenName="W-ETH"
+    />
+  </div>
+  <div>
+    <Connect(ReduxForm)
+      baseToken="W-ETH"
+      form="makeSellOffer"
+      offerMakeType="OFFER_MAKES/MAKE_SELL_OFFER"
+    />
+  </div>
+  <div>
+    <OasisInsufficientAmountOfToken
+      tokenName="W-ETH"
+    />
+  </div>
+  <div>
+    <button
+      disabled={true}
+      onClick={[Function]}
+    >
+      Sell
+    </button>
+  </div>
+</OasisWidgetFrame>
+`;
+
+exports[`(Container) OasisMakeSellOffer will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "initializeOfferMake": [Function],
+    "makeOfferModalOpen": [Function],
+  },
+}
+`;
+
+exports[`(Container) OasisMakeSellOffer will receive right props 1`] = `
+Object {
+  "activeTradingPair": Immutable.Map {
+    baseToken: "MKR",
+    quoteToken: "DAI",
+},
+  "baseToken": undefined,
+  "contractsLoaded": true,
+  "hasSufficientTokenAmount": false,
+  "isModalOpen": false,
+  "quoteToken": undefined,
+}
+`;

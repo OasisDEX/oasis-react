@@ -1,7 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Component) OasisLogo should render 1`] = `
-<div
-  className="OasisLogo"
-/>
+<a
+  href="http://oasisdex.com"
+  styleName="OasisLogoWrapper"
+>
+  <div
+    styleName="OasisLogo"
+  />
+</a>
 `;

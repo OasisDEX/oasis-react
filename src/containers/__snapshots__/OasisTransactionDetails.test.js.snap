@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisTransactionDetails should render 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": "lightgray",
+      "margin": "20px 0",
+      "padding": 10,
+    }
+  }
+>
+  <div>
+    Invalid transaction
+  </div>
+</div>
+`;
+
+exports[`(Container) OasisTransactionDetails will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisTransactionDetails will receive right props 1`] = `
+Object {
+  "baseToken": undefined,
+  "gasEstimateError": null,
+  "isGasEstimatePending": null,
+  "latestBlockNumber": 6716998,
+  "transactionGasCostEstimate": null,
+}
+`;

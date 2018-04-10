@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) WithTimer should render 1`] = `undefined`;
+
+exports[`(Container) WithTimer will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) WithTimer will receive right props 1`] = `
+Object {
+  "timer": undefined,
+}
+`;

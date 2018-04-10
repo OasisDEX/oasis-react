@@ -9,10 +9,11 @@ import {
   mapDispatchToProps
 } from './OasisTokenBalance';
 import { shallow } from 'enzyme';
+import { TOKEN_WRAPPED_ETH } from '../constants';
 
 describe('(Container) OasisTokenBalance', () => {
-  const state = Immutable.fromJS({});
-  const initialProps = mapStateToProps(state);
+  const state = Immutable.fromJS(global.storeMock);
+  const initialProps = mapStateToProps(state, { tokenName: TOKEN_WRAPPED_ETH });
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,

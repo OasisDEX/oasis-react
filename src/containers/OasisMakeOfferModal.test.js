@@ -4,19 +4,21 @@ import React from 'react';
 import Immutable from 'immutable';
 
 import {
-  OasisTakeOfferModalWrapper,
+  OasisMakeOfferModalWrapper,
   mapStateToProps,
   mapDispatchToProps
-} from './OasisTakeOfferModal';
+} from './OasisMakeOfferModal';
 import { shallow } from 'enzyme';
+import { MAKE_BUY_OFFER } from '../store/reducers/offerMakes';
 
-describe('(Container) OasisTakeOfferModal', () => {
-  const state = Immutable.fromJS({});
-  const initialProps = mapStateToProps(state);
+describe('(Container) OasisMakeOfferModal', () => {
+  const state = Immutable.fromJS(global.storeMock);
+  const initialProps = mapStateToProps(state, { form: 'makeBuyOffer', offerMakeType: MAKE_BUY_OFFER });
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,
-    ...initialProps
+    ...initialProps,
+    offerMakeType: MAKE_BUY_OFFER
   };
 
   it('will receive right props', () => {
@@ -30,7 +32,7 @@ describe('(Container) OasisTakeOfferModal', () => {
 
   it('should render', () => {
     const wrapper = shallow(
-      <OasisTakeOfferModalWrapper {...props}/>
+      <OasisMakeOfferModalWrapper {...props}/>
     );
     expect(wrapper).toMatchSnapshot();
   });

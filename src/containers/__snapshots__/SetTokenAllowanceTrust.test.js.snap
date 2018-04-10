@@ -22,7 +22,8 @@ Object {
 
 exports[`(Container) SetTokenAllowanceTrust will receive right props 1`] = `
 Object {
-  "contractsLoaded": false,
+  "contractsLoaded": true,
+  "currentTransaction": [Function],
   "subjectTrustStatus": null,
 }
 `;

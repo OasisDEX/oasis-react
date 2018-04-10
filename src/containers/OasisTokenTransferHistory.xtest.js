@@ -1,17 +1,25 @@
 /* global shallow describe it expect */
-/* eslint-disable import/first */
+/* eslint-disable import/first,no-undef */
 import React from 'react';
-import Immutable from 'immutable';
-
+import { fromJS } from 'immutable';
 import {
   OasisTokenTransferHistoryWrapper,
   mapStateToProps,
   mapDispatchToProps
 } from './OasisTokenTransferHistory';
 import { shallow } from 'enzyme';
+import { combineReducers, createStore } from 'redux/index';
+import { reducer as formReducer } from 'redux-form';
+import { Provider } from 'react-redux';
 
 describe('(Container) OasisTokenTransferHistory', () => {
-  const state = Immutable.fromJS({});
+
+  let store = null;
+  beforeEach(() => {
+    store = createStore(combineReducers({ form: formReducer }));
+  });
+
+  const state = fromJS(global.storeMock);
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
   const props = {
@@ -30,7 +38,9 @@ describe('(Container) OasisTokenTransferHistory', () => {
 
   it('should render', () => {
     const wrapper = shallow(
-      <OasisTokenTransferHistoryWrapper {...props}/>
+      <Provider store={store}>
+        <OasisTokenTransferHistoryWrapper {...props}/>
+      </Provider>
     );
     expect(wrapper).toMatchSnapshot();
   });

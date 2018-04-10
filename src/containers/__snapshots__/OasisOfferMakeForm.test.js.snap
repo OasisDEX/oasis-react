@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisOfferMakeForm should render 1`] = `
+<Connect(ReduxForm)
+  actions={
+    Object {
+      "buyMax": [Function],
+      "priceFieldValueChanged": [Function],
+      "sellMax": [Function],
+      "totalFieldValueChanged": [Function],
+      "volumeFieldValueChanged": [Function],
+    }
+  }
+  activeTradingPairPrecision={18}
+  currentFormValues={Object {}}
+  hasSufficientTokenAmount={false}
+  offerMakeType="OFFER_MAKES/MAKE_BUY_OFFER"
+/>
+`;
+
+exports[`(Container) OasisOfferMakeForm will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "buyMax": [Function],
+    "priceFieldValueChanged": [Function],
+    "sellMax": [Function],
+    "totalFieldValueChanged": [Function],
+    "volumeFieldValueChanged": [Function],
+  },
+}
+`;
+
+exports[`(Container) OasisOfferMakeForm will receive right props 1`] = `
+Object {
+  "activeBaseTokenBalance": undefined,
+  "activeQuoteTokenBalance": undefined,
+  "activeTradingPairPrecision": 18,
+  "currentFormValues": Object {},
+  "hasSufficientTokenAmount": false,
+}
+`;

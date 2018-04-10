@@ -1,7 +1,7 @@
 /* global shallow describe it expect */
 /* eslint-disable import/first */
 import React from 'react';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 
 import {
   OasisTokenSelectWrapper,
@@ -11,8 +11,8 @@ import {
 import { shallow } from 'enzyme';
 
 describe('(Container) OasisTokenSelect', () => {
-  const state = Immutable.fromJS({});
-  const initialProps = mapStateToProps(state);
+  const state = fromJS(global.storeMock);
+  const initialProps = mapStateToProps(state, { name: 'exampleSelectName'});
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,

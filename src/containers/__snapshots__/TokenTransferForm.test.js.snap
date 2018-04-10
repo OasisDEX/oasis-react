@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) TokenTransferForm should render 1`] = `
+<div>
+  <form
+    method="POST"
+  >
+    <Connect(EthereumAddressInputField)
+      fieldName="recipient"
+    />
+    <Connect(TokenAmountInputField)
+      fieldName="tokenAmount"
+    />
+    <Field
+      component="input"
+      hidden={true}
+      name="token"
+      type="text"
+    />
+    <div>
+      <button
+        disabled={true}
+      >
+        Transfer
+      </button>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`(Container) TokenTransferForm will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) TokenTransferForm will receive right props 1`] = `
+Object {
+  "selectedToken": "MKR",
+}
+`;

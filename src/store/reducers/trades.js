@@ -135,7 +135,6 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock }) => (dispatch) => {
         if (err) {
           dispatch(fetchLogTakeEventsAction.rejected(err));
           reject(err);
-          alert('err')
         }
 
         dispatch(loadingTradeHistory(false));

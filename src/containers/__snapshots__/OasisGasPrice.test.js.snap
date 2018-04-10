@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisGasPrice should render 1`] = `
+<div
+  style={
+    Object {
+      "background": "#fff",
+      "padding": "4px 7px",
+    }
+  }
+>
+  <div />
+</div>
+`;
+
+exports[`(Container) OasisGasPrice will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisGasPrice will receive right props 1`] = `
+Object {
+  "currentGasPrice": "30000000000",
+  "latestBlockNumber": 6716998,
+  "latestEthereumPrice": Immutable.Map {
+    percent_change_7d: "-16.34",
+    available_supply: "98614682.0",
+    max_supply: null,
+    total_supply: "98614682.0",
+    name: "Ethereum",
+    rank: "2",
+    percent_change_1h: "-0.99",
+    price_usd: "377.388",
+    percent_change_24h: "-8.14",
+    last_updated: "1522866553",
+    market_cap_usd: "37215997787.0",
+    symbol: "ETH",
+    24h_volume_usd: "1329870000.0",
+    id: "ethereum",
+    price_btc: "0.0557221",
+},
+}
+`;

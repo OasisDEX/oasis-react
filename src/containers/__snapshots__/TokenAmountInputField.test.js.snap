@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) TokenAmountInputField should render 1`] = `
+<Field
+  component={[Function]}
+  maxAmountLimit="0"
+  name="exampleName"
+  required={true}
+  selectedToken="MKR"
+  validate={
+    Array [
+      [Function],
+      [Function],
+    ]
+  }
+/>
+`;
+
+exports[`(Container) TokenAmountInputField will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) TokenAmountInputField will receive right props 1`] = `
+Object {
+  "maxAmountLimit": "0",
+  "selectedToken": "MKR",
+}
+`;

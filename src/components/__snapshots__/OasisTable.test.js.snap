@@ -28,6 +28,13 @@ exports[`(Component) OasisTable should render with example props 1`] = `
         data-tradingpair="MKR / W-ETH"
         key="0"
         onClick={[Function]}
+        style={
+          Object {
+            "borderBottom": "1px solid lightgray",
+            "cursor": "",
+            "lineHeight": "25px",
+          }
+        }
       >
         <td
           key="0"
@@ -50,6 +57,13 @@ exports[`(Component) OasisTable should render with example props 1`] = `
         data-tradingpair="W-ETH / SAI"
         key="1"
         onClick={[Function]}
+        style={
+          Object {
+            "borderBottom": "1px solid lightgray",
+            "cursor": "",
+            "lineHeight": "25px",
+          }
+        }
       >
         <td
           key="0"
@@ -72,6 +86,13 @@ exports[`(Component) OasisTable should render with example props 1`] = `
         data-tradingpair="MKR / SAI"
         key="2"
         onClick={[Function]}
+        style={
+          Object {
+            "borderBottom": "1px solid lightgray",
+            "cursor": "",
+            "lineHeight": "25px",
+          }
+        }
       >
         <td
           key="0"

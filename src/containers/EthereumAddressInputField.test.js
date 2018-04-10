@@ -11,12 +11,13 @@ import {
 import { shallow } from 'enzyme';
 
 describe('(Container) EthereumAddressInputField', () => {
-  const state = Immutable.fromJS({});
+  const state = Immutable.fromJS(global.stateMock);
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,
-    ...initialProps
+    ...initialProps,
+    fieldName: 'exampleFieldName'
   };
 
   it('will receive right props', () => {

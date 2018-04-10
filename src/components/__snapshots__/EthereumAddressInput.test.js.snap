@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) EthereumAddressInput should render 1`] = `
+<input
+  placeholder="Ox"
+  style={
+    Object {
+      "textAlign": "right",
+      "width": "100%",
+    }
+  }
+  type="text"
+/>
+`;

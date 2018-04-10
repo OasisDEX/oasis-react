@@ -1,9 +1,44 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Component) OasisBuyOrders should render 1`] = `
-<div
-  className="OasisBuyOrders"
+<OasisWidgetFrame
+  heading="BUY ORDERS"
+  loadProgressSection={
+    <LoadProgressSection
+      loadedOffersList={
+        Immutable.List [
+        ]
+      }
+      offersTotalCount={undefined}
+    />
+  }
 >
-  OasisBuyOrders
-</div>
+  <OasisTable
+    col={
+      Array [
+        Object {
+          "heading": "price",
+          "key": "bid_price",
+        },
+        Object {
+          "heading": "W-ETH",
+          "key": "sell_how_much",
+        },
+        Object {
+          "heading": "MKR",
+          "key": "buy_how_much",
+        },
+        Object {
+          "heading": "",
+          "template": [Function],
+        },
+      ]
+    }
+    onRowClick={[Function]}
+    rows={
+      Immutable.List [
+      ]
+    }
+  />
+</OasisWidgetFrame>
 `;

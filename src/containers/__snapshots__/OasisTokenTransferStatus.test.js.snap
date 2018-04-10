@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) TokenTransferStatusWrapper should render 1`] = `""`;
+
+exports[`(Container) TokenTransferStatusWrapper will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "resetForm": [Function],
+    "resetTransactionSubjectId": [Function],
+  },
+}
+`;
+
+exports[`(Container) TokenTransferStatusWrapper will receive right props 1`] = `
+Object {
+  "pendingTransferTxSubjectId": null,
+  "transaction": undefined,
+}
+`;
