@@ -1,16 +1,17 @@
 import { createAction, handleActions } from 'redux-actions';
 import Immutable from 'immutable';
 import web3 from '../../bootstrap/web3';
+import { change } from 'redux-form/immutable';
 
-import { fulfilled, pending, rejected } from '../../utils/store';
 import { createPromiseActions } from '../../utils/createPromiseActions';
 import transfers from '../selectors/transfers';
 import getTokenContractInstance from '../../utils/contracts/getContractInstance';
-import { ETH_UNIT_ETHER } from '../../constants';
+import { ETH_UNIT_ETHER, ETH_UNIT_WEI } from '../../constants';
 import network from '../selectors/network';
 import { TX_TRANSFER_FROM, TX_STATUS_CANCELLED_BY_USER } from './transactions';
 import transactionsReducer from './transactions';
 import generateTxSubjectId from '../../utils/transactions/generateTxSubjectId';
+import balances from '../selectors/balances';
 
 const initialState = Immutable.fromJS({
   txSubjectId: null
@@ -87,8 +88,18 @@ const makeTransferEpic = () => async (dispatch, getState) => {
   }
 };
 
+const setTransferMax = () => (dispatch, getState) => {
+  const maxTransferValueInEther = balances.tokenBalance(getState(), { tokenName: transfers.selectedToken(getState())});
+  if (maxTransferValueInEther) {
+    dispatch(
+      change('tokenTransfer', 'tokenAmount', maxTransferValueInEther)
+    );
+  }
+};
+
 const actions = {
   makeTransferEpic,
+  setTransferMax,
   resetPendingTransferTransactionSubjectId
 };
 

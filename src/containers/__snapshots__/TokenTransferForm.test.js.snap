@@ -8,6 +8,12 @@ exports[`(Container) TokenTransferForm should render 1`] = `
     <Connect(EthereumAddressInputField)
       fieldName="recipient"
     />
+    <button
+      onClick={[Function]}
+      type="button"
+    >
+      transfer max
+    </button>
     <Connect(TokenAmountInputField)
       fieldName="tokenAmount"
     />
@@ -30,7 +36,9 @@ exports[`(Container) TokenTransferForm should render 1`] = `
 
 exports[`(Container) TokenTransferForm will receive right actions 1`] = `
 Object {
-  "actions": Object {},
+  "actions": Object {
+    "transferMax": [Function],
+  },
 }
 `;
 
