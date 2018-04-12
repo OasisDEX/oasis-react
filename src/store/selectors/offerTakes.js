@@ -1,13 +1,11 @@
 import { createSelector } from 'reselect';
 import { formValueSelector } from 'redux-form/immutable';
 import balances from './balances';
-import BigNumber from 'bignumber.js';
 import transactions from './transactions';
 import markets from './markets';
 import web3 from '../../bootstrap/web3';
 import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from '../reducers/offerTakes';
 import { ETH_UNIT_ETHER } from '../../constants';
-import { DEFAULT_GAS_LIMIT } from '../reducers/transactions';
 
 const offerTakes = s => s.get('offerTakes');
 

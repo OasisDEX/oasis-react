@@ -1,30 +1,26 @@
 import { createAction, handleActions } from 'redux-actions';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 import * as BigNumber from 'bignumber.js';
 
 import { createPromiseActions } from '../../utils/createPromiseActions';
 import { fulfilled } from '../../utils/store';
 import {
-  BN_DECIMAL_PRECISION,
-  ETH_UNIT_ETHER, TOKEN_1ST, TOKEN_AUGUR, TOKEN_BAT,
-  TOKEN_DAI, TOKEN_DIGIX, TOKEN_ETHER, TOKEN_GNOSIS, TOKEN_ICONOMI,
-  TOKEN_MAKER, TOKEN_MLN, TOKEN_NMR, TOKEN_PLUTON, TOKEN_RHOC, TOKEN_SAI, TOKEN_SINGULARDTV, TOKEN_TIME, TOKEN_VSL,
-  TOKEN_WRAPPED_ETH,
-  TOKEN_WRAPPED_GNT,
+ETH_UNIT_ETHER, TOKEN_1ST, TOKEN_AUGUR, TOKEN_BAT,
+TOKEN_DAI, TOKEN_DIGIX, TOKEN_GNOSIS, TOKEN_ICONOMI,
+TOKEN_MAKER, TOKEN_MLN, TOKEN_NMR, TOKEN_PLUTON, TOKEN_RHOC, TOKEN_SAI, TOKEN_SINGULARDTV, TOKEN_TIME, TOKEN_VSL,
+TOKEN_WRAPPED_ETH,
+TOKEN_WRAPPED_GNT,
 } from '../../constants';
 import web3, { web3p } from '../../bootstrap/web3';
 import balances from '../selectors/balances';
 import {
-  TX_ALLOWANCE_TRUST_DISABLE,
-  TX_ALLOWANCE_TRUST_ENABLE,
-  TX_OFFER_TAKE,
-  TX_STATUS_CANCELLED_BY_USER,
+TX_ALLOWANCE_TRUST_ENABLE,
+TX_STATUS_CANCELLED_BY_USER,
 } from './transactions';
 import accounts from '../selectors/accounts';
 import transactionsReducer from './transactions';
-import { Map } from 'immutable';
 
-const initialState = Immutable.fromJS({
+const initialState = fromJS({
   accounts: [],
   defaultAccount: {
     loadingAllowances: null,
@@ -65,7 +61,7 @@ const getAllTradedTokensBalances = createAction(
     const tokensBalancesPromises = [];
 
     Object.entries(tokensContractsLists).forEach(
-      async ([tokenName, tokenContract]) => {
+      async ([ , tokenContract]) => {
         if (tokenContract.balanceOf) {
           tokensBalancesPromises.push(
             tokenContract.balanceOf(web3.eth.defaultAccount),
@@ -145,10 +141,6 @@ const subscribeAccountEthBalanceChangeEventEpic = (accountAddress) => async (dis
   dispatch(subscribeAccountEthBalanceChangeEvent.fulfilled());
 };
 
-const tokenTransferEvent = createAction(
-  'BALANCES/EVENT___TOKEN_TRANSFER',
-  (tokenName, userAddress, event) => ({ tokenName, event }),
-);
 
 const tokenTransferFromEvent = createAction(
   'BALANCES/EVENT___TOKEN_TRANSFER_FROM',
@@ -166,9 +158,6 @@ const subscribeTokenTransfersEvents = createPromiseActions(
   'BALANCES/SUBSCRIBE_TOKEN_TRANSFER_EVENT',
 );
 
-const tokenSetBalanceOf = createPromiseActions(
-  'BALANCES/TOKEN_SET_BALANCE_OF',
-);
 
 const etherBalanceChanged = createAction(
   'BALANCES/ETHER_BALANCE_CHANGED',
@@ -198,9 +187,6 @@ const subscribeTokenTransfersEventsEpic = (tokensContractsList, address, config 
   );
   dispatch(subscribeTokenTransfersEvents.fulfilled());
 };
-
-
-
 
 const setAllowance = createAction(
   SET_ALLOWANCE,
@@ -302,9 +288,6 @@ const setTokenAllowanceTrustEpic = (tokenName,
                     txSubjectId: {
                       tokenName,
                       account:  allowanceSubjectAddress,
-                      // nonce: transactions.getAllowanceTxNonce(
-                      //   getState(), { tokenName, account:  allowanceSubjectAddress }
-                      // )
                     },
                     txHash
                   })
@@ -385,6 +368,7 @@ const actions = {
   subscribeAccountEthBalanceChangeEventEpic,
   setTokenAllowanceTrustEpic,
   getDefaultAccountTokenAllowanceForAddress,
+  setAllowance
 };
 
 const reducer = handleActions({

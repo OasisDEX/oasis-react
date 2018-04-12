@@ -14,6 +14,7 @@ const getOfferTradingPairAndType = ({ sellWhichTokenAddress, buyWhichTokenAddres
   });
 
   if(!offerTradingPair) {
+// eslint-disable-next-line no-debugger
     debugger;
   }
   if(!sellWhichTokenAddress) {

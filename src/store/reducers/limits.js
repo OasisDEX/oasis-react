@@ -1,8 +1,8 @@
 import { createAction, handleActions } from 'redux-actions';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 import {fulfilled} from '../../utils/store';
 
-const initialState = Immutable.fromJS({
+const initialState = fromJS({
   limitsLoaded: false,
   tokens: {
     'OW-ETH': { minSell: null },
@@ -42,7 +42,7 @@ const Init = createAction(
  */
 const GetTokenMinSell = createAction(
   GET_MIN_SELL,
-  () => async (sellToken) => {},
+  () => async () => {},
 );
 
 /**
@@ -53,7 +53,7 @@ const GetAllTradedTokenMinSellLimits = createAction(
   async (marketContract, tokensContractsLists) =>
    Promise.all(
       Object.entries(tokensContractsLists).map(
-        ([tokenName, tokenContract]) => marketContract.getMinSell(tokenContract.address)
+        ([ , tokenContract]) => marketContract.getMinSell(tokenContract.address)
       )
    ).then( tokensMinSellLimits => {
      const limitsByTokenName = {};

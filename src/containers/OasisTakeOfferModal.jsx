@@ -18,9 +18,8 @@ import { formatAmount } from '../utils/tokens/pair';
 import { getFormValues, getFormSyncErrors } from 'redux-form/immutable';
 import OasisTransactionDetailsWrapper  from './OasisTransactionDetails';
 import transactions from '../store/selectors/transactions';
-import { TX__GROUP__OFFERS, TX_OFFER_TAKE, TX_STATUS_CONFIRMED } from '../store/reducers/transactions';
+import { TX_OFFER_TAKE, TX_STATUS_CONFIRMED } from '../store/reducers/transactions';
 import getUsersSoldAndReceivedAmounts from '../utils/offers/getUsersSoldAndReceivedAmounts';
-import WithTimer from './WithTimer';
 
 const BtnStyle = {
   padding: '10px 15px',

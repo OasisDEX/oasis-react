@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { createAction, handleActions } from 'redux-actions';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 
 import { fulfilled } from '../../utils/store';
 import { createPromiseActions } from '../../utils/createPromiseActions';
@@ -9,7 +10,6 @@ const CHECK_MARKET_CLOSE_TIME = 'MARKETS/CHECK_MARKET_CLOSE_TIME';
 const SET_ACTIVE_MARKET_ADDRESS = 'MARKETS/SET_ACTIVE_MARKET_ADDRESS';
 const CHECK_IF_ORDER_MATCHING_IS_ENABLED = 'NETWORK/CHECK_IF_ORDER_MATCHING_IS_ENABLED';
 const CHECK_IF_BUY_ENABLED = 'MARKETS/CHECK_IF_BUY_ENABLED';
-const DENOTE_PRECISION = 'MARKETS/DENOTE_PRECISION';
 
 
 const SUBSCRIBE___LOG_IS_MATCHING_ENABLED_EVENT = 'MARKETS/SUBSCRIBE___LOG_IS_MATCHING_ENABLED_EVENT';
@@ -21,7 +21,7 @@ const MARKET_TYPE_SIMPLE_MARKET = 'MARKET_TYPE_SIMPLE_MARKET';
 const MARKET_TYPE_EXPIRING_MARKET = 'MARKET_TYPE_EXPIRING_MARKET';
 const MARKET_TYPE_MATCHING_MARKET = 'MARKET_TYPE_MATCHING_MARKET';
 
-const initialState = Immutable.fromJS({
+const initialState = fromJS({
   closeTime: null,
   isMarketOpen: null,
   isOrderMatchingEnabled: null,
@@ -51,7 +51,7 @@ const eventLogIsMatchingEnabled = createAction(
 const subscribeLogMatchingEnabled = createPromiseActions(
   SUBSCRIBE___LOG_IS_MATCHING_ENABLED_EVENT
 );
-const subscribeLogMatchingEnabledEpic = () => async (dispatch, getState) => {
+const subscribeLogMatchingEnabledEpic = () => async dispatch => {
   dispatch(subscribeLogMatchingEnabled.pending());
   window.contracts.market.LogMatchingEnabled({}, { fromBlock: 'latest' })
     .then(
@@ -107,7 +107,8 @@ const actions = {
   subscribeLogBuyEnabledEventEpic,
   checkIfBuyEnabled,
   setActiveMarketAddress,
-  setActiveMarketOriginBlockNumber
+  setActiveMarketOriginBlockNumber,
+  subscribeLogMatchingEnabledEpic
 };
 
 const reducer = handleActions({

@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
-import web3 from '../bootstrap/web3';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 const propTypes = PropTypes && {};

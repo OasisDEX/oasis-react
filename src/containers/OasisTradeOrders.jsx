@@ -9,14 +9,13 @@ import { List } from 'immutable';
 import { trades } from '../utils/tokens/pair';
 import OasisBuyOrders from '../components/OasisBuyOrders';
 import OasisSellOrders from '../components/OasisSellOrders';
-// import OasisMyOrders from '../components/OasisMyOrders';
 import OasisMarketHistory from '../components/OasisMarketHistory';
 import tradesSelectors from '../store/selectors/trades';
 import tokens from '../store/selectors/tokens';
 import offers from '../store/selectors/offers';
 import offersReducer from '../store/reducers/offers';
 import OasisMyOrders from '../components/OasisMyOrders';
-import offerTakesReducer, { TAKE_BUY_OFFER } from '../store/reducers/offerTakes';
+import offerTakesReducer  from '../store/reducers/offerTakes';
 import OasisTakeOfferModalWrapper  from './OasisTakeOfferModal';
 import offerTakes from '../store/selectors/offerTakes';
 import OasisMakeBuyOfferWrapper  from './OasisMakeBuyOffer';
@@ -50,8 +49,6 @@ export class OasisTradeOrdersWrapper extends PureComponent {
       marketData = List(),
       initialMarketHistoryLoaded,
       activeTradingPair,
-      loadingBuyOffers,
-      loadingSellOffers,
       buyOfferCount,
       sellOfferCount,
       buyOffers,
@@ -76,7 +73,6 @@ export class OasisTradeOrdersWrapper extends PureComponent {
         <OasisBuyOrders
           onSetOfferTakeModalOpen={setOfferTakeModalOpen}
           activeTradingPair={activeTradingPair}
-          // loadingBuyOffers={loadingBuyOffers}
           buyOfferCount={buyOfferCount}
           buyOffers={buyOffers}
           cancelOffer={cancelOffer}
@@ -87,7 +83,6 @@ export class OasisTradeOrdersWrapper extends PureComponent {
         <OasisSellOrders
           onSetOfferTakeModalOpen={setOfferTakeModalOpen}
           activeTradingPair={activeTradingPair}
-          // loadingSellOffers={loadingSellOffers}
           sellOfferCount={sellOfferCount}
           sellOffers={sellOffers}
           cancelOffer={cancelOffer}

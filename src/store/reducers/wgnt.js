@@ -1,10 +1,9 @@
 import { createAction, handleActions } from 'redux-actions';
 import Immutable from 'immutable';
 
-import { fulfilled, pending, rejected } from '../../utils/store';
 
-const TRANSFER_TO_BROKER_GAS = 150000;
-const CLEAR_BROKER_GAS = 150000;
+export const TRANSFER_TO_BROKER_GAS = 150000;
+export const CLEAR_BROKER_GAS = 150000;
 
 const initialState = Immutable.fromJS({});
 
@@ -14,18 +13,19 @@ const WATCH_BROKER_TRANSFER = 'WGNT/WATCH_BROKER_TRANSFER';
 const WATCH_BROKER_CLEAR = 'WGNT/WATCH_BROKER_CLEAR';
 const WATCH_WITHDRAW = 'WGNT/WATCH_WITHDRAW';
 
-const Init = createAction(
+const init = createAction(
   INIT,
   () => null,
 );
 
 const actions = {
-  Init,
+  init,
+
 };
 
-const WatchBrokerCreation = createAction(
-  WATCH_BROKER_CREATION,
-  () => {
+// const WatchBrokerCreation = createAction(
+//   WATCH_BROKER_CREATION,
+//   () => {
     // Transactions.observeRemoved('gnttokens_create_broker', (document) => {
     //   if (document.receipt.logs.length === 0) {
     //     Session.set('GNTDepositProgress', 0);
@@ -55,11 +55,11 @@ const WatchBrokerCreation = createAction(
     //     });
     //   }
     // });
-  },
-);
-const WatchBrokerTransfer = createAction(
-  WATCH_BROKER_TRANSFER,
-  () => {
+//   },
+// );
+// const WatchBrokerTransfer = createAction(
+//   WATCH_BROKER_TRANSFER,
+//   () => {
     // Transactions.observeRemoved('gnttokens_transfer', (document) => {
     //   if (document.receipt.logs.length === 0) {
     //     Session.set('GNTDepositProgress', 0);
@@ -107,12 +107,12 @@ const WatchBrokerTransfer = createAction(
     //                            );
     //   }
     // });
-  },
-);
+  // },
+// );
 
-const WatchBrokerClear = createAction(
-  WATCH_BROKER_CLEAR,
-  () => {
+// const WatchBrokerClear = createAction(
+//   WATCH_BROKER_CLEAR,
+//   () => {
     // Transactions.observeRemoved('gnttokens_clear', (document) => {
     //   if (document.receipt.logs.length === 0) {
     //     Session.set('GNTDepositProgress', 0);
@@ -130,11 +130,11 @@ const WatchBrokerClear = createAction(
     //     }, 10000);
     //   }
     // });
-  },
-);
+  // },
+// );
 
-const WatchWithdraw = createAction(
-  WATCH_WITHDRAW,
+// const WatchWithdraw = createAction(
+//   WATCH_WITHDRAW,
   // () => {
   //   Transactions.observeRemoved('gnttokens_withdraw', (document) => {
   //     if (document.receipt.logs.length === 0) {
@@ -154,7 +154,7 @@ const WatchWithdraw = createAction(
   //     }
   //   });
   // },
-);
+// );
 
 const reducer = handleActions({}, initialState);
 

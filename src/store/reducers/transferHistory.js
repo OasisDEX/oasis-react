@@ -108,6 +108,7 @@ const loadTokenTransfersHistoryEpic = (tokenName, address, config) => async (dis
 
 
 const actions = {
+  Init,
   loadTokenTransfersHistoryEpic
 };
 

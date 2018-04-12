@@ -77,7 +77,7 @@ export class OasisFooterWrapper extends PureComponent {
   }
 }
 
-export function mapStateToProps(state) {
+export function mapStateToProps() {
   return {};
 }
 

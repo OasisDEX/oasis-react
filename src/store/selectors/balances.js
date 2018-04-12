@@ -1,15 +1,12 @@
 import { createSelector } from 'reselect';
 import BigNumber from 'bignumber.js';
 import reselect from '../../utils/reselect';
-import { formatAmount } from '../../utils/tokens/pair';
 import web3 from '../../bootstrap/web3';
-import { ETH_UNIT_ETHER, TOKEN_ETHER } from '../../constants';
+import { ETH_UNIT_ETHER } from '../../constants';
 import {
   TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED,
   TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED,
-  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MAX, TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN,
-  TOKEN_ALLOWANCE_TRUST_SUBJECT_TYPE_ADDRESS,
-  TOKEN_ALLOWANCE_TRUST_SUBJECT_TYPE_MARKET,
+  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN,
 } from '../reducers/balances';
 import tokens from './tokens';
 

@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { reduxForm, Field } from 'redux-form/immutable';
 

@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { bindActionCreators, compose } from 'redux';

@@ -17,7 +17,7 @@ const propTypes = PropTypes && {
 
 export const VALIDATION_ERROR__NOT_ETHEREUM_ADDRESS_FORMAT = 'VALIDATION_ERROR/NOT_ETHEREUM_ADDRESS_FORMAT';
 
-const validateEthereumAddress = (value, allValues, props, name) => {
+const validateEthereumAddress = (value) => {
   if (!web3.isAddress(value)) {
     return VALIDATION_ERROR__NOT_ETHEREUM_ADDRESS_FORMAT;
   }
@@ -38,7 +38,7 @@ export class EthereumAddressInputFieldWrapper extends PureComponent {
   }
 }
 
-export function mapStateToProps(state) {
+export function mapStateToProps() {
   return {};
 }
 export function mapDispatchToProps(dispatch) {

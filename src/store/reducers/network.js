@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { createAction, handleActions } from 'redux-actions';
 import { fromJS } from 'immutable';
 import { find } from 'lodash';
@@ -14,7 +15,7 @@ import balancesReducer from './balances';
 
 import marketBootstrap from '../../bootstrap/market';
 
-import { CLOSED, KOVAN_NET_ID, LIVE_NET_ID, ONLINE } from '../../constants';
+import { CLOSED, LIVE_NET_ID, ONLINE } from '../../constants';
 import tradesReducer from './trades';
 import period from '../../utils/period';
 import network from '../selectors/network';
@@ -62,14 +63,13 @@ const initialState = fromJS(
     ],
   });
 
-const CHECK_IF_USER_HAS_BALANCE_IN_OLD_WRAPPER = 'NETWORK/CHECK_IF_USER_HAS_BALANCE_IN_OLD_WRAPPER';
-const INIT_NETWORK = 'NETWORK/INIT_NETWORK';
 const CHECK_NETWORK = 'NETWORK/CHECK_NETWORK';
 const CONNECTED = 'NETWORK/CONNECTED';
 const CONNECTING = 'NETWORK/CONNECTING';
 const DISCONNECTED = 'NETWORK/DISCONNECTED';
 const SYNC_NETWORK = 'NETWORK/SYNC_NETWORK';
 const GET_CONNECTED_NETWORK_ID = 'NETWORK/GET_CONNECTED_NETWORK_ID';
+const FETCH_ETHEREUM_PRICE = 'NETWORK/FETCH_ETHEREUM_PRICE';
 
 const SET_TOKEN_ADDRESSES = 'NETWORK/SET_TOKEN_ADDRESSES';
 
@@ -80,45 +80,10 @@ const setTokenAddresses = createAction(
 // Check which accounts are available and if defaultAccount is still available,
 // Otherwise set it to localStorage, Session, or first element in accounts
 
-const CheckIfUserHasBalanceInOldWrapper = createAction(
-  CHECK_IF_USER_HAS_BALANCE_IN_OLD_WRAPPER,
-  function checkIfUserHasBalanceInOldWrapper(userAddress) {
-    // Named the old wrapper - OW-ETH
-    // Dapple.getToken('OW-ETH', (error, token) => {
-    //   if (!error) {
-    //     if (token) {
-    //       token.balanceOf(userAddress, (err, balance) => {
-    //         if (!error) {
-    //           if (balance.toString(10) > 0) {
-    //             $('#wrapperUpdate').modal({
-    //                                         keyboard: false,
-    //                                         show: true,
-    //                                         backdrop: false,
-    //                                       });
-    //             $('#wrapperUpdate').on('shown.bs.modal', () => {
-    //               $('.amount').
-    //                   text(Blaze._globalHelpers.formatBalance(balance, 3, '',
-    //                                                           false,
-    //                   ));
-    //               Session.set('oldWrapperBalance', balance.toString(10));
-    //             });
-    //           }
-    //         } else {
-    //           console.debug(`Couldn't get balance for ${userAddress}.`, error);
-    //         }
-    //       });
-    //     }
-    //   } else {
-    //     console.debug(`Cannot extract information for ${token} `, error);
-    //   }
-    // });
-  },
-);
-
 // Initialize everything on new network
-const InitNetwork = createAction(
-  INIT_NETWORK,
-  function initNetwork(newNetwork) {
+// const InitNetwork = createAction(
+//   INIT_NETWORK,
+//   function initNetwork(newNetwork) {
     // Dapple.init(newNetwork);
     // checkAccounts().then(checkIfUserHasBalanceInOldWrapper);
     // const isMatchingEnabled = checkIfOrderMatchingEnabled(market.type);
@@ -134,8 +99,8 @@ const InitNetwork = createAction(
     //   Limits.sync();
     //   Offers.sync();
     // });
-  },
-);
+  // },
+// );
 
 /**
  *
@@ -341,7 +306,7 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
 };
 
 const fetchEthereumPrice = createAction(
-  'NETWORK/FETCH_ETHEREUM_PRICE',
+  FETCH_ETHEREUM_PRICE,
   () => fetch('https://api.coinmarketcap.com/v1/ticker/ethereum/').then(res => res.json()),
 );
 

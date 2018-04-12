@@ -24,8 +24,6 @@ const initialState = fromJS({
 const INIT = 'TX/INIT';
 const ADD_TRANSACTION = 'TX/ADD_TRANSACTION';
 const SYNC_TRANSACTION = 'TX/SYNC_TRANSACTION';
-const OBSERVE_REMOVED = 'TX/OBSERVE_REMOVED';
-const SYNC_TRANSACTIONS = 'TX/SYNC_TRANSACTIONS';
 const TX_GET_CURRENT_GAS_PRICE = 'TX/GET_CURRENT_GAS_PRICE';
 const TX_GET_CURRENT_TX_NONCE = 'TX/GET_CURRENT_TX_NONCE';
 
@@ -71,7 +69,7 @@ export const getTransactionGroup = (transactionType) => {
   }
 };
 
-const Init = createAction(
+const init = createAction(
   INIT,
   () => null,
 );
@@ -83,7 +81,7 @@ const transactionCancelledByUser = createAction(
 );
 
 const addTransaction = createPromiseActions(ADD_TRANSACTION);
-const addTransactionEpic = ({ txStatus, txType, txHash, txSubjectId, txMeta }) => async (dispatch, getState) => {
+const addTransactionEpic = ({ txType, txHash, txSubjectId, txMeta }) => async (dispatch, getState) => {
   let previousBlockNumber = network.latestBlockNumber(getState());
   dispatch(
     addTransaction.pending({
@@ -148,13 +146,6 @@ const addTransactionEpic = ({ txStatus, txType, txHash, txSubjectId, txMeta }) =
 
 };
 
-const ObserveRemoved = createAction(
-  OBSERVE_REMOVED,
-  (type, callback) => {
-    // return super.find({ type }).observe({ removed: callback });
-  },
-);
-
 const syncTransaction = createAction(
   SYNC_TRANSACTION,
   txHash => web3p.eth.getTransactionReceipt(txHash),
@@ -177,14 +168,6 @@ const syncTransaction = createAction(
   // }
 );
 
-const SyncTransactions = createAction(
-  SYNC_TRANSACTIONS,
-  () => {
-    // const open = super.find().fetch();
-    // Sync all open transactions non-blocking and asynchronously
-    // syncTransaction(0);
-  },
-);
 
 const transactionRejected = createAction(
   TX_TRANSACTION_REJECTED,
@@ -207,10 +190,9 @@ const getCurrentTxNonceEpic = (address) => (dispatch, getState) => {
 };
 
 const actions = {
-  Init,
+  init,
   addTransactionEpic,
   transactionRejected,
-  ObserveRemoved,
   syncTransaction,
   getCurrentGasPrice,
   transactionCancelledByUser,
@@ -238,7 +220,7 @@ const reducer = handleActions({
     },
   [addTransaction.fulfilled]:
     (
-      state, { payload: { txHash, txReceipt, txSubjectId, txType, txStatus, txStats } },
+      state, { payload: { txHash, txReceipt, txStatus, txStats } },
     ) => {
       const txListIndex = state.get('txList').findIndex(tx => tx.get('txHash') === txHash);
       return state.updateIn(
@@ -254,7 +236,7 @@ const reducer = handleActions({
     },
   [addTransaction.rejected]:
     (
-      state, { payload: { txHash, txReceipt, txSubjectId, txType, txStatus, txStats } }
+      state, { payload: { txHash, txReceipt, txStatus, txStats } }
     ) => {
 
     const txListIndex = state.get('txList').findIndex(tx => tx.get('txHash') === txHash);
@@ -268,7 +250,7 @@ const reducer = handleActions({
           .setIn(['txStats','txTotalTimeSec'], txStats.txEndBlockNumber - transaction.getIn('txStartTimestamp'))
       );
   },
-  [transactionCancelledByUser]: (state, { payload: { txType, txStatus, txSubjectId, txStats } }) => {
+  [transactionCancelledByUser]: (state, { payload: { txSubjectId, txStats } }) => {
     const txListIndex = state.get('txList').findIndex(tx => tx.get('txSubjectId') === txSubjectId);
     return state.updateIn(
       ['txList', txListIndex],

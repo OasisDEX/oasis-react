@@ -27,7 +27,7 @@ export class OasisWrapUnwrapWrapper extends PureComponent {
   }
 }
 
-export function mapStateToProps(state) {
+export function mapStateToProps() {
   return {};
 }
 

@@ -24,8 +24,8 @@ const { store, history } = configureStore();
 
 export const HEALTHCHECK_INTERVAL_MS = 10000;
 
-const healthCheck = (dispatch, getState, isInitialHealhtcheck = false) => {
-  if (isInitialHealhtcheck) {
+const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
+  if (isInitialHealthcheck) {
     dispatch(networkReducer.actions.connecting());
   }
 
@@ -33,7 +33,7 @@ const healthCheck = (dispatch, getState, isInitialHealhtcheck = false) => {
     .then(async (providerType) => {
       const connectedNetworkId = await dispatch(networkReducer.actions.getConnectedNetworkId());
       dispatch(networkReducer.actions.connected());
-      if(isInitialHealhtcheck) {
+      if(isInitialHealthcheck) {
         /**
          * We only do this once, since later we subscribe to 'latest' filter
          * to get notified on new block resolved
@@ -48,14 +48,14 @@ const healthCheck = (dispatch, getState, isInitialHealhtcheck = false) => {
              *  Initialize session on first run of the healthcheck or when default address changes
              */
             const currentDefaultAccount = accounts.defaultAccount(getState());
-            if (isInitialHealhtcheck || previousDefaultAccount !== currentDefaultAccount) {
+            if (isInitialHealthcheck || previousDefaultAccount !== currentDefaultAccount) {
               Session.init(dispatch, getState);
             }
           } catch (e) {
             console.error('SESSION:INIT', e);
           }
           await dispatch(
-            networkReducer.actions.checkNetworkEpic(providerType.join(), isInitialHealhtcheck),
+            networkReducer.actions.checkNetworkEpic(providerType.join(), isInitialHealthcheck),
           );
         }
         /**

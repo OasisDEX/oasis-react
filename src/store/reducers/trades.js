@@ -1,5 +1,5 @@
 import { createAction, handleActions } from 'redux-actions';
-import { fromJS, List, Map } from 'immutable';
+import { fromJS, List } from 'immutable';
 
 import { createPromiseActions } from '../../utils/createPromiseActions';
 import * as BigNumber from 'bignumber.js';
@@ -24,19 +24,14 @@ const initialState = fromJS({
 });
 
 const INIT = 'TRADES/INIT';
-const SYNC_TRADES = 'TRADES/SYNC_TRADES';
 const INIT_VOLUMES = 'TRADES/INIT_VOLUMES';
 const INIT_MARKET_HISTORY = 'TRADES/INIT_MARKET_HISTORY';
 const INIT_TRADES_HISTORY = 'TRADES/INIT_TRADES_HISTORY';
 const UPDATE_TOKEN_PAIR_VOLUME = 'TRADES/UPDATE_TOKEN_PAIR_VOLUME';
 
 const SUBSCRIBE_LOG_TAKE_EVENTS = 'TRADES/SUBSCRIBE_LOG_TAKE_EVENTS';
-const SUBSCRIBE_LOG_MAKE_EVENTS = 'TRADES/SUBSCRIBE_LOG_MAKE_EVENTS';
-const SUBSCRIBE_LOG_TRADE_EVENTS = 'TRADES/SUBSCRIBE_LOG_TRADE_EVENTS';
 
 const FETCH_LOG_TAKE_EVENTS = 'TRADES/FETCH_LOG_TAKE_EVENTS';
-const FETCH_LOG_MAKE_EVENTS = 'TRADES/FETCH_LOG_MAKE_EVENTS';
-const FETCH_LOG_TRADE_EVENTS = 'TRADES/FETCH_LOG_TRADE_EVENTS';
 
 export const BID = 'TRADES/TRADE_TYPE_BID';
 export const ASK = 'TRADES/TRADE_TYPE_ASK';
@@ -79,17 +74,14 @@ const initializeVolumes = () => (dispatch, getState) => {
 };
 
 const logTradeEvent = createAction('TRADES/EVENT___LOG_TRADE', (logTrade) => {
-  const eventData = logTrade.args;
   return logTrade;
 });
 
 const logTakeEvent = createAction('TRADES/EVENT___LOG_TAKE', (logTake) => {
-  const eventData = logTake.args;
   return logTake;
 });
 
 const logMakeEvent = createAction('TRADES/EVENT___LOG_MAKE', (logMake) => {
-  const eventData = logMake.args;
   return logMake;
 });
 
@@ -161,52 +153,17 @@ const subscribeLogTakeEventsEpic = (fromBlock) => async (dispatch) => {
   dispatch(subscribeLogTakeEventsAction.fulfilled());
 };
 
-const SyncTrades = createAction(
-  SYNC_TRADES,
-  (historicalTradesRange) => {
-    // // Get all LogTake events in one go so we can fill up prices, volume and trade history
-    // Dapple['maker-otc'].objects.otc.LogTake({}, {
-    //   fromBlock: historicalTradesRange.startBlockNumber,
-    //   toBlock: historicalTradesRange.endBlockNumber,
-    // }).get((error, logTakes) => {
-    //   if (!error) {
-    //     for (let i = 0; i < logTakes.length; i++) {
-    //       // Since we have the transactionHash the same for 2 LogTake events because two orders were filled automatically
-    //       // We use each log event index to create unique ids for the log entry in the db.
-    //       const eventLogIndex = logTakes[i].logIndex;
-    //       const trade = logTakeToTrade(logTakes[i]);
-    //       if (trade && (trade.timestamp * 1000 >= historicalTradesRange.startTimestamp)) {
-    //         const uniqueId = trade.transactionHash + eventLogIndex;
-    //         Trades.upsert(uniqueId, trade);
-    //       }
-    //     }
-    //     Session.set('loadingTradeHistory', false);
-    //   }
-    // });
-    //
-    // // Watch LogTake events in realtime
-    // Dapple['maker-otc'].objects.otc.LogTake({},
-    //     { fromBlock: historicalTradesRange.endBlockNumber + 1 }, (error, logTake) => {
-    //       if (!error) {
-    //         const trade = logTakeToTrade(logTake);
-    //         if (trade) {
-    //           const uniqueId = trade.transactionHash + logTake.logIndex;
-    //           Trades.upsert(uniqueId, trade);
-    //         }
-    //       }
-    //     });
-  },
-);
-
 const actions = {
   Init,
-  SyncTrades,
   initializeVolumes,
   initMarketHistory,
   initTradesHistory,
   subscribeLogTakeEventsEpic,
   fetchLogTakeEventsEpic,
   initialMarketHistoryLoaded,
+  logTradeEvent,
+  logTakeEvent,
+  logMakeEvent
 };
 
 const reducer = handleActions({

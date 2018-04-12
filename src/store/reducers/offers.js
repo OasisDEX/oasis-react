@@ -1,20 +1,19 @@
+/* eslint-disable no-unused-vars */
 import { createAction, handleActions } from 'redux-actions';
 import { fromJS, List, Map } from 'immutable';
 import BigNumber from 'bignumber.js';
 
-import { fulfilled, pending, rejected } from '../../utils/store';
+import { fulfilled, pending } from '../../utils/store';
 import { createPromiseActions } from '../../utils/createPromiseActions';
 import tokens from '../selectors/tokens';
 import getTokenByAddress from '../../utils/tokens/getTokenByAddress';
 import { web3p } from '../../bootstrap/web3';
 import { convertTo18Precision } from '../../utils/conversion';
 import network from '../selectors/network';
-import { getOfferType } from '../../utils/orders';
 import transactions, { TX_OFFER_CANCELLED, TX_STATUS_CANCELLED_BY_USER } from './transactions';
 import offers from '../selectors/offers';
 import findOffer from '../../utils/offers/findOffer';
 import { STATUS_COMPLETED, STATUS_ERROR, STATUS_PRISTINE } from './platform';
-import web3 from '../../bootstrap/web3';
 import getOfferTradingPairAndType from '../../utils/offers/getOfferTradingPairAndType';
 
 export const TYPE_BUY_OFFER = 'OFFERS/TYPE_BUY';
@@ -34,27 +33,15 @@ const initialState = fromJS({
   offersInitialized: false,
 });
 
-// {
-//   lastSyncAt: null,
-//   buyOfferCount: null,
-//   sellOfferCount: null,
-//   buyOffers: [],
-//   sellOffers: []
-// }
 
 const INIT = 'OFFERS/INIT';
 const FETCH_TRADES_ISSUED_FOR_ADDRESS = 'OFFERS/FETCH_TRADES_ISSUED_FOR_ADDRESS';
 const FETCH_TRADES_ACCEPTED_FOR_ADDRESS = 'OFFERS/FETCH_TRADES_ACCEPTED_FOR_ADDRESS';
-const LISTEN_FOR_NEW_TRADES_OF_ADDRESS = 'OFFERS/LISTEN_FOR_NEW_TRADES_OF_ADDRESS';
-const LISTEN_FOR_ACCEPTED_TRADES_OF_ADDRESS = 'OFFERS/LISTEN_FOR_ACCEPTED_TRADES_OF_ADDRESS';
 const LISTEN_FOR_THE_NEW_SORTED_OFFERS = 'OFFERS/LISTEN_FOR_THE_NEW_SORTED_OFFERS';
-const CHECK_MARKET_OPEN = 'OFFERS/CHECK_MARKET_OPEN';
 const GET_HISTORICAL_TRADE_RANGE = 'OFFERS/GET_HISTORICAL_TRADE_RANGE';
 const SYNC_OFFERS = 'OFFERS/SYNC_OFFERS';
-const SYNC_OFFERS_AND_TRADES = 'OFFERS/SYNC_OFFERS_AND_TRADES';
 const TRADING_PAIR_ALREADY_LOADED = 'OFFERS/TRADING_PAIR_ALREADY_LOADED';
 const GET_BEST_OFFER = 'OFFERS/GET_BEST_OFFER';
-const GET_HIGHER_OFFER_ID = 'OFFERS/GET_HIGHER_OFFER_ID';
 const SYNC_OFFER = 'OFFERS/SYNC_OFFER';
 const UPDATE_OFFER = 'OFFERS/UPDATE_OFFER';
 const OFFER_CONTRACT_PARAMETERS = 'OFFERS/OFFER_CONTRACT_PARAMETERS';
@@ -64,7 +51,6 @@ const NEW_OFFER = 'OFFERS/NEW_OFFER';
 const BUY_OFFER = 'OFFERS/BUY_OFFER';
 const CANCEL_OFFER = 'OFFERS/CANCEL_OFFER';
 
-const GET_LAST_OFFER_ID = 'ORDERS/GET_LAST_OFFER_ID';
 
 const BUY_GAS = 1000000;
 const CANCEL_GAS = 1000000;
@@ -149,43 +135,6 @@ const FetchTradesAcceptedForAddress = createAction(
   },
 );
 
-const ListenForNewTradesOfAddress = createAction(
-  LISTEN_FOR_NEW_TRADES_OF_ADDRESS,
-  address => {
-    // getBlockNumberOfTheMostRecentBlock().then((latestBlock) => {
-    //   Dapple['maker-otc'].objects.otc.LogTake({ maker: address },
-    //       { fromBlock: latestBlock + 1 }, (error, logTake) => {
-    //         if (!error) {
-    //           const trade = logTakeToTrade(logTake);
-    //
-    //           if (trade) {
-    //             IndividualTrades.upsert(trade.transactionHash, trade);
-    //           }
-    //         }
-    //       });
-    // });
-  },
-);
-
-const ListenForAcceptedTradesOfAddress = createAction(
-  LISTEN_FOR_ACCEPTED_TRADES_OF_ADDRESS,
-  address => {
-    // getBlockNumberOfTheMostRecentBlock().then((latestBlock) => {
-    //   Dapple['maker-otc'].objects.otc.LogTake({ taker: address },
-    //       { fromBlock: latestBlock + 1 }, (error, logTake) => {
-    //         if (!error) {
-    //           if (logTake.args.maker !== logTake.args.taker) {
-    //             const trade = logTakeToTrade(logTake);
-    //
-    //             if (trade) {
-    //               IndividualTrades.upsert(trade.transactionHash, trade);
-    //             }
-    //           }
-    //         }
-    //       });
-    // });
-  },
-);
 
 const ListenForTheNewSortedOffers = createAction(
   LISTEN_FOR_THE_NEW_SORTED_OFFERS,
@@ -201,9 +150,9 @@ const ListenForTheNewSortedOffers = createAction(
 //   }
 // });
 
-const GetHistoricalTradesRange = createAction(
-  GET_HISTORICAL_TRADE_RANGE,
-  (numberOfPreviousDays) => {
+// const GetHistoricalTradesRange = createAction(
+//   GET_HISTORICAL_TRADE_RANGE,
+//   (numberOfPreviousDays) => {
     // after the initial jump we step back 1000 blocks at a time
     // We send one extra day just to have a buffer and be sure that the starBlock covers a full week of volume data
     // const INITIAL_NUMBER_OF_BLOCKS_BACKWARDS = Session.get('AVGBlocksPerDay') * (numberOfPreviousDays + 1 + 1);
@@ -219,143 +168,12 @@ const GetHistoricalTradesRange = createAction(
     //   };
     //   return ret;
     // });
-  },
-);
+  // },
+// );
 
 const resetOffers = createAction(
   'OFFERS/RESET_OFFERS',
   ({ baseToken, quoteToken }) => ({ baseToken, quoteToken }),
-);
-
-const SyncOffers = createAction(
-  SYNC_OFFERS,
-  () => {
-    //   Offers.remove({});
-    //   Session.set('loadingCounter', 0);
-    //   Session.set('offersCount', 0);
-    //
-    //   // Watch ItemUpdate Event
-    //   /* eslint new-cap: ["error", { "capIsNewExceptions": ["ItemUpdate", "Trade", "LogTake"] }] */
-    //
-    //   function cartesianProduct(arr) {
-    //     return arr.reduce((a, b) => a.map((x) => b.map((y) => x.concat(y))).reduce((a, b) => a.concat(b), []), [[]]);
-    //   }
-    //
-    //   function flatten(ary) {
-    //     return ary.reduce((a, b) => {
-    //       if (Array.isArray(b)) {
-    //         return a.concat(flatten(b));
-    //       }
-    //       return a.concat(b);
-    //     }, []);
-    //   }
-    //
-
-    // const getNextOffer = (id, error) => {
-    //   if (!error) {
-    //     // const loaded = Session.get('loadingCounter') + 1;
-    //     // const total = Session.get('offersCount');
-    //     // Session.set('loadingCounter', loaded);
-    //
-    //     if (loaded === total) {
-    //       Offers.syncOffer(id.toString(10));
-    //     } else {
-    //       Offers.syncOffer(id.toString(10), total);
-    //     }
-    //     Dapple['maker-otc'].objects.otc.getWorseOffer(id.toString(10), (err, nextId) => {
-    //       if (!err && !nextId.eq(0)) {
-    //         getNextOffer(nextId);
-    //       }
-    //     });
-    //   } else {
-    //     console.debug('Trouble getting next offer: ', error);
-    //   }
-    // };
-    //
-    //   const getOffersCount = (quote, base) => {
-    //     const quoteAddress = Dapple.getTokenAddress(quote);
-    //     const baseAddress = Dapple.getTokenAddress(base);
-    //
-    //     function requestOffersFor(firstCurrency, secondCurrency) {
-    //       return new Promise((resolve, reject) => {
-    //         Dapple['maker-otc'].objects.otc.getOfferCount(firstCurrency, secondCurrency, (err, count) => {
-    //           if (!err) {
-    //             resolve(count);
-    //           } else {
-    //             reject(err);
-    //           }
-    //         });
-    //       });
-    //     }
-    //
-    //     const bidOffersRequest = requestOffersFor(quoteAddress, baseAddress);
-    //     const askOffersRequest = requestOffersFor(baseAddress, quoteAddress);
-    //
-    //     return Promise.all([bidOffersRequest, askOffersRequest]);
-    //   };
-    //
-    //   const isMatchingEnabled = Session.get('isMatchingEnabled');
-    //
-    //   Session.set('loadingBuyOFFERS', true);
-    //   Session.set('loadingSellOFFERS', true);
-    //
-    //   if (isMatchingEnabled) {
-    //     Session.set('loading', true);
-    //     Session.set('loadingProgress', 0);
-    //     Offers.syncedOffers = [];
-    //     const quoteToken = Session.get('quoteCurrency');
-    //     const baseToken = Session.get('baseCurrency');
-    //     getOffersCount(quoteToken, baseToken).then((count) => {
-    //       Session.set('offersCount', parseInt(count[0], 10) + parseInt(count[1], 10)); // combining both ask and bid offersReducer for a given pair
-    //       Offers.getBestOffer(quoteToken, baseToken).then(getNextOffer);
-    //       Offers.getBestOffer(baseToken, quoteToken).then(getNextOffer);
-    //     });
-    //
-    //     listenForNewSortedOFFERS();
-    //     listenForFilledOrCancelledOFFERS();
-    //   } else {
-    //     Dapple['maker-otc'].objects.otc.LogItemUpdate((err, result) => {
-    //       if (!err) {
-    //         const id = result.args.id.toNumber();
-    //         Offers.syncOffer(id);
-    //         Offers.remove(result.transactionHash);
-    //         if (Session.equals('selectedOffer', result.transactionHash)) {
-    //           Session.set('selectedOffer', id.toString());
-    //         }
-    //       }
-    //     });
-    //
-    //     Dapple['maker-otc'].objects.otc.last_offer_id((err, n) => {
-    //       if (!err) {
-    //         const lastOfferId = n.toNumber();
-    //         console.log('last_offer_id', lastOfferId);
-    //         if (lastOfferId > 0) {
-    //           Session.set('loading', true);
-    //           Session.set('loadingProgress', 0);
-    //           for (let i = lastOfferId; i >= 1; i--) {
-    //             Offers.syncOffer(i, lastOfferId);
-    //           }
-    //         } else {
-    //           Session.set('loading', false);
-    //           Session.set('loadingProgress', 100);
-    //           Session.set('loadingBuyOFFERS', false);
-    //           Session.set('loadingSellOFFERS', false);
-    //         }
-    //       }
-    //     });
-    //   }
-  },
-);
-
-const SyncOffersAndTrades = createAction(
-  SYNC_OFFERS_AND_TRADES,
-  () => {
-    // Offers.checkMarketOpen();
-    // Offers.syncOffers();
-    // // As it is expensive to load historical Trades, we load them only for the last week
-    // // Enough for the Volume chart and the Market History section
-    // Offers.getHistoricalTradesRange(6).then(Offers.syncTrades);
-  },
 );
 
 const getBestOffer = createAction(
@@ -364,21 +182,12 @@ const getBestOffer = createAction(
     const sellTokenAddress = window.contracts.tokens[sellToken].address;
     const buyTokenAddress = window.contracts.tokens[buyToken].address;
     return window.contracts.market.getBestOffer(sellTokenAddress, buyTokenAddress);
-    // return new Promise((resolve, reject) => {
-    //   Dapple['maker-otc'].objects.otc.getBestOffer(sellTokenAddress, buyTokenAddress, (error, id) => {
-    //     if (!error) {
-    //       resolve(id);
-    //     } else {
-    //       reject(error);
-    //     }
-    //   });
-    // });
   },
 );
 
-const SyncOffer = createAction(
-  SYNC_OFFER,
-  (id, max = 0) => {
+// const SyncOffer = createAction(
+//   SYNC_OFFER,
+//   (id, max = 0) => {
     // const isBuyEnabled = Session.get('isBuyEnabled');
     // const base = Session.get('baseCurrency');
     //
@@ -418,13 +227,13 @@ const SyncOffer = createAction(
     //     clearLoadingIndicators();
     //   }
     // });
-  },
-);
+//   },
+// );
 
-const UpdateOffer = createAction(
-  UPDATE_OFFER,
-  (idx, sellHowMuch, sellWhichTokenAddress, buyHowMuch,
-   buyWhichTokenAddress, owner, status) => {
+// const UpdateOffer = createAction(
+//   UPDATE_OFFER,
+//   (idx, sellHowMuch, sellWhichTokenAddress, buyHowMuch,
+//    buyWhichTokenAddress, owner, status) => {
     // const sellToken = Dapple.getTokenByAddress(sellWhichTokenAddress);
     // const buyToken = Dapple.getTokenByAddress(buyWhichTokenAddress);
     // const precision = Session.get('precision');
@@ -459,12 +268,12 @@ const UpdateOffer = createAction(
     //
     //   Offers.upsert(idx, { $set: offer });
     // }
-  },
-);
+//   },
+// );
 
-const OfferContractParameters = createAction(
-  OFFER_CONTRACT_PARAMETERS,
-  (sellHowMuch, sellWhichToken, buyHowMuch, buyWhichToken) => {
+// const OfferContractParameters = createAction(
+//   OFFER_CONTRACT_PARAMETERS,
+//   (sellHowMuch, sellWhichToken, buyHowMuch, buyWhichToken) => {
     // const sellWhichTokenAddress = Dapple.getTokenAddress(sellWhichToken);
     // const buyWhichTokenAddress = Dapple.getTokenAddress(buyWhichToken);
     //
@@ -494,101 +303,8 @@ const OfferContractParameters = createAction(
     // console.log(`user_higher_id is ${userHigherId}`);
     //
     // return { sellHowMuchAbsolute, sellWhichTokenAddress, buyHowMuchAbsolute, buyWhichTokenAddress, userHigherId };
-  },
-);
-
-const NewOfferGasEstimate = createAction(
-  NEW_OFFER_GAS_ESTIMATE,
-  async (sellHowMuch, sellWhichToken, buyHowMuch, buyWhichToken) => {
-    // const { sellHowMuchAbsolute, sellWhichTokenAddress, buyHowMuchAbsolute, buyWhichTokenAddress, userHigherId } =
-    //     Offers.offerContractParameters(sellHowMuch, sellWhichToken, buyHowMuch, buyWhichToken);
-    //
-    // const data = Dapple['maker-otc'].objects.otc.offer['uint256,address,uint256,address,uint256,bool'].getData(sellHowMuchAbsolute, sellWhichTokenAddress,
-    //     buyHowMuchAbsolute, buyWhichTokenAddress, userHigherId, true);
-    //
-    // const latestBlockPromise = Offers.getBlock('latest');
-    // const estimateGasPromise = new Promise((resolve, reject) => {
-    //   web3Obj.eth.estimateGas({ to: Dapple['maker-otc'].environments[Dapple.env].otc.value, data }, (error, result) => {
-    //     if (!error) {
-    //       resolve(result);
-    //     } else {
-    //       reject(error);
-    //     }
-    //   });
-    // });
-    //
-    // return Promise.all([estimateGasPromise, latestBlockPromise]).then((results) => [results[0], results[1].gasLimit]);
-  },
-);
-
-const FillOfferGasEstimate = createAction(
-  FILL_OFFER_GAS_ESTIMATE,
-  (id, quantity) => {
-    // const data = Dapple['maker-otc'].objects.otc.buy.getData(id, quantity);
-    //
-    // const latestBlock = Offers.getBlock('latest');
-    // const estimation = new Promise((resolve, reject) => {
-    //   web3Obj.eth.estimateGas({ to: Dapple['maker-otc'].environments[Dapple.env].otc.value, data }, (error, result) => {
-    //     if (!error) {
-    //       resolve(result);
-    //     } else {
-    //       console.log(error);
-    //       reject(error);
-    //     }
-    //   });
-    // });
-    //
-    // return Promise.all([estimation, latestBlock]).then((results) =>
-    //     ({ quantity: results[0], limit: results[1].gasLimit }),
-    // );
-  },
-);
-
-const NewOffer = createAction(
-  NEW_OFFER,
-  (sellHowMuch, sellWhichToken, buyHowMuch, buyWhichToken, callback) => {
-    // // Offers.newOfferGasEstimate(sellHowMuch, sellWhichToken, buyHowMuch, buyWhichToken)
-    // // .then((gasEstimate) => {
-    // //   const { sellHowMuchAbsolute, sellWhichTokenAddress, buyHowMuchAbsolute, buyWhichTokenAddress, userHigherId } =
-    // //       Offers.offerContractParameters(sellHowMuch, sellWhichToken, buyHowMuch, buyWhichToken);
-    // //   Dapple['maker-otc'].objects.otc.offer['uint256,address,uint256,address,uint256,bool'](sellHowMuchAbsolute, sellWhichTokenAddress,
-    // //       buyHowMuchAbsolute, buyWhichTokenAddress, userHigherId, true,
-    // //       { gas: Math.min(gasEstimate[0] + 500000, gasEstimate[1]) }, (error, tx) => {
-    // //         callback(error, tx);
-    // //         if (!error) {
-    // //           Offers.updateOffer(tx, sellHowMuchAbsolute, sellWhichTokenAddress, buyHowMuchAbsolute, buyWhichTokenAddress,
-    // //               web3Obj.eth.defaultAccount, Status.PENDING);
-    // //           Transactions.add('offer', tx, { id: tx, status: Status.PENDING });
-    // //         }
-    // //       });
-    // })
-    // .catch((error) => callback(error));
-  },
-);
-
-const BuyOffer = createAction(
-  BUY_OFFER,
-  (_id, type, _quantity, _token) => {
-    // const quantityAbsolute = convertToTokenPrecision(_quantity, _token);
-    //
-    // Offers.fillOfferGasEstimate(_id, quantityAbsolute).then((estimated) => {
-    //   Offers.update(_id, { $unset: { helper: '' } });
-    //   const estimatedGas = Math.min(estimated.quantity + 500000, estimated.limit);
-    //   Dapple['maker-otc'].objects.otc.buy(_id, quantityAbsolute, { gas: estimatedGas }, (error, tx) => {
-    //     if (!error) {
-    //       Transactions.add('offer', tx, { id: _id, status: Status.BOUGHT });
-    //       Offers.update(_id, {
-    //         $set: {
-    //           tx, status: Status.BOUGHT, helper: `Your ${type} order is being processed...`,
-    //         },
-    //       });
-    //     } else {
-    //       Offers.update(_id, { $set: { helper: formatError(error) } });
-    //     }
-    //   });
-    // });
-  },
-);
+  // },
+// );
 
 const cancelOffer = createAction(
   CANCEL_OFFER,
@@ -703,38 +419,12 @@ const syncOffer = (offerId, syncType = OFFER_SYNC_TYPE_INITIAL, previousOfferSta
       );
       break;
     }
-
   }
 
   return {
     offer,
     offerMeta: { baseToken, quoteToken, offerType },
   };
-
-  // const sellToken = getTokenByAddress(sellWhichTokenAddress);
-  // if (sellToken === baseToken && Session.get('loadingBuyOrders')) {
-  //   // Session.set('loadingBuyOrders', false);
-  // } else if (Session.get('loadingSellOrders')) {
-  //   // Session.set('loadingSellOrders', false);
-  // }
-  // if (timestamp.valueOf() > 0) {
-  //   Offers.updateOffer(idx, sellHowMuch, sellWhichTokenAddress, buyHowMuch, buyWhichTokenAddress,
-  //     owner, Status.CONFIRMED);
-  // } else {
-  //   Offers.remove(idx);
-  //   if (isBuyEnabled && Session.equals('selectedOffer', idx)) {
-  //     $('#offerModal').modal('hide');
-  //   }
-  // }
-  // Offers.syncedOffers.push(offerId);
-  // if (max > 0 && offerId > 1) {
-  //   Session.set('loadingProgress', Math.round(100 * (Offers.syncedOffers.length / max)));
-  // } else {
-  //   clearLoadingIndicators();
-  // }
-  // } else {
-  //   clearLoadingIndicators();
-  // Dapple['maker-otc'].objects.otc.offersReducer(offerId, (error, data) => {});
 };
 
 const loadBuyOffers = createPromiseActions('OFFERS/LOAD_BUY_OFFERS');
@@ -962,9 +652,7 @@ const subscribeCancelledOrdersEpic = (fromBlock, filter = {}) => async (dispatch
           maker,
           pay_gem,
           buy_gem,
-          pay_amt,
-          buy_amt,
-          timestamp,
+          timestamp
         } = LogKillEvent.args;
 
         const { baseToken, quoteToken, offerType } = getOfferTradingPairAndType({
@@ -979,9 +667,11 @@ const subscribeCancelledOrdersEpic = (fromBlock, filter = {}) => async (dispatch
         dispatch(
           offerCancelledEvent(
             {
+              maker,
               offerType,
               offerId: parseInt(id, 16).toString(),
               tradingPair: { baseToken, quoteToken },
+              timestamp
             },
           ),
         );
@@ -1051,7 +741,6 @@ const subscribeFilledOrdersEpic = (fromBlock, filter = {}) => async (dispatch, g
   dispatch(subscribeFilledOrders.fulfilled());
 };
 
-const subscribeFilledOrCancelledOrders = () => async (dispatch, getState) => {
   /** When the order matching is activated we are using ItemUpdate only to listen for events
    * where a given order is getting cancelled or filled in ( in case of `buy` being enabled.*/
   // window.contracts.market.LogItemUpdate((err, result) => {
@@ -1088,7 +777,6 @@ const subscribeFilledOrCancelledOrders = () => async (dispatch, getState) => {
   // });
   // }
   // });
-};
 
 const initOffers = createAction('OFFERS/INIT_OFFERS', initialOffersState => initialOffersState);
 const initOffersEpic = () => (dispatch, getState) => {
@@ -1118,8 +806,6 @@ const actions = {
   // GetBlockNumberOfTheMostRecentBlock,
   FetchTradesIssuedForAddress,
   FetchTradesAcceptedForAddress,
-  ListenForNewTradesOfAddress,
-  ListenForAcceptedTradesOfAddress,
   ListenForTheNewSortedOffers,
   getTradingPairOfferCount,
   cancelOfferEpic,

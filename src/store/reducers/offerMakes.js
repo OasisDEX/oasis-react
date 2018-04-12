@@ -13,7 +13,6 @@ import transactionsReducer from './transactions';
 import network from '../selectors/network';
 import getOfferMakeBuyAndSellTokens from '../../utils/tokens/getOfferMakeBuyAndSellTokens';
 import offerMakeToFormName from '../../utils/offers/offerMakeToFormName';
-import transactions from '../selectors/transactions';
 import generateTxSubjectId from '../../utils/transactions/generateTxSubjectId';
 
 export const MAKE_BUY_OFFER = 'OFFER_MAKES/MAKE_BUY_OFFER';
