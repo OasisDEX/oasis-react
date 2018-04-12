@@ -4,8 +4,7 @@ import promiseMiddleware from 'redux-promise-middleware';
 import createDebounce from 'redux-debounced';
 import { Map } from 'immutable';
 import createHistory from 'history/createBrowserHistory';
-import { routerReducer, routerMiddleware, push } from 'react-router-redux'
-import logger from 'redux-logger'
+import { routerMiddleware } from 'react-router-redux'
 import reducers from './reducers';
 
 
@@ -18,7 +17,6 @@ function initStore(defaultState = Map()) {
     createDebounce(),
     thunk,
     promiseMiddleware(),
-    // logger
   );
   if (window.devToolsExtension) {
     middleware = compose(

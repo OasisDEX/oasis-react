@@ -8,19 +8,10 @@ import SetTokenAllowanceTrustWrapper from './SetTokenAllowanceTrust';
 import tokens from '../store/selectors/tokens';
 import OasisGasPriceWrapper from './OasisGasPrice';
 import network from '../store/selectors/network';
-import offerTakes from '../store/selectors/offerTakes';
 import OasisInsufficientAmountOfToken from '../components/OasisInsufficientAmountOfToken';
 import WithTransactionWatch from './WithTransactionWatch';
-import {
-  TX_OFFER_MAKE,
-  TX_STATUS_AWAITING_CONFIRMATION,
-  TX_STATUS_CANCELLED_BY_USER,
-  TX_STATUS_CONFIRMED,
-} from '../store/reducers/transactions';
-import TransactionTimer from '../components/TransactionTimer';
 import { gasEstimateError, isGasEstimatePending, transactionGasCostEstimate } from '../store/selectors';
 import TransactionStatus from '../components/TransactionStatus';
-import offerMakes from '../store/selectors/offerMakes';
 
 const propTypes = PropTypes && {
   transactionSubectType: PropTypes.string.isRequired,

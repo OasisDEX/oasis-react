@@ -54,7 +54,7 @@ export class OasisMainContentWrapper extends Component {
   /**
    * TODO @Arek implement more performant way.
    */
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate() {
     return true;
   }
 }

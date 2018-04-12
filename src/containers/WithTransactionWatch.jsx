@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { connect } from 'react-redux';
@@ -8,9 +7,6 @@ import { bindActionCreators } from 'redux';
 import { compose } from 'redux';
 import network from '../store/selectors/network';
 
-const propTypes = PropTypes && {
-  actions: PropTypes.object.isRequired,
-};
 
 function withTransactionWatchers (WrappedComponent) {
 
@@ -20,7 +16,7 @@ function withTransactionWatchers (WrappedComponent) {
       return <WrappedComponent {...this.props}/>
     }
 
-    componentWillUpdate(nextProps) {}
+    componentWillUpdate() {}
   };
 }
 

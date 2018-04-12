@@ -1,7 +1,7 @@
 {
  "rules": {
     "no-unused-vars": "warn",
-    "no-console": "warn",
+    "no-console": "off",
     "no-debugger": "warn"
  },
  "env": {

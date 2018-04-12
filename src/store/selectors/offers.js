@@ -1,7 +1,6 @@
 import { createSelector } from 'reselect';
 import { Map, List } from 'immutable';
 import tokens from './tokens';
-import trades from './trades';
 import { STATUS_COMPLETED, STATUS_PENDING } from '../reducers/platform';
 import reselect from '../../utils/reselect';
 

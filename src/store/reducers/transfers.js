@@ -6,7 +6,7 @@ import { change } from 'redux-form/immutable';
 import { createPromiseActions } from '../../utils/createPromiseActions';
 import transfers from '../selectors/transfers';
 import getTokenContractInstance from '../../utils/contracts/getContractInstance';
-import { ETH_UNIT_ETHER, ETH_UNIT_WEI } from '../../constants';
+import { ETH_UNIT_ETHER } from '../../constants';
 import network from '../selectors/network';
 import { TX_TRANSFER_FROM, TX_STATUS_CANCELLED_BY_USER } from './transactions';
 import transactionsReducer from './transactions';
@@ -98,6 +98,7 @@ const setTransferMax = () => (dispatch, getState) => {
 };
 
 const actions = {
+  Init,
   makeTransferEpic,
   setTransferMax,
   resetPendingTransferTransactionSubjectId

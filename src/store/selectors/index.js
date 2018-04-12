@@ -58,5 +58,6 @@ const gasEstimateInfo = createSelector(
 export {
   isGasEstimatePending,
   gasEstimateError,
-  transactionGasCostEstimate
+  transactionGasCostEstimate,
+  gasEstimateInfo
 }

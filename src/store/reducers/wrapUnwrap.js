@@ -20,6 +20,8 @@ const STATUS_SIGNING = 'WRAP_UNWRAP/STATUS_SIGNING';
 const STATUS_AWAITING_CONFIRMATION = 'WRAP_UNWRAP/AWAITING_CONFIRMATION';
 const STATUS_CONFIRMED = 'WRAP_UNWRAP/STATUS_CONFIRMED';
 
+const CHECK_IF_USER_HAS_BALANCE_IN_OLD_WRAPPER = 'NETWORK/CHECK_IF_USER_HAS_BALANCE_IN_OLD_WRAPPER';
+
 // ETHDepositProgress: 0,
 //   ETHDepositProgressMessage: '',
 //   ETHDepositErrorMessage: '',
@@ -39,6 +41,43 @@ const Init = createAction(
   INIT,
   () => null,
 );
+
+// const CheckIfUserHasBalanceInOldWrapper = createAction(
+//   CHECK_IF_USER_HAS_BALANCE_IN_OLD_WRAPPER,
+//   function checkIfUserHasBalanceInOldWrapper(userAddress) {
+    // Named the old wrapper - OW-ETH
+    // Dapple.getToken('OW-ETH', (error, token) => {
+    //   if (!error) {
+    //     if (token) {
+    //       token.balanceOf(userAddress, (err, balance) => {
+    //         if (!error) {
+    //           if (balance.toString(10) > 0) {
+    //             $('#wrapperUpdate').modal({
+    //                                         keyboard: false,
+    //                                         show: true,
+    //                                         backdrop: false,
+    //                                       });
+    //             $('#wrapperUpdate').on('shown.bs.modal', () => {
+    //               $('.amount').
+    //                   text(Blaze._globalHelpers.formatBalance(balance, 3, '',
+    //                                                           false,
+    //                   ));
+    //               Session.set('oldWrapperBalance', balance.toString(10));
+    //             });
+    //           }
+    //         } else {
+    //           console.debug(`Couldn't get balance for ${userAddress}.`, error);
+    //         }
+    //       });
+    //     }
+    //   } else {
+    //     console.debug(`Cannot extract information for ${token} `, error);
+    //   }
+    // });
+//   },
+// );
+
+
 
 /**
  *

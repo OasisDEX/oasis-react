@@ -1,9 +1,7 @@
 import { createAction, handleActions } from 'redux-actions';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 
-import { fulfilled, pending, rejected } from '../../utils/store';
-
-const initialState = Immutable.fromJS({});
+const initialState = fromJS({});
 
 const INIT = 'WETH/INIT';
 const WATCH_DEPOSIT = 'WETH/WATCH_DEPOSIT';

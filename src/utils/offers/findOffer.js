@@ -1,4 +1,3 @@
-import { toJSON } from 'immutable';
 import offers from '../../store/selectors/offers';
 import { TYPE_BUY_OFFER, TYPE_SELL_OFFER } from '../../store/reducers/offers';
 import { STATUS_PRISTINE } from '../../store/reducers/platform';

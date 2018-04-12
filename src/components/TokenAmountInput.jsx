@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
-import { greaterThanZeroValidator } from '../utils/forms/offers';
 import { VALIDATION_ERROR__VALUE_GREATER_THAN_BALANCE } from '../containers/TokenAmountInputField';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 

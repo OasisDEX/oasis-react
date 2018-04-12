@@ -3,7 +3,6 @@ import { PropTypes } from 'prop-types';
 
 import styles from './OasisMessage.scss';
 import CSSModules from 'react-css-modules';
-import { Session } from '../utils/session';
 
 export const MSGTYPE_INFO = 'MSGTYPE_INFO';
 export const MSGTYPE_WARNING = 'MSGTYPE_WARNING';

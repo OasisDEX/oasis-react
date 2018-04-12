@@ -68,6 +68,7 @@ const getBaseAndQuoteAmount = (tradeHistoryEntry, baseToken, quoteToken) => {
 
 };
 
+// eslint-disable-next-line no-unused-vars
 const formatPrice = (price, fromWei = false, unit = ETH_UNIT_ETHER, decimalPlaces = PRICE_DECIMAL) => {
   if (!fromWei) {
     return price ? new BigNumber(price).toFormat(PRICE_DECIMAL) : null;
@@ -76,6 +77,7 @@ const formatPrice = (price, fromWei = false, unit = ETH_UNIT_ETHER, decimalPlace
   }
 };
 
+// eslint-disable-next-line no-unused-vars
 const formatAmount = (price, fromWei = false, unit = ETH_UNIT_ETHER, decimalPlaces) => {
   if (!fromWei) {
     return price ? new BigNumber(price).toFormat(decimalPlaces || AMOUNT_DECIMAL) : null;
@@ -117,5 +119,6 @@ export {
   formatVolume,
   tradeType,
   formatTradeType,
-  formatAmount
+  formatAmount,
+  getBaseAndQuoteAmount
 };

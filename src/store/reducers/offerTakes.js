@@ -291,7 +291,7 @@ const getTransactionGasCostEstimateEpic = () => async (dispatch, getState) => {
       },
     ),
   ).catch(e => {
-    console.log('[offer takes] estimate error');
+    console.log('[offer takes] estimate error', e);
   });
   return gasCost;
 };
