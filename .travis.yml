@@ -1,8 +1,18 @@
 language: node_js
+
 node_js:
   - "8"
+
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.5.1
   - export PATH=$HOME/.yarn/bin:$PATH
+
 cache:
   yarn: true
+
+deploy:
+  on: dev
+  provider: surge
+  project: ./static/
+  domain: oasis-react-staging.surge.sh
+  skip_cleanup: true
