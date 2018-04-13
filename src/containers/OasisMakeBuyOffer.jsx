@@ -13,6 +13,8 @@ import OasisMakeOfferModalWrapper  from './OasisMakeOfferModal';
 import offerMakes from '../store/selectors/offerMakes';
 import OasisInsufficientAmountOfToken from '../components/OasisInsufficientAmountOfToken';
 import platform from '../store/selectors/platform';
+import styles from './OasisMakeOffer.scss';
+import CSSModules from 'react-css-modules';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -49,8 +51,8 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
     };
 
     return (
-      <OasisWidgetFrame heading={`Buy ${baseToken}`}>
-        <div style={{ textTransform: 'uppercase' }}>
+      <OasisWidgetFrame heading={`Buy ${baseToken}`} spaceForContent={true}>
+        <div className={styles.available}>
          Available <OasisTokenBalanceWrapper tokenName={quoteToken}/>
         </div>
         <div>
@@ -97,4 +99,4 @@ export function mapDispatchToProps(dispatch) {
 
 OasisMakeBuyOfferWrapper.propTypes = propTypes;
 OasisMakeBuyOfferWrapper.displayName = 'OasisMakeBuyOffer';
-export default connect(mapStateToProps, mapDispatchToProps)(OasisMakeBuyOfferWrapper);
+export default connect(mapStateToProps, mapDispatchToProps)(CSSModules(OasisMakeBuyOfferWrapper, styles));

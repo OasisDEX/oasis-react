@@ -1,0 +1,78 @@
+@import "../styles/modules/constants";
+
+.table {
+  border-collapse: separate !important;
+  border-spacing: 0;
+  border: solid #EFEFEF 1px;
+  border-radius: 6px;
+
+  th {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    opacity: 0.68;
+    font-size: 13px;
+    background-color: #FBFBFB;
+    padding: 10px;
+    text-align: center;
+  }
+
+  td {
+    border-top: 1px #EFEFEF solid;
+    border-left: 1px #EFEFEF solid;
+  }
+
+  tr:first-child th,
+  tr:first-child td {
+    border-top: none;
+  }
+
+}
+
+
+.formGroup {
+  border-left: 1px solid #999;
+  border-top: 1px solid #999;
+  border-right: 1px solid #999;
+}
+
+.label {
+  opacity: 0.68;
+  font-size: 13px;
+  background-color: #FBFBFB;
+  padding: 10px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.amount {
+  padding:0;
+
+  input {
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    font-size: 21px;
+    font-weight: bold;
+    color: #ABABAD;
+    border: none;
+    text-align: right;
+    padding-right: 10px;
+    max-width: 100%;
+    background: none;
+  }
+}
+
+.currency {
+  font-weight: 700;
+  font-size: 10px;
+  color: #68686C;
+  letter-spacing: 1px;
+  vertical-align: middle;
+  text-align: left;
+  padding-left: 10px;
+  text-transform: uppercase;
+  width: 120px;
+}
+
+.inputGroup {
+  display: flex;
+}

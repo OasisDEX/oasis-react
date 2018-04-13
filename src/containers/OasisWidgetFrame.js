@@ -14,7 +14,7 @@ const OasisWidgetFrame = (props) => {
         </div>
       </div>
 
-      <div>
+      <div styleName={props.spaceForContent ? "OasisWidgetContent" : ""}>
         {props.children}
       </div>
     </section>
@@ -24,6 +24,7 @@ const OasisWidgetFrame = (props) => {
 OasisWidgetFrame.propTypes = {
   heading: PropTypes.string.isRequired,
   loadProgressSection: PropTypes.node,
+  spaceForContent: PropTypes.bool,
 
   children: PropTypes.node
 };
