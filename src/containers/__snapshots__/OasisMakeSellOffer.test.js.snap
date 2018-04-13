@@ -3,14 +3,9 @@
 exports[`(Container) OasisMakeSellOffer should render 1`] = `
 <OasisWidgetFrame
   heading="Sell W-ETH"
+  spaceForContent={true}
 >
-  <div
-    style={
-      Object {
-        "textTransform": "uppercase",
-      }
-    }
-  >
+  <div>
     Available 
     <Connect(OasisTokenBalance)
       tokenName="W-ETH"
@@ -24,17 +19,20 @@ exports[`(Container) OasisMakeSellOffer should render 1`] = `
     />
   </div>
   <div>
-    <OasisInsufficientAmountOfToken
-      tokenName="W-ETH"
-    />
-  </div>
-  <div>
-    <button
+    <div>
+      <OasisInsufficientAmountOfToken
+        tokenName="W-ETH"
+      />
+    </div>
+    <OasisButton
+      btnType="button"
+      color="danger"
       disabled={true}
       onClick={[Function]}
+      size="max"
     >
       Sell
-    </button>
+    </OasisButton>
   </div>
 </OasisWidgetFrame>
 `;
