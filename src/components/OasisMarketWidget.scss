@@ -1,45 +1,38 @@
-.pairs {
-  //background: red;
-}
-
 .marketTable {
-
-  th:last-child {
-    padding-right: 30px;
-  }
 
   th:first-child,
   td:first-child {
-    width: 160px;
+    flex-basis: 160px;
     text-align: center;
   }
 
-  .pair {
-    font-weight: 600;
-    display: flex;
-    span {
-      width: 50%;
-    }
-    span:first-child {
-      text-align: right;
-      margin-right: 5px;
-    }
-    span:last-child {
-      text-align: left;
-      margin-left: 5px;
-      color: rgba(74, 74, 74, 0.6);
-    }
-  }
   th:nth-child(2),
   td:nth-child(2) {
-    width: 100px;
+    flex-basis: 100px;
     text-align: right;
   }
 
   th:nth-child(3),
   td:nth-child(3) {
-    flex-grow: 1;
+    flex-basis: 145px;
     text-align: right;
   }
 
+}
+
+.pair {
+  font-weight: 600;
+  display: flex;
+  span {
+    width: 50%;
+  }
+  span:first-child {
+    text-align: right;
+    margin-right: 5px;
+  }
+  span:last-child {
+    text-align: left;
+    margin-left: 5px;
+    color: rgba(74, 74, 74, 0.6);
+  }
 }

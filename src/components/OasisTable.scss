@@ -1,11 +1,10 @@
-th {
-  font-size: 10px;
-  font-weight: 700;
-  font-family: 'Montserrat', sans-serif;
+@import "../styles/modules/labels";
 
-  line-height: 30px;
+thead {
+  @include text(10px, 700);
+
+  line-height: 2;
   text-transform: uppercase;
-  text-align: center;
 
   opacity: 0.68;
   color: #222228;
@@ -38,8 +37,7 @@ tr.active {
 
 td, th {
   padding: 5px 15px;
-  flex-basis: 10px;
-  flex-grow: 1;
+  flex-basis: 100%;
 }
 
 
@@ -49,7 +47,7 @@ table.scrolling {
   thead > tr {
     display: flex;
     > th,
-    >td {
+    > td {
       max-width: 100%;
       display: block;
     }

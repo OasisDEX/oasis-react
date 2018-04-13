@@ -7,11 +7,10 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import OasisWidgetFrame from '../containers/OasisWidgetFrame';
 import { OasisTable } from './OasisTable';
 import { DAY, MONTH, WEEK } from '../utils/period';
-import { format, trades, volume, price, formatPrice, formatVolume } from '../utils/tokens/pair';
+import { trades, volume, price, formatPrice, formatVolume } from '../utils/tokens/pair';
 
-// import CSSModules from 'react-css-modules';
+import CSSModules from 'react-css-modules';
 import styles from './OasisMarketWidget.scss';
-import CSSModules from "react-css-modules/dist/index";
 
 
 

@@ -9,8 +9,8 @@ const style = {
  background: 'gray',
  color: 'white',
   fontSize: '12px',
-  padding: '3px 4px',
-  verticalAlign: 'middle'
+  padding: '3px 6px',
+  float: 'right'
 };
 
 const LoadProgressSection = ({ loadedOffersList, offersTotalCount }) => {
