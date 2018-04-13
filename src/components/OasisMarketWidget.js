@@ -9,6 +9,10 @@ import { OasisTable } from './OasisTable';
 import { DAY, MONTH, WEEK } from '../utils/period';
 import { format, trades, volume, price, formatPrice, formatVolume } from '../utils/tokens/pair';
 
+// import CSSModules from 'react-css-modules';
+import styles from './OasisMarketWidget.scss';
+import CSSModules from "react-css-modules/dist/index";
+
 
 
 const periodHeading = {
@@ -44,6 +48,7 @@ class OasisMarketWidget extends PureComponent {
     const { marketData = List() } = this.props;
     const [baseToken, quoteToken] = [row.get('base'), row.get('quote')];
 
+    const pair = <span className={styles.pair}><span>{baseToken}</span>/<span>{quoteToken}</span></span>;
     if (marketData) {
       const tradingPairTrades = trades(marketData, baseToken, quoteToken);
       const tradingPairVolume = volume(tradingPairTrades, baseToken, quoteToken);
@@ -52,20 +57,21 @@ class OasisMarketWidget extends PureComponent {
 
       return {
         isActive: isCurrentRowActive(this.props.activeTradingPair, baseToken, quoteToken),
-        tradingPair: format(baseToken, quoteToken),
+        tradingPair: pair,
         volume: formatVolume(tradingPairVolume),
         tradingPairPrice: formatPrice(tradingPairPrice),
+        rawTradingPair: {baseToken: baseToken, quoteToken: quoteToken}
       };
     } else {
       return {
-        tradingPair: format(baseToken, quoteToken), volume: null, tradingPairPrice: null,
+        tradingPair: pair, volume: null, tradingPairPrice: null, rawTradingPair: {baseToken: baseToken, quoteToken: quoteToken}
       };
     }
   }
 
   onTableRowClick(rowData) {
     const { setActiveTradingPair, changeRoute } = this.props;
-    const [baseToken, quoteToken] = rowData.tradingPair.split('/');
+    const {baseToken, quoteToken} = rowData.rawTradingPair;
     setActiveTradingPair({baseToken, quoteToken});
     changeRoute(`/trade/${baseToken}/${quoteToken}`);
   }
@@ -75,6 +81,7 @@ class OasisMarketWidget extends PureComponent {
     return (
       <OasisWidgetFrame heading="MARKETS">
         <OasisTable onRowClick={this.onTableRowClick}
+          className={styles.marketTable}
           col={colDefinition(defaultPeriod)}
           rows={tradedTokens.map(this.transformRow, this.props.activeTradingPair)}
         />
@@ -88,4 +95,4 @@ OasisMarketWidget.propTypes = PropTypes && {
   tradedTokens: PropTypes.object.isRequired,
   marketData: ImmutablePropTypes.list,
 };
-export default OasisMarketWidget;
+export default CSSModules(OasisMarketWidget, styles, { allowMultiple: true });

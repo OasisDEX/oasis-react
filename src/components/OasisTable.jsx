@@ -61,9 +61,8 @@ export class OasisTable extends PureComponent {
     return rows.map( (row, i) => {
       return (
         <tr
-          className={row.isActive ? 'active' : null}
+          className={`${styles.clickable} ${row.isActive ? styles.active: ''}`}
           key={i}
-          style={{ cursor: this.props.onRowClick ? 'pointer' : '', borderBottom: '1px solid lightgray', lineHeight:'25px' }}
           data-tradingpair={row.tradingPair}
           onClick={this.rowClickHandler.bind(null, row)}
         >
@@ -77,7 +76,7 @@ export class OasisTable extends PureComponent {
   render() {
     return (
       <div>
-        <table>
+        <table className={styles.scrolling + ' ' + this.props.className}>
           <thead>
             {this.renderTHeadContent()}
           </thead>
@@ -93,4 +92,4 @@ export class OasisTable extends PureComponent {
 OasisTable.displayName = 'OasisTable';
 OasisTable.propTypes = propTypes;
 OasisTable.defaultProps = defaultProps;
-export default CSSModules(OasisTable, styles);
+export default CSSModules(OasisTable, styles, { allowMultiple: true });

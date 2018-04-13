@@ -11,7 +11,6 @@ const OasisWidgetFrame = (props) => {
       <div className="row">
         <div className="col-md-12">
           <h4 styleName="Heading">{props.heading} {props.loadProgressSection}</h4>
-          <hr/>
         </div>
       </div>
 
