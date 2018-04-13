@@ -10,6 +10,9 @@ before_install:
 cache:
   yarn: true
 
+before_deploy:
+  - yarn build
+
 deploy:
   on: dev
   provider: surge
