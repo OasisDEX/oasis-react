@@ -16,6 +16,6 @@ before_deploy:
 deploy:
   on: dev
   provider: surge
-  project: ./static/
+  project: ./build/
   domain: oasis-react-staging.surge.sh
   skip_cleanup: true
