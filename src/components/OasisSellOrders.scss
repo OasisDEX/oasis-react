@@ -1,2 +1,42 @@
-.base {
+@import "../styles/modules/constants";
+@import "../styles/modules/grid";
+
+.table {
+
+  td, th {
+    text-align: right;
+  }
+
+  td {
+    font-weight: 500;
+  }
+
+  th:first-child,
+  td:first-child {
+    flex-basis: 170px;
+    text-align: right;
+  }
+
+  td:first-child {
+    color: $danger-text;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    flex-basis: 110px;
+    text-align: right;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3) {
+    flex-basis: 110px;
+    text-align: right;
+  }
+
+  th:last-child,
+  td:last-child {
+    @include reset;
+  }
+
+
 }

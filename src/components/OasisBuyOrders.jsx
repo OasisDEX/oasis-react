@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
+import styles from './OasisBuyOrders.scss';
+import CSSModules from 'react-css-modules';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import OasisWidgetFrame from '../containers/OasisWidgetFrame';
@@ -60,6 +62,7 @@ class OasisBuyOrders extends PureComponent {
         }
       >
         <OasisTable
+          className={styles.table}
           onRowClick={this.onTableRowClick}
           rows={buyOffers.sort((p, c) => p.bid_price_sort < c.bid_price_sort ? 1 : -1).map(toDisplayFormat)}
           col={colsDefinition(baseToken, quoteToken, orderActions)}
@@ -72,4 +75,4 @@ class OasisBuyOrders extends PureComponent {
 OasisBuyOrders.displayName = 'OasisBuyOrders';
 OasisBuyOrders.propTypes = propTypes;
 OasisBuyOrders.defaultProps = defaultProps;
-export default OasisBuyOrders;
+export default CSSModules(OasisBuyOrders, styles, { allowMultiple: true });

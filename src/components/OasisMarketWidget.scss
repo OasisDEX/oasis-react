@@ -1,0 +1,38 @@
+.marketTable {
+
+  th:first-child,
+  td:first-child {
+    flex-basis: 160px;
+    text-align: center;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    flex-basis: 100px;
+    text-align: right;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3) {
+    flex-basis: 145px;
+    text-align: right;
+  }
+
+}
+
+.pair {
+  font-weight: 600;
+  display: flex;
+  span {
+    width: 50%;
+  }
+  span:first-child {
+    text-align: right;
+    margin-right: 5px;
+  }
+  span:last-child {
+    text-align: left;
+    margin-left: 5px;
+    color: rgba(74, 74, 74, 0.6);
+  }
+}

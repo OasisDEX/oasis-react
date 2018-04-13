@@ -12,12 +12,10 @@ import tokens from '../store/selectors/tokens';
 import balances from '../store/selectors/balances';
 import { formatValue, greaterThanZeroValidator, normalize, numericFormatValidator } from '../utils/forms/offers';
 
-/**
- * Remove this styling TODO
- */
-const box = { border: '1px solid black', padding: 20, marginTop: 20 };
-const label = { width: '30%', display: 'inline-block' };
-const fieldStyle = { textAlign: 'right' };
+import OasisButton from "../components/OasisButton";
+
+import styles from './OasisOfferMakeForm.scss';
+import CSSModules from 'react-css-modules';
 
 const propTypes = PropTypes && {
   // activeOfferMakeOfferData: ImmutablePropTypes.map.isRequired,
@@ -100,19 +98,26 @@ export class OfferMakeForm extends PureComponent {
     switch (this.props.offerMakeType) {
       case MAKE_BUY_OFFER:
         return (
-          <button
-            disabled={greaterThanZeroValidator(currentFormValues.price)}
-            type="button"
-            onClick={this.onSetBuyMax}
-          >Buy max</button>
+            <OasisButton
+                className={styles.setMaxBtn}
+                disabled={greaterThanZeroValidator(currentFormValues.price)}
+                type="button"
+                color="success"
+                size="xs"
+                onClick={this.onSetBuyMax}
+            >Buy max
+            </OasisButton>
         );
       case MAKE_SELL_OFFER:
         return (
-          <button
+          <OasisButton
+            className={styles.setMaxBtn}
             disabled={greaterThanZeroValidator(currentFormValues.price)}
             type="button"
+            color="danger"
+            size="xs"
             onClick={this.onSetSellMax}
-          >Sell max</button>
+          >Sell max</OasisButton>
         );
 
     }
@@ -129,24 +134,26 @@ export class OfferMakeForm extends PureComponent {
 
     const volumeToken = baseToken, totalToken = quoteToken, priceToken = quoteToken;
     return (
-      <div>
-        <form onSubmit={handleSubmit}>
-          <div style={box}>
-            <span style={label}>Price:</span>
+      <form onSubmit={handleSubmit}>
+        <table className={styles.table}>
+          <tbody>
+          <tr className={styles.formGroup}>
+            <th className={styles.label}>Price:</th>
+            <td className={styles.amount}>
+                <Field
+                  autoComplete="off"
+                  name="price" component="input"
+                  onChange={this.onPriceFieldChange}
+                  placeholder={0}
+                  normalize={normalize} type="text"/>
+            </td>
+            <td className={styles.currency}> {priceToken}</td>
+          </tr>
+          <tr className={styles.formGroup}>
+            <th className={styles.label}>Volume:</th>
+            <td className={styles.amount}>
             <Field
               autoComplete="off"
-              style={fieldStyle}
-              name="price" component="input"
-              onChange={this.onPriceFieldChange}
-              placeholder={0}
-              normalize={normalize} type="text"/>
-            {priceToken}
-          </div>
-          <div style={box}>
-            <span style={label}>Volume:</span>
-            <Field
-              autoComplete="off"
-              style={fieldStyle}
               onChange={this.onVolumeFieldChange}
               normalize={normalize}
               onBlur={formatValue}
@@ -157,33 +164,41 @@ export class OfferMakeForm extends PureComponent {
               min={0}
               placeholder={0}
               disabled={greaterThanZeroValidator(currentFormValues.price)}
-            /> {volumeToken}
-            <div>
-              {isUserTokenBalanceSufficient && <VolumeIsOverUserBalance offerMax={isUserTokenBalanceSufficient}/>}
-            </div>
-          </div>
-          <div style={box}>
-            <span style={label}>Total:</span>
-            <span>
-              {this.setMaxButton()}
-            </span>
-            <Field
-              autoComplete="off"
-              style={fieldStyle}
-              min={0}
-              onChange={this.onTotalFieldChange}
-              normalize={normalize}
-              onBlur={formatValue}
-              name="total"
-              component="input"
-              type="text"
-              validate={validateTotal}
-              placeholder={0}
-              disabled={greaterThanZeroValidator(currentFormValues.price) || greaterThanZeroValidator(currentFormValues.volume)}
-            /> {totalToken}
-          </div>
-        </form>
-      </div>
+            /></td>
+            <td className={styles.currency}>
+              {volumeToken}
+              <div>
+                  {isUserTokenBalanceSufficient && <VolumeIsOverUserBalance offerMax={isUserTokenBalanceSufficient}/>}
+              </div>
+            </td>
+          </tr>
+          <tr className={styles.formGroup}>
+            <th className={styles.label}>Total:</th>
+            <td className={styles.amount}>
+              <div className={styles.inputGroup}>
+                {this.setMaxButton()}
+              <Field
+                autoComplete="off"
+                min={0}
+                onChange={this.onTotalFieldChange}
+                normalize={normalize}
+                onBlur={formatValue}
+                name="total"
+                component="input"
+                type="text"
+                validate={validateTotal}
+                placeholder={0}
+                disabled={greaterThanZeroValidator(currentFormValues.price) || greaterThanZeroValidator(currentFormValues.volume)}
+              />
+              </div>
+            </td>
+            <td className={styles.currency}>
+              {totalToken}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </form>
     );
   }
 }
@@ -214,6 +229,6 @@ export function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  reduxForm({})(OfferMakeForm),
+  reduxForm({})(CSSModules(OfferMakeForm, styles)),
 );
 

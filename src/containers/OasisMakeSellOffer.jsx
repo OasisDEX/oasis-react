@@ -12,7 +12,10 @@ import offerMakesReducer, { MAKE_SELL_OFFER } from '../store/reducers/offerMakes
 import OasisMakeOfferModalWrapper  from './OasisMakeOfferModal';
 import offerMakes from '../store/selectors/offerMakes';
 import OasisInsufficientAmountOfToken from '../components/OasisInsufficientAmountOfToken';
+import OasisButton from "../components/OasisButton";
 import platform from '../store/selectors/platform';
+import styles from './OasisMakeOffer.scss';
+import CSSModules from 'react-css-modules';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -50,19 +53,26 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
 
 
     return (
-      <OasisWidgetFrame heading={`Sell ${baseToken}`}>
-        <div style={{ textTransform: 'uppercase' }}>
+      <OasisWidgetFrame heading={`Sell ${baseToken}`} spaceForContent={true}>
+        <div className={styles.available}>
           Available <OasisTokenBalanceWrapper tokenName={baseToken}/>
         </div>
         <div>
           {this.getModal(formProps)}
           <OfferMakeForm {...formProps}/>
         </div>
-        <div>
-          {hasSufficientTokenAmount === false && <OasisInsufficientAmountOfToken tokenName={baseToken}/>}
-        </div>
-        <div>
-          <button disabled={!hasSufficientTokenAmount} onClick={this.onModalOpen}>Sell</button>
+        <div className={styles.footer}>
+          <div className={styles.helpBlock}>
+              {hasSufficientTokenAmount === false && <OasisInsufficientAmountOfToken tokenName={baseToken}/>}
+          </div>
+          <OasisButton
+              className={styles.callToAction}
+              color="danger"
+              size="max"
+              disabled={!hasSufficientTokenAmount}
+              onClick={this.onModalOpen}>
+            Sell
+          </OasisButton>
         </div>
       </OasisWidgetFrame>
     );
@@ -98,4 +108,4 @@ export function mapDispatchToProps(dispatch) {
 
 OasisMakeSellOfferWrapper.propTypes = propTypes;
 OasisMakeSellOfferWrapper.displayName = 'OasisMakeSellOffer';
-export default connect(mapStateToProps, mapDispatchToProps)(OasisMakeSellOfferWrapper);
+export default connect(mapStateToProps, mapDispatchToProps)(CSSModules(OasisMakeSellOfferWrapper, styles));

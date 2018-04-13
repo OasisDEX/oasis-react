@@ -7,6 +7,8 @@ import { bindActionCreators } from 'redux';
 import { formatAmount } from '../utils/tokens/pair';
 import balances from '../store/selectors/balances';
 import { ETH_UNIT_ETHER } from '../constants';
+import styles from './OasisTokenBalance.scss';
+import CSSModules from 'react-css-modules';
 
 const propTypes = PropTypes && {
   tokenName: PropTypes.string,
@@ -20,16 +22,16 @@ export class OasisTokenBalanceWrapper extends PureComponent {
     const { balance, tokenName, fromWei, balanceUnit } = this.props;
     if(!balance) {
       return (
-        <div style={{ display: 'inline-block', padding: '5px 0' }}>[LOADING]</div>
+        <div className={styles.loading}>[LOADING]</div>
       );
 
     } else {
       return (
         <div style={{ display: 'inline-block' }}>
-          <span>
+          <span className={styles["available-amount"]}>
           { formatAmount(balance, fromWei, balanceUnit ||  ETH_UNIT_ETHER, this.props.decimalPlaces) }
           </span>
-          <span style={{ padding: '0 5px', fontSize: '10px', lineHeight: '18px', verticalAlign: 'middle' }}>
+          <span className={styles["available-currency"]} style={{ padding: '0 5px', fontSize: '10px', lineHeight: '18px', verticalAlign: 'middle' }}>
             <b>{tokenName}</b>
           </span>
         </div>
@@ -51,4 +53,4 @@ export function mapDispatchToProps(dispatch) {
 
 OasisTokenBalanceWrapper.propTypes = propTypes;
 OasisTokenBalanceWrapper.displayName = 'OasisTokenBalance';
-export default connect(mapStateToProps, mapDispatchToProps)(OasisTokenBalanceWrapper);
+export default connect(mapStateToProps, mapDispatchToProps)(CSSModules(OasisTokenBalanceWrapper,styles));

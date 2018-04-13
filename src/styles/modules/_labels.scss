@@ -3,3 +3,10 @@
   font-size: $size;
   font-weight: $weight;
 }
+
+@mixin muted($size: 12px) {
+  font-weight: 500;
+  color: #B1B1B3;
+  font-size: $size;
+  line-height: $size*1.7;
+}
