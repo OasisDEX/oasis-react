@@ -5,6 +5,9 @@ import OasisTable from './OasisTable';
 import { toDisplayFormat } from '../utils/orders';
 import { LoadProgressSection } from '../utils/offers/loadProgress';
 import { TAKE_SELL_OFFER } from '../store/reducers/offerTakes';
+
+import styles from './OasisSellOrders.scss';
+import CSSModules from 'react-css-modules';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 
@@ -60,6 +63,7 @@ class OasisSellOrders extends PureComponent {
         loadProgressSection={<LoadProgressSection loadedOffersList={sellOffers} offersTotalCount={sellOfferCount}/>}
       >
         <OasisTable
+          className={styles.table}
           onRowClick={this.onTableRowClick}
           rows={sellOffers.sort((p, c) => p.ask_price_sort > c.ask_price_sort? 1 : -1).map(toDisplayFormat)}
           col={colsDefinition(baseToken, quoteToken, orderActions)}/>
@@ -71,4 +75,4 @@ class OasisSellOrders extends PureComponent {
 OasisSellOrders.displayName = 'OasisSellOrders';
 OasisSellOrders.propTypes = propTypes;
 OasisSellOrders.defaultProps = defaultProps;
-export default OasisSellOrders;
+export default CSSModules(OasisSellOrders, styles, { allowMultiple: true });
