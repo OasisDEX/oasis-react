@@ -12,6 +12,8 @@ import tokens from '../store/selectors/tokens';
 import balances from '../store/selectors/balances';
 import { formatValue, greaterThanZeroValidator, normalize, numericFormatValidator } from '../utils/forms/offers';
 
+import OasisButton from "../components/OasisButton";
+
 import styles from './OasisOfferMakeForm.scss';
 import CSSModules from 'react-css-modules';
 
@@ -96,19 +98,26 @@ export class OfferMakeForm extends PureComponent {
     switch (this.props.offerMakeType) {
       case MAKE_BUY_OFFER:
         return (
-          <button
-            disabled={greaterThanZeroValidator(currentFormValues.price)}
-            type="button"
-            onClick={this.onSetBuyMax}
-          >Buy max</button>
+            <OasisButton
+                className={styles.setMaxBtn}
+                disabled={greaterThanZeroValidator(currentFormValues.price)}
+                type="button"
+                color="success"
+                size="xs"
+                onClick={this.onSetBuyMax}
+            >Buy max
+            </OasisButton>
         );
       case MAKE_SELL_OFFER:
         return (
-          <button
+          <OasisButton
+            className={styles.setMaxBtn}
             disabled={greaterThanZeroValidator(currentFormValues.price)}
             type="button"
+            color="danger"
+            size="xs"
             onClick={this.onSetSellMax}
-          >Sell max</button>
+          >Sell max</OasisButton>
         );
 
     }

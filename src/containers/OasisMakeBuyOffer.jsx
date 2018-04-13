@@ -12,6 +12,7 @@ import offerMakesReducer, { MAKE_BUY_OFFER } from '../store/reducers/offerMakes'
 import OasisMakeOfferModalWrapper  from './OasisMakeOfferModal';
 import offerMakes from '../store/selectors/offerMakes';
 import OasisInsufficientAmountOfToken from '../components/OasisInsufficientAmountOfToken';
+import OasisButton from "../components/OasisButton";
 import platform from '../store/selectors/platform';
 import styles from './OasisMakeOffer.scss';
 import CSSModules from 'react-css-modules';
@@ -59,11 +60,18 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
           {this.getModal(formProps)}
           <OfferMakeForm {...formProps}/>
         </div>
-        <div>
+        <div className={styles.footer}>
+          <div className={styles.helpBlock}>
           {hasSufficientTokenAmount === false && <OasisInsufficientAmountOfToken tokenName={quoteToken}/>}
-        </div>
-        <div>
-          <button disabled={!hasSufficientTokenAmount} onClick={this.onModalOpen}>Buy</button>
+          </div>
+          <OasisButton
+              className={styles.callToAction}
+              color="success"
+              size="max"
+              disabled={!hasSufficientTokenAmount}
+              onClick={this.onModalOpen}>
+            Buy
+          </OasisButton>
         </div>
       </OasisWidgetFrame>
     );

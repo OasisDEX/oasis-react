@@ -58,6 +58,10 @@
     padding-right: 10px;
     max-width: 100%;
     background: none;
+
+    &::placeholder {
+      color: #DDD;
+    }
   }
 }
 
@@ -75,4 +79,8 @@
 
 .inputGroup {
   display: flex;
+}
+
+.setMaxBtn {
+  margin: 6px;
 }

@@ -1,0 +1,111 @@
+@import "../styles/modules/constants";
+
+.button {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  border: 1px solid transparent;
+
+  background-color: transparent;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  &:hover {
+    cursor: pointer;
+  }
+  &:hover[disabled] {
+    cursor: default;
+  }
+}
+
+// -------------- size -----------------
+.xs {
+  padding: 1px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px
+}
+
+.sm {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px
+}
+
+.md {
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px
+
+}
+
+.lg {
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.3333333;
+  border-radius: 6px
+}
+
+
+.max {
+  padding: 6px 12px;
+  font-size: 13.5px;
+  letter-spacing: 1.57px;
+  border-radius: 100px;
+}
+// --------------- color -----------
+
+.default {
+  color: #4F5362;
+  border-color: #A8ACB9;
+
+  &:hover,
+  &:focus:enabled,
+  &:active:enabled {
+    color: white;
+    background-color: #A8ACB9;
+    border-color: #838690
+  }
+}
+
+.success {
+  color: $success-text;
+  border-color: $success-text;
+
+  &:hover,
+  &:focus:enabled,
+  &:active:enabled {
+    color: #FFFFFF;
+    background-color: lighten($success-text, 12%);
+    border-color: $success;
+  }
+
+  &[disabled]:hover,
+  &[disabled] {
+    color: $success-text;
+    border-color: $success-text;
+    background-color: transparent;
+  }
+}
+
+
+.danger {
+  color: $danger-text;
+  border-color: $danger-text;
+
+  &:hover,
+  &:focus:enabled,
+  &:active:enabled {
+    color: #FFFFFF;
+    background-color: lighten($danger-text, 12%);
+    border-color: $danger;
+  }
+
+  &[disabled]:hover,
+  &[disabled] {
+    color: $danger-text;
+    border-color: $danger-text;
+    background-color: transparent;
+  }
+}
