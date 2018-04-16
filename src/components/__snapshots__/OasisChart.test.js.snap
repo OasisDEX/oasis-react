@@ -1,7 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Component) OasisChart should render 1`] = `
-<div>
-  OasisChart
-</div>
+<OasisWidgetFrame
+  heading="Charts"
+>
+  <div>
+    To be continued...
+  </div>
+</OasisWidgetFrame>
 `;

@@ -10,6 +10,7 @@ import { BASE_TOKENS, QUOTE_TOKENS, TOKEN_MAKER, TOKEN_WRAPPED_ETH } from '../co
 import tokensReducer from './../store/reducers/tokens';
 import { generateTradingPairs } from '../utils/generateTradingPairs';
 import OasisMarketWidget from '../components/OasisMarketWidget';
+import OasisChart from '../components/OasisChart';
 import trades from '../store/selectors/trades';
 import tokens from './../store/selectors/tokens';
 import platform from '../store/selectors/platform';
@@ -82,6 +83,7 @@ export class OasisTradeWrapper extends PureComponent {
           defaultPeriod={defaultPeriod}
           loadingTradeHistory={loadingTradeHistory}
         />
+        <OasisChart/>
         <OasisTradeOrdersWrapper/>
       </main>
     );

@@ -129,6 +129,7 @@ exports[`(Container) OasisTrade should render 1`] = `
       ]
     }
   />
+  <OasisChart />
   <Connect(OasisTradeOrders) />
 </main>
 `;
