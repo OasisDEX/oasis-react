@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 import OasisWidgetFrame from '../containers/OasisWidgetFrame';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import styles from './OasisChart.scss';
+// import styles from './OasisChart.scss';
 
 const propTypes = PropTypes && {};
 const defaultProps = {};
