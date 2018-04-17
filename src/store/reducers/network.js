@@ -175,7 +175,7 @@ const getBlock = createAction(
 const subscribeLatestBlockFilter = createPromiseActions(
   'NETWORK/SUBSCRIBE_LATEST_BLOCK_FILTER',
 );
-const subscribeLatestBlockFilterEpic = () => async dispatch => {
+const subscribeLatestBlockFilterEpic = () => async (dispatch, getState) => {
   dispatch(subscribeLatestBlockFilter.pending());
 
   const tid = setInterval(() => {
@@ -183,6 +183,8 @@ const subscribeLatestBlockFilterEpic = () => async dispatch => {
     dispatch(getLatestBlockNumber());
     dispatch(fetchEthereumPrice());
     dispatch(transactionsReducer.actions.getCurrentGasPrice());
+    dispatch(balancesReducer.actions.syncTokenBalances(window.contracts.tokens, accounts.defaultAccount(getState())))
+
   }, HEALTHCHECK_INTERVAL_MS);
 
   web3.eth.filter('latest', (e, b) => {
@@ -192,6 +194,7 @@ const subscribeLatestBlockFilterEpic = () => async dispatch => {
     dispatch(transactionsReducer.actions.getCurrentTxNonceEpic());
     dispatch(fetchEthereumPrice());
     dispatch(transactionsReducer.actions.getCurrentGasPrice());
+    dispatch(balancesReducer.actions.syncTokenBalances(window.contracts.tokens, accounts.defaultAccount(getState())))
   });
 
   dispatch(subscribeLatestBlockFilter.fulfilled());
@@ -209,9 +212,8 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
      */
 
     dispatch(offersReducer.actions.subscribeOffersEventsEpic());
-    dispatch(offersReducer.actions.syncOffersEpic(
-      tokens.activeTradingPair(getState()),
-    ));
+    const tradingPair = tokens.activeTradingPair(getState()) || tokens.defaultTradingPair(getState()).toJSON();
+    dispatch(offersReducer.actions.syncOffersEpic(tradingPair));
 
     /**
      *  Fetch LogTake events for set historicalRange

@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisWrapUnwrapWrap should render 1`] = `
+<OasisWrapUnwrapWrap
+  activeUnwrappedToken="GNT"
+  activeUnwrappedTokenBalance={"0"}
+  onSubmit={[Function]}
+/>
+`;
+
+exports[`(Container) OasisWrapUnwrapWrap will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "wrapToken": [Function],
+  },
+}
+`;
+
+exports[`(Container) OasisWrapUnwrapWrap will receive right props 1`] = `
+Object {
+  "activeUnwrappedToken": "GNT",
+  "activeUnwrappedTokenBalance": "0",
+}
+`;

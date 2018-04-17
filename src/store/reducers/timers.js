@@ -7,6 +7,9 @@ const initialState = fromJS({
   timeoutId: null,
 });
 
+
+export const TIMER_DEFAULT_INTERVAL_MS = 5000;
+
 const Init = createPromiseActions('TIMERS/INIT');
 const InitEpic = () => (dispatch) => {
   dispatch(Init.pending());
@@ -14,7 +17,7 @@ const InitEpic = () => (dispatch) => {
     () => {
       const currentTimestamp = parseInt(Date.now() / 1000);
       dispatch(updateTimestamp(currentTimestamp));
-    }, 1000);
+    }, TIMER_DEFAULT_INTERVAL_MS);
     dispatch(Init.fulfilled({ tid }))
 };
 const actions = {

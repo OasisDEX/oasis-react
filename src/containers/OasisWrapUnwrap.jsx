@@ -4,11 +4,13 @@ import { PropTypes } from 'prop-types';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import OasisWrapUnwrapWrap from '../components/OasisWrapUnwrapWrap';
-import OasisWrapUnwrapUnwrap from '../components/OasisWrapUnwrapUnwrap';
 import OasisWrapUnwrapBalancesWrapper  from './OasisWrapUnwrapBalances';
 import OasisWrapUnwrapHistoryWrapper from './OasisWrapUnwrapHistory';
+import OasisWrapUnwrapUnwrapWrapper from './OasisWrapUnwrapUnwrap';
+import OasisWrapUnwrapWrapWrapper  from './OasisWrapUnwrapWrap';
 import wrapUnwrapReducer from '../store/reducers/wrapUnwrap';
+import { TOKEN_ETHER } from '../constants';
+import platformReducer from '../store/reducers/platform';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -16,13 +18,24 @@ const propTypes = PropTypes && {
 
 export class OasisWrapUnwrapWrapper extends PureComponent {
 
+  constructor(props) {
+    super(props);
+    const { match: { params: { token }, url } } = this.props;
+    if (!token) {
+      return this.props.actions.changeRoute(`${url}/${TOKEN_ETHER}`);
+    }
+    this.props.actions.setActiveWrapUnwrappedToken(token);
+  }
   render() {
+    const { activeUnwrappedToken } = this.props;
     return (
       <div>
-        <OasisWrapUnwrapBalancesWrapper/>
+        <OasisWrapUnwrapBalancesWrapper
+          activeUnwrappedToken={activeUnwrappedToken}
+        />
         <OasisWrapUnwrapHistoryWrapper/>
-        <OasisWrapUnwrapWrap/>
-        <OasisWrapUnwrapUnwrap/>
+        <OasisWrapUnwrapWrapWrapper/>
+        <OasisWrapUnwrapUnwrapWrapper/>
       </div>
     );
   }
@@ -33,7 +46,11 @@ export function mapStateToProps() {
 }
 
 export function mapDispatchToProps(dispatch) {
-  const actions = {};
+  const actions = {
+    setActiveWrapUnwrappedToken: wrapUnwrapReducer.actions.setActiveWrapUnwrappedToken,
+    changeRoute: platformReducer.actions.changeRouteEpic,
+
+  };
   return { actions: bindActionCreators(actions, dispatch) };
 }
 

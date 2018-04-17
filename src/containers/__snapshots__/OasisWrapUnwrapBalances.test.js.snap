@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisWrapUnwrapBalances should render 1`] = `
+<OasisWrapUnwrapBalances
+  activeUnwrappedToken="GNT"
+  changeRoute={[Function]}
+  setActiveWrapUnwrappedToken={[Function]}
+  wrapUnwrapBalances={
+    Immutable.List [
+      Immutable.Map {
+        unwrappedToken: "ETH",
+        wrapperToken: "W-ETH",
+        unwrappedBalance: "4995357305000000000",
+        wrappedBalance: "0",
+      },
+      Immutable.Map {
+        unwrappedToken: "GNT",
+        wrapperToken: "W-GNT",
+        unwrappedBalance: "0",
+        wrappedBalance: "0",
+      },
+    ]
+  }
+/>
+`;
+
+exports[`(Container) OasisWrapUnwrapBalances will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "changeRoute": [Function],
+    "setActiveWrapUnwrappedToken": [Function],
+  },
+}
+`;
+
+exports[`(Container) OasisWrapUnwrapBalances will receive right props 1`] = `
+Object {
+  "activeUnwrappedToken": "GNT",
+  "wrapUnwrapBalances": Immutable.List [
+    Immutable.Map {
+        unwrappedToken: "ETH",
+        wrapperToken: "W-ETH",
+        unwrappedBalance: "4995357305000000000",
+        wrappedBalance: "0",
+    },
+    Immutable.Map {
+        unwrappedToken: "GNT",
+        wrapperToken: "W-GNT",
+        unwrappedBalance: "0",
+        wrappedBalance: "0",
+    },
+],
+}
+`;

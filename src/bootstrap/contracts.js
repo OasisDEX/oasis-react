@@ -15,7 +15,7 @@ import web3 from './web3';
 
 const init = (networkName) => {
 
-  const brokers = fromJS({});
+  let brokers = fromJS({});
 
   const tokencontractsDeploymentAdressessList = config['tokens'][networkName];
   const marketDeploymentAddress = config['market'][networkName]['address'];
@@ -44,13 +44,19 @@ const init = (networkName) => {
   const marketNoProxy = loadContact(MatchingMarketAbi.interface, marketDeploymentAddress, true);
   const WGNTNoProxy = loadContact(TokenWrapperAbi.interface, tokencontractsDeploymentAdressessList['W-GNT'], true);
 
-  const getDepositBroker = (address) => {
+  const getDepositBrokerContractInstance = (token) => {
+    if (brokers.has(token)) {
+      return brokers.get(token);
+    }
+  };
+
+  const initDepositBrokerContract = (token, address) => {
     if (!web3.isAddress(address)) {
       throw  new Error('This is not Ethereum address!')
     }
-    if (!brokers.has(address)) {
-      return brokers.set(address, loadContact(DepositBrokerAbi, address));
-    } else { return brokers.get(address); }
+    brokers = brokers.set(token, loadContact(DepositBrokerAbi.interface, address));
+    console.log('initDepositBrokerContract', brokers );
+    return brokers.get(token);
   };
 
   const abiList =  Object.freeze({
@@ -75,7 +81,8 @@ const init = (networkName) => {
     marketNoProxy,
     WGNTNoProxy,
     abiList,
-    getDepositBroker,
+    getDepositBrokerContractInstance,
+    initDepositBrokerContract,
     createContractInstance
   };
 };

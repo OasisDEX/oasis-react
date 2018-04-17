@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisTokenWrapForm should render 1`] = `
+<div>
+  <form>
+    <div>
+      <span>
+        Amount:
+      </span>
+      <button
+        onClick={[Function]}
+        type="button"
+      >
+        wrap max
+      </button>
+      <Field
+        autoComplete="off"
+        component="input"
+        name="amount"
+        normalize={[Function]}
+        placeholder={0}
+        required={true}
+        style={
+          Object {
+            "textAlign": "right",
+            "width": "100%",
+          }
+        }
+        type="text"
+        validate={[Function]}
+      />
+    </div>
+    <div>
+      <button
+        disabled={true}
+      >
+        Wrap
+      </button>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`(Container) OasisTokenWrapForm will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "setWrapMax": [Function],
+  },
+}
+`;
+
+exports[`(Container) OasisTokenWrapForm will receive right props 1`] = `
+Object {
+  "activeUnwrappedTokenBalance": "0",
+}
+`;

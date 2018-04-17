@@ -24,7 +24,6 @@ export class OasisTokenBalanceWrapper extends PureComponent {
       return (
         <div className={styles.loading}>[LOADING]</div>
       );
-
     } else {
       return (
         <div style={{ display: 'inline-block' }}>

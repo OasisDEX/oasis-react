@@ -45,7 +45,7 @@ class OasisMarketHistory extends PureComponent {
       }
 
       const tradeTypeEnum = tradeType(tradeHistoryEntry, baseToken);
-      let tradeTypeClass = tradeTypeEnum == BID ? styles.buy : styles.sell;
+      let tradeTypeClass = tradeTypeEnum === BID ? styles.buy : styles.sell;
       let tradeTypeSpan = <span className={`${tradeTypeClass} ${styles.tradeType}`}>{formatTradeType(tradeTypeEnum)}</span>;
       return {
         date: moment.unix(tradeHistoryEntry.timestamp).format('DD-MM-HH:mm'),

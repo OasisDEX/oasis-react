@@ -1,7 +1,12 @@
 import { createAction, handleActions } from 'redux-actions';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
+import { TOKEN_WRAPPED_GNT } from '../../constants';
 
-const initialState = Immutable.fromJS({});
+const initialState = fromJS({
+  implementsTokenWrappers: [
+    TOKEN_WRAPPED_GNT
+  ]
+});
 
 const INIT = 'CONTRACTS/INIT';
 

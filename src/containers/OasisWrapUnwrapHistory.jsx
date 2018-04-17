@@ -46,7 +46,7 @@ export function mapStateToProps(state) {
 export function mapDispatchToProps(dispatch) {
   const actions = {
     loadWrapUnwrapsHistory: wrapUnwrapHistoryReducer.actions.loadWrapUnwrapsHistoryEpic,
-    loadGNTBrokerAddress: wrapUnwrapReducer.actions.loadGNTBrokerAddressEpic
+    loadGNTBrokerAddress: wrapUnwrapReducer.actions.loadGNTBrokerAddressEpic,
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }
