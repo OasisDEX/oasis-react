@@ -2,31 +2,30 @@ import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import { VALIDATION_ERROR__VALUE_GREATER_THAN_BALANCE } from '../containers/TokenAmountInputField';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
+import styles from './TokenAmountInput.scss';
 
 const propTypes = PropTypes && {
 };
 const defaultProps = {};
-
-const inputStyle = { textAlign: 'right', width: '100%' };
-
 
 class TokenAmountInput extends PureComponent {
   render() {
     const { selectedToken, meta } = this.props;
 
     const insufficientAmount = (meta.error && meta.error.includes(VALIDATION_ERROR__VALUE_GREATER_THAN_BALANCE));
+
+    const errorMessage = <div className={styles.errorMessage}>
+      {insufficientAmount && (<div>Insufficient token amount</div>)}
+    </div>;
+
     return (
-      <div>
-        <div style={{ display: 'flex' }}>
-          <input style={inputStyle} {...this.props.input}/>
-          <span style={{ display: 'inline-block', padding: '4px', backgroundColor: '#fff', borderColor: 'ligghtgray' }}>
+        <div className={styles.inputGroup}>
+          <input className={styles.input} {...this.props.input}/>
+          <span className={`${styles.currency} `}>
             {selectedToken}
           </span>
+          {insufficientAmount && errorMessage}
         </div>
-        <div>
-          {insufficientAmount && (<div>Insufficient token amount</div>)}
-        </div>
-      </div>
     );
   }
 }

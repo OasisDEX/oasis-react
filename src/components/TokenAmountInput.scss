@@ -1,2 +1,33 @@
-.base {
+@import "../styles/modules/constants";
+@import "../styles/modules/labels";
+
+.inputGroup {
+  display: flex;
+  align-items: stretch;
+  position: relative;
+  min-height: 38px;
+}
+
+.input {
+  text-align: right;
+  width: 100%;
+}
+
+.currency {
+  @include currency;
+  border-left: 1px solid $table-border;
+  display: flex;
+  align-items: center;
+}
+
+.errorMessage {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 2px);
+
+  @include muted();
+
+  padding: 2px 13px;
+  max-width: 100vw;
+  width: max-content;
 }

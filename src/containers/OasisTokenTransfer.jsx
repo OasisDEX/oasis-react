@@ -14,6 +14,7 @@ import OasisTokenBalanceWrapper  from './OasisTokenBalance';
 import transfers from '../store/selectors/transfers';
 import { TX_STATUS_AWAITING_CONFIRMATION } from '../store/reducers/transactions';
 import transactions from '../store/selectors/transactions';
+import styles from './OasisMakeOffer.scss';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -26,23 +27,20 @@ export class OasisTokenTransferWrapper extends PureComponent {
   render() {
     const { selectedToken, transaction } = this.props;
     const disable = transaction && transaction.get('txStatus') === TX_STATUS_AWAITING_CONFIRMATION;
+    const selectToken = <OasisTokenSelectWrapper disabled={disable}
+                                                 name={'tokenTransfer'}/>;
     return (
-      <OasisWidgetFrame heading="Transfer">
-        <div>
-          <div style={{ display: 'flex', marginBottom: '20px' }}>
-            <span style={{ width: '50%', textTransform: 'uppercase' }}>Wallet</span>
-            <OasisTokenBalanceWrapper style={{ width: '50%' }} decimalPlaces={5} tokenName={selectedToken}/>
-          </div>
-          <hr/>
-          <div>
-            <OasisTokenSelectWrapper disabled={disable} name={'tokenTransfer'}/>
-            <TokenTransferFormWrapper disabled={disable} onSubmit={this.props.actions.makeTransfer}/>
-          </div>
-          <div>
-            <hr/>
-            <OasisTokenTransferStatusWrapper/>
-          </div>
+      <OasisWidgetFrame heading="Transfer" spaceForContent={true}
+        headingChildren={selectToken}
+      >
+        <div className={styles.available}>
+          Wallet
+          <OasisTokenBalanceWrapper decimalPlaces={5} tokenName={selectedToken}/>
         </div>
+
+        <TokenTransferFormWrapper disabled={disable} onSubmit={this.props.actions.makeTransfer}/>
+
+        <OasisTokenTransferStatusWrapper/>
       </OasisWidgetFrame>
     );
   }
