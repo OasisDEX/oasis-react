@@ -14,6 +14,7 @@ import network from '../store/selectors/network';
 import transferHistory from '../store/selectors/transferHistory';
 import { formatAmount } from '../utils/tokens/pair';
 import { Map } from 'immutable';
+import styles from './OasisTokenTransferHistory.scss';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -23,7 +24,7 @@ const propTypes = PropTypes && {
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line react/display-name
 const RecipientAddress = ({ address }) => (
-    <span style={{ display: 'inline-block', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+    <span className={styles.recipientAddress}>
       {address}
     </span>
   );
@@ -57,6 +58,7 @@ export class OasisTokenTransferHistoryWrapper extends PureComponent {
       <OasisWidgetFrame heading="History">
         <div>
           {<OasisTable metadata={{activeNetworkName}}
+            className={styles.table}
             onRowClick={this.onRowClick}
             rows={transferHistoryList.toJSON()}
             col={transferHistoryColsDefinition()}

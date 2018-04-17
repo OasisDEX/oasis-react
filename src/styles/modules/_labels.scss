@@ -34,3 +34,10 @@
   text-transform: uppercase;
   width: 120px;
 }
+
+@mixin ellipsis($max-width: auto) {
+  max-width: $max-width;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
