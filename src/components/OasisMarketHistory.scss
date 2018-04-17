@@ -1,4 +1,3 @@
-@import "../styles/modules/constants";
 @import "../styles/modules/labels";
 
 .table {
@@ -18,7 +17,6 @@
   }
 
   td:first-child {
-    font-weight: 400;
     @include muted;
   }
 
@@ -48,15 +46,4 @@
   }
 
 
-}
-
-.tradeType {
-  text-transform: uppercase;
-
-  &.buy {
-    color: $success-text;
-  }
-  &.sell {
-    color: $danger-text;
-  }
 }

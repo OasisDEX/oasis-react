@@ -1,2 +1,69 @@
-.base {
+@import "../styles/modules/labels";
+@import "OasisMarketHistory";
+
+.select {
+  float: right;
+  position: relative;
+  top: -1px;
+}
+
+.tradesHistory {
+  @extend .table;
+}
+
+.openOffers {
+
+  td, th {
+    text-align: right;
+  }
+
+  td {
+    font-weight: 500;
+  }
+
+  th:first-child,
+  td:first-child {
+    flex-basis: 80px;
+    text-align: right;
+  }
+
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    flex-basis: 100px;
+    text-align: right;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3) {
+    flex-basis: 80px;
+    text-align: right;
+  }
+
+  th:nth-child(4),
+  td:nth-child(4) {
+    flex-basis: 80px;
+    text-align: right;
+  }
+
+  th:nth-child(5),
+  td:nth-child(5) {
+    flex-basis: 70px;
+    text-align: right;
+  }
+}
+
+
+.info {
+  margin-top: 2em;
+  padding: 0 30px;
+  @include muted();
+}
+
+
+.cancelButton.cancelButton {
+  font-weight: 400;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 10px;
 }

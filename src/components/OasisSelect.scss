@@ -1,0 +1,47 @@
+@import "../styles/modules/constants";
+
+.selectContainer {
+  border: 1px solid #D3D5DC;
+  background-color: transparent;
+  display: inline-block;
+}
+
+.select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  color: #4F5362;
+  border: none;
+  z-index: 1;
+  position: relative;
+  cursor: pointer;
+  text-transform: uppercase;
+
+  &:hover {
+    cursor: pointer;
+  }
+  &:hover[disabled] {
+    cursor: default;
+  }
+}
+
+.selectGlyph {
+  color: #D3D5DC;
+  z-index: -1;
+}
+
+// -------------- size -----------------
+
+
+.md {
+  border-radius: 4px;
+  font-size: 10px;
+  padding: 0 8px 0 2px;
+
+  .select {
+    margin-right: -20px;
+    padding: 7px 25px 7px 10px;
+    font-size: 12px;
+  }
+}
+

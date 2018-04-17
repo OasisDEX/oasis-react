@@ -1,3 +1,5 @@
+@import "./constants";
+
 @mixin text($size: 12px, $weight: 500) {
   font-family: 'Montserrat', sans-serif;
   font-size: $size;
@@ -9,4 +11,14 @@
   color: #B1B1B3;
   font-size: $size;
   line-height: $size*1.7;
+}
+
+@mixin buyLabel() {
+  text-transform: uppercase;
+  color: $success-text;
+}
+
+@mixin sellLabel() {
+  text-transform: uppercase;
+  color: $danger-text;
 }

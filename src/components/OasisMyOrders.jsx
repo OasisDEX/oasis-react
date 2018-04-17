@@ -5,13 +5,17 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import moment from 'moment';
 
 import { DESCENDING, orderByTimestamp } from '../utils/sort';
-import { formatAmount, formatPrice, formatTradeType, price, tradeType } from '../utils/tokens/pair';
+import { formatAmount, formatPrice, price } from '../utils/tokens/pair';
 import { OasisTable } from './OasisTable';
+import { OasisTradeType } from './OasisTradeType';
 import OasisWidgetFrame from '../containers/OasisWidgetFrame';
 import web3 from '../bootstrap/web3';
 import { ASK, BID } from '../store/reducers/trades';
 import { ETH_UNIT_ETHER } from '../constants';
 import { isOfferOwner } from '../utils/orders';
+import OasisSelect from "./OasisSelect";
+import styles from './OasisMyOrders.scss';
+import OasisButton from "./OasisButton";
 
 
 
@@ -61,7 +65,14 @@ const actionsColumnTemplate = function(offer) {
   return (
     isOfferOwner(offer) ?
       (
-        <button disabled={cancelPending} onClick={onCancel}>{cancelPending?'cancelling': 'cancel'}</button>
+        <OasisButton
+            disabled={cancelPending}
+            size='xs'
+            onClick={onCancel}
+            className={styles.cancelButton}
+        >
+          {cancelPending ? '...' : 'cancel'}
+        </OasisButton>
       ) : null
   );
 };
@@ -108,8 +119,8 @@ class OasisMyOrders extends PureComponent {
     const orderActions = { cancelOffer };
     const myOpenOffers =
       sellOffers
-        .map(so => ({...so, tradeType: formatTradeType(ASK), price: so.ask_price }) )
-        .concat(buyOffers.map(bo => ({...bo, tradeType: formatTradeType(BID), price: bo.bid_price }) ))
+        .map(so => ({...so, tradeType: <OasisTradeType type={ASK} />, price: so.ask_price }) )
+        .concat(buyOffers.map(bo => ({...bo, tradeType: <OasisTradeType type={BID} />, price: bo.bid_price }) ))
         .filter(myOpenOffersFilter)
         .sort((p, c) => p.bid_price_sort < c.bid_price_sort ? 1 : -1)
         .map(myOrdersDisplayFormat);
@@ -119,11 +130,12 @@ class OasisMyOrders extends PureComponent {
         <OasisTable
           rows={myOpenOffers.toArray()}
           col={openOrdersColsDefinition(baseToken, quoteToken, orderActions)}
+          className={styles.openOffers}
         />
       );
     } else {
       return (
-        <div>You currently have no active offers</div>
+        <div className={styles.info}>You currently have no active offers</div>
       )
     }
   }
@@ -143,9 +155,7 @@ class OasisMyOrders extends PureComponent {
 
       return {
         date: moment.unix(tradeHistoryEntry.timestamp).format('DD-MM-HH:mm'),
-        tradeType: formatTradeType(
-          tradeType(tradeHistoryEntry, baseToken),
-        ),
+        tradeType: <OasisTradeType order={tradeHistoryEntry} baseCurrency={baseToken}/>,
         baseAmount: formatAmount(baseAmount, true),
         quoteAmount: formatAmount(quoteAmount, true),
         price: formatPrice(
@@ -158,10 +168,13 @@ class OasisMyOrders extends PureComponent {
     const marketHistory = orderByTimestamp(myTrades.toJSON(), DESCENDING).map(toHistoricalTrades);
     if (myTrades.count()) {
       return (
-        <OasisTable rows={marketHistory} col={tradesHistoryColsDefinition(baseToken, quoteToken)}/>
+        <OasisTable
+          rows={marketHistory}
+          col={tradesHistoryColsDefinition(baseToken, quoteToken)}
+          className={styles.tradesHistory}/>
       );
     } else {
-      return (<div>Your trades is history empty</div>);
+      return (<div className={styles.info}>Your trades history is empty</div>);
     }
 
   }
@@ -175,15 +188,17 @@ class OasisMyOrders extends PureComponent {
 
 
   render() {
+    var select = <OasisSelect
+        onChange={this.onViewTypeChange}
+        value={this.viewType}
+        className={styles.select}
+      >
+        <option value={'Open'}>Open</option>
+        <option value={'Closed'}>Closed</option>
+      </OasisSelect>;
 
     return (
-      <OasisWidgetFrame heading={'MY ORDERS'}>
-        <div>
-          <select onChange={this.onViewTypeChange} value={this.viewType} >
-            <option value={'Open'}>Open</option>
-            <option value={'Closed'}>Closed</option>
-          </select>
-        </div>
+      <OasisWidgetFrame heading={'MY ORDERS'} headingChildren={select}>
         <div>{this.renderContent()}</div>
       </OasisWidgetFrame>
     );
