@@ -1,0 +1,57 @@
+@import "../styles/modules/labels";
+@import "../styles/modules/grid";
+
+.recipientAddress {
+  @include ellipsis(80px);
+}
+
+.table {
+
+  td, th {
+    text-align: right;
+  }
+
+  td {
+    font-weight: 500;
+  }
+
+  th:first-child,
+  td:first-child {
+    flex-basis: 100px;
+    text-align: right;
+  }
+
+  td:first-child {
+    @include muted;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    flex-basis: 50px;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3) {
+    flex-basis: 110px;
+    flex-grow: 0;
+    text-align: left;
+  }
+
+  th:nth-child(4),
+  td:nth-child(4) {
+    flex-basis: 70px;
+    text-align: center;
+  }
+
+  th:nth-child(5),
+  td:nth-child(5) {
+    flex-basis: 80px;
+    text-align: right;
+  }
+
+
+}
