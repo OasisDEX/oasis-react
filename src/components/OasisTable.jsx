@@ -61,7 +61,7 @@ export class OasisTable extends PureComponent {
     return rows.map( (row, i) => {
       return (
         <tr
-          className={`${styles.clickable} ${row.isActive ? styles.active: ''}`}
+          className={`${row.isActive ? styles.active: ''} ${this.props.onRowClick ? styles.clickable : ''}`}
           key={i}
           data-tradingpair={row.tradingPair}
           onClick={this.rowClickHandler.bind(null, row)}

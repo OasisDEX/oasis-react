@@ -14,6 +14,8 @@
     background-color: #FBFBFB;
     padding: 10px;
     text-align: center;
+    border-top: 1px #EFEFEF solid;
+    border-left: 1px #EFEFEF solid;
   }
 
   td {
@@ -24,6 +26,11 @@
   tr:first-child th,
   tr:first-child td {
     border-top: none;
+  }
+
+  td:first-child,
+  th:first-child {
+    border-left: none;
   }
 
 }

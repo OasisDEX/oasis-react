@@ -138,7 +138,7 @@ export class OfferMakeForm extends PureComponent {
         <table className={styles.table}>
           <tbody>
           <tr className={styles.formGroup}>
-            <th className={styles.label}>Price:</th>
+            <th className={styles.label}>Price</th>
             <td className={styles.amount}>
                 <Field
                   autoComplete="off"
@@ -150,7 +150,7 @@ export class OfferMakeForm extends PureComponent {
             <td className={styles.currency}> {priceToken}</td>
           </tr>
           <tr className={styles.formGroup}>
-            <th className={styles.label}>Volume:</th>
+            <th className={styles.label}>Amount</th>
             <td className={styles.amount}>
             <Field
               autoComplete="off"
@@ -173,7 +173,7 @@ export class OfferMakeForm extends PureComponent {
             </td>
           </tr>
           <tr className={styles.formGroup}>
-            <th className={styles.label}>Total:</th>
+            <th className={styles.label}>Total</th>
             <td className={styles.amount}>
               <div className={styles.inputGroup}>
                 {this.setMaxButton()}

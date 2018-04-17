@@ -68,7 +68,7 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
           <OasisButton
               className={styles.callToAction}
               color="danger"
-              size="max"
+              size="md"
               disabled={!hasSufficientTokenAmount}
               onClick={this.onModalOpen}>
             Sell

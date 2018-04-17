@@ -67,7 +67,7 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
           <OasisButton
               className={styles.callToAction}
               color="success"
-              size="max"
+              size="md"
               disabled={!hasSufficientTokenAmount}
               onClick={this.onModalOpen}>
             Buy
