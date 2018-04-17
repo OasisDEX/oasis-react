@@ -1,0 +1,9 @@
+@import "../styles/modules/labels";
+
+.buy {
+  @include buyLabel;
+}
+
+.sell {
+  @include sellLabel;
+}

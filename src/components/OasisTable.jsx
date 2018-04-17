@@ -76,7 +76,7 @@ export class OasisTable extends PureComponent {
   render() {
     return (
       <div>
-        <table className={styles.scrolling + ' ' + this.props.className}>
+        <table className={`${styles.scrolling} ${this.props.className || ''}`}>
           <thead>
             {this.renderTHeadContent()}
           </thead>

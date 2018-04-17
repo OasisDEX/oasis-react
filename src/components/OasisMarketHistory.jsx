@@ -4,9 +4,9 @@ import moment from 'moment';
 import BigNumber from 'bignumber.js';
 import OasisWidgetFrame from '../containers/OasisWidgetFrame';
 import { OasisTable } from './OasisTable';
-import { tradeType, price, formatTradeType, formatPrice, formatAmount } from '../utils/tokens/pair';
+import { OasisTradeType } from './OasisTradeType';
+import { price, formatPrice, formatAmount } from '../utils/tokens/pair';
 import { orderByTimestamp, DESCENDING } from '../utils/sort';
-import { BID } from '../store/reducers/trades';
 import styles from './OasisMarketHistory.scss';
 import CSSModules from 'react-css-modules';
 
@@ -44,12 +44,9 @@ class OasisMarketHistory extends PureComponent {
         quoteAmount = new BigNumber(tradeHistoryEntry.sellHowMuch);
       }
 
-      const tradeTypeEnum = tradeType(tradeHistoryEntry, baseToken);
-      let tradeTypeClass = tradeTypeEnum === BID ? styles.buy : styles.sell;
-      let tradeTypeSpan = <span className={`${tradeTypeClass} ${styles.tradeType}`}>{formatTradeType(tradeTypeEnum)}</span>;
       return {
         date: moment.unix(tradeHistoryEntry.timestamp).format('DD-MM-HH:mm'),
-        tradeType: tradeTypeSpan,
+        tradeType: <OasisTradeType order={tradeHistoryEntry} baseCurrency={baseToken}/>,
         baseAmount: formatAmount(baseAmount, true),
         quoteAmount: formatAmount(quoteAmount, true),
         price: formatPrice(

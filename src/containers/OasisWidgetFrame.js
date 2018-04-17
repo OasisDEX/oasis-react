@@ -10,7 +10,7 @@ const OasisWidgetFrame = (props) => {
     <section styleName="OasisWidgetFrame">
       <div className="row">
         <div className="col-md-12">
-          <h4 styleName="Heading">{props.heading} {props.loadProgressSection}</h4>
+          <h4 styleName="Heading">{props.heading} {props.loadProgressSection}{props.headingChildren}</h4>
         </div>
       </div>
 
@@ -26,6 +26,7 @@ OasisWidgetFrame.propTypes = {
   loadProgressSection: PropTypes.node,
   spaceForContent: PropTypes.bool,
 
+  headingChildren: PropTypes.node,
   children: PropTypes.node
 };
 
