@@ -10,6 +10,8 @@ import EthereumAddressInputFieldWrapper from './EthereumAddressInputField';
 import TokenAmountInputFieldWrapper  from './TokenAmountInputField';
 import transfers from '../store/selectors/transfers';
 import transfersReducer from '../store/reducers/transfers';
+import styles from './TokenTransferForm.scss';
+import OasisButton from "../components/OasisButton";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -22,22 +24,46 @@ export class TokenTransferFormWrapper extends PureComponent {
   render() {
     const { handleSubmit, valid, makeTransfer, disabled, actions } = this.props;
     return (
-      <div>
-        <form method="POST" onSubmit={handleSubmit}>
-          <EthereumAddressInputFieldWrapper disabled={disabled} fieldName={'recipient'}/>
-          <button type="button" onClick={actions.transferMax}>transfer max</button>
-          <TokenAmountInputFieldWrapper disabled={disabled} fieldName={'tokenAmount'}/>
-          <Field
-            component={'input'}
-            type={'text'}
-            name={'token'}
-            hidden
-          />
-          <div>
-            <button onClick={makeTransfer} disabled={!valid || disabled}>Transfer</button>
-          </div>
-        </form>
-      </div>
+      <form method="POST" onSubmit={handleSubmit}>
+        <table className={styles.table}>
+          <tbody>
+          <tr>
+            <th>Recipient</th>
+            <td colSpan="2" className={styles.withInput}>
+              <EthereumAddressInputFieldWrapper disabled={disabled} fieldName={'recipient'}/>
+            </td>
+          </tr>
+          <tr>
+            <th>Amount</th>
+            <td className={styles.withInput}>
+              <div className={styles.formGroup}>
+                <OasisButton
+                  type="button"
+                  onClick={actions.transferMax}
+                  size="xs"
+                  className={styles.setMaxBtn}
+                >
+                  transfer max
+                </OasisButton>
+                <TokenAmountInputFieldWrapper disabled={disabled} fieldName={'tokenAmount'}/>
+                <Field
+                  component={'input'}
+                  type={'text'}
+                  name={'token'}
+                  hidden
+                />
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div className={styles.footer}>
+          <OasisButton
+            onClick={makeTransfer}
+            disabled={!valid || disabled}
+          >Transfer</OasisButton>
+        </div>
+      </form>
     );
   }
 

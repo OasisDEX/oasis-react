@@ -26,7 +26,7 @@ export class OasisTokenBalanceWrapper extends PureComponent {
       );
     } else {
       return (
-        <div style={{ display: 'inline-block' }}>
+        <div className={styles.available}>
           <span className={styles["available-amount"]}>
           { formatAmount(balance, fromWei, balanceUnit ||  ETH_UNIT_ETHER, this.props.decimalPlaces) }
           </span>

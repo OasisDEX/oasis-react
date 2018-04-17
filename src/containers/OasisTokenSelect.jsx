@@ -7,6 +7,8 @@ import { bindActionCreators } from 'redux';
 import tokens from '../store/selectors/tokens';
 import tokenSelectorsReducer from '../store/reducers/tokenSelectors';
 import tokenSelectors from '../store/selectors/tokenSelectors';
+import OasisSelect from "../components/OasisSelect";
+import widgetFrameStyles from "./OasisWidgetFrame.scss"
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -40,11 +42,15 @@ export class OasisTokenSelectWrapper extends PureComponent {
     const selectedToken = selected || defaultToken;
     if (tokens) {
       return (
-        <div>
-          <select disabled={disabled} name={this.props.name} value={selectedToken} onChange={this.onOptionSelected}>
+          <OasisSelect
+            disabled={disabled}
+            name={this.props.name}
+            value={selectedToken}
+            onChange={this.onOptionSelected}
+            className={widgetFrameStyles.WidgetFloatRightButton}
+          >
             {this.getOptions()}
-          </select>
-        </div>
+          </OasisSelect>
       );
     } else {
       return (

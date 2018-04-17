@@ -22,3 +22,15 @@
   text-transform: uppercase;
   color: $danger-text;
 }
+
+@mixin currency {
+  font-weight: 700;
+  font-size: 10px;
+  color: #68686C;
+  letter-spacing: 1px;
+  vertical-align: middle;
+  text-align: left;
+  padding-left: 10px;
+  text-transform: uppercase;
+  width: 120px;
+}
