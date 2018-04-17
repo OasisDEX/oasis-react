@@ -6,6 +6,13 @@
   font-weight: $weight;
 }
 
+@mixin heading {
+  @include text(24px, 400);
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
+
 @mixin muted($size: 12px) {
   font-weight: 500;
   color: #B1B1B3;

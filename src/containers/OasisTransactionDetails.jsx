@@ -4,7 +4,6 @@ import { PropTypes } from 'prop-types';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import SetTokenAllowanceTrustWrapper from './SetTokenAllowanceTrust';
 import tokens from '../store/selectors/tokens';
 import OasisGasPriceWrapper from './OasisGasPrice';
 import network from '../store/selectors/network';
@@ -12,42 +11,52 @@ import OasisInsufficientAmountOfToken from '../components/OasisInsufficientAmoun
 import WithTransactionWatch from './WithTransactionWatch';
 import { gasEstimateError, isGasEstimatePending, transactionGasCostEstimate } from '../store/selectors';
 import TransactionStatus from '../components/TransactionStatus';
+import InfoBox from '../components/InfoBox';
+import styles from './OasisTransactionDetails.scss';
+import CSSModules from 'react-css-modules';
+import {InfoBoxBody} from "../components/InfoBoxBody";
+
 
 const propTypes = PropTypes && {
   transactionSubectType: PropTypes.string.isRequired,
   actions: PropTypes.object.isRequired,
   buyToken: PropTypes.string.isRequired,
   sellToken: PropTypes.string.isRequired,
-  transactionSubjectAddress: PropTypes.string.isRequired,
   gasEstimatePending: PropTypes.bool,
   hasSufficientTokenAmount: PropTypes.bool,
 };
 
-const tokenReceivedSoldStyle = (displayInline) =>
-  ({ display: displayInline ? 'inline-block' : '', width: '50%', textAlign: displayInline ? 'center': '' });
+const TokenAmount = ({ tokenName, tokenAmount, sign, color }) => (
+    <div>
+      <span className={`${styles.circleIco} ${styles[color]}`}>{sign}</span>
+      <span className={styles.baseText}>{tokenAmount.toString()} </span>
+      <span className={styles.bolderText}>{tokenName}</span>
+    </div>
+);
 
-const TokenReceivedAmount = ({ tokenName, tokenAmount, displayInline }) => (
-  <div style={tokenReceivedSoldStyle(displayInline)}>
-    <span>[+] {tokenAmount.toString()} <b>{tokenName}</b></span>
-  </div>
+TokenAmount.propTypes = {
+  tokenName: PropTypes.string,
+  tokenAmount: PropTypes.string,
+  sign: PropTypes.string,
+  color: PropTypes.string
+};
+
+const TokenReceivedAmount = ({ tokenName, tokenAmount }) => (
+    <TokenAmount tokenName={tokenName} tokenAmount={tokenAmount} sign='+' color='green' />
 );
 
 TokenReceivedAmount.propTypes = {
   tokenName: PropTypes.string,
-  tokenAmount: PropTypes.string,
-  displayInline: PropTypes.bool
+  tokenAmount: PropTypes.string
 };
 
-const TokenSoldAmount = ({ tokenName, tokenAmount, displayInline }) => (
-  <div style={tokenReceivedSoldStyle(displayInline)}>
-    <span>[-] {tokenAmount.toString()} <b>{tokenName}</b></span>
-  </div>
+const TokenSoldAmount = ({ tokenName, tokenAmount }) => (
+  <TokenAmount tokenName={tokenName} tokenAmount={tokenAmount} sign='-' color='red' />
 );
 
 TokenSoldAmount.propTypes = {
   tokenName: PropTypes.string,
-  tokenAmount: PropTypes.string,
-  displayInline: PropTypes.bool
+  tokenAmount: PropTypes.string
 };
 
 export class OasisTransactionDetailsWrapper extends PureComponent {
@@ -58,8 +67,8 @@ export class OasisTransactionDetailsWrapper extends PureComponent {
 
   tradingTokenPartial() {
     return (
-      <div>
-        trading of <b>{this.props.baseToken}</b>
+      <div className={styles.baseText}>
+        trading of <span className={styles.bolderText}>{this.props.baseToken}</span>
       </div>
     );
   }
@@ -67,8 +76,6 @@ export class OasisTransactionDetailsWrapper extends PureComponent {
   gasAndAllowancePartial() {
 
     const {
-      transactionSubjectAddress,
-      buyToken,
       transaction,
       transactionGasCostEstimate,
       isGasEstimatePending,
@@ -77,17 +84,11 @@ export class OasisTransactionDetailsWrapper extends PureComponent {
 
     if (!transaction) {
       return (
-        <div>
           <OasisGasPriceWrapper
             gasEstimateError={gasEstimateError}
             gasEstimatePending={isGasEstimatePending}
             transactionGasCostEstimate={transactionGasCostEstimate}
           />
-          <SetTokenAllowanceTrustWrapper
-            allowanceSubjectAddress={transactionSubjectAddress}
-            tokenName={buyToken}
-          />
-        </div>
       );
     }
   }
@@ -99,28 +100,27 @@ export class OasisTransactionDetailsWrapper extends PureComponent {
       amountSold,
       amountReceived,
       transaction,
-      fullWidth,
     } = this.props;
 
     if (!transaction) {
       return (
-        <div style={{ display: 'flex' }}>
-        <div style={{ width: (!fullWidth ? '50%' : '100%') }}>
-          <TokenReceivedAmount tokenAmount={amountReceived} tokenName={buyToken}/>
-          <TokenSoldAmount tokenAmount={amountSold} tokenName={sellToken}/>
-        </div>
-        <div style={{ width: (!fullWidth ? '50%' : '100%') }}>
-          <div>{this.tradingTokenPartial()}</div>
-          {this.gasAndAllowancePartial()}
-        </div>
-      </div>);
+        <InfoBox>
+          <InfoBoxBody>
+            <TokenReceivedAmount tokenAmount={amountReceived} tokenName={buyToken}/>
+            <TokenSoldAmount tokenAmount={amountSold} tokenName={sellToken}/>
+          </InfoBoxBody>
+          <InfoBoxBody>
+            {this.tradingTokenPartial()}
+            {this.gasAndAllowancePartial()}
+          </InfoBoxBody>
+        </InfoBox>);
 
     } else {
       return (
         <div>
           <div>
-            <TokenReceivedAmount displayInline tokenAmount={amountReceived} tokenName={buyToken}/>
-            <TokenSoldAmount displayInline tokenAmount={amountSold} tokenName={sellToken}/>
+            <TokenReceivedAmount tokenAmount={amountReceived} tokenName={buyToken}/>
+            <TokenSoldAmount tokenAmount={amountSold} tokenName={sellToken}/>
           </div>
           <TransactionStatus transaction={transaction}/>
         </div>
@@ -130,7 +130,11 @@ export class OasisTransactionDetailsWrapper extends PureComponent {
 
   renderInSufficientAmount() {
     const { sellToken } = this.props;
-    return <OasisInsufficientAmountOfToken tokenName={sellToken}/>;
+    return <InfoBox>
+        <InfoBoxBody>
+          <OasisInsufficientAmountOfToken tokenName={sellToken}/>
+        </InfoBoxBody>
+    </InfoBox>;
   }
 
   static renderTransactionIsInvalid() {
@@ -150,9 +154,7 @@ export class OasisTransactionDetailsWrapper extends PureComponent {
 
   render() {
     return (
-      <div style={{ backgroundColor: 'lightgray', padding: 10, margin: '20px 0' }}>
-        {this.renderContent()}
-      </div>
+      this.renderContent()
     );
   }
 
@@ -186,4 +188,4 @@ export function mapDispatchToProps(dispatch) {
 
 OasisTransactionDetailsWrapper.propTypes = propTypes;
 OasisTransactionDetailsWrapper.displayName = 'OasisTransactionDetails';
-export default WithTransactionWatch(connect(mapStateToProps, mapDispatchToProps)(OasisTransactionDetailsWrapper));
+export default WithTransactionWatch(connect(mapStateToProps, mapDispatchToProps)(CSSModules(OasisTransactionDetailsWrapper, styles)));

@@ -1,0 +1,11 @@
+@import "../styles/modules/labels";
+
+.heading {
+  @include heading;
+  margin-bottom: 1em;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+}

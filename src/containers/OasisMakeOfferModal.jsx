@@ -14,23 +14,16 @@ import OfferMakeForm from './OasisOfferMakeForm';
 import balances from '../store/selectors/balances';
 import { getFormValues, getFormSyncErrors } from 'redux-form/immutable';
 import OasisTransactionDetailsWrapper from './OasisTransactionDetails';
+import SetTokenAllowanceTrustWrapper from './SetTokenAllowanceTrust';
 import transactions from '../store/selectors/transactions';
 import { TX_OFFER_MAKE, TX_STATUS_CONFIRMED } from '../store/reducers/transactions';
 import getUsersSoldAndReceivedAmounts from '../utils/offers/getUsersSoldAndReceivedAmounts';
-import OasisTokenBalanceWrapper  from './OasisTokenBalance';
+import OasisTokenBalanceSummary  from './OasisTokenBalanceSummary';
 import markets from '../store/selectors/markets';
-
-const BtnStyle = {
-  padding: '10px 15px',
-  margin: 5,
-  backgroundColor: 'white',
-  border: '1px solid gray',
-};
-const closeModalBtnStyle = {
-  position: 'absolute',
-  top: 20,
-  right: 20,
-};
+import modalStyles from '../styles/modules/_modal.scss';
+import styles from './OasisMakeOfferModal.scss';
+import CSSModules from 'react-css-modules';
+import OasisButton from "../components/OasisButton";
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -48,18 +41,6 @@ const getOfferTitle = (offerMakeType) => {
     case MAKE_SELL_OFFER:
       return 'Sell offer';
   }
-};
-
-const style = {
-  content: {
-    top: '40px',
-    left: '30%',
-    right: '30%',
-    bottom: '40px',
-    background: '#fff',
-    overflow: 'auto',
-    padding: '20px',
-  },
 };
 
 export const isTransactionConfirmed = (transaction) =>
@@ -110,19 +91,14 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
     } = this.props;
 
     return (
-      <ReactModal ariaHideApp={false} style={style} isOpen={true}>
-        <div>
-          <h3>{getOfferTitle(offerMakeType)}</h3>
+      <ReactModal ariaHideApp={false} isOpen={true} className={modalStyles.modal}>
+          <h4 className={styles.heading}>{getOfferTitle(offerMakeType)}</h4>
           <button
             hidden={currentOfferMakeTransaction}
-            style={{ ...BtnStyle, ...closeModalBtnStyle }}
-            onClick={this.onCancel}>x
+            className={modalStyles.closeModalBtn}
+            onClick={this.onCancel}>×
           </button>
-        </div>
-        <div>
-          <b>Available:</b>
-          <OasisTokenBalanceWrapper tokenName={sellToken}/>
-        </div>
+        <OasisTokenBalanceSummary summary="Available" token={sellToken}/>
         <div>
           <OfferMakeForm
             baseToken={baseToken}
@@ -130,35 +106,29 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
             offerMakeType={offerMakeType}
             form={form}
           />
-          <div className="statusSection">
-            <OasisTransactionDetailsWrapper
+          <OasisTransactionDetailsWrapper
               transactionSubectType={TX_OFFER_MAKE}
               isTransactionValid={isCurrentTransactionValid}
               {...getUsersSoldAndReceivedAmounts(offerMakeType, offerMakeFormValues)}
               buyToken={buyToken}
               transaction={currentOfferMakeTransaction}
               sellToken={sellToken}
-              transactionSubjectAddress={marketAddress}
               offerId={null}
               getTransactionGasCostEstimate={this.getTransactionGasCostEstimate}
               hasSufficientTokenAmount={hasSufficientTokenAmount}
             />
-          </div>
+          <SetTokenAllowanceTrustWrapper
+            allowanceSubjectAddress={marketAddress}
+            tokenName={buyToken}
+          />
           <div
-            className="cancelBuyActionsSection"
-            style={{ display: 'flex' }}
+            className={styles.footer}
             hidden={currentOfferMakeTransaction}
           >
-            <div>
-              <button style={BtnStyle} onClick={this.onCancel}>Cancel</button>
-            </div>
-            <div className="notificationsSection">
-            </div>
-            <div>
-              <button disabled={!canMakeOffer} style={BtnStyle} onClick={this.onBuyOffer}>
-                {OasisMakeOfferModalWrapper.makeOfferBtnLabel(offerMakeType, baseToken)}
-              </button>
-            </div>
+            <OasisButton onClick={this.onCancel}>Cancel</OasisButton>
+            <OasisButton disabled={!canMakeOffer} onClick={this.onBuyOffer}>
+              {OasisMakeOfferModalWrapper.makeOfferBtnLabel(offerMakeType, baseToken)}
+            </OasisButton>
           </div>
         </div>
       </ReactModal>
@@ -207,4 +177,4 @@ export function mapDispatchToProps(dispatch) {
 
 OasisMakeOfferModalWrapper.propTypes = propTypes;
 OasisMakeOfferModalWrapper.displayName = 'OasisMakeOfferModal';
-export default connect(mapStateToProps, mapDispatchToProps)(OasisMakeOfferModalWrapper);
+export default connect(mapStateToProps, mapDispatchToProps)(CSSModules(OasisMakeOfferModalWrapper, {modalStyles, styles}, { allowMultiple: true }));

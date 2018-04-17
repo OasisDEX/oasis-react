@@ -17,6 +17,7 @@ import tokens from '../store/selectors/tokens';
 import { formatAmount } from '../utils/tokens/pair';
 import { getFormValues, getFormSyncErrors } from 'redux-form/immutable';
 import OasisTransactionDetailsWrapper  from './OasisTransactionDetails';
+import SetTokenAllowanceTrustWrapper from './SetTokenAllowanceTrust';
 import transactions from '../store/selectors/transactions';
 import { TX_OFFER_TAKE, TX_STATUS_CONFIRMED } from '../store/reducers/transactions';
 import getUsersSoldAndReceivedAmounts from '../utils/offers/getUsersSoldAndReceivedAmounts';
@@ -148,11 +149,14 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
               buyToken={buyToken}
               transaction={currentOfferTakeTransaction}
               sellToken={sellToken}
-              transactionSubjectAddress={activeOfferTakeOfferOwner}
               offerId={activeOfferTakeOfferId}
               getTransactionGasCostEstimate={getTransactionGasCostEstimate}
             />
           </div>
+          <SetTokenAllowanceTrustWrapper
+            allowanceSubjectAddress={activeOfferTakeOfferOwner}
+            tokenName={buyToken}
+          />
           <div
             className="cancelBuyActionsSection"
             style={{ display: 'flex' }}

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import tokens from '../store/selectors/tokens';
 import OasisWidgetFrame from '../containers/OasisWidgetFrame';
-import OasisTokenBalanceWrapper  from './OasisTokenBalance';
+import OasisTokenBalanceSummary  from './OasisTokenBalanceSummary';
 import OfferMakeForm  from './OasisOfferMakeForm';
 import offerMakesReducer, { MAKE_SELL_OFFER } from '../store/reducers/offerMakes';
 import OasisMakeOfferModalWrapper  from './OasisMakeOfferModal';
@@ -54,9 +54,7 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
 
     return (
       <OasisWidgetFrame heading={`Sell ${baseToken}`} spaceForContent={true}>
-        <div className={styles.available}>
-          Available <OasisTokenBalanceWrapper tokenName={baseToken}/>
-        </div>
+        <OasisTokenBalanceSummary summary="Available" token={baseToken}/>
         <div>
           {this.getModal(formProps)}
           <OfferMakeForm {...formProps}/>
