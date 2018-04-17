@@ -55,10 +55,21 @@
   border-radius: 100px;
 }
 // --------------- color -----------
+@mixin disabled {
+  &[disabled]:hover,
+  &[disabled] {
+    color: #A8ACB9;
+    border-color: #A8ACB9;
+    background-color: transparent;
+  }
+}
+
+
 
 .default {
   color: #4F5362;
   border-color: #A8ACB9;
+  background-color: transparent;
 
   &:hover,
   &:focus:enabled,
@@ -67,11 +78,14 @@
     background-color: #A8ACB9;
     border-color: #838690
   }
+
+  @include disabled;
 }
 
 .success {
   color: $success-text;
   border-color: $success-text;
+  background-color: transparent;
 
   &:hover,
   &:focus:enabled,
@@ -81,18 +95,14 @@
     border-color: $success;
   }
 
-  &[disabled]:hover,
-  &[disabled] {
-    color: $success-text;
-    border-color: $success-text;
-    background-color: transparent;
-  }
+  @include disabled;
 }
 
 
 .danger {
   color: $danger-text;
   border-color: $danger-text;
+  background-color: transparent;
 
   &:hover,
   &:focus:enabled,
@@ -102,10 +112,5 @@
     border-color: $danger;
   }
 
-  &[disabled]:hover,
-  &[disabled] {
-    color: $danger-text;
-    border-color: $danger-text;
-    background-color: transparent;
-  }
+  @include disabled;
 }

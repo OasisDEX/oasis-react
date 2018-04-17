@@ -10,6 +10,10 @@ import balancesReducer, {
 } from '../store/reducers/balances';
 import platform from '../store/selectors/platform';
 import transactions from '../store/selectors/transactions';
+import OasisButton from "../components/OasisButton";
+import {InfoBox} from "../components/InfoBox";
+import {InfoBoxBody} from "../components/InfoBoxBody";
+import styles from './SetTokenAllowanceTrust.scss';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -76,10 +80,14 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
     }
 
     return (
-      <div>
-        <h1>{subjectTrustStatus}</h1>
-        <button onClick={this.toggleTokenAllowanceTrustStatus}>{btnLabel}</button>
-      </div>
+      <InfoBox justifyContent='space-between'>
+        <InfoBoxBody>
+          <h1>{subjectTrustStatus}</h1>
+        </InfoBoxBody>
+        <InfoBoxBody>
+          <OasisButton onClick={this.toggleTokenAllowanceTrustStatus} size='md' color='success'>{btnLabel}</OasisButton>
+        </InfoBoxBody>
+      </InfoBox>
     );
   }
 }

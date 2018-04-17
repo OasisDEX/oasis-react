@@ -1,0 +1,32 @@
+@import "../styles/modules/constants";
+
+.box {
+  border: 1px solid;
+  border-radius: 8px;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+
+  display: flex;
+}
+
+.boxBody {
+  padding: 16px;
+  font-size: 13px;
+  color: #939194;
+}
+
+.vertical {
+  flex-direction: column;
+}
+
+.default {
+  border-color: #E5E9EB;
+}
+
+.danger {
+  border-color: $danger-text;
+}
+
+.success {
+  border-color: $success-text;
+}

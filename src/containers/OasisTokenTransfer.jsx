@@ -6,15 +6,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import OasisTokenSelectWrapper from './OasisTokenSelect';
 import TokenTransferFormWrapper from './TokenTransferForm';
+import OasisTokenBalanceSummary from './OasisTokenBalanceSummary';
 import OasisTokenTransferStatusWrapper  from './OasisTokenTransferStatus';
 import OasisWidgetFrame from '../containers/OasisWidgetFrame';
 
 import transfersReducer from '../store/reducers/transfers';
-import OasisTokenBalanceWrapper  from './OasisTokenBalance';
 import transfers from '../store/selectors/transfers';
 import { TX_STATUS_AWAITING_CONFIRMATION } from '../store/reducers/transactions';
 import transactions from '../store/selectors/transactions';
-import styles from './OasisMakeOffer.scss';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -33,11 +32,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
       <OasisWidgetFrame heading="Transfer" spaceForContent={true}
         headingChildren={selectToken}
       >
-        <div className={styles.available}>
-          Wallet
-          <OasisTokenBalanceWrapper decimalPlaces={5} tokenName={selectedToken}/>
-        </div>
-
+        <OasisTokenBalanceSummary summary="Wallet" token={selectedToken} decimalPlaces={5} />
         <TokenTransferFormWrapper disabled={disable} onSubmit={this.props.actions.makeTransfer}/>
 
         <OasisTokenTransferStatusWrapper/>
