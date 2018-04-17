@@ -8,7 +8,7 @@ const handlers = {
 
 class ErrorHandler {
   handle(error) {
-    console.log('ErrorHandler', error);
+    //console.log('ErrorHandler', error);
     const handler = handlers[error];
     if (!handler) {
       throw new Error('Platform error:', error);

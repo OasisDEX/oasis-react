@@ -1,3 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`(Component) OasisWrapUnwrapBalances should render 1`] = `<div />`;
+exports[`(Component) OasisWrapUnwrapBalances should render 1`] = `
+<OasisWidgetFrame
+  heading="BALANCES"
+>
+  <OasisTable
+    col={
+      Array [
+        Object {
+          "heading": "coin",
+          "key": "unwrappedToken",
+        },
+        Object {
+          "heading": "wallet",
+          "template": [Function],
+        },
+        Object {
+          "heading": "wrapped",
+          "template": [Function],
+        },
+      ]
+    }
+    onRowClick={[Function]}
+    rows={Array []}
+  />
+</OasisWidgetFrame>
+`;

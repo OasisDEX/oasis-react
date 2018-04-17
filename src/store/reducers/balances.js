@@ -6,7 +6,7 @@ import { createPromiseActions } from '../../utils/createPromiseActions';
 import { fulfilled } from '../../utils/store';
 import {
 ETH_UNIT_ETHER, TOKEN_1ST, TOKEN_AUGUR, TOKEN_BAT,
-TOKEN_DAI, TOKEN_DIGIX, TOKEN_GNOSIS, TOKEN_ICONOMI,
+TOKEN_DAI, TOKEN_DIGIX, TOKEN_GOLEM, TOKEN_ICONOMI,
 TOKEN_MAKER, TOKEN_MLN, TOKEN_NMR, TOKEN_PLUTON, TOKEN_RHOC, TOKEN_SAI, TOKEN_SINGULARDTV, TOKEN_TIME, TOKEN_VSL,
 TOKEN_WRAPPED_ETH,
 TOKEN_WRAPPED_GNT,
@@ -19,6 +19,7 @@ TX_STATUS_CANCELLED_BY_USER,
 } from './transactions';
 import accounts from '../selectors/accounts';
 import transactionsReducer from './transactions';
+import network from '../selectors/network';
 
 const initialState = fromJS({
   accounts: [],
@@ -154,38 +155,66 @@ const tokenTransferToEvent = createAction(
     ({ tokenName, userAddress, event, addressIsDefaultAccount }),
 );
 
-const subscribeTokenTransfersEvents = createPromiseActions(
-  'BALANCES/SUBSCRIBE_TOKEN_TRANSFER_EVENT',
-);
 
 
 const etherBalanceChanged = createAction(
   'BALANCES/ETHER_BALANCE_CHANGED',
 );
 
-const subscribeTokenTransfersEventsEpic = (tokensContractsList, address, config = {}) => async (dispatch, getState) => {
-  dispatch(subscribeTokenTransfersEvents.pending());
+
+const syncTokenBalances$ = createPromiseActions(
+  'BALANCES/SYNC_TOKEN_BALANCES',
+);
+const syncTokenBalances = (tokensContractsList = [], address) => (dispatch, getState) => {
+  dispatch(syncTokenBalances$.pending());
+  const addressIsDefaultAccount = address === accounts.defaultAccount(getState());
+  Object.entries(tokensContractsList).forEach(
+    ([tokenName, tokenContract]) => {
+      tokenContract.balanceOf(address)
+        .then(
+          (tokenBalance) => {
+            dispatch(
+              updateTokenBalance({ tokenName, tokenBalance, addressIsDefaultAccount, address })
+            );
+          }
+        );
+    },
+  );
+  dispatch(syncTokenBalances$.fulfilled());
+};
+
+
+const updateTokenBalance = createAction(
+  'BALANCES/UPDATE_TOKEN_BALANCE',
+  ({ tokenName, tokenBalance, addressIsDefaultAccount })  =>  ({ tokenName, tokenBalance, addressIsDefaultAccount })
+);
+
+const subscribeTokenTransfersEvents$ = createPromiseActions(
+  'BALANCES/SUBSCRIBE_TOKEN_TRANSFER_EVENT',
+);
+const subscribeTokenTransfersEventsEpic = (tokensContractsList, address) => async (dispatch, getState) => {
+  dispatch(subscribeTokenTransfersEvents$.pending());
   const addressIsDefaultAccount = address === accounts.defaultAccount(getState());
   Object.entries(tokensContractsList).forEach(
     ([tokenName, tokenContract]) => {
       /**
        * Listen to all erc20 transfer events from now.
        */
-      tokenContract.Transfer(config)
+      console.log('subscribeTokenTransfersEvents$!!!!!!!!!!!!!!!!!!')
+      tokenContract.Transfer({}, {fromBlock: network.latestBlockNumber(getState()), toBlock: 'latest'})
         .then(
           (err, transferEvent) => {
-            console.log(transferEvent);
             const { from, to } = transferEvent.args;
             if (from === address) {
-              dispatch(tokenTransferFromEvent(tokenName, address, transferEvent, addressIsDefaultAccount));
-            } else if (to === address) {
-              dispatch(tokenTransferToEvent(tokenName, address, transferEvent, addressIsDefaultAccount));
+                dispatch(tokenTransferFromEvent(tokenName, address, transferEvent, addressIsDefaultAccount));
+              } else if (to === address) {
+                dispatch(tokenTransferToEvent(tokenName, address, transferEvent, addressIsDefaultAccount));
+              }
             }
-          },
         );
     },
   );
-  dispatch(subscribeTokenTransfersEvents.fulfilled());
+  dispatch(subscribeTokenTransfersEvents$.fulfilled());
 };
 
 const setAllowance = createAction(
@@ -264,7 +293,7 @@ const setTokenAllowanceTrustEpic = (tokenName,
       case TOKEN_1ST:
       case TOKEN_DIGIX:
       case TOKEN_BAT:
-      case TOKEN_GNOSIS:
+      case TOKEN_GOLEM:
       case TOKEN_ICONOMI:
       case TOKEN_MLN:
       case TOKEN_PLUTON:
@@ -368,7 +397,8 @@ const actions = {
   subscribeAccountEthBalanceChangeEventEpic,
   setTokenAllowanceTrustEpic,
   getDefaultAccountTokenAllowanceForAddress,
-  setAllowance
+  setAllowance,
+  syncTokenBalances
 };
 
 const reducer = handleActions({
@@ -422,6 +452,12 @@ const reducer = handleActions({
   [fulfilled(getDefaultAccountTokenAllowanceForAddress)]: (state, { payload, meta: { tokenName, spenderAddress } }) =>
     state.setIn(['tokenAllowances', tokenName, spenderAddress], payload)
   ,
+  [updateTokenBalance]: (state, { payload : { tokenName, tokenBalance, addressIsDefaultAccount, address } }) => {
+    const path = addressIsDefaultAccount ?
+      ['defaultAccount','tokenBalances', tokenName] :
+      ['accounts', address, 'tokenBalances', tokenName];
+    return state.setIn(path, tokenBalance.toString())
+  }
 }, initialState);
 
 export default {

@@ -1,3 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`(Component) OasisWrapUnwrapUnwrap should render 1`] = `<div />`;
+exports[`(Component) OasisWrapUnwrapUnwrap should render 1`] = `
+<OasisWidgetFrame
+  heading="Unwrap"
+>
+  <div>
+    <span>
+      Wrapped
+    </span>
+    <Connect(OasisTokenBalance)
+      decimalPlaces={5}
+      tokenName="W-ETH"
+    />
+  </div>
+  <Connect(ReduxForm)
+    onSubmit={[Function]}
+  />
+  <WrapUnwrapStatus
+    type="unwrap"
+  />
+</OasisWidgetFrame>
+`;

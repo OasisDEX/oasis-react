@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
-import { last } from 'lodash';
 import { List } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
@@ -52,8 +51,7 @@ class OasisMarketWidget extends PureComponent {
       const tradingPairTrades = trades(marketData, baseToken, quoteToken);
       const tradingPairVolume = volume(tradingPairTrades, baseToken, quoteToken);
       const tradingPairPrice = tradingPairVolume.toNumber() ?
-        price(last(tradingPairTrades), baseToken, quoteToken) : null;
-
+        price(tradingPairTrades.last(), baseToken, quoteToken) : null;
       return {
         isActive: isCurrentRowActive(this.props.activeTradingPair, baseToken, quoteToken),
         tradingPair: pair,

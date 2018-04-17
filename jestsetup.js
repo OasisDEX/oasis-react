@@ -291,9 +291,13 @@ global.storeMock = {
         wrapper: 'W-GNT'
       }
     ],
-    brokers: {
-      GNT: null
-    }
+    activeUnwrappedToken: 'GNT',
+    loadedBrokerContracts: [],
+    brokerAddresses: {
+      GNT: '0x0000000000000000000000000000000000000001'
+    },
+    activeTokenWrapStatus: null,
+    activeTokenUnwrapStatus: null
   },
   timers: {
     timestamp: 1522866862,

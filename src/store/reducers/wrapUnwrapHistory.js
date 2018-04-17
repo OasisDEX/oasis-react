@@ -6,8 +6,10 @@ import getTokenContractInstance from '../../utils/contracts/getContractInstance'
 import period from '../../utils/period';
 import network from '../selectors/network';
 import networkReducer from './network';
-import { TOKEN_ETHER, TOKEN_GNOSIS, TOKEN_WRAPPED_ETH, TOKEN_WRAPPED_GNT } from '../../constants';
+import { TOKEN_ETHER, TOKEN_GOLEM, TOKEN_WRAPPED_ETH, TOKEN_WRAPPED_GNT } from '../../constants';
 import wrapUnwrap from '../selectors/wrapUnwrap';
+import balancesReducer from './balances';
+import createHistoryEntry from '../../utils/wrapUnwrapHistory/createHistoryEntry';
 
 const initialState = fromJS({
   historyLoadingStatus: null,
@@ -16,45 +18,10 @@ const initialState = fromJS({
 
 const INIT = 'WRAP_UNWRAP_HISTORY/INIT';
 
-const Init = createAction(
+const init = createAction(
   INIT,
   () => null,
 );
-
-const createHistoryEntry = ({ event, transactionHash, tokenName, timestamp, blockNumber, wrapUnwrapType }) => {
-
-  const action  = wrapUnwrapType === WRAP_UNWRAP_HISTORY_TYPE_WRAP ? 'wrap': 'unwrap';
-  switch (tokenName) {
-    case TOKEN_ETHER: {
-      const { who, amount } = event.args;
-      return fromJS({
-        tokenName,
-        fromAddress: who,
-        toAddress: null,
-        tokenAmount: amount.toString(),
-        timestamp,
-        blockNumber,
-        wrapUnwrapType,
-        transactionHash,
-        action
-      });
-    }
-    case TOKEN_GNOSIS: {
-      const { to, from, value } = event.args;
-      return fromJS({
-        tokenName,
-        fromAddress : from,
-        toAddress: to,
-        tokenAmount: value.toString(),
-        timestamp,
-        blockNumber,
-        wrapUnwrapType,
-        transactionHash,
-        action
-      });
-    }
-  }
-};
 
 export const WRAP_UNWRAP_HISTORY_LOAD_STATUS_PENDING =   'WRAP_UNWRAP_HISTORY/LOAD_STATUS_PENDING';
 export const WRAP_UNWRAP_HISTORY_LOAD_STATUS_COMPLETED = 'WRAP_UNWRAP_HISTORY/LOAD_STATUS_COMPLETED';
@@ -76,9 +43,6 @@ const tokenUnwrapEvent = createAction(
     ({ tokenName, userAddress, event, blockInfo }),
 );
 
-const loadWrapUnwrapsHistory = createPromiseActions(
-  'WRAP_UNWRAP_HISTORY/LOAD_WRAP_UNWRAP_HISTORY',
-);
 
 const loadingWrapUnwrapHistorySetPending = createAction(
   'WRAP_UNWRAP_HISTORY/LOADING_WRAP_UNWRAP_HISTORY_SET_PENDING'
@@ -93,15 +57,17 @@ const loadingWrapUnwrapHistorySetCompleted = createAction(
 );
 
 
-
+const loadWrapUnwrapsHistory$ = createPromiseActions(
+  'WRAP_UNWRAP_HISTORY/LOAD_WRAP_UNWRAP_HISTORY',
+);
 const loadEtherWrapUnwrapsHistoryEpic = (address, config) => async (dispatch, getState) => {
-
+  dispatch(loadWrapUnwrapsHistory$.pending());
   const tokenName = TOKEN_ETHER;
-
   const filterAddress = address || accounts.defaultAccount(getState());
   const tokenContract = getTokenContractInstance(TOKEN_WRAPPED_ETH);
 
-  const fromBlock = network.latestBlockNumber(getState()) - period.avgBlockPerActivePeriod();
+  const currentLatestBlock = network.latestBlockNumber(getState());
+  const fromBlock = currentLatestBlock - period.avgBlockPerActivePeriod();
   const toBlock = 'latest';
 
   const filterConfig = config ? config : { fromBlock, toBlock };
@@ -111,6 +77,18 @@ const loadEtherWrapUnwrapsHistoryEpic = (address, config) => async (dispatch, ge
         const blockInfo = (
           await dispatch(networkReducer.actions.getBlock(ethWrapEvent.blockNumber))
         ).value;
+
+        if (ethWrapEvent.blockNumber > currentLatestBlock) {
+          const { amount } = ethWrapEvent.args;
+          dispatch(
+            balancesReducer.actions.tokenTransferToEvent(
+              TOKEN_WRAPPED_ETH, filterAddress,
+              { args: { from: filterAddress, value: amount } },
+              true
+            )
+          );
+        }
+
         dispatch(tokenWrapEvent(tokenName, ethWrapEvent.transactionHash, filterAddress, ethWrapEvent, blockInfo));
       },
     );
@@ -121,9 +99,22 @@ const loadEtherWrapUnwrapsHistoryEpic = (address, config) => async (dispatch, ge
         const blockInfo = (
           await dispatch(networkReducer.actions.getBlock(ethUnwrapEvent.blockNumber))
         ).value;
+
+        if (ethUnwrapEvent.blockNumber > currentLatestBlock) {
+          const { amount } = ethUnwrapEvent.args;
+          dispatch(
+            balancesReducer.actions.tokenTransferFromEvent(
+              TOKEN_WRAPPED_ETH, filterAddress,
+              { args: { from: filterAddress, value: amount } },
+              true
+            )
+          );
+        }
         dispatch(tokenUnwrapEvent(tokenName, ethUnwrapEvent.transactionHash, filterAddress, ethUnwrapEvent, blockInfo));
       },
     );
+
+  dispatch(loadWrapUnwrapsHistory$.fulfilled());
 };
 
 
@@ -131,7 +122,7 @@ const loadEtherWrapUnwrapsHistoryEpic = (address, config) => async (dispatch, ge
 
 const loadGNTWrapUnwrapsHistoryEpic = (address, config) => async (dispatch, getState) => {
 
-  const tokenName = TOKEN_GNOSIS;
+  const tokenName = TOKEN_GOLEM;
 
   const filterAddress = address || accounts.defaultAccount(getState());
   const tokenContract = getTokenContractInstance(tokenName);
@@ -139,16 +130,30 @@ const loadGNTWrapUnwrapsHistoryEpic = (address, config) => async (dispatch, getS
 
   const GNTBrokerAddress = wrapUnwrap.getBrokerAddress(getState(), tokenName);
 
-  const fromBlock = network.latestBlockNumber(getState()) - period.avgBlockPerActivePeriod();
+  const currentLatestBlock = network.latestBlockNumber(getState());
+  const fromBlock = currentLatestBlock - period.avgBlockPerActivePeriod();
   const toBlock = 'latest';
-
   const filterConfig = config ? config : { fromBlock, toBlock };
-  tokenContract.Transfer({ from: GNTBrokerAddress, to: WGNTContract.address },{fromBlock: 6523450 - 10000})
+
+  tokenContract.Transfer({ from: GNTBrokerAddress, to: WGNTContract.address },{ fromBlock })
     .then(
       async (err, wrapUnwrapEvent) => {
         const blockInfo = (
           await dispatch(networkReducer.actions.getBlock(wrapUnwrapEvent.blockNumber))
         ).value;
+
+        if (wrapUnwrapEvent.blockNumber > currentLatestBlock) {
+          const { value } = wrapUnwrapEvent.args;
+          dispatch(
+            balancesReducer.actions.tokenTransferToEvent(
+              TOKEN_WRAPPED_GNT,
+              filterAddress,
+              { args: { to: filterAddress, value } },
+              true
+            )
+          );
+        }
+
         dispatch(tokenWrapEvent(tokenName, wrapUnwrapEvent.transactionHash, filterAddress, wrapUnwrapEvent, blockInfo));
       },
     );
@@ -159,6 +164,19 @@ const loadGNTWrapUnwrapsHistoryEpic = (address, config) => async (dispatch, getS
         const blockInfo = (
           await dispatch(networkReducer.actions.getBlock(wrapUnwrapEvent.blockNumber))
         ).value;
+
+        if (wrapUnwrapEvent.blockNumber > currentLatestBlock) {
+          const { value } = wrapUnwrapEvent.args;
+          dispatch(
+            balancesReducer.actions.tokenTransferFromEvent(
+              TOKEN_WRAPPED_GNT,
+              filterAddress,
+              { args: { from: filterAddress, value } },
+              true
+            )
+          );
+        }
+
         dispatch(tokenUnwrapEvent(tokenName, wrapUnwrapEvent.transactionHash, filterAddress, wrapUnwrapEvent, blockInfo));
       },
     );
@@ -173,6 +191,7 @@ const loadWrapUnwrapsHistoryEpic = () => (dispatch) => {
 };
 
 const actions = {
+  init,
   loadWrapUnwrapsHistoryEpic
 };
 

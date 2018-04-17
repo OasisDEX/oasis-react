@@ -3,13 +3,12 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import OasisWrapUnwrapBalances from './OasisWrapUnwrapBalances';
+import { fromJS } from 'immutable';
 
 describe('(Component) OasisWrapUnwrapBalances', () => {
   it('should render', () => {
     const props = {
-      children: (
-        <span>test</span>
-      ),
+      wrapUnwrapBalances : fromJS([])
     };
     const wrapper = shallow(
       <OasisWrapUnwrapBalances {...props}/>,

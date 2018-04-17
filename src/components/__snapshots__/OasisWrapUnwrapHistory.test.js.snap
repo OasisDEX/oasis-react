@@ -1,3 +1,39 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`(Component) OasisWrapUnwrapHistory should render 1`] = `<div />`;
+exports[`(Component) OasisWrapUnwrapHistory should render 1`] = `
+<OasisWidgetFrame
+  heading="History"
+>
+  <div>
+    <OasisTable
+      col={
+        Array [
+          Object {
+            "heading": "date",
+            "template": [Function],
+          },
+          Object {
+            "heading": "action",
+            "key": "action",
+          },
+          Object {
+            "heading": "coin",
+            "key": "tokenName",
+          },
+          Object {
+            "heading": "amount",
+            "template": [Function],
+          },
+        ]
+      }
+      metadata={
+        Object {
+          "activeNetworkName": undefined,
+        }
+      }
+      onRowClick={[Function]}
+      rows={Array []}
+    />
+  </div>
+</OasisWidgetFrame>
+`;

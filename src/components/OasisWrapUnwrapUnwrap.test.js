@@ -1,15 +1,15 @@
 /* global shallow describe it expect */
-/* eslint-disable import/first */
+/* eslint-disable import/first,no-undef */
 import React from 'react';
 import { shallow } from 'enzyme';
 import OasisWrapUnwrapUnwrap from './OasisWrapUnwrapUnwrap';
+import { TOKEN_WRAPPED_ETH } from '../constants';
 
 describe('(Component) OasisWrapUnwrapUnwrap', () => {
   it('should render', () => {
     const props = {
-      children: (
-        <span>test</span>
-      ),
+      activeWrappedToken: TOKEN_WRAPPED_ETH,
+      onSubmit: jest.fn
     };
     const wrapper = shallow(
       <OasisWrapUnwrapUnwrap {...props}/>,

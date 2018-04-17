@@ -4,6 +4,7 @@ import ImmutablePropTypes from "react-immutable-proptypes";
 import OasisWidgetFrame from "../containers/OasisWidgetFrame";
 import { OasisTable } from "./OasisTable";
 import OasisInlineTokenBalance from "./OasisInlineTokenBalance";
+import { fromJS } from 'immutable';
 
 /* eslint-disable react/prop-types */
 const colDefinition = [
@@ -42,21 +43,29 @@ class OasisWrapUnwrapBalances extends PureComponent {
   constructor(props) {
     super(props);
     this.onTableRowClick = this.onTableRowClick.bind(this);
+    this.transformRow = this.transformRow.bind(this);
   }
 
-  onTableRowClick(rowData) {
-    const { changeRoute } = this.props;
-    changeRoute(`/wrap-unwrap/${rowData.unwrappedToken}`);
+  transformRow(row) {
+    if (row.unwrappedToken === this.props.activeUnwrappedToken) {
+      return {...row, isActive: true };
+    } else return row;
+  }
+
+  onTableRowClick({ unwrappedToken }) {
+    const { changeRoute, setActiveWrapUnwrappedToken } = this.props;
+    setActiveWrapUnwrappedToken(unwrappedToken);
+    changeRoute(`/wrap-unwrap/${unwrappedToken}`);
   }
 
   render() {
-    const { wrapUnwrapBalances = [] } = this.props;
+    const { wrapUnwrapBalances = fromJS([]) } = this.props;
     return (
       <OasisWidgetFrame heading="BALANCES">
         <OasisTable
           onRowClick={this.onTableRowClick}
           col={colDefinition}
-          rows={wrapUnwrapBalances.toJSON()}
+          rows={wrapUnwrapBalances.toJSON().map(this.transformRow)}
         />
       </OasisWidgetFrame>
     );

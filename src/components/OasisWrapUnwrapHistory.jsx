@@ -27,10 +27,6 @@ const wrapUnwrapHistoryColsDefinition = () => [
 
 
 export class OasisWrapUnwrapHistory extends PureComponent {
-  constructor(props) {
-    super(props);
-  }
-
   onRowClick({ transactionHash }, { activeNetworkName }) {
     const url = `https://${activeNetworkName}.etherscan.io/tx/${transactionHash}`;
     window.open(url, '_blank');

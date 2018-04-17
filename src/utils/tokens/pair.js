@@ -30,6 +30,7 @@ const volume = (tradingPairTrades, baseToken) => {
    * - unit is wei
    */
   const tradingPairTradesToVolume = (volume, currentTradingPairTrade) => {
+
     if (currentTradingPairTrade.buyWhichToken === baseToken) {
       return volume.add(currentTradingPairTrade.buyHowMuch);
     } else if (currentTradingPairTrade.sellWhichToken === baseToken) {
@@ -41,6 +42,7 @@ const volume = (tradingPairTrades, baseToken) => {
 
 const price = (tradeHistoryEntry, baseToken, quoteToken) => {
   if (!tradeHistoryEntry) {
+    console.log('tradeHistoryEntry', tradeHistoryEntry, baseToken, quoteToken)
     return null;
   }
   let price = 0;
