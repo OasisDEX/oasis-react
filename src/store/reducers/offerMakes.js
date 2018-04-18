@@ -267,8 +267,8 @@ const setOfferMakeModalClosedEpic = (offerMakeType) => (dispatch) => {
 const priceFieldChangedEpic = (offerMakeType, value) => (dispatch, getState) => {
   const formName = offerMakeToFormName(offerMakeType);
   const volume = formValueSelector(formName)(getState(), 'volume');
-  if ((isNaN(value) || parseFloat(value) === 0) || (isNaN(volume) || parseFloat(volume) === 0)) {
-    dispatch(change(formName, 'total', '0'));
+  if ( !value ||(isNaN(value) || parseFloat(value) === 0) || (isNaN(volume) || parseFloat(volume) === 0)) {
+    dispatch(change(formName, 'total', null));
   } else {
     dispatch(change(formName, 'total', web3.toBigNumber(volume).mul(value).toString()));
   }

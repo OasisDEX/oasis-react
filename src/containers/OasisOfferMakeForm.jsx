@@ -72,7 +72,7 @@ export class OfferMakeForm extends PureComponent {
   }
 
   onPriceFieldChange(event, newValue, previousValue) {
-    if (parseFloat(newValue) > 0) {
+    if (parseFloat(newValue) >= 0 ) {
       const { priceFieldValueChanged } = this.props.actions;
       if ((!previousValue || newValue.toString() !== previousValue.toString())) {
         priceFieldValueChanged(this.props.offerMakeType, newValue);

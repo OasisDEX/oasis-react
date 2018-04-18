@@ -7,9 +7,8 @@ const normalize = (value, previousValue) => {
 };
 
 
-const formatValue = (value) =>  isFinite(value) ?  web3.toBigNumber(value).toFormat(5): '0';
-
-
+const formatValue = (value) =>
+  isFinite(value) ?  web3.toBigNumber(value).toFormat(5): '0';
 
 const numericFormatValidator = value => {
   if(!/^(\d+\.?\d*|\.\d+)$/.test(value)) {
