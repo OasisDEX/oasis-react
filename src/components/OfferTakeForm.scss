@@ -1,26 +1,4 @@
-@import "../styles/modules/verticalForm";
 @import "../styles/modules/labels";
-
-.table {
-  @include verticalFormTable;
-}
-
-.amount {
-  @include tdWithInput;
-}
-
-.currency {
-  @include currency;
-}
-
-.inputGroup {
-  display: flex;
-}
-
-.setMaxBtn {
-  margin: 6px;
-}
-
 
 .errorMessage {
   @include muted();
