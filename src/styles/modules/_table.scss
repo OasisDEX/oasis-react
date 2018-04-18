@@ -1,0 +1,22 @@
+@import "./labels";
+@import "./verticalForm";
+
+.table {
+  @include verticalFormTable;
+}
+
+.withInput {
+  @include tdWithInput;
+}
+
+.currency {
+  @include currency;
+}
+
+.inputGroup {
+  display: flex;
+}
+
+.inputBtn {
+  margin: 6px;
+}

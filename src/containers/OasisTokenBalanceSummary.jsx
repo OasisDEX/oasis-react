@@ -14,7 +14,7 @@ export class OasisTokenBalanceSummary extends PureComponent {
     return (
       <div className={styles.summary}>
         {summary}
-        <OasisTokenBalance tokenName={token} {...this.props} />
+        {this.props.children || <OasisTokenBalance tokenName={token} {...this.props} />}
       </div>
     );
   }

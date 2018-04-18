@@ -9,6 +9,10 @@ import { normalize } from '../utils/forms/offers';
 import wrapUnwrap from '../store/selectors/wrapUnwrap';
 import web3 from '../bootstrap/web3';
 import wrapUnwrapReducer from '../store/reducers/wrapUnwrap';
+import OasisButton from "../components/OasisButton";
+import tableStyles from "../styles/modules/_table.scss";
+import styles from "./OasisTokenWrapForm.scss";
+import CSSModules from 'react-css-modules';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -43,27 +47,35 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
   render() {
     const { valid, handleSubmit, activeUnwrappedToken } = this.props;
     return (
-      <div>
         <form onSubmit={handleSubmit}>
-          <div>
-            <span >Amount:</span>
-            <button type="button" onClick={this.setWrapMax}>wrap max</button>
-            <Field
-              style={inputStyle}
-              required
-              validate={this.validate}
-              autoComplete="off"
-              name="amount"
-              component="input"
-              placeholder={0}
-              normalize={normalize} type="text"/>
-            {activeUnwrappedToken}
-          </div>
-          <div>
-            <button disabled={!valid}>Wrap</button>
+          <table className={tableStyles.table}>
+            <tbody>
+              <tr>
+                <th>Amount</th>
+                <td className={tableStyles.withInput}>
+                  <div className={tableStyles.inputGroup}>
+                    <OasisButton type="button" size="xs" className={tableStyles.inputBtn} onClick={this.setWrapMax}>wrap max</OasisButton>
+                    <Field
+                      style={inputStyle}
+                      required
+                      validate={this.validate}
+                      autoComplete="off"
+                      name="amount"
+                      component="input"
+                      placeholder={0}
+                      normalize={normalize} type="text"/>
+                  </div>
+                </td>
+                <td className={tableStyles.currency}>
+                  {activeUnwrappedToken}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div className={styles.footer}>
+            <OasisButton disabled={!valid}>Wrap</OasisButton>
           </div>
         </form>
-      </div>
     );
   }
 }
@@ -85,5 +97,5 @@ OasisTokenWrapFormWrapper.displayName = 'OasisTokenWrapForm';
 export default connect(mapStateToProps, mapDispatchToProps)(
   reduxForm({
     form: 'wrapToken',
-  })(OasisTokenWrapFormWrapper)
+  })(CSSModules(OasisTokenWrapFormWrapper, {tableStyles, styles}, {allowMultiple: true}))
 );

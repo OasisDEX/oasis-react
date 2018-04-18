@@ -9,6 +9,7 @@ import OasisWidgetFrame from "../containers/OasisWidgetFrame";
 import OasisEtherBalanceWrapper  from '../containers/OasisEtherBalance';
 import { WRAP_STATUS_VIEW_TYPE_WRAP, WrapUnwrapStatusWrapper } from '../containers/WrapUnwrapStatus';
 import OasisDontWrapAllEther from './OasisDontWrapAllEther';
+import OasisTokenBalanceSummary from '../containers/OasisTokenBalanceSummary';
 
 const propTypes = PropTypes && {
   activeUnwrappedToken: PropTypes.string,
@@ -44,10 +45,8 @@ class OasisWrapUnwrapWrap extends PureComponent {
   render() {
     const { activeUnwrappedToken } = this.props;
     return (
-      <OasisWidgetFrame heading={'Wrap'}>
-        <div>
-          <b>Wallet </b>{this.getBalance()}
-        </div>
+      <OasisWidgetFrame heading={'Wrap'} spaceForContent={true}>
+        <OasisTokenBalanceSummary summary="Wallet">{this.getBalance()}</OasisTokenBalanceSummary>
         {this.renderDontWrapAllEtherWarning()}
         <OasisTokenWrapFormWrapper
           activeUnwrappedtoken={activeUnwrappedToken}
