@@ -17,10 +17,15 @@ import tokens from '../store/selectors/tokens';
 import { formatAmount } from '../utils/tokens/pair';
 import { getFormValues, getFormSyncErrors } from 'redux-form/immutable';
 import OasisTransactionDetailsWrapper  from './OasisTransactionDetails';
+import OasisTokenBalanceSummary  from './OasisTokenBalanceSummary';
 import SetTokenAllowanceTrustWrapper from './SetTokenAllowanceTrust';
 import transactions from '../store/selectors/transactions';
 import { TX_OFFER_TAKE, TX_STATUS_CONFIRMED } from '../store/reducers/transactions';
 import getUsersSoldAndReceivedAmounts from '../utils/offers/getUsersSoldAndReceivedAmounts';
+import modalStyles from '../styles/modules/_modal.scss';
+import styles from './OasisMakeOfferModal.scss';
+import CSSModules from 'react-css-modules';
+import OasisButton from "../components/OasisButton";
 
 const BtnStyle = {
   padding: '10px 15px',
@@ -121,21 +126,15 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     } = this.props;
 
     return (
-      <ReactModal ariaHideApp={false} style={style} isOpen={true}>
-        <div>
-          <h3>{getOfferTitle(offerTakeType)}</h3>
-          <button
-            hidden={currentOfferTakeTransaction}
-            style={{...BtnStyle, ...closeModalBtnStyle }}
-            onClick={this.onCancel}>x
-          </button>
-        </div>
-        <div>
-          <b>Available:</b>
-          <span>
-            {formatAmount(userBalances.get(sellToken), true)} <b>{sellToken}</b>
-          </span>
-        </div>
+      <ReactModal ariaHideApp={false} isOpen={true} className={modalStyles.modal}>
+        <h4 className={styles.heading}>{getOfferTitle(offerTakeType)}</h4>
+        <button
+          hidden={currentOfferTakeTransaction}
+          className={modalStyles.closeModalBtn}
+          onClick={this.onCancel}>×
+        </button>
+        <OasisTokenBalanceSummary summary="Available" token={sellToken}/>
+
         <div>
           <div>
             <OfferTakeForm estimateGas={getTransactionGasCostEstimate}/>
@@ -158,21 +157,16 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
             tokenName={buyToken}
           />
           <div
-            className="cancelBuyActionsSection"
-            style={{ display: 'flex' }}
+            className={styles.footer}
             hidden={currentOfferTakeTransaction}
           >
-            <div>
-              <button  style={BtnStyle} onClick={this.onCancel}>Cancel</button>
-            </div>
+            <OasisButton onClick={this.onCancel}>Cancel</OasisButton>
             <div className="notificationsSection">
               { !isCurrentOfferActive && <OfferNotAvailable/>}
             </div>
-            <div>
-              <button disabled={!canBuyOffer} style={BtnStyle} onClick={this.onBuyOffer}>
-                {OasisTakeOfferModalWrapper.takeOfferBtnLabel(offerTakeType, { buyToken, sellToken })}
-              </button>
-            </div>
+            <OasisButton disabled={!canBuyOffer} onClick={this.onBuyOffer}>
+              {OasisTakeOfferModalWrapper.takeOfferBtnLabel(offerTakeType, { buyToken, sellToken })}
+            </OasisButton>
           </div>
         </div>
       </ReactModal>
@@ -236,4 +230,4 @@ export function mapDispatchToProps(dispatch) {
 
 OasisTakeOfferModalWrapper.propTypes = propTypes;
 OasisTakeOfferModalWrapper.displayName = 'OasisTakeOfferModal';
-export default connect(mapStateToProps, mapDispatchToProps)(OasisTakeOfferModalWrapper);
+export default connect(mapStateToProps, mapDispatchToProps)(CSSModules(OasisTakeOfferModalWrapper, {modalStyles, styles}, { allowMultiple: true }));
