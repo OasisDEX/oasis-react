@@ -1,14 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
-<div>
-  <h1 />
-  <button
-    onClick={[Function]}
+<InfoBox
+  className=""
+  color="default"
+  justifyContent="space-between"
+  vertical={false}
+>
+  <InfoBoxBody
+    className=""
+    color="default"
+    vertical={false}
   >
-    Loading
-  </button>
-</div>
+    <h1 />
+  </InfoBoxBody>
+  <InfoBoxBody
+    className=""
+    color="default"
+    vertical={false}
+  >
+    <OasisButton
+      btnType="button"
+      color="success"
+      onClick={[Function]}
+      size="md"
+    >
+      Loading
+    </OasisButton>
+  </InfoBoxBody>
+</InfoBox>
 `;
 
 exports[`(Container) SetTokenAllowanceTrust will receive right actions 1`] = `

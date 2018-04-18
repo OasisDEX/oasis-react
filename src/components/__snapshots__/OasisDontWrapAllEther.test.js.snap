@@ -1,7 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Component) OasisDontWrapAllEther should render 1`] = `
-<div>
-  Do not wrap all of your ETH! Otherwise you cannot pay for transactions.
-</div>
+<InfoBox
+  className=""
+  color="danger"
+  justifyContent="normal"
+  vertical={false}
+>
+  <InfoBoxBody
+    className=""
+    color="default"
+    vertical={false}
+  >
+    Do not wrap all of your ETH! Otherwise you cannot pay for transactions.
+  </InfoBoxBody>
+</InfoBox>
 `;

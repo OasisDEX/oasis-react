@@ -1,37 +1,63 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) TokenTransferForm should render 1`] = `
-<div>
-  <form
-    method="POST"
-  >
-    <Connect(EthereumAddressInputField)
-      fieldName="recipient"
-    />
-    <button
-      onClick={[Function]}
-      type="button"
+<form
+  method="POST"
+>
+  <table>
+    <tbody>
+      <tr>
+        <th>
+          Recipient
+        </th>
+        <td
+          colSpan="2"
+        >
+          <Connect(EthereumAddressInputField)
+            fieldName="recipient"
+          />
+        </td>
+      </tr>
+      <tr>
+        <th>
+          Amount
+        </th>
+        <td>
+          <div>
+            <OasisButton
+              btnType="button"
+              color="default"
+              onClick={[Function]}
+              size="xs"
+              type="button"
+            >
+              transfer max
+            </OasisButton>
+            <Connect(TokenAmountInputField)
+              fieldName="tokenAmount"
+            />
+            <Field
+              component="input"
+              hidden={true}
+              name="token"
+              type="text"
+            />
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div>
+    <OasisButton
+      btnType="button"
+      color="default"
+      disabled={true}
+      size="md"
     >
-      transfer max
-    </button>
-    <Connect(TokenAmountInputField)
-      fieldName="tokenAmount"
-    />
-    <Field
-      component="input"
-      hidden={true}
-      name="token"
-      type="text"
-    />
-    <div>
-      <button
-        disabled={true}
-      >
-        Transfer
-      </button>
-    </div>
-  </form>
-</div>
+      Transfer
+    </OasisButton>
+  </div>
+</form>
 `;
 
 exports[`(Container) TokenTransferForm will receive right actions 1`] = `

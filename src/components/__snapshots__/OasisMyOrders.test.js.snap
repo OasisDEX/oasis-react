@@ -3,10 +3,11 @@
 exports[`(Component) OasisMyOrders should render 1`] = `
 <OasisWidgetFrame
   heading="MY ORDERS"
->
-  <div>
-    <select
+  headingChildren={
+    <OasisSelect
+      className={undefined}
       onChange={[Function]}
+      size="md"
       value="Open"
     >
       <option
@@ -19,8 +20,9 @@ exports[`(Component) OasisMyOrders should render 1`] = `
       >
         Closed
       </option>
-    </select>
-  </div>
+    </OasisSelect>
+  }
+>
   <div>
     <div>
       You currently have no active offers

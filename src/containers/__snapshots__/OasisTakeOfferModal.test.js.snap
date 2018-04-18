@@ -12,53 +12,19 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
   shouldCloseOnOverlayClick={true}
   shouldFocusAfterRender={true}
   shouldReturnFocusAfterClose={true}
-  style={
-    Object {
-      "content": Object {
-        "background": "#fff",
-        "bottom": "40px",
-        "left": "30%",
-        "overflow": "auto",
-        "padding": "20px",
-        "right": "30%",
-        "top": "40px",
-      },
-    }
-  }
 >
-  <div>
-    <h3>
-      Buy offer
-    </h3>
-    <button
-      onClick={[Function]}
-      style={
-        Object {
-          "backgroundColor": "white",
-          "border": "1px solid gray",
-          "margin": 5,
-          "padding": "10px 15px",
-          "position": "absolute",
-          "right": 20,
-          "top": 20,
-        }
-      }
-    >
-      x
-    </button>
-  </div>
-  <div>
-    <b>
-      Available:
-    </b>
-    <span>
-      0.000
-       
-      <b>
-        W-ETH
-      </b>
-    </span>
-  </div>
+  <h4>
+    Buy offer
+  </h4>
+  <button
+    onClick={[Function]}
+  >
+    ×
+  </button>
+  <OasisTokenBalance
+    summary="Available"
+    token="W-ETH"
+  />
   <div>
     <div>
       <Connect(ReduxForm)
@@ -78,51 +44,33 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
         offerId="7"
         sellToken="W-ETH"
         transactionSubectType="TRANSACTIONS/GROUP__OFFERS/OFFER_TAKE"
-        transactionSubjectAddress="0xdb33dfd3d61308c33c63209845dad3e6bfb2c674"
       />
     </div>
-    <div
-      className="cancelBuyActionsSection"
-      style={
-        Object {
-          "display": "flex",
-        }
-      }
-    >
-      <div>
-        <button
-          onClick={[Function]}
-          style={
-            Object {
-              "backgroundColor": "white",
-              "border": "1px solid gray",
-              "margin": 5,
-              "padding": "10px 15px",
-            }
-          }
-        >
-          Cancel
-        </button>
-      </div>
+    <Connect(SetTokenAllowanceTrust)
+      allowanceSubjectAddress="0xdb33dfd3d61308c33c63209845dad3e6bfb2c674"
+      tokenName="MKR"
+    />
+    <div>
+      <OasisButton
+        btnType="button"
+        color="default"
+        onClick={[Function]}
+        size="md"
+      >
+        Cancel
+      </OasisButton>
       <div
         className="notificationsSection"
       />
-      <div>
-        <button
-          disabled={true}
-          onClick={[Function]}
-          style={
-            Object {
-              "backgroundColor": "white",
-              "border": "1px solid gray",
-              "margin": 5,
-              "padding": "10px 15px",
-            }
-          }
-        >
-          Sell W-ETH
-        </button>
-      </div>
+      <OasisButton
+        btnType="button"
+        color="default"
+        disabled={true}
+        onClick={[Function]}
+        size="md"
+      >
+        Sell W-ETH
+      </OasisButton>
     </div>
   </div>
 </Modal>

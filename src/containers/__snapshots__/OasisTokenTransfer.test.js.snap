@@ -3,50 +3,23 @@
 exports[`(Container) OasisTokenTransfer should render 1`] = `
 <OasisWidgetFrame
   heading="Transfer"
+  headingChildren={
+    <Connect(OasisTokenSelect)
+      disabled={undefined}
+      name="tokenTransfer"
+    />
+  }
+  spaceForContent={true}
 >
-  <div>
-    <div
-      style={
-        Object {
-          "display": "flex",
-          "marginBottom": "20px",
-        }
-      }
-    >
-      <span
-        style={
-          Object {
-            "textTransform": "uppercase",
-            "width": "50%",
-          }
-        }
-      >
-        Wallet
-      </span>
-      <Connect(OasisTokenBalance)
-        decimalPlaces={5}
-        style={
-          Object {
-            "width": "50%",
-          }
-        }
-        tokenName="MKR"
-      />
-    </div>
-    <hr />
-    <div>
-      <Connect(OasisTokenSelect)
-        name="tokenTransfer"
-      />
-      <Connect(ReduxForm)
-        onSubmit={[Function]}
-      />
-    </div>
-    <div>
-      <hr />
-      <Connect(TokenTransferStatus) />
-    </div>
-  </div>
+  <OasisTokenBalance
+    decimalPlaces={5}
+    summary="Wallet"
+    token="MKR"
+  />
+  <Connect(ReduxForm)
+    onSubmit={[Function]}
+  />
+  <Connect(TokenTransferStatus) />
 </OasisWidgetFrame>
 `;
 

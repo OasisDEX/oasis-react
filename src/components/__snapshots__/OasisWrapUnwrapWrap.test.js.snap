@@ -3,15 +3,15 @@
 exports[`(Component) OasisWrapUnwrapWrap should render 1`] = `
 <OasisWidgetFrame
   heading="Wrap"
+  spaceForContent={true}
 >
-  <div>
-    <b>
-      Wallet 
-    </b>
+  <OasisTokenBalance
+    summary="Wallet"
+  >
     <Connect(OasisTokenBalance)
       decimalPlaces={5}
     />
-  </div>
+  </OasisTokenBalance>
   <Connect(ReduxForm)
     onSubmit={[Function]}
   />

@@ -1,13 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) OasisTokenBalance should render 1`] = `
-<div
-  style={
-    Object {
-      "display": "inline-block",
-    }
-  }
->
+<div>
   <span>
     0.000
   </span>

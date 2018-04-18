@@ -5,12 +5,10 @@ exports[`(Container) OasisMakeSellOffer should render 1`] = `
   heading="Sell W-ETH"
   spaceForContent={true}
 >
-  <div>
-    Available 
-    <Connect(OasisTokenBalance)
-      tokenName="W-ETH"
-    />
-  </div>
+  <OasisTokenBalance
+    summary="Available"
+    token="W-ETH"
+  />
   <div>
     <Connect(ReduxForm)
       baseToken="W-ETH"
@@ -29,7 +27,7 @@ exports[`(Container) OasisMakeSellOffer should render 1`] = `
       color="danger"
       disabled={true}
       onClick={[Function]}
-      size="max"
+      size="md"
     >
       Sell
     </OasisButton>

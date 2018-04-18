@@ -3,7 +3,7 @@
 exports[`(Component) OasisTable should render with example props 1`] = `
 <div>
   <table
-    className="undefined undefined"
+    className="undefined "
   >
     <thead>
       <tr>
@@ -26,7 +26,7 @@ exports[`(Component) OasisTable should render with example props 1`] = `
     </thead>
     <tbody>
       <tr
-        className="undefined "
+        className=" "
         data-tradingpair="MKR / W-ETH"
         key="0"
         onClick={[Function]}
@@ -48,7 +48,7 @@ exports[`(Component) OasisTable should render with example props 1`] = `
         </td>
       </tr>
       <tr
-        className="undefined "
+        className=" "
         data-tradingpair="W-ETH / SAI"
         key="1"
         onClick={[Function]}
@@ -70,7 +70,7 @@ exports[`(Component) OasisTable should render with example props 1`] = `
         </td>
       </tr>
       <tr
-        className="undefined "
+        className=" "
         data-tradingpair="MKR / SAI"
         key="2"
         onClick={[Function]}

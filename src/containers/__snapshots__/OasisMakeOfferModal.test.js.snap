@@ -12,111 +12,56 @@ exports[`(Container) OasisMakeOfferModal should render 1`] = `
   shouldCloseOnOverlayClick={true}
   shouldFocusAfterRender={true}
   shouldReturnFocusAfterClose={true}
-  style={
-    Object {
-      "content": Object {
-        "background": "#fff",
-        "bottom": "40px",
-        "left": "30%",
-        "overflow": "auto",
-        "padding": "20px",
-        "right": "30%",
-        "top": "40px",
-      },
-    }
-  }
 >
-  <div>
-    <h3>
-      Buy offer
-    </h3>
-    <button
-      onClick={[Function]}
-      style={
-        Object {
-          "backgroundColor": "white",
-          "border": "1px solid gray",
-          "margin": 5,
-          "padding": "10px 15px",
-          "position": "absolute",
-          "right": 20,
-          "top": 20,
-        }
-      }
-    >
-      x
-    </button>
-  </div>
-  <div>
-    <b>
-      Available:
-    </b>
-    <Connect(OasisTokenBalance)
-      tokenName="DAI"
-    />
-  </div>
+  <h4>
+    Buy offer
+  </h4>
+  <button
+    onClick={[Function]}
+  >
+    ×
+  </button>
+  <OasisTokenBalance
+    summary="Available"
+    token="DAI"
+  />
   <div>
     <Connect(ReduxForm)
       offerMakeType="OFFER_MAKES/MAKE_BUY_OFFER"
     />
-    <div
-      className="statusSection"
-    >
-      <Connect(WithTransactionWatchWrapper)
-        amountReceived="1.00000"
-        amountSold="1.00000"
-        buyToken="MKR"
-        getTransactionGasCostEstimate={[Function]}
-        hasSufficientTokenAmount={false}
-        isTransactionValid={true}
-        offerId={null}
-        sellToken="DAI"
-        transactionSubectType="TRANSACTIONS/GROUP__OFFERS/OFFER_MAKE"
-        transactionSubjectAddress="0x8cf1cab422a0b6b554077a361f8419cdf122a9f9"
-      />
-    </div>
-    <div
-      className="cancelBuyActionsSection"
-      style={
-        Object {
-          "display": "flex",
-        }
-      }
-    >
-      <div>
-        <button
-          onClick={[Function]}
-          style={
-            Object {
-              "backgroundColor": "white",
-              "border": "1px solid gray",
-              "margin": 5,
-              "padding": "10px 15px",
-            }
-          }
-        >
-          Cancel
-        </button>
-      </div>
-      <div
-        className="notificationsSection"
-      />
-      <div>
-        <button
-          disabled={true}
-          onClick={[Function]}
-          style={
-            Object {
-              "backgroundColor": "white",
-              "border": "1px solid gray",
-              "margin": 5,
-              "padding": "10px 15px",
-            }
-          }
-        >
-          Buy undefined
-        </button>
-      </div>
+    <Connect(WithTransactionWatchWrapper)
+      amountReceived="1.00000"
+      amountSold="1.00000"
+      buyToken="MKR"
+      getTransactionGasCostEstimate={[Function]}
+      hasSufficientTokenAmount={false}
+      isTransactionValid={true}
+      offerId={null}
+      sellToken="DAI"
+      transactionSubectType="TRANSACTIONS/GROUP__OFFERS/OFFER_MAKE"
+    />
+    <Connect(SetTokenAllowanceTrust)
+      allowanceSubjectAddress="0x8cf1cab422a0b6b554077a361f8419cdf122a9f9"
+      tokenName="MKR"
+    />
+    <div>
+      <OasisButton
+        btnType="button"
+        color="default"
+        onClick={[Function]}
+        size="md"
+      >
+        Cancel
+      </OasisButton>
+      <OasisButton
+        btnType="button"
+        color="default"
+        disabled={true}
+        onClick={[Function]}
+        size="md"
+      >
+        Buy undefined
+      </OasisButton>
     </div>
   </div>
 </Modal>
