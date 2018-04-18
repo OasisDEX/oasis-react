@@ -12,7 +12,6 @@
 .boxBody {
   padding: 16px;
   font-size: 13px;
-  color: #939194;
 }
 
 .vertical {
@@ -21,12 +20,15 @@
 
 .default {
   border-color: #E5E9EB;
+  color: #939194;
 }
 
 .danger {
   border-color: $danger-text;
+  color: $danger-text;
 }
 
 .success {
   border-color: $success-text;
+  color: $success-text;
 }
