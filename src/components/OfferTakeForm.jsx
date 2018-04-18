@@ -18,6 +18,7 @@ import { formatValue, greaterThanZeroValidator, normalize, numericFormatValidato
 import OasisButton from "../components/OasisButton";
 
 import styles from './OfferTakeForm.scss';
+import tableStyles from "../styles/modules/_table.scss";
 import CSSModules from 'react-css-modules';
 
 /**
@@ -109,7 +110,7 @@ export class OfferTakeForm extends PureComponent {
         case TAKE_BUY_OFFER:
           return (
             <OasisButton
-                className={styles.setMaxBtn}
+                className={tableStyles.inputBtn}
                 type="button"
                 color="success"
                 size="xs"
@@ -120,7 +121,7 @@ export class OfferTakeForm extends PureComponent {
         case TAKE_SELL_OFFER:
           return (
             <OasisButton
-                className={styles.setMaxBtn}
+                className={tableStyles.inputBtn}
                 type="button"
                 color="danger"
                 size="xs"
@@ -152,11 +153,11 @@ export class OfferTakeForm extends PureComponent {
     }
     return (
       <form onSubmit={handleSubmit}>
-        <table className={styles.table}>
+        <table className={tableStyles.table}>
           <tbody>
           <tr>
             <th>Price</th>
-            <td className={styles.amount}>
+            <td className={tableStyles.withInput}>
               <Field
                 autoComplete="off"
                 style={fieldStyle}
@@ -165,13 +166,13 @@ export class OfferTakeForm extends PureComponent {
                 placeholder={0}
                 normalize={normalize} disabled type="text"/>
             </td>
-            <td className={styles.currency}>
+            <td className={tableStyles.currency}>
               {priceToken}
             </td>
           </tr>
           <tr>
             <th>Amount</th>
-            <td className={styles.amount}>
+            <td className={tableStyles.withInput}>
               <Field
                 autoComplete="off"
                 style={fieldStyle}
@@ -189,14 +190,14 @@ export class OfferTakeForm extends PureComponent {
                 {isVolumeGreaterThanOfferMax && <VolumeIsOverTheOfferMax offerMax={isVolumeGreaterThanOfferMax}/>}
               </div>
             </td>
-            <td className={styles.currency}>
+            <td className={tableStyles.currency}>
               {volumeToken}
             </td>
           </tr>
           <tr>
             <th>Total</th>
-            <td className={styles.amount}>
-              <div className={styles.inputGroup}>
+            <td className={tableStyles.withInput}>
+              <div className={tableStyles.inputGroup}>
                 {this.setMaxButton()}
                 <Field
                   autoComplete="off"
@@ -213,7 +214,7 @@ export class OfferTakeForm extends PureComponent {
                 />
               </div>
             </td>
-            <td className={styles.currency}>
+            <td className={tableStyles.currency}>
                 {totalToken}
             </td>
           </tr>
@@ -255,6 +256,6 @@ export function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  reduxForm({ form: 'takeOffer' })(CSSModules(OfferTakeForm,styles))
+  reduxForm({ form: 'takeOffer' })(CSSModules(OfferTakeForm,{styles, tableStyles}, { allowMultiple: true}))
 );
 
