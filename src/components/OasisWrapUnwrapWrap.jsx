@@ -53,7 +53,7 @@ class OasisWrapUnwrapWrap extends PureComponent {
           {this.getBalance()}
         </OasisTokenBalanceSummary>
         <OasisTokenWrapFormWrapper
-          activeUnwrappedtoken={activeUnwrappedToken}
+          activeUnwrappedToken={activeUnwrappedToken}
           onSubmit={this.props.onSubmit}
         />
         <WrapUnwrapStatusWrapper type={WRAP_STATUS_VIEW_TYPE_WRAP}/>

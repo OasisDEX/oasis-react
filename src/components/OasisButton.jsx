@@ -17,13 +17,14 @@ const defaultProps = {
 class OasisButton extends PureComponent {
 
   render() {
-    const { disabled, btnType, caption, color, size, className } = this.props;
+    const { disabled, btnType, caption, color, size, className, ...props } = this.props;
     return (
       <button
           className={`${styles.button} ${styles[color]} ${styles[size]} ${className}`}
           disabled={disabled}
           type={btnType}
           onClick={this.props.onClick}
+          {...props}
       >
           {caption || this.props.children}
       </button>
