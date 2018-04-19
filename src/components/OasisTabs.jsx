@@ -12,9 +12,9 @@ class OasisTabs extends PureComponent {
     return (
       <div styleName="row-tabs">
         <ul styleName="Tabs">
-          <li styleName="Tab"><NavLink to={'/trade'}>Trade</NavLink></li>
-          <li styleName="Tab Tab--2x"><NavLink to={'/wrap-unwrap'}>Wrap / Unwrap</NavLink></li>
-          <li styleName="Tab"><NavLink to={'/transfer'}>Transfer</NavLink></li>
+          <li styleName="Tab"><NavLink to={'/trade'} activeClassName={styles.active}>Trade</NavLink></li>
+          <li styleName="Tab Tab--2x"><NavLink to={'/wrap-unwrap'} activeClassName={styles.active}>Wrap / Unwrap</NavLink></li>
+          <li styleName="Tab"><NavLink to={'/transfer'} activeClassName={styles.active}>Transfer</NavLink></li>
         </ul>
       </div>
     );
