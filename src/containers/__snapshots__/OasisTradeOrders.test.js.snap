@@ -1,11 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) OasisTradeOrders should render 1`] = `
-<div>
-  <div>
-    <Connect(OasisMakeBuyOffer) />
-    <Connect(OasisMakeSellOffer) />
-  </div>
+<FlexBox
+  alignContent="stretch"
+  alignItems="stretch"
+  className=""
+  justifyContent="normal"
+  vertical={false}
+  wrap={true}
+>
+  <Connect(OasisMakeBuyOffer) />
+  <Connect(OasisMakeSellOffer) />
   <div>
     <Connect(OasisTakeOfferModal)
       activeOfferTake={
@@ -104,7 +109,7 @@ exports[`(Container) OasisTradeOrders should render 1`] = `
       ]
     }
   />
-</div>
+</FlexBox>
 `;
 
 exports[`(Container) OasisTradeOrders will receive right actions 1`] = `

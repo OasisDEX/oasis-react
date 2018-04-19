@@ -2,10 +2,12 @@
 
 exports[`(Component) OasisWrapUnwrapWrap should render 1`] = `
 <OasisWidgetFrame
+  className=""
   heading="Wrap"
   spaceForContent={true}
 >
   <OasisTokenBalance
+    className=""
     summary="Wallet"
   >
     <Connect(OasisTokenBalance)

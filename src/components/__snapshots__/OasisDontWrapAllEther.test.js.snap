@@ -5,6 +5,7 @@ exports[`(Component) OasisDontWrapAllEther should render 1`] = `
   className=""
   color="danger"
   justifyContent="normal"
+  size="md"
   vertical={false}
 >
   <InfoBoxBody

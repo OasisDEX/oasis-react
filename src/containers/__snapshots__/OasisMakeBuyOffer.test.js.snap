@@ -2,10 +2,12 @@
 
 exports[`(Container) OasisMakeBuyOffer should render 1`] = `
 <OasisWidgetFrame
+  className=""
   heading="Buy undefined"
   spaceForContent={true}
 >
   <OasisTokenBalance
+    className=""
     summary="Available"
     token="W-ETH"
   />
