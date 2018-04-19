@@ -7,12 +7,14 @@ import CSSModules from "react-css-modules/dist/index";
 const propTypes = PropTypes && {
   children: PropTypes.node,
   color: PropTypes.string,
+  size: PropTypes.string,
   justifyContent: PropTypes.string,
   vertical: PropTypes.bool,
 };
 
 const defaultProps = {
     color: "default",
+    size: "md",
     vertical: false,
     className: '',
     justifyContent: 'normal'
@@ -21,11 +23,11 @@ const defaultProps = {
 export class InfoBox extends PureComponent {
 
   render() {
-    const { color, vertical, justifyContent, className } = this.props;
+    const { color, size, vertical, justifyContent, className } = this.props;
     return (
       <div
           style={{justifyContent: justifyContent}}
-          className={`${styles.box} ${styles[color]} ${vertical ? styles.vertical : ''} ${className}`}
+          className={`${styles.box} ${styles[color]} ${styles[size]} ${vertical ? styles.vertical : ''} ${className}`}
       >
           {this.props.children}
       </div>
