@@ -13,7 +13,7 @@ import transactions from '../store/selectors/transactions';
 import OasisButton from "../components/OasisButton";
 import {InfoBox} from "../components/InfoBox";
 import {InfoBoxBody} from "../components/InfoBoxBody";
-import styles from './SetTokenAllowanceTrust.scss';
+// import styles from './SetTokenAllowanceTrust.scss';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,

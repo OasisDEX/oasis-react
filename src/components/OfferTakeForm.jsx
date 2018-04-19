@@ -24,8 +24,8 @@ import CSSModules from 'react-css-modules';
 /**
  * Remove this styling TODO
  */
-const box = { border: '1px solid black', padding: 20, marginTop: 20 };
-const label = { width: '30%', display: 'inline-block' };
+// const box = { border: '1px solid black', padding: 20, marginTop: 20 };
+// const label = { width: '30%', display: 'inline-block' };
 const fieldStyle = { textAlign: 'right' };
 
 
