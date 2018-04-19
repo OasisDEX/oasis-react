@@ -25,7 +25,7 @@ class OasisWrapUnwrapUnwrap extends PureComponent {
         <OasisTokenBalanceSummary summary="Wrapped" className={styles.balance}>
           {<OasisTokenBalanceWrapper decimalPlaces={5} tokenName={activeWrappedToken}/>}
         </OasisTokenBalanceSummary>
-        <OasisTokenUnwrapFormWrapper onSubmit={onSubmit}/>
+        <OasisTokenUnwrapFormWrapper onSubmit={onSubmit} activeWrappedToken={activeWrappedToken}/>
         <WrapUnwrapStatusWrapper type={WRAP_STATUS_VIEW_TYPE_UNWRAP}/>
       </OasisWidgetFrame>
     );
