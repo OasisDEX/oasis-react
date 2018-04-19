@@ -10,7 +10,7 @@ const OasisWidgetFrame = (props) => {
     <section styleName="OasisWidgetFrame">
       <div className="row">
         <div className="col-md-12">
-          <h4 styleName="Heading">{props.heading} {props.loadProgressSection}{props.headingChildren}</h4>
+          <h4 styleName="Heading" className={props.className}>{props.heading} {props.loadProgressSection}{props.headingChildren}</h4>
         </div>
       </div>
 
@@ -28,8 +28,13 @@ OasisWidgetFrame.propTypes = {
 
   headingChildren: PropTypes.node,
   children: PropTypes.node
+} && {};
+
+const defaultProps = {
+  className: ''
 };
 
 OasisWidgetFrame.displayName = "OasisWidgetFrame";
+OasisWidgetFrame.defaultProps = defaultProps;
 
 export default CSSModules(OasisWidgetFrame, styles);

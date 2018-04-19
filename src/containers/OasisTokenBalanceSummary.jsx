@@ -7,12 +7,15 @@ import styles from './OasisTokenBalanceSummary.scss';
 import CSSModules from 'react-css-modules';
 
 const propTypes = PropTypes && {};
+const defaultProps = {
+  className: ''
+};
 
 export class OasisTokenBalanceSummary extends PureComponent {
   render() {
-    const { summary, token } = this.props;
+    const { summary, token, className } = this.props;
     return (
-      <div className={styles.summary}>
+      <div className={`${styles.summary} ${className}`}>
         {summary}
         {this.props.children || <OasisTokenBalance tokenName={token} {...this.props} />}
       </div>
@@ -22,5 +25,6 @@ export class OasisTokenBalanceSummary extends PureComponent {
 
 
 OasisTokenBalanceSummary.propTypes = propTypes;
+OasisTokenBalanceSummary.defaultProps = defaultProps;
 OasisTokenBalanceSummary.displayName = 'OasisTokenBalance';
 export default CSSModules(OasisTokenBalanceSummary,styles);
