@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import OasisTokenTransferHistoryWrapper  from './OasisTokenTransferHistory';
 import OasisTokenTransferWrapper  from './OasisTokenTransfer';
 import transfers from '../store/selectors/transfers';
+import {FlexBox} from "../components/FlexBox";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -16,10 +17,10 @@ export class OasisTransferMainWrapper extends PureComponent {
   render() {
     const { selectedToken } = this.props;
     return (
-      <div>
+      <FlexBox wrap>
         <OasisTokenTransferWrapper selectedToken={selectedToken}/>
         <OasisTokenTransferHistoryWrapper/>
-      </div>
+      </FlexBox>
     );
   }
 }

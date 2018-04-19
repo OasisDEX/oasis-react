@@ -18,6 +18,7 @@ import { DAY, WEEK } from '../utils/period';
 import OasisTradeOrdersWrapper from './OasisTradeOrders';
 import offers from '../store/selectors/offers';
 import platformReducer from '../store/reducers/platform';
+import {FlexBox} from "../components/FlexBox";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -73,7 +74,7 @@ export class OasisTradeWrapper extends PureComponent {
     } = this.props;
 
     return this.redirect() || (
-      <main>
+      <FlexBox wrap>
         <OasisMarketWidget
           activeTradingPair={activeTradingPair}
           setActiveTradingPair={setActiveTradingPairEpic}
@@ -85,7 +86,7 @@ export class OasisTradeWrapper extends PureComponent {
         />
         <OasisChart/>
         <OasisTradeOrdersWrapper/>
-      </main>
+      </FlexBox>
     );
   }
 }

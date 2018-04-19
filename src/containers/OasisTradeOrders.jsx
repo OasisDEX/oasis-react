@@ -20,6 +20,7 @@ import OasisTakeOfferModalWrapper  from './OasisTakeOfferModal';
 import offerTakes from '../store/selectors/offerTakes';
 import OasisMakeBuyOfferWrapper  from './OasisMakeBuyOffer';
 import OasisMakeSellOfferWrapper  from './OasisMakeSellOffer';
+import {FlexBox} from "../components/FlexBox";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -64,11 +65,9 @@ export class OasisTradeOrdersWrapper extends PureComponent {
 
     const tradesList = trades(marketData, activeTradingPair.baseToken, activeTradingPair.quoteToken);
     return (
-      <div>
-        <div>
-          <OasisMakeBuyOfferWrapper/>
-          <OasisMakeSellOfferWrapper/>
-        </div>
+      <FlexBox wrap>
+        <OasisMakeBuyOfferWrapper/>
+        <OasisMakeSellOfferWrapper/>
         <div>{this.offerTakeModal()}</div>
         <OasisBuyOrders
           onSetOfferTakeModalOpen={setOfferTakeModalOpen}
@@ -103,7 +102,7 @@ export class OasisTradeOrdersWrapper extends PureComponent {
           activeTradingPair={activeTradingPair}
           initialMarketHistoryLoaded={initialMarketHistoryLoaded}
         />
-      </div>
+      </FlexBox>
     );
   }
 }
