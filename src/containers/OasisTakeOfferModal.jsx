@@ -135,39 +135,35 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
         </button>
         <OasisTokenBalanceSummary summary="Available" token={sellToken}/>
 
-        <div>
-          <div>
-            <OfferTakeForm estimateGas={getTransactionGasCostEstimate}/>
-          </div>
-          <div className="statusSection">
-            <OasisTransactionDetailsWrapper
-              hasSufficientTokenAmount={hasSufficientTokenAmount}
-              transactionSubectType={TX_OFFER_TAKE}
-              isTransactionValid={isCurrentTransactionValid}
-              {...getUsersSoldAndReceivedAmounts(offerTakeType, offerTakeFormValues)}
-              buyToken={buyToken}
-              transaction={currentOfferTakeTransaction}
-              sellToken={sellToken}
-              offerId={activeOfferTakeOfferId}
-              getTransactionGasCostEstimate={getTransactionGasCostEstimate}
-            />
-          </div>
-          <SetTokenAllowanceTrustWrapper
-            allowanceSubjectAddress={activeOfferTakeOfferOwner}
-            tokenName={buyToken}
+        <OfferTakeForm estimateGas={getTransactionGasCostEstimate}/>
+        <div className="statusSection">
+          <OasisTransactionDetailsWrapper
+            hasSufficientTokenAmount={hasSufficientTokenAmount}
+            transactionSubectType={TX_OFFER_TAKE}
+            isTransactionValid={isCurrentTransactionValid}
+            {...getUsersSoldAndReceivedAmounts(offerTakeType, offerTakeFormValues)}
+            buyToken={buyToken}
+            transaction={currentOfferTakeTransaction}
+            sellToken={sellToken}
+            offerId={activeOfferTakeOfferId}
+            getTransactionGasCostEstimate={getTransactionGasCostEstimate}
           />
-          <div
-            className={styles.footer}
-            hidden={currentOfferTakeTransaction}
-          >
-            <OasisButton onClick={this.onCancel}>Cancel</OasisButton>
-            <div className="notificationsSection">
-              { !isCurrentOfferActive && <OfferNotAvailable/>}
-            </div>
-            <OasisButton disabled={!canBuyOffer} onClick={this.onBuyOffer}>
-              {OasisTakeOfferModalWrapper.takeOfferBtnLabel(offerTakeType, { buyToken, sellToken })}
-            </OasisButton>
+        </div>
+        <SetTokenAllowanceTrustWrapper
+          allowanceSubjectAddress={activeOfferTakeOfferOwner}
+          tokenName={buyToken}
+        />
+        <div
+          className={styles.footer}
+          hidden={currentOfferTakeTransaction}
+        >
+          <OasisButton onClick={this.onCancel}>Cancel</OasisButton>
+          <div className="notificationsSection">
+            { !isCurrentOfferActive && <OfferNotAvailable/>}
           </div>
+          <OasisButton disabled={!canBuyOffer} onClick={this.onBuyOffer}>
+            {OasisTakeOfferModalWrapper.takeOfferBtnLabel(offerTakeType, { buyToken, sellToken })}
+          </OasisButton>
         </div>
       </ReactModal>
     );

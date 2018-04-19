@@ -11,6 +11,7 @@ import OasisWrapUnwrapWrapWrapper  from './OasisWrapUnwrapWrap';
 import wrapUnwrapReducer from '../store/reducers/wrapUnwrap';
 import { TOKEN_ETHER } from '../constants';
 import platformReducer from '../store/reducers/platform';
+import {FlexBox} from "../components/FlexBox";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -29,14 +30,14 @@ export class OasisWrapUnwrapWrapper extends PureComponent {
   render() {
     const { activeUnwrappedToken } = this.props;
     return (
-      <div>
+      <FlexBox wrap>
         <OasisWrapUnwrapBalancesWrapper
           activeUnwrappedToken={activeUnwrappedToken}
         />
         <OasisWrapUnwrapHistoryWrapper/>
         <OasisWrapUnwrapWrapWrapper/>
         <OasisWrapUnwrapUnwrapWrapper/>
-      </div>
+      </FlexBox>
     );
   }
 }
