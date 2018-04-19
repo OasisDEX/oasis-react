@@ -2,15 +2,8 @@
 
 exports[`(Container) OasisGasPrice should render 1`] = `
 <div
-  style={
-    Object {
-      "background": "#fff",
-      "padding": "4px 7px",
-    }
-  }
->
-  <div />
-</div>
+  className=""
+/>
 `;
 
 exports[`(Container) OasisGasPrice will receive right actions 1`] = `

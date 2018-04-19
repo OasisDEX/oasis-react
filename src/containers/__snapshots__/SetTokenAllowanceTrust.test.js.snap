@@ -5,6 +5,7 @@ exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
   className=""
   color="default"
   justifyContent="space-between"
+  size="md"
   vertical={false}
 >
   <InfoBoxBody

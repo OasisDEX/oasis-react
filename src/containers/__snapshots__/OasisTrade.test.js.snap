@@ -1,7 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) OasisTrade should render 1`] = `
-<main>
+<FlexBox
+  alignContent="stretch"
+  alignItems="stretch"
+  className=""
+  justifyContent="normal"
+  vertical={false}
+  wrap={true}
+>
   <OasisMarketWidget
     activeTradingPair={
       Immutable.Map {
@@ -131,7 +138,7 @@ exports[`(Container) OasisTrade should render 1`] = `
   />
   <OasisChart />
   <Connect(OasisTradeOrders) />
-</main>
+</FlexBox>
 `;
 
 exports[`(Container) OasisTrade will receive right actions 1`] = `

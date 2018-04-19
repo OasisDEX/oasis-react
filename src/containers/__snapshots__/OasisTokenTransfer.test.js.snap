@@ -2,6 +2,7 @@
 
 exports[`(Container) OasisTokenTransfer should render 1`] = `
 <OasisWidgetFrame
+  className=""
   heading="Transfer"
   headingChildren={
     <Connect(OasisTokenSelect)
@@ -12,6 +13,7 @@ exports[`(Container) OasisTokenTransfer should render 1`] = `
   spaceForContent={true}
 >
   <OasisTokenBalance
+    className=""
     decimalPlaces={5}
     summary="Wallet"
     token="MKR"

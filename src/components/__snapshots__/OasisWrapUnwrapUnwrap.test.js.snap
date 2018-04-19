@@ -2,18 +2,21 @@
 
 exports[`(Component) OasisWrapUnwrapUnwrap should render 1`] = `
 <OasisWidgetFrame
+  className=""
   heading="Unwrap"
+  spaceForContent={true}
 >
-  <div>
-    <span>
-      Wrapped
-    </span>
+  <OasisTokenBalance
+    className=""
+    summary="Wrapped"
+  >
     <Connect(OasisTokenBalance)
       decimalPlaces={5}
       tokenName="W-ETH"
     />
-  </div>
+  </OasisTokenBalance>
   <Connect(ReduxForm)
+    activeWrappedToken="W-ETH"
     onSubmit={[Function]}
   />
   <WrapUnwrapStatus

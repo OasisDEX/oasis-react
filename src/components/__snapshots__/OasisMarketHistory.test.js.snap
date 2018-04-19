@@ -2,6 +2,7 @@
 
 exports[`(Component) OasisMarketHistory should render 1`] = `
 <OasisWidgetFrame
+  className=""
   heading="MARKET HISTORY (0)"
 >
   <OasisTable

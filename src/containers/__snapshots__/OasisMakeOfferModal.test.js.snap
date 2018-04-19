@@ -22,6 +22,7 @@ exports[`(Container) OasisMakeOfferModal should render 1`] = `
     ×
   </button>
   <OasisTokenBalance
+    className=""
     summary="Available"
     token="DAI"
   />

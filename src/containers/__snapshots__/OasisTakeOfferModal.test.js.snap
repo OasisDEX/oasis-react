@@ -22,56 +22,53 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
     ×
   </button>
   <OasisTokenBalance
+    className=""
     summary="Available"
     token="W-ETH"
   />
-  <div>
-    <div>
-      <Connect(ReduxForm)
-        estimateGas={[Function]}
-      />
-    </div>
-    <div
-      className="statusSection"
-    >
-      <Connect(WithTransactionWatchWrapper)
-        amountReceived="0.01110"
-        amountSold="0.00010"
-        buyToken="MKR"
-        getTransactionGasCostEstimate={[Function]}
-        hasSufficientTokenAmount={false}
-        isTransactionValid={true}
-        offerId="7"
-        sellToken="W-ETH"
-        transactionSubectType="TRANSACTIONS/GROUP__OFFERS/OFFER_TAKE"
-      />
-    </div>
-    <Connect(SetTokenAllowanceTrust)
-      allowanceSubjectAddress="0xdb33dfd3d61308c33c63209845dad3e6bfb2c674"
-      tokenName="MKR"
+  <Connect(ReduxForm)
+    estimateGas={[Function]}
+  />
+  <div
+    className="statusSection"
+  >
+    <Connect(WithTransactionWatchWrapper)
+      amountReceived="0.01110"
+      amountSold="0.00010"
+      buyToken="MKR"
+      getTransactionGasCostEstimate={[Function]}
+      hasSufficientTokenAmount={false}
+      isTransactionValid={true}
+      offerId="7"
+      sellToken="W-ETH"
+      transactionSubectType="TRANSACTIONS/GROUP__OFFERS/OFFER_TAKE"
     />
-    <div>
-      <OasisButton
-        btnType="button"
-        color="default"
-        onClick={[Function]}
-        size="md"
-      >
-        Cancel
-      </OasisButton>
-      <div
-        className="notificationsSection"
-      />
-      <OasisButton
-        btnType="button"
-        color="default"
-        disabled={true}
-        onClick={[Function]}
-        size="md"
-      >
-        Sell W-ETH
-      </OasisButton>
-    </div>
+  </div>
+  <Connect(SetTokenAllowanceTrust)
+    allowanceSubjectAddress="0xdb33dfd3d61308c33c63209845dad3e6bfb2c674"
+    tokenName="MKR"
+  />
+  <div>
+    <OasisButton
+      btnType="button"
+      color="default"
+      onClick={[Function]}
+      size="md"
+    >
+      Cancel
+    </OasisButton>
+    <div
+      className="notificationsSection"
+    />
+    <OasisButton
+      btnType="button"
+      color="default"
+      disabled={true}
+      onClick={[Function]}
+      size="md"
+    >
+      Sell W-ETH
+    </OasisButton>
   </div>
 </Modal>
 `;
