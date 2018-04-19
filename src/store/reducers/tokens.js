@@ -98,7 +98,6 @@ const setActiveTradingPairEpic = (args, sync = true) => (dispatch, getState) => 
       dispatch(offersReducer.actions.syncOffersEpic(currentActiveTradingPair));
     }
   }
-
 };
 
 const setPrecision = createAction(

@@ -148,7 +148,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
 
 export function mapStateToProps(state, props) {
   return {
-    activeOfferMake: offerMakes.activeOfferMake(state, props.form),
+    activeOfferMake: offerMakes.activeOfferMakePure(state, props.form),
     // activeOfferMakeType: offerMakes.activeOfferMakeType(state, props.form),
     userBalances: balances.tokenBalances(state),
     offerMakeFormValues: getFormValues(props.form)(state, 'total', 'volume', 'price'),

@@ -133,10 +133,8 @@ const subscribeAccountEthBalanceChangeEventEpic = (accountAddress) => async (dis
               dispatch(etherBalanceChanged(accEthBalance));
             }
           }
-
         },
       );
-
     },
   );
   dispatch(subscribeAccountEthBalanceChangeEvent.fulfilled());
@@ -307,6 +305,8 @@ const setTokenAllowanceTrustEpic = (tokenName,
               setTokenTrustAddressEnabled(tokenName, allowanceSubjectAddress)
             ).then(
               txHash => {
+
+                //TODO: where TrustStatus is stored?
                 dispatch(
                   setTokenAllowanceTrustStatus.fulfilled({ txHash }),
                 );

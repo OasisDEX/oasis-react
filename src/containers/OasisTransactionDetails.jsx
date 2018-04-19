@@ -169,7 +169,6 @@ export class OasisTransactionDetailsWrapper extends PureComponent {
 
   componentWillUpdate({ latestBlockNumber, hasSufficientTokenAmount }) {
     if (
-
       (latestBlockNumber && this.props.latestBlockNumber !== latestBlockNumber) ||
       (this.props.hasSufficientTokenAmount !== hasSufficientTokenAmount && hasSufficientTokenAmount)
 

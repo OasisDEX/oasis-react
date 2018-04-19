@@ -81,16 +81,16 @@ Object {
 exports[`(Container) OasisMakeOfferModal will receive right props 1`] = `
 Object {
   "activeOfferMake": Immutable.Map {
-    offerData: Immutable.Map {
-        payToken: null,
-        buyToken: null,
-    },
-    buyToken: "MKR",
-    sellToken: "DAI",
     baseToken: "MKR",
     quoteToken: "DAI",
+    buyToken: "MKR",
+    sellToken: "DAI",
     sellTokenAddress: "0xc4375b7de8af5a38a93548eb8453a498222c4ff2",
     buyTokenAddress: "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+    offerData: Immutable.Map {
+        payAmount: "1000000000000000000",
+        buyAmount: "1000000000000000000",
+    },
 },
   "buyToken": "MKR",
   "canMakeOffer": false,

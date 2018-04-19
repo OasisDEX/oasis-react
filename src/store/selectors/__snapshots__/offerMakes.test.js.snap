@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`offerMakes activeOfferMakeBuyToken/makeBuyOffer 1`] = `"MKR"`;
+
+exports[`offerMakes activeOfferMakeBuyToken/makeSellOffer 1`] = `"W-ETH"`;
+
+exports[`offerMakes activeOfferMakePure/makeBuyOffer 1`] = `
+Immutable.Map {
+  baseToken: "MKR",
+  quoteToken: "W-ETH",
+  buyToken: "MKR",
+  sellToken: "W-ETH",
+  sellTokenAddress: "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+  buyTokenAddress: "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+  offerData: Immutable.Map {
+    payAmount: "1000000000000000000",
+    buyAmount: "1000000000000000000",
+  },
+}
+`;
+
+exports[`offerMakes activeOfferMakePure/makeSellOffer 1`] = `
+Immutable.Map {
+  baseToken: "MKR",
+  quoteToken: "W-ETH",
+  buyToken: "W-ETH",
+  sellToken: "MKR",
+  sellTokenAddress: "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+  buyTokenAddress: "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+  offerData: Immutable.Map {
+    payAmount: "1000000000000000000",
+    buyAmount: "1000000000000000000",
+  },
+}
+`;

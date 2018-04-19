@@ -1,36 +1,25 @@
-import { createAction, handleActions } from 'redux-actions';
-import { fromJS } from 'immutable';
-import { createPromiseActions } from '../../utils/createPromiseActions';
-import tokens from '../selectors/tokens';
+import {createAction, handleActions} from 'redux-actions';
+import {fromJS} from 'immutable';
+import {createPromiseActions} from '../../utils/createPromiseActions';
+
 import offerMakes from '../selectors/offerMakes';
-import { initialize } from 'redux-form/immutable';
-import { DEFAULT_GAS_LIMIT, TX_OFFER_MAKE, TX_STATUS_CANCELLED_BY_USER } from './transactions';
-import { change, formValueSelector } from 'redux-form/immutable';
+import {change, formValueSelector, initialize} from 'redux-form/immutable';
+import transactionsReducer, {DEFAULT_GAS_LIMIT, TX_OFFER_MAKE, TX_STATUS_CANCELLED_BY_USER} from './transactions';
 import web3 from '../../bootstrap/web3';
 import balances from '../selectors/balances';
-import { fulfilled, pending, rejected } from '../../utils/store';
-import transactionsReducer from './transactions';
+import {fulfilled, pending, rejected} from '../../utils/store';
 import network from '../selectors/network';
-import getOfferMakeBuyAndSellTokens from '../../utils/tokens/getOfferMakeBuyAndSellTokens';
+
 import offerMakeToFormName from '../../utils/offers/offerMakeToFormName';
 import generateTxSubjectId from '../../utils/transactions/generateTxSubjectId';
 
 export const MAKE_BUY_OFFER = 'OFFER_MAKES/MAKE_BUY_OFFER';
 export const MAKE_SELL_OFFER = 'OFFER_MAKES/MAKE_SELL_OFFER';
 
-const currentOfferMakeInitialValue = fromJS(
-  {
-    offerData: null,
-    buyToken: null,
-    sellToken: null,
-  },
-);
-
 const initialState = fromJS(
   {
     makeBuyOffer: {
       type: MAKE_BUY_OFFER,
-      activeOfferMake: currentOfferMakeInitialValue,
       isOfferMakeModalOpen: false,
       activeOfferMakeOfferDraftId: null,
       transactionGasCostEstimate: null,
@@ -39,7 +28,6 @@ const initialState = fromJS(
     },
     makeSellOffer: {
       type: MAKE_SELL_OFFER,
-      activeOfferMake: currentOfferMakeInitialValue,
       isOfferMakeModalOpen: false,
       activeOfferMakeOfferDraftId: null,
       transactionGasCostEstimate: null,
@@ -51,78 +39,56 @@ const initialState = fromJS(
 );
 
 const INIT = 'OFFER_MAKES/INIT';
-const UPDATE_ACTIVE_OFFER_MAKE_DATA = 'OFFER_MAKES/UPDATE_ACTIVE_OFFER_MAKE_DATA';
 
 const Init = createAction(
   INIT, () => null,
 );
 
+
+//TODO: buxMax sets only total amount, volume should be calculated elsewhere
 const buyMaxEpic = (offerMakeType) => (dispatch, getState) => {
-  const formName = offerMakeToFormName(offerMakeType);
-  const usersQuoteTokenBalanceBN = web3.toBigNumber(
-    web3.fromWei(
-      balances.activeQuoteTokenBalance(getState())
-    ),
-  );
-  const { price } = offerMakes.currentFormValues(getState(), formName);
-  const priceBN = web3.toBigNumber(price);
+    const formName = offerMakeToFormName(offerMakeType);
+    const usersQuoteTokenBalanceBN = web3.toBigNumber(
+        web3.fromWei(
+            balances.activeQuoteTokenBalance(getState())
+        ),
+    );
 
-  dispatch(change(formName, 'total', usersQuoteTokenBalanceBN.toString()));
-  dispatch(change(formName, 'volume', usersQuoteTokenBalanceBN.div(priceBN).toString()));
+    const total = usersQuoteTokenBalanceBN.toString();
 
-  dispatch(makeOfferFormUpdatedEpic(offerMakeType));
+    dispatch(change(formName, 'total', total));
+    dispatch(totalFieldValueChangedEpic(offerMakeType, total));
+
 };
 
+//TODO: sellMax sets only total amount, volume should be calculated elsewhere
 const sellMaxEpic = (offerMakeType) => (dispatch, getState) => {
-  const formName = offerMakeToFormName(offerMakeType);
+    const formName = offerMakeToFormName(offerMakeType);
 
-  const usersBaseTokenBalanceBN = web3.toBigNumber(
-    web3.fromWei(
-      balances.activeBaseTokenBalance(getState()),
-    ),
-  );
-  const { price } = offerMakes.currentFormValues(getState(), formName);
-  const priceBN = web3.toBigNumber(price.toString());
-  dispatch(change(formName, 'total', usersBaseTokenBalanceBN.mul(priceBN).toString()));
-  dispatch(change(formName, 'volume', usersBaseTokenBalanceBN.toString()));
+    const usersBaseTokenBalanceBN = web3.toBigNumber(
+        web3.fromWei(
+            balances.activeBaseTokenBalance(getState()),
+        ),
+    );
+    const { price } = offerMakes.currentFormValues(getState(), formName);
+    const priceBN = web3.toBigNumber(price.toString());
 
-  dispatch(makeOfferFormUpdatedEpic(offerMakeType));
+    const total = usersBaseTokenBalanceBN.mul(priceBN).toString();
+
+    dispatch(change(formName, 'total', total));
+    dispatch(totalFieldValueChangedEpic(offerMakeType, total));
 
 };
-
-const setActiveOfferMake = createAction('OFFER_MAKES/SET_CURRENT_OFFER_MAKE',
-  (offerMakeType, offerMake) => ({ offerMake, offerMakeType }),
-);
-const setActiveOfferMakeEpic = (offerMakeType) => (dispatch, getState) => {
-  const { baseToken, quoteToken } = tokens.activeTradingPair(getState());
-  const { sellToken, buyToken } = getOfferMakeBuyAndSellTokens({ baseToken, quoteToken }, offerMakeType);
-  dispatch(
-    setActiveOfferMake(
-      offerMakeType,
-      currentOfferMakeInitialValue
-        .set('offerData', fromJS({ payToken: null, buyToken: null }))
-        .set('sellToken', sellToken)
-        .set('buyToken', buyToken)
-        .set('baseToken', baseToken)
-        .set('quoteToken', quoteToken)
-        .set('sellTokenAddress', network.getTokenAddress(getState(), sellToken))
-        .set('buyTokenAddress', network.getTokenAddress(getState(), buyToken)),
-    ),
-  );
-};
-
-
 
 /**
  *  Create new offer transaction actions
  */
-
-
 const setActiveOfferMakeTxSubjectId = createAction(
   'OFFER_MAKES/SET_ACTIVE_OFFER_MAKE_TX_SUBJECT_ID',
   (offerMakeType, txSubjectId) => ({ offerMakeType, txSubjectId })
 );
 
+//TODO: already refactored?
 const generateActiveOfferMakeTxSubjectIdEpic = () => (dispatch, getState) => {
   const offerMakeType = offerMakes.activeOfferMakeType(getState());
   const newTxSubjectId = generateTxSubjectId();
@@ -135,6 +101,7 @@ const resetActiveOfferMakeTxSubjectId = createAction(
   'OFFER_MAKES/RESET_ACTIVE_OFFER_MAKE_TX_SUBJECT_ID', (offerMakeType) => offerMakeType
 );
 
+//TODO: window? why not direct call?
 const makeOfferTransaction = createAction(
   'OFFER_MAKES/MAKE_OFFER_TRANSACTION',
   ({ payAmount, payToken, buyAmount, buyToken, gasLimit }) =>
@@ -143,14 +110,18 @@ const makeOfferTransaction = createAction(
 
 const makeOffer = createPromiseActions('OFFER_MAKES/MAKE_OFFER');
 
+
+//TODO: To many duties at once. Offer form and offer making logic needlessly coupled here...
 const makeOfferEpic = (offerMakeType) => async (dispatch, getState) => {
 
+
+  //TODO: Already refactored?
   dispatch(
     generateActiveOfferMakeTxSubjectIdEpic(offerMakeType)
   );
   dispatch(makeOffer.pending());
 
-  const activeOfferMake = offerMakes.activeOfferMake(getState(), offerMakeToFormName(offerMakeType));
+  const activeOfferMake = offerMakes.activeOfferMakePure(getState(), offerMakeToFormName(offerMakeType));
   const makeOfferPayload = {
     payAmount: activeOfferMake.getIn(['offerData','payAmount']),
     buyAmount: activeOfferMake.getIn(['offerData','buyAmount']),
@@ -161,6 +132,9 @@ const makeOfferEpic = (offerMakeType) => async (dispatch, getState) => {
   const txSubjectId = offerMakes.activeOfferMakeTxSubjectId(getState());
 
   try {
+
+    //TODO: why indirection?
+    //TODO: Not sure about error handling?
     const pendingMakeOfferAction = dispatch(
       makeOfferTransaction(makeOfferPayload),
     );
@@ -211,9 +185,6 @@ const makeOfferEpic = (offerMakeType) => async (dispatch, getState) => {
 const setActiveOfferMakeType = createAction('OFFER_MAKES/SET_ACTIVE_OFFER_MAKE_TYPE', makeType => makeType);
 const resetActiveOfferMakeType = createAction('OFFER_MAKES/RESET_ACTIVE_OFFER_MAKE_TYPE');
 
-const resetActiveOfferMakeData = createAction('OFFER_MAKES/RESET_CURRENT_OFFER_MAKE_DATA', offerMakeType => ({ offerMakeType }));
-
-
 const initializeOfferMakeFormEpic = (offerMakeType) => dispatch => {
   const formName = offerMakeToFormName(offerMakeType);
   dispatch(
@@ -223,11 +194,7 @@ const initializeOfferMakeFormEpic = (offerMakeType) => dispatch => {
       total: null
     }),
   );
-  dispatch(setActiveOfferMakeEpic(offerMakeType));
-
 };
-
-
 
 /**
  *  Set offer make modal  open / closed
@@ -243,8 +210,6 @@ const setOfferMakeModalOpenEpic = (offerMakeType) => (dispatch) => {
   dispatch(setOfferMakeModalOpen(offerMakeType));
 };
 
-
-
 const setOfferMakeModalClosed = createAction(
   'OFFER_MAKES/SET_MODAL_CLOSED',
   offerMakeType => ({ formName: offerMakeToFormName(offerMakeType) }),
@@ -254,10 +219,8 @@ const setOfferMakeModalClosedEpic = (offerMakeType) => (dispatch) => {
   dispatch(setOfferMakeModalClosed(offerMakeType));
   dispatch(resetActiveOfferMakeType());
   dispatch(resetActiveOfferMakeTxSubjectId(offerMakeType));
-  dispatch(resetActiveOfferMakeData(offerMakeType));
   dispatch(resetActiveOfferMakeGasCostEstimate(offerMakeType));
 };
-
 
 
 /***
@@ -272,9 +235,6 @@ const priceFieldChangedEpic = (offerMakeType, value) => (dispatch, getState) => 
   } else {
     dispatch(change(formName, 'total', web3.toBigNumber(volume).mul(value).toString()));
   }
-
-  dispatch(makeOfferFormUpdatedEpic(offerMakeType));
-
 };
 
 const volumeFieldValueChangedEpic = (offerMakeType, value) => (dispatch, getState) => {
@@ -286,9 +246,6 @@ const volumeFieldValueChangedEpic = (offerMakeType, value) => (dispatch, getStat
     dispatch(change(formName, 'volume', value));
     dispatch(change(formName, 'total', web3.toBigNumber(value).mul(price).toString()));
   }
-
-  dispatch(makeOfferFormUpdatedEpic(offerMakeType));
-
 };
 
 const totalFieldValueChangedEpic = (offerMakeType, value) => (dispatch, getState) => {
@@ -296,50 +253,7 @@ const totalFieldValueChangedEpic = (offerMakeType, value) => (dispatch, getState
   const price = formValueSelector(formName)(getState(), 'price');
   if ((!isNaN(value) && parseFloat(value) !== 0) && (!isNaN(price) && parseFloat(price) !== 0)) {
     dispatch(change(formName, 'volume', web3.toBigNumber(value).div(price).toString()));
-    dispatch(makeOfferFormUpdatedEpic(offerMakeType));
   }
-};
-
-
-/**
- *
- * When any of the offer make fields changes dispatch action
- *
- */
-
-const updateActiveOfferMakeData = createAction(
-  UPDATE_ACTIVE_OFFER_MAKE_DATA, ({ offerMakeType, offerMakeData }) => ({ offerMakeType, offerMakeData })
-);
-const updateActiveOfferMakeDataEpic = (offerMakeType, offerMakeData) => dispatch => {
-  dispatch(
-    updateActiveOfferMakeData({
-      offerMakeType,
-      offerMakeData: fromJS(offerMakeData)
-    }),
-  );
-};
-
-const makeOfferFormUpdatedEpic = (offerMakeType) => (dispatch, getState) => {
-
-  let payAmount = null, buyAmount = null;
-  const {total, volume } = offerMakes.currentFormValues(getState(), offerMakeToFormName(offerMakeType));
-  switch (offerMakeType) {
-    case MAKE_BUY_OFFER: {
-      payAmount = web3.toBigNumber(web3.toWei(total)).ceil().toString();
-      buyAmount = web3.toBigNumber(web3.toWei(volume)).ceil().toString();
-    }
-      break;
-
-    case MAKE_SELL_OFFER: {
-      payAmount = web3.toBigNumber(web3.toWei(volume)).ceil().toString();
-      buyAmount = web3.toBigNumber(web3.toWei(total)).ceil().toString();
-    }
-      break;
-  }
-
-  dispatch(
-    updateActiveOfferMakeDataEpic(offerMakeType, { payAmount, buyAmount })
-  );
 };
 
 /**
@@ -350,6 +264,7 @@ const resetActiveOfferMakeGasCostEstimate = createAction(
   'OFFER_MAKES/RESET_TRANSACTION_GAS_ESTIMATE',
 );
 
+//TODO: why noProxy? Why 2 actions and epic instead of ?
 const getTransactionGasCostEstimate = createAction(
   'OFFER_MAKES/GET_TRANSACTION_GAS_ESTIMATE',
   ({ payAmount, payToken, buyAmount, buyToken }) => new Promise((resolve, reject) => {
@@ -369,11 +284,12 @@ const getTransactionGasCostEstimate = createAction(
   }),
 );
 
+//TODO: why is it made available outside the store?
 const getTransactionGasCostEstimateEpic = (offerMakeType) => async (dispatch, getState) => {
   if (!offerMakes.canMakeOffer(getState(), offerMakeType)) {
     return null;
   } else {
-    const offerMake = offerMakes.activeOfferMake(getState(), offerMakeToFormName(offerMakeType));
+    const offerMake = offerMakes.activeOfferMakePure(getState(), offerMakeToFormName(offerMakeType));
 
     const
       payAmount = offerMake.getIn(['offerData','payAmount']),
@@ -401,23 +317,13 @@ const actions = {
   sellMaxEpic,
   getTransactionGasCostEstimateEpic,
   initializeOfferMakeFormEpic,
-
 };
 
 const reducer = handleActions({
   [setOfferMakeModalOpen]: (state, { payload: { formName } }) => state.setIn([formName, 'isOfferMakeModalOpen'], true),
   [setOfferMakeModalClosed]: (state, { payload: { formName } }) => state.setIn([formName, 'isOfferMakeModalOpen'], false),
-  [setActiveOfferMake]: (state, { payload: { offerMake, offerMakeType } }) =>
-    state.setIn([offerMakeToFormName(offerMakeType), 'activeOfferMake'], offerMake),
-  [resetActiveOfferMakeData]: (state, { payload: { offerMakeType } }) =>
-    state.setIn(
-      [offerMakeToFormName(offerMakeType), 'activeOfferMake', 'offerData'], fromJS({ payToken: null, buyToken: null })
-    ),
   [setActiveOfferMakeType]: (state, { payload }) => state.set('activeOfferMakeType', payload),
   [resetActiveOfferMakeType]: state => state.set('activeOfferMakeType', null),
-  // [setActiveOfferMakeOfferId]: (state, { payload }) => state.set('activeOfferMakeOfferDraftId', payload),
-  [updateActiveOfferMakeData]: (state, { payload: {offerMakeType, offerMakeData} }) =>
-    state.setIn([offerMakeToFormName(offerMakeType), 'activeOfferMake', 'offerData'], offerMakeData),
   [pending(getTransactionGasCostEstimate)]:
     state => state.set('transactionGasCostEstimatePending', true),
   [fulfilled(getTransactionGasCostEstimate)]:
