@@ -9,10 +9,18 @@
   display: flex;
 }
 
-.boxBody {
-  padding: 5px 16px;
+
+.sm {
+  padding: 7px 16px;
+  font-size: 13px;
+
+}
+
+.md {
+  padding: 16px;
   font-size: 13px;
 }
+
 
 .vertical {
   flex-direction: column;

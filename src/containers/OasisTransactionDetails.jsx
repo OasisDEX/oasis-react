@@ -15,6 +15,7 @@ import InfoBox from '../components/InfoBox';
 import styles from './OasisTransactionDetails.scss';
 import CSSModules from 'react-css-modules';
 import {InfoBoxBody} from "../components/InfoBoxBody";
+import {FlexBox} from "../components/FlexBox";
 
 
 const propTypes = PropTypes && {
@@ -26,12 +27,12 @@ const propTypes = PropTypes && {
   hasSufficientTokenAmount: PropTypes.bool,
 };
 
-const TokenAmount = ({ tokenName, tokenAmount, sign, color }) => (
-    <div>
+const TokenAmount = ({ tokenName, tokenAmount, sign, color, ...props }) => (
+    <FlexBox alignItems='center' {...props}>
       <span className={`${styles.circleIco} ${styles[color]}`}>{sign}</span>
-      <span className={styles.baseText}>{tokenAmount.toString()} </span>
+      <span className={styles.baseText}>{tokenAmount.toString()}&nbsp;</span>
       <span className={styles.bolderText}>{tokenName}</span>
-    </div>
+    </FlexBox>
 );
 
 TokenAmount.propTypes = {
@@ -41,8 +42,8 @@ TokenAmount.propTypes = {
   color: PropTypes.string
 };
 
-const TokenReceivedAmount = ({ tokenName, tokenAmount }) => (
-    <TokenAmount tokenName={tokenName} tokenAmount={tokenAmount} sign='+' color='green' />
+const TokenReceivedAmount = ({ tokenName, tokenAmount, ...props }) => (
+    <TokenAmount tokenName={tokenName} tokenAmount={tokenAmount} sign='+' color='green' {...props} />
 );
 
 TokenReceivedAmount.propTypes = {
@@ -50,8 +51,8 @@ TokenReceivedAmount.propTypes = {
   tokenAmount: PropTypes.string
 };
 
-const TokenSoldAmount = ({ tokenName, tokenAmount }) => (
-  <TokenAmount tokenName={tokenName} tokenAmount={tokenAmount} sign='-' color='red' />
+const TokenSoldAmount = ({ tokenName, tokenAmount, ...props }) => (
+  <TokenAmount tokenName={tokenName} tokenAmount={tokenAmount} sign='-' color='red' {...props} />
 );
 
 TokenSoldAmount.propTypes = {
@@ -67,9 +68,14 @@ export class OasisTransactionDetailsWrapper extends PureComponent {
 
   tradingTokenPartial() {
     return (
-      <div className={styles.baseText}>
+      <FlexBox className={`${styles.baseText} ${styles.detailsTradingCol}`}>
+        <div className={styles.detailsTradingFirstCol}>
         trading of <span className={styles.bolderText}>{this.props.baseToken}</span>
-      </div>
+        </div>
+        <div className={styles.detailsTradingSecCol}>
+          <span className={styles.tradingStatus}>ACTIVE</span>
+        </div>
+      </FlexBox>
     );
   }
 
@@ -88,6 +94,7 @@ export class OasisTransactionDetailsWrapper extends PureComponent {
             gasEstimateError={gasEstimateError}
             gasEstimatePending={isGasEstimatePending}
             transactionGasCostEstimate={transactionGasCostEstimate}
+            className={styles.detailsTradingCol}
           />
       );
     }
@@ -104,14 +111,16 @@ export class OasisTransactionDetailsWrapper extends PureComponent {
 
     if (!transaction) {
       return (
-        <InfoBox>
+        <InfoBox vertical>
           <InfoBoxBody>
-            <TokenReceivedAmount tokenAmount={amountReceived} tokenName={buyToken}/>
-            <TokenSoldAmount tokenAmount={amountSold} tokenName={sellToken}/>
-          </InfoBoxBody>
-          <InfoBoxBody>
-            {this.tradingTokenPartial()}
-            {this.gasAndAllowancePartial()}
+            <FlexBox className={styles.buying}>
+              <TokenReceivedAmount tokenAmount={amountReceived} tokenName={buyToken} className={styles.detailsAmountCol}/>
+              {this.tradingTokenPartial()}
+            </FlexBox>
+            <FlexBox>
+              <TokenSoldAmount tokenAmount={amountSold} tokenName={sellToken} className={styles.detailsAmountCol} />
+              {this.gasAndAllowancePartial()}
+            </FlexBox>
           </InfoBoxBody>
         </InfoBox>);
 
