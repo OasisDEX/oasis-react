@@ -14,7 +14,6 @@ import offerTakes from '../store/selectors/offerTakes';
 import OfferTakeForm from '../components/OfferTakeForm';
 import balances from '../store/selectors/balances';
 import tokens from '../store/selectors/tokens';
-import { formatAmount } from '../utils/tokens/pair';
 import { getFormValues, getFormSyncErrors } from 'redux-form/immutable';
 import OasisTransactionDetailsWrapper  from './OasisTransactionDetails';
 import OasisTokenBalanceSummary  from './OasisTokenBalanceSummary';
@@ -27,17 +26,6 @@ import styles from './OasisMakeOfferModal.scss';
 import CSSModules from 'react-css-modules';
 import OasisButton from "../components/OasisButton";
 
-// const BtnStyle = {
-//   padding: '10px 15px',
-//   margin: 5,
-//   backgroundColor: 'white',
-//   border: '1px solid gray'
-// };
-// const closeModalBtnStyle = {
-//   position: 'absolute',
-//   top: 20,
-//   right: 20
-// };
 
 const OfferNotAvailable = () => (
   <div>
@@ -62,18 +50,6 @@ const getOfferTitle = (offerTakeType) => {
     case TAKE_SELL_OFFER: return 'Sell offer';
   }
 };
-
-// const style = {
-//   content: {
-//     top: '40px',
-//     left: '30%',
-//     right: '30%',
-//     bottom: '40px',
-//     background: '#fff',
-//     overflow: 'auto',
-//     padding: '20px',
-//   },
-// };
 
 export const isTransactionConfirmed = (transaction) =>
   transaction && transaction.get('txStatus') === TX_STATUS_CONFIRMED;
