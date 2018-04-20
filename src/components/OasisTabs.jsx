@@ -4,17 +4,31 @@ import { NavLink } from 'react-router-dom';
 import styles from './OasisTabs.scss';
 import CSSModules from 'react-css-modules';
 
-const propTypes = PropTypes && {};
+const propTypes = PropTypes && {
+  pathname: PropTypes.string
+};
 const defaultProps = {};
 
 class OasisTabs extends PureComponent {
+  isActive(basePath) {
+    const  { pathname } = this.props;
+    if (pathname && pathname.indexOf(basePath) === 0) { return 'active'; }
+    else { return ''; }
+  }
   render() {
+    console.log(this.props);
     return (
       <div styleName="row-tabs">
         <ul styleName="Tabs">
-          <li styleName="Tab"><NavLink to={'/trade'} activeClassName={styles.active}>Trade</NavLink></li>
-          <li styleName="Tab Tab--2x"><NavLink to={'/wrap-unwrap'} activeClassName={styles.active}>Wrap / Unwrap</NavLink></li>
-          <li styleName="Tab"><NavLink to={'/transfer'} activeClassName={styles.active}>Transfer</NavLink></li>
+          <li styleName={`Tab ${this.isActive('/trade')}`}>
+            <NavLink to={'/trade'}>Trade</NavLink>
+          </li>
+          <li styleName={`Tab Tab--2x ${this.isActive('/wrap-unwrap')}`}>
+            <NavLink to={'/wrap-unwrap'}>Wrap / Unwrap</NavLink>
+          </li>
+          <li styleName={`Tab ${this.isActive('/transfer')}`}>
+            <NavLink to={'/transfer'}>Transfer</NavLink>
+          </li>
         </ul>
       </div>
     );
@@ -24,4 +38,4 @@ class OasisTabs extends PureComponent {
 OasisTabs.displayName = 'OasisTabs';
 OasisTabs.propTypes = propTypes;
 OasisTabs.defaultProps = defaultProps;
-export default CSSModules(OasisTabs, styles, {allowMultiple: true});
+export default CSSModules(styles, {allowMultiple: true})(OasisTabs);

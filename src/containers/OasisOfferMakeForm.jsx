@@ -16,6 +16,7 @@ import OasisButton from "../components/OasisButton";
 
 import styles from './OasisOfferMakeForm.scss';
 import CSSModules from 'react-css-modules';
+import OasisVolumeIsGreaterThanUserBalance from '../components/OasisVolumeIsGreaterThanUserBalance';
 
 const propTypes = PropTypes && {
   // activeOfferMakeOfferData: ImmutablePropTypes.map.isRequired,
@@ -28,14 +29,6 @@ const propTypes = PropTypes && {
 
 const defaultProps = {};
 
-const VolumeIsOverUserBalance = ({ offerMax }) => (
-  <div style={{ marginTop: 20, padding: 10, textAlign: 'center', backgroundColor: 'black', color: '#fff' }}>
-    Current volume is greater than offer maximum of <b>{offerMax}</b>
-  </div>
-);
-
-VolumeIsOverUserBalance.propTypes = { offerMax: PropTypes.string.isRequired };
-
 const validateVolume = [greaterThanZeroValidator, numericFormatValidator];
 const validateTotal = [greaterThanZeroValidator, numericFormatValidator];
 
@@ -43,11 +36,16 @@ export class OfferMakeForm extends PureComponent {
 
   constructor(props) {
     super(props);
+
+    this.state = {};
+
     this.onVolumeFieldChange = this.onVolumeFieldChange.bind(this);
     this.onTotalFieldChange = this.onTotalFieldChange.bind(this);
     this.onSetBuyMax = this.onSetBuyMax.bind(this);
     this.onSetSellMax = this.onSetSellMax.bind(this);
     this.onPriceFieldChange = this.onPriceFieldChange.bind(this);
+    this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
+    this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
     this.estimateGas = throttle(this.props.estimateGas || (() => null), 500);
   }
 
@@ -95,32 +93,44 @@ export class OfferMakeForm extends PureComponent {
 
   setMaxButton() {
     const { currentFormValues = {} } = this.props;
-    switch (this.props.offerMakeType) {
-      case MAKE_BUY_OFFER:
-        return (
+    if (!this.state.showMaxButton) { return null; }
+    else {
+      switch (this.props.offerMakeType) {
+        case MAKE_BUY_OFFER:
+          return (
             <OasisButton
-                className={styles.setMaxBtn}
-                disabled={greaterThanZeroValidator(currentFormValues.price)}
-                type="button"
-                color="success"
-                size="xs"
-                onClick={this.onSetBuyMax}
+              className={styles.setMaxBtn}
+              disabled={greaterThanZeroValidator(currentFormValues.price)}
+              type="button"
+              color="success"
+              size="xs"
+              onClick={this.onSetBuyMax}
             >Buy max
             </OasisButton>
-        );
-      case MAKE_SELL_OFFER:
-        return (
-          <OasisButton
-            className={styles.setMaxBtn}
-            disabled={greaterThanZeroValidator(currentFormValues.price)}
-            type="button"
-            color="danger"
-            size="xs"
-            onClick={this.onSetSellMax}
-          >Sell max</OasisButton>
-        );
+          );
+        case MAKE_SELL_OFFER:
+          return (
+            <OasisButton
+              className={styles.setMaxBtn}
+              disabled={greaterThanZeroValidator(currentFormValues.price)}
+              type="button"
+              color="danger"
+              size="xs"
+              onClick={this.onSetSellMax}
+            >Sell max</OasisButton>
+          );
 
+      }
     }
+  }
+
+
+  onTotalFieldSectionFocus() {
+    this.setState({ showMaxButton: true });
+  }
+
+  onTotalFieldSectionBlur() {
+    this.setState({ showMaxButton: false });
   }
 
   render() {
@@ -168,13 +178,13 @@ export class OfferMakeForm extends PureComponent {
             <td className={styles.currency}>
               {volumeToken}
               <div>
-                  {isUserTokenBalanceSufficient && <VolumeIsOverUserBalance offerMax={isUserTokenBalanceSufficient}/>}
+                  {isUserTokenBalanceSufficient && <OasisVolumeIsGreaterThanUserBalance offerMax={isUserTokenBalanceSufficient}/>}
               </div>
             </td>
           </tr>
           <tr>
             <th>Total</th>
-            <td className={styles.amount}>
+            <td className={styles.amount} onBlur={this.onTotalFieldSectionBlur} onFocus={this.onTotalFieldSectionFocus}>
               <div className={styles.inputGroup}>
                 {this.setMaxButton()}
               <Field
