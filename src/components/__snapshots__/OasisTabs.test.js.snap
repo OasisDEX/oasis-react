@@ -8,7 +8,7 @@ exports[`(Component) OasisTabs should render 1`] = `
     styleName="Tabs"
   >
     <li
-      styleName="Tab"
+      styleName="Tab "
     >
       <NavLink
         activeClassName="active"
@@ -19,7 +19,7 @@ exports[`(Component) OasisTabs should render 1`] = `
       </NavLink>
     </li>
     <li
-      styleName="Tab Tab--2x"
+      styleName="Tab Tab--2x "
     >
       <NavLink
         activeClassName="active"
@@ -30,7 +30,7 @@ exports[`(Component) OasisTabs should render 1`] = `
       </NavLink>
     </li>
     <li
-      styleName="Tab"
+      styleName="Tab "
     >
       <NavLink
         activeClassName="active"

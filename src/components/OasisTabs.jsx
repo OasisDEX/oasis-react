@@ -16,7 +16,6 @@ class OasisTabs extends PureComponent {
     else { return ''; }
   }
   render() {
-    console.log(this.props);
     return (
       <div styleName="row-tabs">
         <ul styleName="Tabs">
@@ -38,4 +37,4 @@ class OasisTabs extends PureComponent {
 OasisTabs.displayName = 'OasisTabs';
 OasisTabs.propTypes = propTypes;
 OasisTabs.defaultProps = defaultProps;
-export default CSSModules(styles, {allowMultiple: true})(OasisTabs);
+export default CSSModules(OasisTabs, styles, {allowMultiple: true});
