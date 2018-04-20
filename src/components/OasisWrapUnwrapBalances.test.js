@@ -8,7 +8,9 @@ import { fromJS } from 'immutable';
 describe('(Component) OasisWrapUnwrapBalances', () => {
   it('should render', () => {
     const props = {
-      wrapUnwrapBalances : fromJS([])
+      wrapUnwrapBalances : fromJS([]),
+      resetActiveWrapForm: jest.fn,
+      resetActiveUnwrapForm: jest.fn,
     };
     const wrapper = shallow(
       <OasisWrapUnwrapBalances {...props}/>,

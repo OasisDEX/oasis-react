@@ -35,7 +35,9 @@ const colDefinition = [
 
 const propTypes = PropTypes && {
   changeRoute: PropTypes.func,
-  wrapUnwrapBalances: ImmutablePropTypes.list.isRequired
+  wrapUnwrapBalances: ImmutablePropTypes.list.isRequired,
+  resetActiveWrapForm: PropTypes.func.isRequired,
+  resetActiveUnwrapForm: PropTypes.func.isRequired
 };
 const defaultProps = {};
 
@@ -53,8 +55,16 @@ class OasisWrapUnwrapBalances extends PureComponent {
   }
 
   onTableRowClick({ unwrappedToken }) {
-    const { changeRoute, setActiveWrapUnwrappedToken } = this.props;
+    const {
+      changeRoute,
+      setActiveWrapUnwrappedToken,
+      resetActiveWrapForm,
+      resetActiveUnwrapForm
+    } = this.props;
+
     setActiveWrapUnwrappedToken(unwrappedToken);
+    resetActiveWrapForm();
+    resetActiveUnwrapForm();
     changeRoute(`/wrap-unwrap/${unwrappedToken}`);
   }
 

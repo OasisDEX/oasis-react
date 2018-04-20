@@ -26,6 +26,8 @@ export class OasisWrapUnwrapWrapper extends PureComponent {
       return this.props.actions.changeRoute(`${url}/${TOKEN_ETHER}`);
     }
     this.props.actions.setActiveWrapUnwrappedToken(token);
+    this.props.actions.resetActiveWrapForm();
+    this.props.actions.resetActiveUnwrapForm();
   }
   render() {
     const { activeUnwrappedToken } = this.props;
@@ -50,7 +52,8 @@ export function mapDispatchToProps(dispatch) {
   const actions = {
     setActiveWrapUnwrappedToken: wrapUnwrapReducer.actions.setActiveWrapUnwrappedToken,
     changeRoute: platformReducer.actions.changeRouteEpic,
-
+    resetActiveWrapForm: wrapUnwrapReducer.actions.resetActiveWrapForm,
+    resetActiveUnwrapForm: wrapUnwrapReducer.actions.resetActiveUnwrapForm,
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

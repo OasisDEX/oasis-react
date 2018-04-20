@@ -4,6 +4,8 @@ exports[`(Container) OasisWrapUnwrapBalances should render 1`] = `
 <OasisWrapUnwrapBalances
   activeUnwrappedToken="GNT"
   changeRoute={[Function]}
+  resetActiveUnwrapForm={[Function]}
+  resetActiveWrapForm={[Function]}
   setActiveWrapUnwrappedToken={[Function]}
   wrapUnwrapBalances={
     Immutable.List [
@@ -28,6 +30,8 @@ exports[`(Container) OasisWrapUnwrapBalances will receive right actions 1`] = `
 Object {
   "actions": Object {
     "changeRoute": [Function],
+    "resetActiveUnwrapForm": [Function],
+    "resetActiveWrapForm": [Function],
     "setActiveWrapUnwrappedToken": [Function],
   },
 }
