@@ -33,10 +33,10 @@ export class OasisMainContentWrapper extends Component {
   }
 
   render() {
-    const { defaultTradingPair } = this.props;
+    const { defaultTradingPair, location: { pathname } } = this.props;
     return this.redirect() || (
       <div className="OasisMainContentWrapper">
-        <OasisTabs/>
+        <OasisTabs pathname={pathname}/>
         <div>
           <Switch>
             <Route

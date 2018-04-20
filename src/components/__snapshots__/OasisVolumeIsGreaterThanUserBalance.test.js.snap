@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisVolumeIsGreaterThanUserBalance should render 1`] = `
+<div>
+  Current volume is greater than offer maximum of 
+  <b />
+</div>
+`;
