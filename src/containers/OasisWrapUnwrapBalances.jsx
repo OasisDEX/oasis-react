@@ -19,10 +19,17 @@ export class OasisWrapUnwrapBalancesWrapper extends PureComponent {
     const {
       wrapUnwrapBalances,
       activeUnwrappedToken,
-      actions: { changeRoute, setActiveWrapUnwrappedToken }
+      actions: {
+        changeRoute,
+        setActiveWrapUnwrappedToken,
+        resetActiveWrapForm,
+        resetActiveUnwrapForm
+      }
     } = this.props;
     return (
       <OasisWrapUnwrapBalances
+        resetActiveWrapForm={resetActiveWrapForm}
+        resetActiveUnwrapForm={resetActiveUnwrapForm}
         changeRoute={changeRoute}
         setActiveWrapUnwrappedToken={setActiveWrapUnwrappedToken}
         wrapUnwrapBalances={wrapUnwrapBalances}
@@ -41,7 +48,9 @@ export function mapStateToProps(state) {
 export function mapDispatchToProps(dispatch) {
   const actions = {
     changeRoute: platformReducer.actions.changeRouteEpic,
-    setActiveWrapUnwrappedToken: wrapUnwrapReducer.actions.setActiveWrapUnwrappedToken
+    setActiveWrapUnwrappedToken: wrapUnwrapReducer.actions.setActiveWrapUnwrappedToken,
+    resetActiveWrapForm: wrapUnwrapReducer.actions.resetActiveWrapForm,
+    resetActiveUnwrapForm: wrapUnwrapReducer.actions.resetActiveUnwrapForm,
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

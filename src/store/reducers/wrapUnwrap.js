@@ -77,6 +77,7 @@ const setActiveWrapUnwrappedToken = createAction(
 );
 
 
+
 const loadGNTBrokerAddress = createAction(
   'WRAP_UNWRAP/LOAD_GNT_TOKEN_ADDRESS',
   (address) => new Promise((resolve, reject) =>
@@ -275,7 +276,7 @@ const setUnwrapMax = () => (dispatch, getState) => {
 
 };
 
-const resetActiveWrapForm = createAction('WRAP_UNWRAP/SET_WRAP_FORM', () => reset('wrapToken'));
+const resetActiveWrapForm = () => reset('wrapToken');
 
 const setActiveUnwrapStatus = createAction('WRAP_UNWRAP/SET_UNWRAP_STATUS', status => status);
 const resetActiveUnwrapStatus = createAction('WRAP_UNWRAP/SET_UNWRAP_STATUS');
@@ -284,7 +285,7 @@ const setActiveWrapStatus = createAction('WRAP_UNWRAP/SET_WRAP_STATUS', status =
 const resetActiveWrapStatus = createAction('WRAP_UNWRAP/SET_WRAP_STATUS');
 
 
-const resetActiveUnwrapForm = createAction('WRAP_UNWRAP/SET_UNWRAP_FORM', () => reset('unwrapToken'));
+const resetActiveUnwrapForm = () => reset('unwrapToken');
 
 const actions = {
   init,
@@ -293,7 +294,9 @@ const actions = {
   unwrapTokenEpic,
   setActiveWrapUnwrappedToken,
   setWrapMax,
-  setUnwrapMax
+  setUnwrapMax,
+  resetActiveWrapForm,
+  resetActiveUnwrapForm
 };
 
 const reducer = handleActions({
