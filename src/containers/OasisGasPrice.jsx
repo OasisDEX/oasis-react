@@ -24,6 +24,7 @@ export class OasisGasPriceWrapper extends PureComponent {
 
   getGasCostEstimate() {
     const  { currentGasPrice, latestEthereumPrice, transactionGasCostEstimate } = this.props;
+
     const currentGasPriceBN = web3.toBigNumber(currentGasPrice);
     if(transactionGasCostEstimate && latestEthereumPrice) {
       const cost = web3.fromWei(currentGasPriceBN.mul(transactionGasCostEstimate), ETH_UNIT_ETHER);

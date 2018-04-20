@@ -14,7 +14,7 @@ import offerTakes from '../store/selectors/offerTakes';
 import OfferTakeForm from '../components/OfferTakeForm';
 import balances from '../store/selectors/balances';
 import tokens from '../store/selectors/tokens';
-// import { formatAmount } from '../utils/tokens/pair';
+import { formatAmount } from '../utils/tokens/pair';
 import { getFormValues, getFormSyncErrors } from 'redux-form/immutable';
 import OasisTransactionDetailsWrapper  from './OasisTransactionDetails';
 import OasisTokenBalanceSummary  from './OasisTokenBalanceSummary';
@@ -120,9 +120,9 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
       isCurrentOfferActive,
       offerTakeFormValues,
       hasSufficientTokenAmount,
-      actions: {
-        getTransactionGasCostEstimate
-      }
+      // actions: {
+      //   getTransactionGasCostEstimate
+      // }
     } = this.props;
 
     return (
@@ -135,7 +135,9 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
         </button>
         <OasisTokenBalanceSummary summary="Available" token={sellToken}/>
 
-        <OfferTakeForm estimateGas={getTransactionGasCostEstimate}/>
+        <OfferTakeForm
+            // estimateGas={getTransactionGasCostEstimate}
+        />
         <div className="statusSection">
           <OasisTransactionDetailsWrapper
             hasSufficientTokenAmount={hasSufficientTokenAmount}
@@ -146,7 +148,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
             transaction={currentOfferTakeTransaction}
             sellToken={sellToken}
             offerId={activeOfferTakeOfferId}
-            getTransactionGasCostEstimate={getTransactionGasCostEstimate}
+            // getTransactionGasCostEstimate={getTransactionGasCostEstimate}
           />
         </div>
         <SetTokenAllowanceTrustWrapper
@@ -219,7 +221,7 @@ export function mapDispatchToProps(dispatch) {
     checkIfOfferIsActive: offerTakesReducer.actions.checkIfOfferTakeSubjectStillActiveEpic,
     setOfferTakeModalClosed: offerTakesReducer.actions.setOfferTakeModalClosedEpic,
     takeOffer: offerTakesReducer.actions.takeOfferEpic,
-    getTransactionGasCostEstimate: offerTakesReducer.actions.getTransactionGasCostEstimateEpic
+    // getTransactionGasCostEstimate: offerTakesReducer.actions.getTransactionGasCostEstimateEpic
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

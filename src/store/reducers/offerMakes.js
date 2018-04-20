@@ -16,6 +16,8 @@ import generateTxSubjectId from '../../utils/transactions/generateTxSubjectId';
 export const MAKE_BUY_OFFER = 'OFFER_MAKES/MAKE_BUY_OFFER';
 export const MAKE_SELL_OFFER = 'OFFER_MAKES/MAKE_SELL_OFFER';
 
+import throttle from 'lodash/throttle';
+
 const initialState = fromJS(
   {
     makeBuyOffer: {
@@ -37,13 +39,6 @@ const initialState = fromJS(
     activeOfferMakeType: null,
   },
 );
-
-const INIT = 'OFFER_MAKES/INIT';
-
-const Init = createAction(
-  INIT, () => null,
-);
-
 
 //TODO: buxMax sets only total amount, volume should be calculated elsewhere
 const buyMaxEpic = (offerMakeType) => (dispatch, getState) => {
@@ -113,7 +108,6 @@ const makeOffer = createPromiseActions('OFFER_MAKES/MAKE_OFFER');
 
 //TODO: To many duties at once. Offer form and offer making logic needlessly coupled here...
 const makeOfferEpic = (offerMakeType) => async (dispatch, getState) => {
-
 
   //TODO: Already refactored?
   dispatch(
@@ -222,11 +216,9 @@ const setOfferMakeModalClosedEpic = (offerMakeType) => (dispatch) => {
   dispatch(resetActiveOfferMakeGasCostEstimate(offerMakeType));
 };
 
-
 /***
  * Form fields changed actions
  */
-
 const priceFieldChangedEpic = (offerMakeType, value) => (dispatch, getState) => {
   const formName = offerMakeToFormName(offerMakeType);
   const volume = formValueSelector(formName)(getState(), 'volume');
@@ -235,6 +227,7 @@ const priceFieldChangedEpic = (offerMakeType, value) => (dispatch, getState) => 
   } else {
     dispatch(change(formName, 'total', web3.toBigNumber(volume).mul(value).toString()));
   }
+  dispatch(updateTransactionGasCostEstimateEpic(offerMakeType))
 };
 
 const volumeFieldValueChangedEpic = (offerMakeType, value) => (dispatch, getState) => {
@@ -246,6 +239,7 @@ const volumeFieldValueChangedEpic = (offerMakeType, value) => (dispatch, getStat
     dispatch(change(formName, 'volume', value));
     dispatch(change(formName, 'total', web3.toBigNumber(value).mul(price).toString()));
   }
+  dispatch(updateTransactionGasCostEstimateEpic(offerMakeType))
 };
 
 const totalFieldValueChangedEpic = (offerMakeType, value) => (dispatch, getState) => {
@@ -254,58 +248,52 @@ const totalFieldValueChangedEpic = (offerMakeType, value) => (dispatch, getState
   if ((!isNaN(value) && parseFloat(value) !== 0) && (!isNaN(price) && parseFloat(price) !== 0)) {
     dispatch(change(formName, 'volume', web3.toBigNumber(value).div(price).toString()));
   }
+  dispatch(updateTransactionGasCostEstimateEpic(offerMakeType))
 };
 
 /**
  *  New offer make gas estimate
  */
 
-const resetActiveOfferMakeGasCostEstimate = createAction(
-  'OFFER_MAKES/RESET_TRANSACTION_GAS_ESTIMATE',
+const resetActiveOfferMakeGasCostEstimate = createAction('OFFER_MAKES/RESET_TRANSACTION_GAS_ESTIMATE');
+
+const getTransactionGasEstimate = createAction('OFFER_MAKES/GET_TRANSACTION_GAS_ESTIMATE',
+    (payAmount, payToken, buyAmount, buyToken, toAddress) => new Promise((resolve, reject) => {
+       window.contracts.marketNoProxy.offer.estimateGas(
+           payAmount, payToken, buyAmount, buyToken, 0, { to: toAddress, gasLimit: DEFAULT_GAS_LIMIT },
+           (e, estimation) => {
+               if (e) {
+                   reject({
+                       payAmount, payToken, buyAmount, buyToken, toAddress,
+                   });
+               } else {
+                   resolve(estimation);
+               }
+           },
+       );
+   })
 );
 
-//TODO: why noProxy? Why 2 actions and epic instead of ?
-const getTransactionGasCostEstimate = createAction(
-  'OFFER_MAKES/GET_TRANSACTION_GAS_ESTIMATE',
-  ({ payAmount, payToken, buyAmount, buyToken }) => new Promise((resolve, reject) => {
-    const toAddress = window.contracts.market.address;
-    window.contracts.marketNoProxy.offer.estimateGas(
-      payAmount, payToken, buyAmount, buyToken, 0, { to: toAddress, gasLimit: DEFAULT_GAS_LIMIT },
-      (e, estimation) => {
-        if (e) {
-          reject({
-            payAmount, payToken, buyAmount, buyToken, toAddress,
-          });
-        } else {
-          resolve(estimation);
+const updateTransactionGasCostEstimateEpic = throttle((offerMakeType) => async (dispatch, getState) => {
+
+        if (!offerMakes.canMakeOffer(getState(), offerMakeType)) {
+            dispatch(resetActiveOfferMakeGasCostEstimate());
+            return;
         }
-      },
-    );
-  }),
-);
 
-//TODO: why is it made available outside the store?
-const getTransactionGasCostEstimateEpic = (offerMakeType) => async (dispatch, getState) => {
-  if (!offerMakes.canMakeOffer(getState(), offerMakeType)) {
-    return null;
-  } else {
-    const offerMake = offerMakes.activeOfferMakePure(getState(), offerMakeToFormName(offerMakeType));
+        const offerMake = offerMakes.activeOfferMakePure(getState(), offerMakeToFormName(offerMakeType));
 
-    const
-      payAmount = offerMake.getIn(['offerData','payAmount']),
-      payToken =  offerMake.get('sellTokenAddress'),
-      buyAmount = offerMake.getIn(['offerData','buyAmount']),
-      buyToken =  offerMake.get('buyTokenAddress');
+        const
+            payAmount = offerMake.getIn(['offerData','payAmount']),
+            payToken =  offerMake.get('sellTokenAddress'),
+            buyAmount = offerMake.getIn(['offerData','buyAmount']),
+            buyToken =  offerMake.get('buyTokenAddress'),
+            toAddress = window.contracts.market.address;
 
-    return await dispatch(
-      getTransactionGasCostEstimate({ payAmount, payToken, buyAmount, buyToken }),
-    ).catch(
-      () => { console.log('[offer makes] estimate error'); });
-  }
-};
+        dispatch(getTransactionGasEstimate(payAmount, payToken, buyAmount, buyToken, toAddress));
+    }, 500);
 
 const actions = {
-  Init,
   makeOffer,
   makeOfferEpic,
   setOfferMakeModalClosedEpic,
@@ -315,7 +303,6 @@ const actions = {
   totalFieldValueChangedEpic,
   buyMaxEpic,
   sellMaxEpic,
-  getTransactionGasCostEstimateEpic,
   initializeOfferMakeFormEpic,
 };
 
@@ -324,14 +311,14 @@ const reducer = handleActions({
   [setOfferMakeModalClosed]: (state, { payload: { formName } }) => state.setIn([formName, 'isOfferMakeModalOpen'], false),
   [setActiveOfferMakeType]: (state, { payload }) => state.set('activeOfferMakeType', payload),
   [resetActiveOfferMakeType]: state => state.set('activeOfferMakeType', null),
-  [pending(getTransactionGasCostEstimate)]:
+  [pending(getTransactionGasEstimate)]:
     state => state.set('transactionGasCostEstimatePending', true),
-  [fulfilled(getTransactionGasCostEstimate)]:
+  [fulfilled(getTransactionGasEstimate)]:
     (state, { payload }) =>
       state
         .set('transactionGasCostEstimate', payload.toString())
         .set('transactionGasCostEstimatePending', false),
-  [rejected(getTransactionGasCostEstimate)]:
+  [rejected(getTransactionGasEstimate)]:
     state =>
       state
         .set('transactionGasCostEstimateError', true)

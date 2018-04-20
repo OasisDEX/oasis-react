@@ -26,9 +26,7 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
     summary="Available"
     token="W-ETH"
   />
-  <Connect(ReduxForm)
-    estimateGas={[Function]}
-  />
+  <Connect(ReduxForm) />
   <div
     className="statusSection"
   >
@@ -36,7 +34,6 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
       amountReceived="0.01110"
       amountSold="0.00010"
       buyToken="MKR"
-      getTransactionGasCostEstimate={[Function]}
       hasSufficientTokenAmount={false}
       isTransactionValid={true}
       offerId="7"
@@ -77,7 +74,6 @@ exports[`(Container) OasisTakeOfferModal will receive right actions 1`] = `
 Object {
   "actions": Object {
     "checkIfOfferIsActive": [Function],
-    "getTransactionGasCostEstimate": [Function],
     "setOfferTakeModalClosed": [Function],
     "takeOffer": [Function],
   },

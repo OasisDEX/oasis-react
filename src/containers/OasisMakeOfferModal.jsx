@@ -61,9 +61,9 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
     super(props);
     this.onBuyOffer = this.onBuyOffer.bind(this);
     this.onCancel = this.onCancel.bind(this);
-    this.getTransactionGasCostEstimate = this.props.actions.getTransactionGasCostEstimate.bind(
-      null, props.offerMakeType,
-    );
+    // this.getTransactionGasCostEstimate = this.props.actions.getTransactionGasCostEstimate.bind(
+    //   null, props.offerMakeType,
+    // );
   }
 
   onCancel() {
@@ -114,7 +114,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
               transaction={currentOfferMakeTransaction}
               sellToken={sellToken}
               offerId={null}
-              getTransactionGasCostEstimate={this.getTransactionGasCostEstimate}
+              // getTransactionGasCostEstimate={this.getTransactionGasCostEstimate}
               hasSufficientTokenAmount={hasSufficientTokenAmount}
             />
           <SetTokenAllowanceTrustWrapper
@@ -170,7 +170,7 @@ export function mapDispatchToProps(dispatch) {
   const actions = {
     setOfferMakeModalClosed: offerMakesReducer.actions.setOfferMakeModalClosedEpic,
     makeOffer: offerMakesReducer.actions.makeOfferEpic,
-    getTransactionGasCostEstimate: offerMakesReducer.actions.getTransactionGasCostEstimateEpic,
+    // getTransactionGasCostEstimate: offerMakesReducer.actions.getTransactionGasCostEstimateEpic,
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

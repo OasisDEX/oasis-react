@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import throttle from 'lodash/throttle';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Field, reduxForm } from 'redux-form/immutable'
@@ -27,9 +26,6 @@ import CSSModules from 'react-css-modules';
 // const box = { border: '1px solid black', padding: 20, marginTop: 20 };
 // const label = { width: '30%', display: 'inline-block' };
 const fieldStyle = { textAlign: 'right' };
-
-
-
 
 const propTypes = PropTypes && {
   activeOfferTakeOfferData: ImmutablePropTypes.map.isRequired,
@@ -70,16 +66,16 @@ export class OfferTakeForm extends PureComponent {
     this.onTotalFieldChange =  this.onTotalFieldChange.bind(this);
     this.onSetBuyMax = this.onSetBuyMax.bind(this);
     this.onSetSellMax = this.onSetSellMax.bind(this);
-    this.estimateGas = throttle(this.props.estimateGas, 500);
+    // this.estimateGas = throttle(this.props.estimateGas, 500);
   }
 
   onSetBuyMax() {
     this.props.actions.buyMax();
-    this.estimateGas();
+    // this.estimateGas();
   }
   onSetSellMax() {
     this.props.actions.sellMax();
-    this.estimateGas();
+    // this.estimateGas();
   }
 
 
@@ -87,9 +83,9 @@ export class OfferTakeForm extends PureComponent {
     const { volumeFieldValueChanged } = this.props.actions;
     if((newValue.toString() !== previousValue.toString())){
       volumeFieldValueChanged(newValue);
-      if(parseFloat(newValue)) {
-        this.estimateGas();
-      }
+      // if(parseFloat(newValue)) {
+      //   this.estimateGas();
+      // }
     }
 
   }
@@ -97,9 +93,9 @@ export class OfferTakeForm extends PureComponent {
     const { totalFieldValueChanged } = this.props.actions;
     if((newValue.toString() !== previousValue.toString())){
       totalFieldValueChanged(newValue);
-      if(parseFloat(newValue)) {
-        this.estimateGas();
-      }
+      // if(parseFloat(newValue)) {
+      //   this.estimateGas();
+      // }
     }
   }
 
@@ -224,9 +220,9 @@ export class OfferTakeForm extends PureComponent {
     );
   }
 
-  componentDidMount() {
-     setTimeout(()=> this.props.estimateGas(), 500)
-  }
+  // componentDidMount() {
+  //    setTimeout(()=> this.props.estimateGas(), 500)
+  // }
 }
 
 OfferTakeForm.displayName = 'OfferTakeForm';

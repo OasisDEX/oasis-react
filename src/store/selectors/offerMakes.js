@@ -147,13 +147,28 @@ const canMakeOffer = createSelector(
   hasSufficientTokenAmount,
   rootState => transactions.canSendTransaction(rootState),
   markets.isBuyEnabled,
-  (rootState, offerMakeType) => balances.tokenAllowanceTrustStatus(
-      rootState,
-      {
-        tokenName: activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerMakeType)),
-        allowanceSubjectAddress: window.contracts.market.address
-      }
-  ),
+  (rootState, offerMakeType) => {
+
+      console.log("tokenAllowanceTrustStatus",
+          "tokenName:", activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerMakeType)),
+          "allowanceSubjectAddress:", window.contracts.market.address,
+          "tokenAllowanceTrustStatus:", balances.tokenAllowanceTrustStatus(
+              rootState,
+              {
+                  tokenName: activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerMakeType)),
+                  allowanceSubjectAddress: window.contracts.market.address
+              }
+          )
+          );
+
+      return balances.tokenAllowanceTrustStatus(
+          rootState,
+          {
+            tokenName: activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerMakeType)),
+            allowanceSubjectAddress: window.contracts.market.address
+          }
+      )
+  },
   isVolumeEmptyOrZero,
   (
     hasSufficientTokenAmount,
@@ -163,6 +178,7 @@ const canMakeOffer = createSelector(
     isVolumeZero,
   ) => {
     if (isVolumeZero || !hasSufficientTokenAmount || !canSendTransaction || !isBuyEnabled || !isMarketTrusted ) {
+
       return false;
     } else {
       return hasSufficientTokenAmount;
@@ -195,10 +211,8 @@ const activeOfferMakeTxSubjectId = createSelector(
   (state, aomt) => state.getIn([offerMakeToFormName(aomt), 'txSubjectId'])
 );
 
-
 export default {
   state: offerMakes,
-  // activeOfferMake,
   selector,
   activeOfferMakePure,
   activeOfferMakeType,

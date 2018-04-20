@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
-// import ImmutablePropTypes from 'react-immutable-proptypes';
-
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import tokens from '../store/selectors/tokens';
@@ -63,7 +61,7 @@ TokenSoldAmount.propTypes = {
 export class OasisTransactionDetailsWrapper extends PureComponent {
   constructor(props) {
     super(props);
-    props.getTransactionGasCostEstimate();
+    // props.getTransactionGasCostEstimate();
   }
 
   tradingTokenPartial() {
@@ -167,15 +165,15 @@ export class OasisTransactionDetailsWrapper extends PureComponent {
     );
   }
 
-  componentWillUpdate({ latestBlockNumber, hasSufficientTokenAmount }) {
-    if (
-      (latestBlockNumber && this.props.latestBlockNumber !== latestBlockNumber) ||
-      (this.props.hasSufficientTokenAmount !== hasSufficientTokenAmount && hasSufficientTokenAmount)
-
-    ) {
-      this.props.getTransactionGasCostEstimate();
-    }
-  }
+  // componentWillUpdate({ latestBlockNumber, hasSufficientTokenAmount }) {
+  //   if (
+  //     (latestBlockNumber && this.props.latestBlockNumber !== latestBlockNumber) ||
+  //     (this.props.hasSufficientTokenAmount !== hasSufficientTokenAmount && hasSufficientTokenAmount)
+  //
+  //   ) {
+  //     // this.props.getTransactionGasCostEstimate();
+  //   }
+  // }
 
 }
 
