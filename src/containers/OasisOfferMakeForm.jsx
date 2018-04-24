@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
-import throttle from 'lodash/throttle';
+// import throttle from 'lodash/throttle';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Field, reduxForm } from 'redux-form/immutable';
 
 import offerMakes from '../store/selectors/offerMakes';
-import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from '../store/reducers/offerMakes';
+import {MAKE_BUY_OFFER, MAKE_SELL_OFFER} from "../constants";
 import offerMakesReducer from '../store/reducers/offerMakes';
 import tokens from '../store/selectors/tokens';
 import balances from '../store/selectors/balances';
@@ -46,26 +46,21 @@ export class OfferMakeForm extends PureComponent {
     this.onPriceFieldChange = this.onPriceFieldChange.bind(this);
     this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
-    this.estimateGas = throttle(this.props.estimateGas || (() => null), 500);
+    // this.estimateGas = throttle(this.props.estimateGas || (() => null), 500);
   }
 
   onSetBuyMax() {
     this.props.actions.buyMax(this.props.offerMakeType);
-    this.estimateGas(this.props.form);
   }
 
   onSetSellMax() {
     this.props.actions.sellMax(this.props.offerMakeType);
-    this.estimateGas(this.props.form);
   }
 
   onVolumeFieldChange(event, newValue, previousValue) {
     const { volumeFieldValueChanged } = this.props.actions;
     if ((!previousValue || newValue.toString() !== previousValue.toString())) {
       volumeFieldValueChanged(this.props.offerMakeType, newValue);
-      if (parseFloat(newValue)) {
-        this.estimateGas(this.props.offerMakeType);
-      }
     }
   }
 
@@ -74,9 +69,6 @@ export class OfferMakeForm extends PureComponent {
       const { priceFieldValueChanged } = this.props.actions;
       if ((!previousValue || newValue.toString() !== previousValue.toString())) {
         priceFieldValueChanged(this.props.offerMakeType, newValue);
-        if (parseFloat(newValue)) {
-          this.estimateGas(this.props.offerMakeType);
-        }
       }
     }
   }
@@ -85,16 +77,13 @@ export class OfferMakeForm extends PureComponent {
     const { totalFieldValueChanged } = this.props.actions;
     if ((!previousValue || newValue.toString() !== previousValue.toString())) {
       totalFieldValueChanged(this.props.offerMakeType, newValue);
-      if (parseFloat(newValue)) {
-        this.estimateGas();
-      }
     }
   }
 
   setMaxButton() {
     const { currentFormValues = {} } = this.props;
-    if (!this.state.showMaxButton) { return null; }
-    else {
+    // if (!this.state.showMaxButton) { return null; }
+    // else {
       switch (this.props.offerMakeType) {
         case MAKE_BUY_OFFER:
           return (
@@ -121,7 +110,7 @@ export class OfferMakeForm extends PureComponent {
           );
 
       }
-    }
+    // }
   }
 
 
@@ -241,4 +230,3 @@ export function mapDispatchToProps(dispatch) {
 export default connect(mapStateToProps, mapDispatchToProps)(
   reduxForm({})(CSSModules(OfferMakeForm, styles)),
 );
-

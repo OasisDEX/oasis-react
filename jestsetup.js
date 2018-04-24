@@ -1,8 +1,7 @@
 /* eslint-disable no-undef */
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { MAKE_BUY_OFFER } from './src/store/reducers/offerMakes';
-
+// import { MAKE_BUY_OFFER } from './src/store/reducers/offerMakes';
 
 configure({ adapter: new Adapter() });
 
@@ -278,7 +277,7 @@ global.storeMock = {
       txSubjectId: null,
       drafts: []
     },
-    activeOfferMakeType: MAKE_BUY_OFFER
+    activeOfferMakeType: "OFFER_MAKES/MAKE_BUY_OFFER"
   },
   wrapUnwrap: {
     wrapperTokenPairs: [

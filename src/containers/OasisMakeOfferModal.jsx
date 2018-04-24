@@ -6,8 +6,7 @@ import ReactModal from 'react-modal';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from '../store/reducers/offerMakes';
-
+import {MAKE_BUY_OFFER, MAKE_SELL_OFFER} from "../constants";
 import offerMakesReducer from '../store/reducers/offerMakes';
 import offerMakes from '../store/selectors/offerMakes';
 import OfferMakeForm from './OasisOfferMakeForm';
