@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`offerMakes activeOfferMakeBuyToken/makeBuyOffer 1`] = `"MKR"`;
+exports[`activeOfferMakeBuyToken/makeBuyOffer 1`] = `"MKR"`;
 
-exports[`offerMakes activeOfferMakeBuyToken/makeSellOffer 1`] = `"W-ETH"`;
+exports[`activeOfferMakeBuyToken/makeSellOffer 1`] = `"W-ETH"`;
 
-exports[`offerMakes activeOfferMakePure/makeBuyOffer 1`] = `
+exports[`activeOfferMakePure/makeBuyOffer 1`] = `
 Immutable.Map {
   baseToken: "MKR",
   quoteToken: "W-ETH",
@@ -19,7 +19,7 @@ Immutable.Map {
 }
 `;
 
-exports[`offerMakes activeOfferMakePure/makeSellOffer 1`] = `
+exports[`activeOfferMakePure/makeSellOffer 1`] = `
 Immutable.Map {
   baseToken: "MKR",
   quoteToken: "W-ETH",

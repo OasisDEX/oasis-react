@@ -4,7 +4,7 @@ import balances from './balances';
 import transactions from './transactions';
 import markets from './markets';
 import web3 from '../../bootstrap/web3';
-import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from '../reducers/offerMakes';
+import {MAKE_BUY_OFFER, MAKE_SELL_OFFER} from '../../constants'
 import reselect from '../../utils/reselect';
 import offerMakeToFormName from '../../utils/offers/offerMakeToFormName';
 import tokens from './tokens';
@@ -149,17 +149,17 @@ const canMakeOffer = createSelector(
   markets.isBuyEnabled,
   (rootState, offerMakeType) => {
 
-      console.log("tokenAllowanceTrustStatus",
-          "tokenName:", activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerMakeType)),
-          "allowanceSubjectAddress:", window.contracts.market.address,
-          "tokenAllowanceTrustStatus:", balances.tokenAllowanceTrustStatus(
-              rootState,
-              {
-                  tokenName: activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerMakeType)),
-                  allowanceSubjectAddress: window.contracts.market.address
-              }
-          )
-          );
+      // console.log("tokenAllowanceTrustStatus",
+      //     "tokenName:", activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerMakeType)),
+      //     "allowanceSubjectAddress:", window.contracts.market.address,
+      //     "tokenAllowanceTrustStatus:", balances.tokenAllowanceTrustStatus(
+      //         rootState,
+      //         {
+      //             tokenName: activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerMakeType)),
+      //             allowanceSubjectAddress: window.contracts.market.address
+      //         }
+      //     )
+      //     );
 
       return balances.tokenAllowanceTrustStatus(
           rootState,

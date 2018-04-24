@@ -9,7 +9,7 @@ import {
   mapDispatchToProps
 } from './OasisMakeOfferModal';
 import { shallow } from 'enzyme';
-import { MAKE_BUY_OFFER } from '../store/reducers/offerMakes';
+import { MAKE_BUY_OFFER } from '../constants';
 
 describe('(Container) OasisMakeOfferModal', () => {
   const state = Immutable.fromJS(global.storeMock);

@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import { deferredThunk } from './deferredThunk';
 import promiseMiddleware from 'redux-promise-middleware';
 import createDebounce from 'redux-debounced';
 import { Map } from 'immutable';
@@ -15,6 +16,7 @@ function initStore(defaultState = Map()) {
   let middleware = applyMiddleware(
     reactRouterMiddleware,
     createDebounce(),
+    deferredThunk,
     thunk,
     promiseMiddleware(),
   );

@@ -65,3 +65,8 @@ export const BASE_TOKENS = [
   'W-GNT', 'DAI', 'DGD', 'REP', 'ICN', '1ST', 'SNGLS',
   'VSL', 'PLU', 'MLN', 'RHOC', 'TIME', 'GUP', 'BAT', 'NMR',
 ];
+
+export const MAKE_BUY_OFFER = 'OFFER_MAKES/MAKE_BUY_OFFER';
+export const MAKE_SELL_OFFER = 'OFFER_MAKES/MAKE_SELL_OFFER';
+export const MAKE_SELL_OFFER_FORM_NAME = 'makeSellOffer';
+export const MAKE_BUY_OFFER_FORM_NAME = 'makeBuyOffer';

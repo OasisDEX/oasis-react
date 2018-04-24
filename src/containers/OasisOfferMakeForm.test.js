@@ -10,7 +10,7 @@ import {
   mapDispatchToProps
 } from './OasisOfferMakeForm';
 import { shallow } from 'enzyme';
-import { MAKE_BUY_OFFER } from '../store/reducers/offerMakes';
+import { MAKE_BUY_OFFER } from '../constants';
 import { combineReducers, createStore } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 

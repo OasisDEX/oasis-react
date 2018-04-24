@@ -8,7 +8,8 @@ import tokens from '../store/selectors/tokens';
 import OasisWidgetFrame from '../containers/OasisWidgetFrame';
 import OasisTokenBalanceSummary  from './OasisTokenBalanceSummary';
 import OfferMakeForm  from './OasisOfferMakeForm';
-import offerMakesReducer, { MAKE_SELL_OFFER } from '../store/reducers/offerMakes';
+import offerMakesReducer from '../store/reducers/offerMakes';
+import { MAKE_SELL_OFFER, MAKE_SELL_OFFER_FORM_NAME } from '../constants';
 import OasisMakeOfferModalWrapper  from './OasisMakeOfferModal';
 import offerMakes from '../store/selectors/offerMakes';
 import OasisInsufficientAmountOfToken from '../components/OasisInsufficientAmountOfToken';
@@ -20,8 +21,6 @@ import CSSModules from 'react-css-modules';
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
 };
-
-export const MAKE_SELL_OFFER_FORM_NAME = 'makeSellOffer';
 
 export class OasisMakeSellOfferWrapper extends PureComponent {
 
