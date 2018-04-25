@@ -1,5 +1,105 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`buyMaxEpic max greater than offer 1`] = `
+Array [
+  Object {
+    "meta": Object {
+      "field": "total",
+      "form": "takeOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "1e-18",
+    "type": "@@redux-form/CHANGE",
+  },
+  Object {
+    "payload": Object {
+      "args": Array [
+        "1e-18",
+      ],
+      "thunk": [Function],
+      "thunkName": "totalFieldValueChangedEpic",
+    },
+    "type": "deferred-thunk",
+  },
+]
+`;
+
+exports[`buyMaxEpic max lower than offer 1`] = `
+Array [
+  Object {
+    "meta": Object {
+      "field": "total",
+      "form": "takeOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "1.3e-17",
+    "type": "@@redux-form/CHANGE",
+  },
+  Object {
+    "payload": Object {
+      "args": Array [
+        "1.3e-17",
+      ],
+      "thunk": [Function],
+      "thunkName": "totalFieldValueChangedEpic",
+    },
+    "type": "deferred-thunk",
+  },
+]
+`;
+
+exports[`sellMaxEpic balance greater than the offer 1`] = `
+Array [
+  Object {
+    "meta": Object {
+      "field": "total",
+      "form": "takeOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "3.6e-17",
+    "type": "@@redux-form/CHANGE",
+  },
+  Object {
+    "payload": Object {
+      "args": Array [
+        "3.6e-17",
+      ],
+      "thunk": [Function],
+      "thunkName": "totalFieldValueChangedEpic",
+    },
+    "type": "deferred-thunk",
+  },
+]
+`;
+
+exports[`sellMaxEpic balance lower than the offer 1`] = `
+Array [
+  Object {
+    "meta": Object {
+      "field": "total",
+      "form": "takeOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "1.2e-17",
+    "type": "@@redux-form/CHANGE",
+  },
+  Object {
+    "payload": Object {
+      "args": Array [
+        "1.2e-17",
+      ],
+      "thunk": [Function],
+      "thunkName": "totalFieldValueChangedEpic",
+    },
+    "type": "deferred-thunk",
+  },
+]
+`;
+
 exports[`take offer form volumeFieldValueChangedEpic total set to: negative number(-1) 1`] = `
 Array [
   Object {
@@ -19,8 +119,16 @@ Array [
       "persistentSubmitErrors": undefined,
       "touch": undefined,
     },
-    "payload": "0",
+    "payload": "-0.33333333333333333333",
     "type": "@@redux-form/CHANGE",
+  },
+  Object {
+    "payload": Object {
+      "args": Array [],
+      "thunk": [Function],
+      "thunkName": "getTransactionGasCostEstimateEpic",
+    },
+    "type": "deferred-thunk",
   },
 ]
 `;
@@ -44,8 +152,16 @@ Array [
       "persistentSubmitErrors": undefined,
       "touch": undefined,
     },
-    "payload": "0",
+    "payload": "33.33333333333333333333",
     "type": "@@redux-form/CHANGE",
+  },
+  Object {
+    "payload": Object {
+      "args": Array [],
+      "thunk": [Function],
+      "thunkName": "getTransactionGasCostEstimateEpic",
+    },
+    "type": "deferred-thunk",
   },
 ]
 `;
@@ -72,6 +188,14 @@ Array [
     "payload": "0",
     "type": "@@redux-form/CHANGE",
   },
+  Object {
+    "payload": Object {
+      "args": Array [],
+      "thunk": [Function],
+      "thunkName": "getTransactionGasCostEstimateEpic",
+    },
+    "type": "deferred-thunk",
+  },
 ]
 `;
 
@@ -84,8 +208,16 @@ Array [
       "persistentSubmitErrors": undefined,
       "touch": undefined,
     },
-    "payload": "0",
+    "payload": "-3",
     "type": "@@redux-form/CHANGE",
+  },
+  Object {
+    "payload": Object {
+      "args": Array [],
+      "thunk": [Function],
+      "thunkName": "getTransactionGasCostEstimateEpic",
+    },
+    "type": "deferred-thunk",
   },
 ]
 `;
@@ -99,8 +231,16 @@ Array [
       "persistentSubmitErrors": undefined,
       "touch": undefined,
     },
-    "payload": "0",
+    "payload": "300",
     "type": "@@redux-form/CHANGE",
+  },
+  Object {
+    "payload": Object {
+      "args": Array [],
+      "thunk": [Function],
+      "thunkName": "getTransactionGasCostEstimateEpic",
+    },
+    "type": "deferred-thunk",
   },
 ]
 `;
@@ -116,6 +256,14 @@ Array [
     },
     "payload": "0",
     "type": "@@redux-form/CHANGE",
+  },
+  Object {
+    "payload": Object {
+      "args": Array [],
+      "thunk": [Function],
+      "thunkName": "getTransactionGasCostEstimateEpic",
+    },
+    "type": "deferred-thunk",
   },
 ]
 `;

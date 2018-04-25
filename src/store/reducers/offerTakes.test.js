@@ -3,6 +3,7 @@ import thunk2Data from '../thunk2Data';
 import thunk from 'redux-thunk';
 import offerTakes from './offerTakes';
 import each from 'jest-each';
+import { fromJS } from 'immutable';
 
 describe('take offer form', () => {
   const testCases = [
@@ -37,3 +38,37 @@ describe('take offer form', () => {
   });
 
 });
+
+each([["max lower than offer", 13, 3, 12],
+      ["max greater than offer", 1, 3, 12]])
+  .test("buyMaxEpic %s", (description, balance, howMutch, price) =>
+{
+  const store = configureMockStore([thunk2Data(), thunk])({});
+
+  store.dispatch(offerTakes.actions.buyMaxEpic({
+    quoteTokenBalance: () => balance,
+    offerTakeOfferData: () => fromJS({
+      buyHowMuch: howMutch,
+      ask_price: price})
+  }));
+
+  expect(store.getActions()).toMatchSnapshot();
+});
+
+each([["balance greater than the offer", 13, 3, 12],
+  ["balance lower than the offer", 1, 3, 12]])
+  .test("sellMaxEpic %s", (description, balance, howMutch, price) =>
+  {
+    const store = configureMockStore([thunk2Data(), thunk])({});
+
+    store.dispatch(offerTakes.actions.sellMaxEpic({
+      activeBaseTokenBalance: () => balance,
+      activeOfferTakeOfferData: () => fromJS({
+        buyHowMuch: howMutch,
+        bid_price: price})
+    }));
+
+    expect(store.getActions()).toMatchSnapshot();
+  });
+
+

@@ -19,6 +19,8 @@ import network from '../selectors/network';
 export const TAKE_BUY_OFFER = 'OFFER_TAKES/TAKE_BUY_OFFER';
 export const TAKE_SELL_OFFER = 'OFFER_TAKES/TAKE_SELL_OFFER';
 
+import {defer} from '../deferredThunk';
+
 const currentOfferTakeInitialValue = fromJS(
   {
     offerData: null,
@@ -47,33 +49,37 @@ const Init = createAction(
   INIT, () => null,
 );
 
-const buyMaxEpic = () => (dispatch, getState) => {
-  const usersQuoteTokenBalanceBN = web3.toBigNumber(balances.activeQuoteTokenBalance(getState()));
-  const activeOfferTakeData = offerTakes.activeOfferTakeOfferData(getState());
+const buyMaxEpic = ({quoteTokenBalance = balances.activeQuoteTokenBalance,
+                     offerTakeOfferData = offerTakes.activeOfferTakeOfferData} = {}) => (dispatch, getState) =>
+{
+  const usersQuoteTokenBalanceBN = web3.toBigNumber(quoteTokenBalance(getState()));
+
+  const activeOfferTakeData = offerTakeOfferData(getState());
   const volume = activeOfferTakeData.get('buyHowMuch');
   const priceBN = web3.toBigNumber(activeOfferTakeData.get('ask_price'));
-  if (usersQuoteTokenBalanceBN.gte(priceBN.mul(volume))) {
-    dispatch(form.change('takeOffer', 'total', web3.fromWei(priceBN.mul(volume), ETH_UNIT_ETHER)));
-    dispatch(form.change('takeOffer', 'volume', web3.fromWei(volume, ETH_UNIT_ETHER)));
-  } else {
-    dispatch(form.change('takeOffer', 'total', web3.fromWei(usersQuoteTokenBalanceBN, ETH_UNIT_ETHER)));
-    dispatch(form.change('takeOffer', 'volume', web3.fromWei(usersQuoteTokenBalanceBN.div(priceBN), ETH_UNIT_ETHER)));
-  }
+
+  const total = usersQuoteTokenBalanceBN.gte(priceBN.mul(volume)) ?
+    web3.fromWei(priceBN.mul(volume), ETH_UNIT_ETHER) :
+    web3.fromWei(usersQuoteTokenBalanceBN, ETH_UNIT_ETHER);
+
+  dispatch(form.change('takeOffer', 'total', total));
+  dispatch(defer(totalFieldValueChangedEpic, total));
 };
 
-const sellMaxEpic = () => (dispatch, getState) => {
-  const usersBaseTokenBalanceBN = web3.toBigNumber(balances.activeBaseTokenBalance(getState()));
-  const activeOfferTakeData = offerTakes.activeOfferTakeOfferData(getState());
+const sellMaxEpic = ({activeBaseTokenBalance = balances.activeBaseTokenBalance,
+                      activeOfferTakeOfferData = offerTakes.activeOfferTakeOfferData} = {}) => (dispatch, getState) =>
+{
+  const usersBaseTokenBalanceBN = web3.toBigNumber(activeBaseTokenBalance(getState()));
+  const activeOfferTakeData = activeOfferTakeOfferData(getState());
   const volume = activeOfferTakeData.get('buyHowMuch');
   const priceBN = web3.toBigNumber(activeOfferTakeData.get('bid_price'));
-  if (usersBaseTokenBalanceBN.gte(volume)) {
-    dispatch(form.change('takeOffer', 'total', web3.fromWei(priceBN.mul(volume), ETH_UNIT_ETHER)));
-    dispatch(form.change('takeOffer', 'volume', web3.fromWei(volume, ETH_UNIT_ETHER)));
-  } else {
-    dispatch(form.change('takeOffer', 'total', web3.fromWei(usersBaseTokenBalanceBN.mul(priceBN), ETH_UNIT_ETHER)));
-    dispatch(form.change('takeOffer', 'volume', web3.fromWei(usersBaseTokenBalanceBN, ETH_UNIT_ETHER)));
-  }
 
+  const total = usersBaseTokenBalanceBN.gte(volume) ?
+    web3.fromWei(priceBN.mul(volume), ETH_UNIT_ETHER) :
+    web3.fromWei(usersBaseTokenBalanceBN.mul(priceBN), ETH_UNIT_ETHER);
+
+  dispatch(form.change('takeOffer', 'total', total));
+  dispatch(defer(totalFieldValueChangedEpic, total));
 };
 
 const resetActiveOfferTake = createAction('OFFER_TAKES/RESET_CURRENT_OFFER_TAKE');
@@ -237,7 +243,7 @@ const volumeFieldValueChangedEpic = (value, {formValueSelector = form.formValueS
 
   const { price } = formValueSelector('takeOffer')(getState(), 'volume', 'total', 'price');
 
-  if (!isNaN(value)) {
+  if (isNaN(value)) {
     dispatch(form.change('takeOffer', 'total', '0'));
   } else {
     dispatch(form.change('takeOffer', 'total', web3.toBigNumber(value).mul(price).toString()));
@@ -248,6 +254,8 @@ const volumeFieldValueChangedEpic = (value, {formValueSelector = form.formValueS
   // } else {
   //   dispatch(form.change('takeOffer', 'total', web3.toBigNumber(value).mul(price).toString()));
   // }
+
+  dispatch(defer(getTransactionGasCostEstimateEpic));
 };
 
 const totalFieldValueChangedEpic = (value, {formValueSelector = form.formValueSelector} = {}) => (dispatch, getState) => {
@@ -255,7 +263,7 @@ const totalFieldValueChangedEpic = (value, {formValueSelector = form.formValueSe
 
   dispatch(form.change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toString()));
 
-  if (!isNaN(value)) {
+  if (isNaN(value)) {
     dispatch(form.change('takeOffer', 'volume', '0'));
   } else {
     dispatch(form.change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toString()));
@@ -267,6 +275,9 @@ const totalFieldValueChangedEpic = (value, {formValueSelector = form.formValueSe
   // } else {
   //   dispatch(form.change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toString()));
   // }
+
+
+  dispatch(defer(getTransactionGasCostEstimateEpic));
 };
 
 const resetActiveOfferTakeGasCostEstimate = createAction(
@@ -294,10 +305,12 @@ const getTransactionGasCostEstimate = createAction(
 const getTransactionGasCostEstimateEpic = () => async (dispatch, getState) => {
   const offerId = offerTakes.activeOfferTakeOfferId(getState());
   const volume = offerTakes.takeFormValuesSelector(getState(), 'volume');
+
   if (!offerTakes.canBuyOffer(getState()) || !volume) {
     return null;
   }
   const offerOwner = offerTakes.activeOfferTakeOfferOwner(getState());
+
   const gasCost = await dispatch(
     getTransactionGasCostEstimate(
       {
