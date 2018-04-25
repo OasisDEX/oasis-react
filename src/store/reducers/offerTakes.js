@@ -8,7 +8,7 @@ import offerTakes from '../selectors/offerTakes';
 import offersReducer from './offers';
 import { initialize } from 'redux-form';
 import { DEFAULT_GAS_LIMIT, TX_OFFER_TAKE, TX_STATUS_CANCELLED_BY_USER } from './transactions';
-import { change, formValueSelector } from 'redux-form/immutable';
+import * as form from 'redux-form/immutable';
 import web3 from '../../bootstrap/web3';
 import { ETH_UNIT_ETHER } from '../../constants';
 import balances from '../selectors/balances';
@@ -53,11 +53,11 @@ const buyMaxEpic = () => (dispatch, getState) => {
   const volume = activeOfferTakeData.get('buyHowMuch');
   const priceBN = web3.toBigNumber(activeOfferTakeData.get('ask_price'));
   if (usersQuoteTokenBalanceBN.gte(priceBN.mul(volume))) {
-    dispatch(change('takeOffer', 'total', web3.fromWei(priceBN.mul(volume), ETH_UNIT_ETHER)));
-    dispatch(change('takeOffer', 'volume', web3.fromWei(volume, ETH_UNIT_ETHER)));
+    dispatch(form.change('takeOffer', 'total', web3.fromWei(priceBN.mul(volume), ETH_UNIT_ETHER)));
+    dispatch(form.change('takeOffer', 'volume', web3.fromWei(volume, ETH_UNIT_ETHER)));
   } else {
-    dispatch(change('takeOffer', 'total', web3.fromWei(usersQuoteTokenBalanceBN, ETH_UNIT_ETHER)));
-    dispatch(change('takeOffer', 'volume', web3.fromWei(usersQuoteTokenBalanceBN.div(priceBN), ETH_UNIT_ETHER)));
+    dispatch(form.change('takeOffer', 'total', web3.fromWei(usersQuoteTokenBalanceBN, ETH_UNIT_ETHER)));
+    dispatch(form.change('takeOffer', 'volume', web3.fromWei(usersQuoteTokenBalanceBN.div(priceBN), ETH_UNIT_ETHER)));
   }
 };
 
@@ -67,11 +67,11 @@ const sellMaxEpic = () => (dispatch, getState) => {
   const volume = activeOfferTakeData.get('buyHowMuch');
   const priceBN = web3.toBigNumber(activeOfferTakeData.get('bid_price'));
   if (usersBaseTokenBalanceBN.gte(volume)) {
-    dispatch(change('takeOffer', 'total', web3.fromWei(priceBN.mul(volume), ETH_UNIT_ETHER)));
-    dispatch(change('takeOffer', 'volume', web3.fromWei(volume, ETH_UNIT_ETHER)));
+    dispatch(form.change('takeOffer', 'total', web3.fromWei(priceBN.mul(volume), ETH_UNIT_ETHER)));
+    dispatch(form.change('takeOffer', 'volume', web3.fromWei(volume, ETH_UNIT_ETHER)));
   } else {
-    dispatch(change('takeOffer', 'total', web3.fromWei(usersBaseTokenBalanceBN.mul(priceBN), ETH_UNIT_ETHER)));
-    dispatch(change('takeOffer', 'volume', web3.fromWei(usersBaseTokenBalanceBN, ETH_UNIT_ETHER)));
+    dispatch(form.change('takeOffer', 'total', web3.fromWei(usersBaseTokenBalanceBN.mul(priceBN), ETH_UNIT_ETHER)));
+    dispatch(form.change('takeOffer', 'volume', web3.fromWei(usersBaseTokenBalanceBN, ETH_UNIT_ETHER)));
   }
 
 };
@@ -120,7 +120,7 @@ const sendBuyTransaction = createAction(
 const takeOffer = createPromiseActions('OFFER_TAKES/TAKE_OFFER');
 
 const takeOfferEpic = () => async (dispatch, getState) => {
-  const volume = formValueSelector('takeOffer')(getState(), 'volume');
+  const volume = form.formValueSelector('takeOffer')(getState(), 'volume');
   const volumeInWei = web3.toWei(volume, ETH_UNIT_ETHER);
   const activeOfferTakeOfferId = offerTakes.activeOfferTakeOfferId(getState());
   dispatch(takeOffer.pending());
@@ -233,23 +233,40 @@ const checkIfOfferTakeSubjectStillActiveEpic = (offerId) => async (dispatch, get
   return isActive;
 };
 
-const volumeFieldValueChangedEpic = (value) => (dispatch, getState) => {
+const volumeFieldValueChangedEpic = (value, {formValueSelector = form.formValueSelector} = {}) => (dispatch, getState) => {
+
   const { price } = formValueSelector('takeOffer')(getState(), 'volume', 'total', 'price');
-  if (parseFloat(value) === 0) {
-    dispatch(change('takeOffer', 'total', '0'));
+
+  if (!isNaN(value)) {
+    dispatch(form.change('takeOffer', 'total', '0'));
   } else {
-    dispatch(change('takeOffer', 'total', web3.toBigNumber(value).mul(price).toString()));
+    dispatch(form.change('takeOffer', 'total', web3.toBigNumber(value).mul(price).toString()));
   }
 
+  // if (parseFloat(value) === 0) {
+  //   dispatch(form.change('takeOffer', 'total', '0'));
+  // } else {
+  //   dispatch(form.change('takeOffer', 'total', web3.toBigNumber(value).mul(price).toString()));
+  // }
 };
 
-const totalFieldValueChangedEpic = (value) => (dispatch, getState) => {
+const totalFieldValueChangedEpic = (value, {formValueSelector = form.formValueSelector} = {}) => (dispatch, getState) => {
   const { price } = formValueSelector('takeOffer')(getState(), 'volume', 'total', 'price');
-  if (parseFloat(value) === 0) {
-    dispatch(change('takeOffer', 'total', '0'));
+
+  dispatch(form.change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toString()));
+
+  if (!isNaN(value)) {
+    dispatch(form.change('takeOffer', 'volume', '0'));
   } else {
-    dispatch(change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toString()));
+    dispatch(form.change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toString()));
   }
+
+  // if (parseFloat(value) === 0) {
+  //   //TODO: looks like noop?
+  //   dispatch(form.change('takeOffer', 'total', '0'));
+  // } else {
+  //   dispatch(form.change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toString()));
+  // }
 };
 
 const resetActiveOfferTakeGasCostEstimate = createAction(
