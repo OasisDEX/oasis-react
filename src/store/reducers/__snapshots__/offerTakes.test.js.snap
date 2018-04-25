@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`take offer form volumeFieldValueChangedEpic total set to: negative number(-1) 1`] = `
+Array [
+  Object {
+    "meta": Object {
+      "field": "volume",
+      "form": "takeOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "-0.33333333333333333333",
+    "type": "@@redux-form/CHANGE",
+  },
+  Object {
+    "meta": Object {
+      "field": "volume",
+      "form": "takeOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
+  },
+]
+`;
+
+exports[`take offer form volumeFieldValueChangedEpic total set to: reasonable amount(100) 1`] = `
+Array [
+  Object {
+    "meta": Object {
+      "field": "volume",
+      "form": "takeOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "33.33333333333333333333",
+    "type": "@@redux-form/CHANGE",
+  },
+  Object {
+    "meta": Object {
+      "field": "volume",
+      "form": "takeOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
+  },
+]
+`;
+
+exports[`take offer form volumeFieldValueChangedEpic total set to: zero(0) 1`] = `
+Array [
+  Object {
+    "meta": Object {
+      "field": "volume",
+      "form": "takeOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
+  },
+  Object {
+    "meta": Object {
+      "field": "volume",
+      "form": "takeOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
+  },
+]
+`;
+
+exports[`take offer form volumeFieldValueChangedEpic volume set to: negative number(-1) 1`] = `
+Array [
+  Object {
+    "meta": Object {
+      "field": "total",
+      "form": "takeOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
+  },
+]
+`;
+
+exports[`take offer form volumeFieldValueChangedEpic volume set to: reasonable amount(100) 1`] = `
+Array [
+  Object {
+    "meta": Object {
+      "field": "total",
+      "form": "takeOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
+  },
+]
+`;
+
+exports[`take offer form volumeFieldValueChangedEpic volume set to: zero(0) 1`] = `
+Array [
+  Object {
+    "meta": Object {
+      "field": "total",
+      "form": "takeOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
+  },
+]
+`;
