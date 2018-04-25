@@ -236,7 +236,7 @@ const volumeFieldValueChangedEpic =
     if ((isNaN(value) || parseFloat(value) <= 0) || (isNaN(price) || parseFloat(price) === 0)) {
       dispatch(localChange(offerMakeType, 'total', '0'));
     } else {
-      dispatch(localChange(offerMakeType, 'volume', value));
+      // dispatch(localChange(offerMakeType, 'volume', value));
       dispatch(localChange(offerMakeType, 'total', web3.toBigNumber(value).mul(price).toString()));
     }
     dispatch(defer(updateTransactionGasCostEstimateEpic, offerMakeType));
