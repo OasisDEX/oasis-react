@@ -72,6 +72,24 @@ const tokenAllowanceTrustStatus = createSelector(
 );
 
 
+const tokenAllowanceStatusForActiveMarket = createSelector(
+  balances,
+  reselect.getProps,
+  (s, { tokenName }) => {
+    const tokenAllowance = s.getIn([ 'tokenAllowances', tokenName, window.contracts.market.address]);
+    if(tokenAllowance) {
+      const tokenAllowanceBN = new BigNumber(tokenAllowance);
+      const tokenTrustEnabledMinBN = new BigNumber(TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN);
+      if(tokenAllowanceBN.gte(tokenTrustEnabledMinBN)) {
+        return TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED;
+      } else {
+        return TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED;
+      }
+    } else { return null; }
+  }
+);
+
+
 const activeBaseTokenBalance = createSelector(
   tokenBalances,
   tokens.activeTradingPairBaseToken,
@@ -99,5 +117,6 @@ export default {
   ethBalance,
   tokenAllowanceTrustStatus,
   activeBaseTokenBalance,
-  activeQuoteTokenBalance
+  activeQuoteTokenBalance,
+  tokenAllowanceStatusForActiveMarket
 }
