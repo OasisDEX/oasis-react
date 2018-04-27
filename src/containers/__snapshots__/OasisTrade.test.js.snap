@@ -11,9 +11,9 @@ exports[`(Container) OasisTrade should render 1`] = `
 >
   <OasisMarketWidget
     activeTradingPair={
-      Immutable.Map {
-        baseToken: "MKR",
-        quoteToken: "DAI",
+      Object {
+        "baseToken": "MKR",
+        "quoteToken": "DAI",
       }
     }
     defaultPeriod="TIME_SPAN/WEEK"
@@ -153,10 +153,10 @@ Object {
 
 exports[`(Container) OasisTrade will receive right props 1`] = `
 Object {
-  "activeTradingPair": Immutable.Map {
-    baseToken: "MKR",
-    quoteToken: "DAI",
-},
+  "activeTradingPair": Object {
+    "baseToken": "MKR",
+    "quoteToken": "DAI",
+  },
   "defaultPeriod": "TIME_SPAN/WEEK",
   "loadingTradeHistory": false,
   "marketsData": Immutable.List [

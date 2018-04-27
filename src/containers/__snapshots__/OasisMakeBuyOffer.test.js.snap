@@ -48,10 +48,10 @@ Object {
 
 exports[`(Container) OasisMakeBuyOffer will receive right props 1`] = `
 Object {
-  "activeTradingPair": Immutable.Map {
-    baseToken: "MKR",
-    quoteToken: "DAI",
-},
+  "activeTradingPair": Object {
+    "baseToken": "MKR",
+    "quoteToken": "DAI",
+  },
   "baseToken": undefined,
   "contractsLoaded": true,
   "hasSufficientTokenAmount": false,
