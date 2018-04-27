@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisOfferNotAvailable should render 1`] = `
+<div>
+  <div>
+    Offer is not available anymore
+  </div>
+  <div>
+    Will close shortly
+  </div>
+</div>
+`;

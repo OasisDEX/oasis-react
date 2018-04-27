@@ -3,6 +3,8 @@ import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import styles from './OasisInsufficientAmountOfToken.scss';
+import InfoBox from './InfoBox';
+import InfoBoxBody from './InfoBoxBody';
 
 const propTypes = PropTypes && {
   tokenName: PropTypes.string.isRequired
@@ -14,7 +16,11 @@ class OasisInsufficientAmountOfToken extends PureComponent {
   render() {
     return (
       <div className={styles.base}>
-        You do not have enough <b>{this.props.tokenName}</b> tokens.
+        <InfoBox color="danger">
+          <InfoBoxBody>
+            You do not have enough <b>{this.props.tokenName}</b> tokens.
+          </InfoBoxBody>
+        </InfoBox>
       </div>
     );
   }

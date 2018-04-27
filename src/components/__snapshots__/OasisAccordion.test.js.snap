@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisAccordion should render 1`] = `
+<div>
+  <div>
+    <span
+      onClick={[Function]}
+    >
+      [e]
+    </span>
+     
+  </div>
+  <div />
+</div>
+`;

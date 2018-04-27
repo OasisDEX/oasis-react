@@ -1,0 +1,49 @@
+@import "../styles/modules/constants";
+
+.base {
+}
+
+.red {
+  color: $danger-text;
+}
+
+.green {
+  color: $success-text;
+}
+
+.baseText {
+  font-weight: 300;
+}
+
+.bolderText {
+  font-weight: 400;
+}
+
+.buying {
+  margin-bottom: 0.75em;
+}
+
+.detailsAmountCol {
+  flex-basis: 45%;
+}
+
+.detailsTradingCol {
+  flex-basis: 65%;
+}
+
+.detailsTradingFirstCol {
+  flex-basis: 55%;
+}
+.detailsTradingSecCol {
+  flex-basis: 45%;
+}
+
+.tradingStatus {
+  border: 1px solid $success;
+  color: $success-text;
+  height: 20px;
+  border-radius: 6px;
+  display: inline-block;
+  width: 92px;
+  text-align: center;
+}
