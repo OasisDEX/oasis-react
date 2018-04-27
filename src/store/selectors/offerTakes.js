@@ -6,31 +6,15 @@ import markets from './markets';
 import web3 from '../../bootstrap/web3';
 import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from '../reducers/offerTakes';
 import { ETH_UNIT_ETHER } from '../../constants';
+import { fromJS } from 'immutable';
+import getOfferTakeBuyAndSellTokens from '../../utils/tokens/getOfferTakeBuyAndSellTokens';
+import tokens from './tokens';
+import offers from './offers';
 
 const offerTakes = s => s.get('offerTakes');
 
-const activeOfferTake = createSelector(
-  offerTakes, s => s.get('activeOfferTake'),
-);
-
 const activeOfferTakeType = createSelector(
   offerTakes, s => s.get('activeOfferTakeType'),
-);
-
-const activeOfferTakeOfferData = createSelector(
-  offerTakes, s => s.getIn(['activeOfferTake', 'offerData']),
-);
-
-const activeOfferTakeOfferOwner = createSelector(
-  offerTakes, s => s.getIn(['activeOfferTake', 'offerData', 'owner']),
-);
-
-const activeOfferTakeBuyToken = createSelector(
-  offerTakes, s => s.getIn(['activeOfferTake', 'buyToken']),
-);
-
-const activeOfferTakeSellToken = createSelector(
-  offerTakes, s => s.getIn(['activeOfferTake', 'sellToken']),
 );
 
 const isOfferTakeModalOpen = createSelector(
@@ -40,6 +24,56 @@ const activeOfferTakeOfferId = createSelector(
   offerTakes, s => s.get('activeOfferTakeOfferId'),
 );
 
+const activeOfferTake = createSelector(
+  s => s,
+  activeOfferTakeType,
+  activeOfferTakeOfferId,
+  tokens.activeTradingPair,
+  (rootState, offerTakeType, offerId, activeTadingPair) => {
+
+    const { baseToken, quoteToken } = activeTadingPair;
+
+    let offer = null;
+    switch (offerTakeType) {
+      case TAKE_BUY_OFFER: {
+        offer = offers.activeTradingPairBuyOffers(rootState).find(offer => offer.id === offerId);
+      }
+        break;
+      case TAKE_SELL_OFFER: {
+        offer = offers.activeTradingPairSellOffers(rootState).find(offer => offer.get("id") === offerId);
+      }
+        break;
+    }
+
+    if (offer) {
+      const {sellToken, buyToken} = getOfferTakeBuyAndSellTokens(tokens.activeTradingPair(rootState), offerTakeType);
+      return fromJS({
+        offerData: fromJS(offer),
+        sellToken: sellToken,
+        buyToken: buyToken,
+        baseToken: baseToken,
+        quoteToken: quoteToken
+      });
+    } else {
+      return fromJS({});
+    }
+  });
+
+const activeOfferTakeOfferData = createSelector(
+  activeOfferTake, s => s.get('offerData'),
+);
+
+const activeOfferTakeOfferOwner = createSelector(
+  activeOfferTake, s => s.getIn(['offerData', 'owner']),
+);
+
+const activeOfferTakeBuyToken = createSelector(
+  activeOfferTake, s => s.get('buyToken')
+);
+
+const activeOfferTakeSellToken = createSelector(
+  activeOfferTake, s => s.get('sellToken'),
+);
 
 const takeFormValuesSelector = formValueSelector('takeOffer');
 
@@ -82,6 +116,9 @@ const isVolumeGreaterThanOfferMax = createSelector(
   activeOfferTakeOfferData,
   activeOfferTakeType,
   (volume, offerData, offerTakeType) => {
+    if(!offerData) {
+      return false;
+    }
     const buyHowMuch = web3.fromWei(offerData.get('buyHowMuch'));
     const sellHowMuch = web3.fromWei(offerData.get('sellHowMuch'));
     const volumeBN = web3.toBigNumber(volume);

@@ -50,6 +50,28 @@ Array [
 ]
 `;
 
+exports[`getTransactionGasCostEstimateEpic canMakeOffer: false 1`] = `Array []`;
+
+exports[`getTransactionGasCostEstimateEpic canMakeOffer: true 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "args": Array [
+        Object {
+          "activeOfferData": undefined,
+          "amount": "123000000000000000000",
+          "offerId": "offerId",
+          "offerOwner": "owner",
+        },
+      ],
+      "thunk": [Function],
+      "thunkName": "actionCreator",
+    },
+    "type": "deferred-thunk",
+  },
+]
+`;
+
 exports[`sellMaxEpic balance greater than the offer 1`] = `
 Array [
   Object {
@@ -264,6 +286,48 @@ Array [
       "thunkName": "getTransactionGasCostEstimateEpic",
     },
     "type": "deferred-thunk",
+  },
+]
+`;
+
+exports[`take offer modal setOfferTakeModalClosedEpic 1`] = `
+Array [
+  Object {
+    "type": "OFFER_TAKES/SET_MODAL_CLOSED",
+  },
+  Object {
+    "type": "OFFER_TAKES/RESET_ACTIVE_OFFER_TAKE_TYPE",
+  },
+  Object {
+    "type": "OFFER_TAKES/RESET_ACTIVE_OFFER_TAKE_OFFER_ID",
+  },
+  Object {
+    "type": "OFFER_TAKES/RESET_TRANSACTION_GAS_ESTIMATE",
+  },
+  Object {
+    "type": "OFFER_TAKES/RESET_COMPLETED_OFFER_CHECK",
+  },
+]
+`;
+
+exports[`take offer modal setOfferTakeModalOpenEpic 1`] = `
+Array [
+  Object {
+    "type": "OFFER_TAKES/SET_ACTIVE_OFFER_TAKE_OFFER_ID",
+  },
+  Object {
+    "type": "OFFER_TAKES/SET_ACTIVE_OFFER_TAKE_TYPE",
+  },
+  Object {
+    "payload": Object {
+      "args": Array [],
+      "thunk": [Function],
+      "thunkName": "initializeOfferTakeFormEpic",
+    },
+    "type": "deferred-thunk",
+  },
+  Object {
+    "type": "OFFER_TAKES/SET_MODAL_OPEN",
   },
 ]
 `;

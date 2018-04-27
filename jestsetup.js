@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 import { configure } from 'enzyme';
+import {Map} from 'immutable';
 import Adapter from 'enzyme-adapter-react-16';
 // import { MAKE_BUY_OFFER } from './src/store/reducers/offerMakes';
 
@@ -479,7 +480,7 @@ global.storeMock = {
         minOrderLimitInWei: '100000000000000000',
         isOfferActive: true,
         transactionGasCostEstimateError: null,
-        activeOfferTakeOfferId: '7',
+        activeOfferTakeOfferId: '12',
         activeOfferTake: {
       offerData: {
         buyHowMuch_filter: 1.951718560884e+21,
@@ -495,7 +496,7 @@ global.storeMock = {
             bid_price_sort: 0.5,
             buyHowMuch: '1.951718560884e+21',
             ask_price_sort: 2,
-            id: '7'
+            id: '12'
       },
       buyToken: 'MKR',
           sellToken: 'W-ETH',
@@ -664,8 +665,7 @@ global.storeMock = {
       'Map { "baseToken": "MKR", "quoteToken": "W-ETH" }': {
         buyOfferCount: null,
         sellOfferCount: null,
-        buyOffers: [
-        ],
+        buyOffers: [],
         sellOffers: [],
         initialSyncStatus: 'STATUS_COMPLETED',
         loadingSellOffers: 'OFFERS/SYNC_STATUS_COMPLETED',
@@ -726,7 +726,8 @@ global.storeMock = {
         sellOffers: [],
         initialSyncStatus: 'STATUS_PRISTINE'
       },
-      'Map { "baseToken": "MKR", "quoteToken": "DAI" }': {
+      // 'Map { "baseToken": "MKR", "quoteToken": "DAI" }': {
+       [Map({ "baseToken": "MKR", "quoteToken": "DAI" })]: {
         buyOfferCount: 1,
         sellOfferCount: 1,
         buyOffers: [

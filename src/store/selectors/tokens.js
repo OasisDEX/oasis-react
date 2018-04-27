@@ -11,7 +11,10 @@ const defaultTradingPair = createSelector(
 
 const activeTradingPair = createSelector(
   tokens,
-  state => state.get('activeTradingPair'),
+  state =>
+    state.get('activeTradingPair') && state.get('activeTradingPair').toJS ?
+      state.get('activeTradingPair').toJS() :
+      state.get('activeTradingPair'),
 );
 
 const validBaseTokensList = createSelector(
