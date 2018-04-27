@@ -24,7 +24,6 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
   <OasisTokenBalance
     className=""
     summary="Available"
-    token="W-ETH"
   />
   <Connect(ReduxForm) />
   <div
@@ -33,18 +32,13 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
     <Connect(WithTransactionWatchWrapper)
       amountReceived="0.01110"
       amountSold="0.00010"
-      buyToken="MKR"
       hasSufficientTokenAmount={false}
       isTransactionValid={true}
-      offerId="7"
-      sellToken="W-ETH"
+      offerId="12"
       transactionSubectType="TRANSACTIONS/GROUP__OFFERS/OFFER_TAKE"
     />
   </div>
-  <Connect(SetTokenAllowanceTrust)
-    allowanceSubjectAddress="0xdb33dfd3d61308c33c63209845dad3e6bfb2c674"
-    tokenName="MKR"
-  />
+  <Connect(SetTokenAllowanceTrust) />
   <div>
     <OasisButton
       btnType="button"
@@ -64,7 +58,7 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
       onClick={[Function]}
       size="md"
     >
-      Sell W-ETH
+      Sell undefined
     </OasisButton>
   </div>
 </Modal>
@@ -83,35 +77,15 @@ Object {
 exports[`(Container) OasisTakeOfferModal will receive right props 1`] = `
 Object {
   "activeOfferTake": Immutable.Map {
-    offerData: Immutable.Map {
-        buyHowMuch_filter: 1.951718560884e+21,
-        buyWhichToken: "W-ETH",
-        ask_price: "2",
-        sellWhichTokenAddress: "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
-        bid_price: "0.5",
-        sellHowMuch: "975859280442000000000",
-        sellHowMuch_filter: 975859280442000000000,
-        sellWhichToken: "MKR",
-        buyWhichTokenAddress: "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
-        owner: "0xdb33dfd3d61308c33c63209845dad3e6bfb2c674",
-        bid_price_sort: 0.5,
-        buyHowMuch: "1.951718560884e+21",
-        ask_price_sort: 2,
-        id: "7",
-    },
-    buyToken: "MKR",
-    sellToken: "W-ETH",
-    baseToken: "MKR",
-    quoteToken: "W-ETH",
 },
-  "activeOfferTakeOfferId": "7",
-  "activeOfferTakeOfferOwner": "0xdb33dfd3d61308c33c63209845dad3e6bfb2c674",
+  "activeOfferTakeOfferId": "12",
+  "activeOfferTakeOfferOwner": undefined,
   "activeOfferTakeType": "OFFER_TAKES/TAKE_SELL_OFFER",
-  "activeTradingPair": Immutable.Map {
-    baseToken: "MKR",
-    quoteToken: "DAI",
-},
-  "buyToken": "MKR",
+  "activeTradingPair": Object {
+    "baseToken": "MKR",
+    "quoteToken": "DAI",
+  },
+  "buyToken": undefined,
   "canBuyOffer": false,
   "currentOfferTakeTransaction": undefined,
   "formErrors": Immutable.Map {
@@ -126,7 +100,7 @@ Object {
     volume: "0.0001",
     total: "0.0111",
 },
-  "sellToken": "W-ETH",
+  "sellToken": undefined,
   "userBalances": Immutable.Map {
     DGD: "0",
     GUP: "0",

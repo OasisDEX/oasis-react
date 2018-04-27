@@ -198,7 +198,7 @@ const subscribeTokenTransfersEventsEpic = (tokensContractsList, address) => asyn
       /**
        * Listen to all erc20 transfer events from now.
        */
-      console.log('subscribeTokenTransfersEvents$!!!!!!!!!!!!!!!!!!')
+      // console.log('subscribeTokenTransfersEvents$!!!!!!!!!!!!!!!!!!')
       tokenContract.Transfer({}, {fromBlock: network.latestBlockNumber(getState()), toBlock: 'latest'})
         .then(
           (err, transferEvent) => {

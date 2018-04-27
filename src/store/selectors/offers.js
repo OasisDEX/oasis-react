@@ -26,8 +26,7 @@ const activeTradingPairBuyOffers = createSelector(
 const activeTradingPairSellOffers = createSelector(
   offers,
   tokens.activeTradingPair,
-  (state, activeTradingPair) =>
-    state.getIn(['offers', Map(activeTradingPair), 'sellOffers']) || List()
+  (state, activeTradingPair) => state.getIn(['offers', Map(activeTradingPair), 'sellOffers']) || List()
 );
 
 const activeTradingPairBuyOfferCount = createSelector(
