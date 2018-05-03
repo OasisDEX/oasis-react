@@ -5,7 +5,7 @@ import tokens from '../selectors/tokens';
 import offerTakes from '../selectors/offerTakes';
 import offersReducer from './offers';
 import { initialize } from 'redux-form';
-import { DEFAULT_GAS_LIMIT, TX_OFFER_TAKE, TX_STATUS_CANCELLED_BY_USER } from './transactions';
+import { DEFAULT_GAS_LIMIT, TX_OFFER_TAKE } from './transactions';
 import * as form from 'redux-form/immutable';
 import web3 from '../../bootstrap/web3';
 import { ETH_UNIT_ETHER } from '../../constants';
@@ -212,7 +212,7 @@ const getTransactionGasCostEstimate = createAction(
 );
 
 const getTransactionGasCostEstimateEpic = (
-  { canBuyOffer = offerTakes.canBuyOffer,
+  { canFulfillOffer = offerTakes.canFulfillOffer,
     activeOfferTakeOfferId = offerTakes.activeOfferTakeOfferId,
     takeFormValuesSelector = offerTakes.takeFormValuesSelector,
     activeOfferTakeOfferOwner = offerTakes.activeOfferTakeOfferOwner,
@@ -222,7 +222,7 @@ const getTransactionGasCostEstimateEpic = (
   const offerId = activeOfferTakeOfferId(getState());
   const volume = takeFormValuesSelector(getState(), 'volume');
 
-  if (!canBuyOffer(getState()) || !volume) {
+  if (!canFulfillOffer(getState()) || !volume) {
     return null;
   }
   const offerOwner = activeOfferTakeOfferOwner(getState());

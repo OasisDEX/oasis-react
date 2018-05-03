@@ -2,10 +2,10 @@ import { createSelector } from "reselect";
 import reselect from "../../utils/reselect";
 import { TX_OFFER_MAKE, TX_OFFER_TAKE } from "../reducers/transactions";
 import { fromJS } from "immutable";
-import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from "../reducers/offerTakes";
-import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from "../reducers/offerMakes";
 import offerTakes from "./offerTakes";
 import offerMakes from "./offerMakes";
+import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from '../reducers/offerTakes';
+import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from '../../constants';
 
 const isGasEstimatePending = createSelector(
   s => s,

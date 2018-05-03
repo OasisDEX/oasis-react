@@ -12,11 +12,9 @@ import offerMakes from '../store/selectors/offerMakes';
 import OfferMakeForm from './OasisOfferMakeForm';
 import balances from '../store/selectors/balances';
 import { getFormValues, getFormSyncErrors } from 'redux-form/immutable';
-import OasisTransactionDetailsWrapper from './OasisTransactionDetails';
 import SetTokenAllowanceTrustWrapper from './SetTokenAllowanceTrust';
 import transactions from '../store/selectors/transactions';
-import { TX_OFFER_MAKE, TX_STATUS_CONFIRMED } from '../store/reducers/transactions';
-import getUsersSoldAndReceivedAmounts from '../utils/offers/getUsersSoldAndReceivedAmounts';
+import { TX_STATUS_CONFIRMED } from '../store/reducers/transactions';
 import OasisTokenBalanceSummary  from './OasisTokenBalanceSummary';
 import markets from '../store/selectors/markets';
 import modalStyles from '../styles/modules/_modal.scss';
@@ -83,10 +81,10 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
       sellToken,
       buyToken,
       currentOfferMakeTransaction,
-      isCurrentTransactionValid,
+      // isCurrentTransactionValid,
       form,
-      offerMakeFormValues,
-      hasSufficientTokenAmount,
+      // offerMakeFormValues,
+      // hasSufficientTokenAmount,
     } = this.props;
 
     return (
@@ -105,17 +103,17 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
             offerMakeType={offerMakeType}
             form={form}
           />
-          <OasisTransactionDetailsWrapper
-              transactionSubectType={TX_OFFER_MAKE}
-              isTransactionValid={isCurrentTransactionValid}
-              {...getUsersSoldAndReceivedAmounts(offerMakeType, offerMakeFormValues)}
-              buyToken={buyToken}
-              transaction={currentOfferMakeTransaction}
-              sellToken={sellToken}
-              offerId={null}
-              // getTransactionGasCostEstimate={this.getTransactionGasCostEstimate}
-              hasSufficientTokenAmount={hasSufficientTokenAmount}
-            />
+          {/*<OasisTransactionDetailsWrapper*/}
+              {/*transactionSubectType={TX_OFFER_MAKE}*/}
+              {/*isTransactionValid={isCurrentTransactionValid}*/}
+              {/*{...getUsersSoldAndReceivedAmounts(offerMakeType, offerMakeFormValues)}*/}
+              {/*buyToken={buyToken}*/}
+              {/*transaction={currentOfferMakeTransaction}*/}
+              {/*sellToken={sellToken}*/}
+              {/*offerId={null}*/}
+              {/*// getTransactionGasCostEstimate={this.getTransactionGasCostEstimate}*/}
+              {/*hasSufficientTokenAmount={hasSufficientTokenAmount}*/}
+            {/*/>*/}
           <SetTokenAllowanceTrustWrapper
             allowanceSubjectAddress={marketAddress}
             tokenName={buyToken}

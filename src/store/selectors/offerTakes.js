@@ -30,9 +30,9 @@ const activeOfferTake = createSelector(
   activeOfferTakeType,
   activeOfferTakeOfferId,
   tokens.activeTradingPair,
-  (rootState, offerTakeType, offerId, activeTadingPair) => {
+  (rootState, offerTakeType, offerId, activeTradingPair) => {
 
-    const { baseToken, quoteToken } = activeTadingPair;
+    const { baseToken, quoteToken } = activeTradingPair;
 
     let offer = null;
     switch (offerTakeType) {
@@ -41,7 +41,9 @@ const activeOfferTake = createSelector(
       }
         break;
       case TAKE_SELL_OFFER: {
-        offer = offers.activeTradingPairSellOffers(rootState).find(offer => offer.get("id") === offerId);
+        const sellOffers = offers.activeTradingPairSellOffers(rootState);
+        console.log(sellOffers);
+        offer = offers.activeTradingPairSellOffers(rootState).find(offer => fromJS(offer).get("id") === offerId);
       }
         break;
     }
@@ -110,14 +112,16 @@ const currentFormVolume = createSelector(
 
 const isVolumeEmptyOrZero = createSelector(
   rootState => takeFormValuesSelector(rootState, 'volume'),
-  activeFormVolume => activeFormVolume.length === 0 || web3.toBigNumber(activeFormVolume).eq(0)
+  activeFormVolume => {
+    console.log({activeFormVolume});
+    return !activeFormVolume || web3.toBigNumber(activeFormVolume).eq(0);
+  }
 );
 const tokenToBeAllowed = createSelector(
   activeOfferTakeType,
   activeOfferTakeSellToken,
   activeOfferTakeBuyToken,
   (offerType, sellToken, buyToken) => {
-    console.log('------t-------->', tokenToBeAllowedForOffer({ offerType, sellToken, buyToken }));
     return tokenToBeAllowedForOffer({ offerType, sellToken, buyToken })
   }
 );

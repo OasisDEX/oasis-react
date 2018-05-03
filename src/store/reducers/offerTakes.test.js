@@ -84,7 +84,7 @@ describe('getTransactionGasCostEstimateEpic', () => {
 
     store.dispatch(offerTakes.actions.getTransactionGasCostEstimateEpic(
       {
-        canBuyOffer: () => canMakeOffer,
+        canFulfillOffer: () => canMakeOffer,
         activeOfferTakeOfferId: () => "offerId",
         takeFormValuesSelector: () => 123,
         activeOfferTakeOfferOwner: () => "owner",

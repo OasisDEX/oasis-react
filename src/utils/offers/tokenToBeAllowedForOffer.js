@@ -1,4 +1,4 @@
-import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from '../../store/reducers/offerMakes';
+import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from '../../constants';
 import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from '../../store/reducers/offerTakes';
 
 const tokenToBeAllowedForOffer = ({offerType, sellToken, buyToken }) => {
@@ -9,7 +9,7 @@ const tokenToBeAllowedForOffer = ({offerType, sellToken, buyToken }) => {
       return buyToken;
     case TAKE_BUY_OFFER:
     case TAKE_SELL_OFFER:
-      throw new Error('not implemented');
+      return sellToken;
   }
 };
 

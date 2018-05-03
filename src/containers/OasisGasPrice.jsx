@@ -24,19 +24,22 @@ export class OasisGasPriceWrapper extends PureComponent {
 
   getGasCostEstimate() {
     const  { currentGasPrice, latestEthereumPrice, transactionGasCostEstimate } = this.props;
-    console.log('OasisGasPriceWrapper',this.props)
-
     const currentGasPriceBN = web3.toBigNumber(currentGasPrice);
     if(transactionGasCostEstimate && latestEthereumPrice) {
       const cost = web3.fromWei(currentGasPriceBN.mul(transactionGasCostEstimate), ETH_UNIT_ETHER);
       return (
-        <FlexBox>
-          <span className={styles.detailsTradingFirstCol}>{formatAmount(cost,false, null, 5)} ETH</span>
-          <span className={styles.detailsTradingSecCol} >
+        <FlexBox className={styles.base}>
+          <div className={styles.gasLabel}>
+            Gas
+          </div>
+          <div>
+            <span className={styles.detailsTradingFirstCol}>{formatAmount(cost,false, null, 5)} ETH</span>
+            <span className={styles.detailsTradingSecCol} >
             <span className={styles.estimateUSD}>
               {formatAmount(cost.mul(latestEthereumPrice.price_usd))} USD
             </span>
           </span>
+          </div>
         </FlexBox>
       )
     }

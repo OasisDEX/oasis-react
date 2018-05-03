@@ -72,23 +72,6 @@ const sellMaxEpic = (offerMakeType,
 /**
  *  Create new offer transaction actions
  */
-const setActiveOfferMakeTxSubjectId = createAction(
-  'OFFER_MAKES/SET_ACTIVE_OFFER_MAKE_TX_SUBJECT_ID',
-  (offerMakeType, txSubjectId) => ({offerMakeType, txSubjectId})
-);
-
-//TODO: already refactored?
-const generateActiveOfferMakeTxSubjectIdEpic = () => (dispatch, getState) => {
-  const offerMakeType = offerMakes.activeOfferMakeType(getState());
-  const newTxSubjectId = generateTxSubjectId();
-  dispatch(
-    setActiveOfferMakeTxSubjectId(offerMakeType, newTxSubjectId)
-  );
-};
-
-const resetActiveOfferMakeTxSubjectId = createAction(
-  'OFFER_MAKES/RESET_ACTIVE_OFFER_MAKE_TX_SUBJECT_ID', (offerMakeType) => offerMakeType
-);
 
 //TODO: window? why not direct call?
 const makeOfferTransaction = createAction(

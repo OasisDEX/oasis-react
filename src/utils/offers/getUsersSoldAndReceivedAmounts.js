@@ -1,7 +1,7 @@
 import web3 from '../../bootstrap/web3';
 import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from '../../store/reducers/offerTakes';
 import { formatAmount } from '../tokens/pair';
-import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from '../../store/reducers/offerMakes';
+import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from '../../constants';
 
 const getUsersSoldAndReceivedAmounts = (offerType, offerFormValues) => {
   if (!offerFormValues || !offerFormValues.get('price') || !offerFormValues.get('total') || !offerFormValues.get('volume')) {

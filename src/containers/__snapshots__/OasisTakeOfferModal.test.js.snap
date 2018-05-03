@@ -86,7 +86,7 @@ Object {
     "quoteToken": "DAI",
   },
   "buyToken": undefined,
-  "canBuyOffer": false,
+  "canFulfillOffer": false,
   "currentOfferTakeTransaction": undefined,
   "formErrors": Immutable.Map {
 },
