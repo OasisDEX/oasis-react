@@ -58,16 +58,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
         tokenName,
         allowanceSubjectAddress
       );
-    } else {
-      getDefaultAccountTokenAllowanceForAddress(
-        tokenName,
-        allowanceSubjectAddress
-      );
     }
-  }
-
-  componentWillUpdate(nextProps) {
-    this.getAllowanceStatus(nextProps);
   }
 
   setTokenAllowanceTrustStatus(newAllowanceTrustStatus) {
@@ -170,7 +161,6 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
     const disable = disableActionDispatchButton
       ? disableActionDispatchButton
       : isToggleEnabled ? false : this.isAllowanceEnabled();
-    console.log({ disable, disableActionDispatchButton });
     return disable;
   }
 
@@ -202,7 +192,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
 
   renderAccordionContent() {
     return !this.state.txTimestamp ? (
-      <div>
+      <div hidden={this.isAllowanceEnabled()}>
         You need first grant access to withdraw from your personal account. To
         disable {this.props.tokenName} trading use Allowance widget on the funds
         page.

@@ -10,9 +10,9 @@ import {fulfilled, pending, rejected} from '../../utils/store';
 import network from '../selectors/network';
 
 import offerMakeToFormName from '../../utils/offers/offerMakeToFormName';
-import generateTxSubjectId from '../../utils/transactions/generateTxSubjectId';
 
 import throttle from 'lodash/throttle';
+import { getTimestamp } from '../../utils/time';
 
 import {defer} from '../deferredThunk';
 
@@ -104,9 +104,6 @@ const makeOffer = createPromiseActions('OFFER_MAKES/MAKE_OFFER');
 const makeOfferEpic = (offerMakeType) => async (dispatch, getState) => {
 
   //TODO: Already refactored?
-  dispatch(
-    generateActiveOfferMakeTxSubjectIdEpic(offerMakeType)
-  );
   dispatch(makeOffer.pending());
 
   const activeOfferMake = offerMakes.activeOfferMakePure(getState(), offerMakeToFormName(offerMakeType));
@@ -117,23 +114,21 @@ const makeOfferEpic = (offerMakeType) => async (dispatch, getState) => {
     buyToken: activeOfferMake.get('buyTokenAddress'),
   };
 
-  const txSubjectId = offerMakes.activeOfferMakeTxSubjectId(getState());
 
   try {
 
     //TODO: why indirection?
     //TODO: Not sure about error handling?
     const pendingMakeOfferAction = dispatch(
-      makeOfferTransaction(makeOfferPayload),
+      makeOfferTransaction(makeOfferPayload)
     );
 
     pendingMakeOfferAction.then((e, transactionHash) => {
       dispatch(
         transactionsReducer.actions.addTransactionEpic({
           txType: TX_OFFER_MAKE,
-          txMeta: {offerMakeType},
+          txMeta: { offerMakeType },
           txHash: transactionHash,
-          txSubjectId
         }),
       );
     });
@@ -142,27 +137,21 @@ const makeOfferEpic = (offerMakeType) => async (dispatch, getState) => {
     dispatch(
       transactionsReducer.actions.addTransactionEpic({
         txType: TX_OFFER_MAKE,
-        txMeta: {offerMakeType},
-        txSubjectId
+        txMeta: { offerMakeType },
       }),
     );
     dispatch(makeOffer.rejected());
     dispatch(
       transactionsReducer.actions.transactionCancelledByUser({
         txType: TX_OFFER_MAKE,
-        txMeta: {offerMakeType},
+        txMeta: { offerMakeType },
         txStatus: TX_STATUS_CANCELLED_BY_USER,
-        txSubjectId,
         txStats: {
           txEndBlockNumber: network.latestBlockNumber(getState()),
-          txEndTimestamp: parseInt(Date.now() / 1000),
+          txEndTimestamp: getTimestamp(),
         },
       }),
     );
-
-    setTimeout(() => {
-      dispatch(setOfferMakeModalClosedEpic(offerMakeType));
-    }, 5000);
   }
 };
 
@@ -195,6 +184,7 @@ const setOfferMakeModalOpen = createAction(
 
 const setOfferMakeModalOpenEpic = (offerMakeType) => (dispatch) => {
   dispatch(setActiveOfferMakeType(offerMakeType));
+  dispatch(updateTransactionGasCostEstimateEpic(offerMakeType));
   dispatch(setOfferMakeModalOpen(offerMakeType));
 };
 
@@ -206,7 +196,6 @@ const setOfferMakeModalClosed = createAction(
 const setOfferMakeModalClosedEpic = (offerMakeType) => (dispatch) => {
   dispatch(setOfferMakeModalClosed(offerMakeType));
   dispatch(resetActiveOfferMakeType());
-  dispatch(resetActiveOfferMakeTxSubjectId(offerMakeType));
   dispatch(resetActiveOfferMakeGasCostEstimate(offerMakeType));
 };
 
@@ -332,11 +321,6 @@ const reducer = handleActions({
       .set('transactionGasCostEstimate', null)
       .set('transactionGasCostEstimateError', null)
       .set('transactionGasCostEstimatePending', null),
-  [setActiveOfferMakeTxSubjectId]:
-    (state, {payload: {offerMakeType, txSubjectId}}) =>
-      state.setIn([offerMakeToFormName(offerMakeType), 'txSubjectId'], txSubjectId),
-  [resetActiveOfferMakeTxSubjectId]:
-    (state, {payload}) => state.setIn([offerMakeToFormName(payload), 'txSubjectId'], null)
 }, initialState);
 
 export default {

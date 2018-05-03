@@ -70,7 +70,6 @@ export class OasisSoldReceivedAmounts extends PureComponent {
             tokenName={buyToken}
             className={styles.detailsAmountCol}
           />
-          {/*{this.tradingTokenPartial()}*/}
         </FlexBox>
         <FlexBox>
           <TokenSoldAmount
@@ -78,7 +77,6 @@ export class OasisSoldReceivedAmounts extends PureComponent {
             tokenName={sellToken}
             className={styles.detailsAmountCol}
           />
-          {/*{this.gasAndAllowancePartial()}*/}
         </FlexBox>
       </div>
     );

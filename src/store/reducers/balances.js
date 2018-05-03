@@ -6,17 +6,19 @@ import * as BigNumber from "bignumber.js";
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import { fulfilled } from "../../utils/store";
 import {
-  ETH_UNIT_ETHER,
-} from "../../constants";
+  ETH_UNIT_ETHER, ETH_UNIT_WEI,
+} from '../../constants';
 import web3, { web3p } from "../../bootstrap/web3";
 import balances from "../selectors/balances";
-import {
-  TX_ALLOWANCE_TRUST_TOGGLE,
-} from "./transactions";
 import accounts from "../selectors/accounts";
 import network from "../selectors/network";
 import { handleTransaction } from "../../utils/transactions/handleTransaction";
 import tokens from "../selectors/tokens";
+
+import {
+  TX_ALLOWANCE_TRUST_TOGGLE,
+} from "./transactions";
+
 
 const initialState = fromJS({
   accounts: [],
@@ -167,14 +169,16 @@ const syncTokenBalances = (tokensContractsList = [], address) => (
     address === accounts.defaultAccount(getState());
   Object.entries(tokensContractsList).forEach(([tokenName, tokenContract]) => {
     tokenContract.balanceOf(address).then(tokenBalance => {
-      dispatch(
-        updateTokenBalance({
-          tokenName,
-          tokenBalance,
-          addressIsDefaultAccount,
-          address
-        })
-      );
+      if (!tokenBalance.eq(balances.tokenBalance(getState(), {tokenName, balanceUnit: ETH_UNIT_WEI }))) {
+        dispatch(
+          updateTokenBalance({
+            tokenName,
+            tokenBalance,
+            addressIsDefaultAccount,
+            address
+          })
+        );
+      }
     });
   });
   dispatch(syncTokenBalances$.fulfilled());
@@ -278,7 +282,7 @@ const getDefaultAccountTokenAllowanceForMarket = createAction(
       web3.eth.defaultAccount,
       window.contracts.market.address
     ),
-  (tokenName, spenderAddress) => ({ tokenName, spenderAddress })
+  (tokenName) => ({ tokenName, spenderAddress: window.contracts.market.address })
 );
 
 export const TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN =
@@ -373,7 +377,8 @@ const actions = {
   setTokenAllowanceTrustEpic,
   getDefaultAccountTokenAllowanceForAddress,
   setAllowance,
-  syncTokenBalances
+  syncTokenBalances,
+  getDefaultAccountTokenAllowanceForMarket
 };
 
 const reducer = handleActions(

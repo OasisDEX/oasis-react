@@ -7,7 +7,6 @@ import { fulfilled } from '../../utils/store';
 import web3 from '../../bootstrap/web3';
 import accounts from '../selectors/accounts';
 import { getTimestamp } from '../../utils/time';
-import { TIMER_DEFAULT_INTERVAL_MS } from './timers';
 import transactions from '../selectors/transactions';
 
 export const DEFAULT_GAS_LIMIT = '10000000';
@@ -139,8 +138,8 @@ const addTransactionEpic = ({ txType, txHash, txMeta, txDispatchedTimestamp, txS
                 txRejectedBlockNumber: txReceipt.blockNumber,
                 txStatus: TX_STATUS_REJECTED,
                 txGasCost: txReceipt.gasCost,
-
-            };
+                txEndTimestamp: getTimestamp()
+              };
               dispatch(
                 addTransaction.rejected(payload)
               );

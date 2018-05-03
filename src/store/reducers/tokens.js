@@ -15,6 +15,8 @@ import tokens from '../selectors/tokens';
 import offersReducer from './offers';
 import offers from '../selectors/offers';
 import { STATUS_PRISTINE } from './platform';
+import { createPromiseActions } from '../../utils/createPromiseActions';
+import balancesReducer from './balances';
 
 const initialState = Immutable.fromJS({
   allTokens: [
@@ -109,6 +111,9 @@ const setActiveTradingPair = createAction(
 
 const setActiveTradingPairEpic = (args, sync = true) => (dispatch, getState) => {
   const previousActiveTradingPair = tokens.activeTradingPair(getState());
+  if(previousActiveTradingPair) {
+    dispatch(getActiveTradingPairAllowanceStatus());
+  }
   if (previousActiveTradingPair === null || previousActiveTradingPair.baseToken !== args.baseToken || previousActiveTradingPair.quoteToken !== args.quoteToken) {
     dispatch(setActiveTradingPair(args));
     const currentActiveTradingPair = tokens.activeTradingPair(getState());
@@ -134,11 +139,39 @@ const denotePrecision = () => (dispatch, getState) => {
   // BigNumber.config({ DECIMAL_PLACES: precision });
 };
 
+
+const getActiveTradingPairAllowanceStatus$ = createPromiseActions('TOKENS/GET_ACTIVE_TRADING_PAIR_ALLOWANCE_STATUS');
+
+const getActiveTradingPairAllowanceStatus = () => async (dispatch, getState) => {
+
+  dispatch(
+    getActiveTradingPairAllowanceStatus$.pending()
+  );
+  const { baseToken , quoteToken } = tokens.activeTradingPair(getState());
+  await dispatch(
+    balancesReducer.actions.getDefaultAccountTokenAllowanceForMarket(
+      baseToken
+    )
+  );
+  await dispatch(
+    balancesReducer.actions.getDefaultAccountTokenAllowanceForMarket(
+      quoteToken
+    )
+  );
+
+  dispatch(
+    getActiveTradingPairAllowanceStatus$.fulfilled()
+  );
+
+};
+
+
 const actions = {
   Init,
   setDefaultTradingPair,
   setActiveTradingPairEpic,
   denotePrecision,
+  getActiveTradingPairAllowanceStatus
 };
 
 const reducer = handleActions({

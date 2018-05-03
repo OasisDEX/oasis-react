@@ -9,6 +9,7 @@ import { ETH_UNIT_ETHER } from '../../constants';
 import { fromJS } from 'immutable';
 import getOfferTakeBuyAndSellTokens from '../../utils/tokens/getOfferTakeBuyAndSellTokens';
 import tokens from './tokens';
+import tokenToBeAllowedForOffer from '../../utils/offers/tokenToBeAllowedForOffer';
 import offers from './offers';
 
 const offerTakes = s => s.get('offerTakes');
@@ -111,6 +112,16 @@ const isVolumeEmptyOrZero = createSelector(
   rootState => takeFormValuesSelector(rootState, 'volume'),
   activeFormVolume => activeFormVolume.length === 0 || web3.toBigNumber(activeFormVolume).eq(0)
 );
+const tokenToBeAllowed = createSelector(
+  activeOfferTakeType,
+  activeOfferTakeSellToken,
+  activeOfferTakeBuyToken,
+  (offerType, sellToken, buyToken) => {
+    console.log('------t-------->', tokenToBeAllowedForOffer({ offerType, sellToken, buyToken }));
+    return tokenToBeAllowedForOffer({ offerType, sellToken, buyToken })
+  }
+);
+
 const isVolumeGreaterThanOfferMax = createSelector(
   currentFormVolume,
   activeOfferTakeOfferData,
@@ -129,30 +140,30 @@ const isVolumeGreaterThanOfferMax = createSelector(
   }
 );
 
-const canBuyOffer = createSelector(
+const canFulfillOffer = createSelector(
   hasSufficientTokenAmount,
   rootState => transactions.canSendTransaction(rootState),
   markets.isBuyEnabled,
-  rootState =>
-    balances.tokenAllowanceTrustStatus(
+  rootState => {
+    return balances.tokenAllowanceTrustStatus(
       rootState,
       {
-        tokenName: activeOfferTakeBuyToken(rootState),
-        allowanceSubjectAddress: activeOfferTakeOfferOwner(rootState)
+        tokenName: tokenToBeAllowed(rootState),
+        allowanceSubjectAddress: markets.activeMarketAddress(rootState)
       }
-  ),
+  )},
   isVolumeEmptyOrZero,
   isVolumeGreaterThanOfferMax,
   (
     hasSufficientTokenAmount,
     canSendTransaction,
     isBuyEnabled,
-    isOfferOwnerTrusted,
+    istTokenEnabled,
     isVolumeZero,
     isVolumeGreaterThanOfferMax
   ) => {
 
-    if (isVolumeZero|| isVolumeGreaterThanOfferMax || !canSendTransaction || !isBuyEnabled || !isOfferOwnerTrusted ) {
+    if (isVolumeZero|| isVolumeGreaterThanOfferMax || !canSendTransaction || !isBuyEnabled || [false, null].includes(istTokenEnabled) ) {
       return false;
     } else {
       return hasSufficientTokenAmount;
@@ -180,6 +191,29 @@ const gasEstimatePending = createSelector(
 );
 
 
+const getActiveOfferTakeAllowanceStatus = createSelector(
+  rootState => {
+    return balances.tokenAllowanceStatusForActiveMarket(
+      rootState, {
+        tokenName: tokenToBeAllowed(rootState)
+      }
+    );
+  },
+  status => Boolean(status)
+);
+
+const isActiveOfferTakeBestOffer = createSelector(
+  activeOfferTakeType,
+  activeOfferTakeOfferId,
+  offers.activeTradingPairBestBuyOfferId,
+  offers.activeTradingPairBestSellOfferId,
+  (takeType, offerId, bestBuyOfferId, bestSellOfferId) => {
+    switch (takeType) {
+      case TAKE_BUY_OFFER:  return offerId.toString() === bestBuyOfferId;
+      case TAKE_SELL_OFFER: return offerId.toString() === bestSellOfferId;
+    }
+  }
+);
 
 export default {
   state: offerTakes,
@@ -191,7 +225,7 @@ export default {
   activeOfferTakeBuyToken,
   activeOfferTakeSellToken,
   activeOfferTakeOfferOwner,
-  canBuyOffer,
+  canFulfillOffer,
   isOfferBelowLimit,
   takeFormValuesSelector,
   hasSufficientTokenAmount,
@@ -200,5 +234,8 @@ export default {
   isVolumeEmptyOrZero,
   isOfferActive,
   checkingIfOfferIsActive,
-  gasEstimatePending
+  gasEstimatePending,
+  getActiveOfferTakeAllowanceStatus,
+  isActiveOfferTakeBestOffer,
+  tokenToBeAllowed
 };

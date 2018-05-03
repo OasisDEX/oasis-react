@@ -11,10 +11,12 @@ import styles from './OasisMarketHistory.scss';
 import CSSModules from 'react-css-modules';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import createEtherscanTransactionLink from '../utils/createEtherscanTransactionLink';
 
 const propTypes = PropTypes && {
   activeTradingPair: PropTypes.object.isRequired,
   trades: ImmutablePropTypes.list.isRequired,
+  activeNetworkName: PropTypes.string
 };
 const defaultProps = {};
 
@@ -29,8 +31,16 @@ const colsDefinition = (baseToken, quoteToken) => {
 };
 
 class OasisMarketHistory extends PureComponent {
+
+  static onRowClick({ transactionHash }, { activeNetworkName }) {
+    window.open(
+      createEtherscanTransactionLink({ activeNetworkName, transactionHash }), '_blank'
+    );
+    window.focus();
+  }
+
   render() {
-    const { trades, activeTradingPair: { baseToken, quoteToken } } = this.props;
+    const { activeNetworkName, trades, activeTradingPair: { baseToken, quoteToken } } = this.props;
     const sortedTrades = orderByTimestamp(trades.toJSON(), DESCENDING);
 
     const toHistoricalTrades = (tradeHistoryEntry) => {
@@ -45,6 +55,7 @@ class OasisMarketHistory extends PureComponent {
       }
 
       return {
+        transactionHash: tradeHistoryEntry.transactionHash,
         date: moment.unix(tradeHistoryEntry.timestamp).format('DD-MM-HH:mm'),
         tradeType: <OasisTradeType order={tradeHistoryEntry} baseCurrency={baseToken}/>,
         baseAmount: formatAmount(baseAmount, true),
@@ -60,9 +71,12 @@ class OasisMarketHistory extends PureComponent {
     return (
       <OasisWidgetFrame heading={`MARKET HISTORY (${sortedTrades.length})`}>
         <OasisTable
+          onRowClick={OasisMarketHistory.onRowClick}
           className={styles.table}
           rows={marketHistory}
-          col={colsDefinition(baseToken, quoteToken)}/>
+          col={colsDefinition(baseToken, quoteToken)}
+          metadata={{ activeNetworkName }}
+        />
       </OasisWidgetFrame>
     );
   }

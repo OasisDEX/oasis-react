@@ -20,6 +20,7 @@ import OasisTakeOfferModalWrapper  from './OasisTakeOfferModal';
 import offerTakes from '../store/selectors/offerTakes';
 import OasisMakeBuyOfferWrapper  from './OasisMakeBuyOffer';
 import OasisMakeSellOfferWrapper  from './OasisMakeSellOffer';
+import network from '../store/selectors/network';
 import {FlexBox} from "../components/FlexBox";
 
 const propTypes = PropTypes && {
@@ -54,6 +55,7 @@ export class OasisTradeOrdersWrapper extends PureComponent {
       sellOfferCount,
       buyOffers,
       sellOffers,
+      activeNetworkName,
       actions: {
         cancelOffer,
         setOfferTakeModalOpen,
@@ -101,6 +103,7 @@ export class OasisTradeOrdersWrapper extends PureComponent {
           trades={tradesList}
           activeTradingPair={activeTradingPair}
           initialMarketHistoryLoaded={initialMarketHistoryLoaded}
+          activeNetworkName={activeNetworkName}
         />
       </FlexBox>
     );
@@ -120,7 +123,8 @@ export function mapStateToProps(state) {
     sellOffers: offers.activeTradingPairSellOffers(state),
     activeOfferTakeType: offerTakes.activeOfferTakeType(state),
     isOfferTakeModalOpen: offerTakes.isOfferTakeModalOpen(state),
-    activeOfferTake: offerTakes.activeOfferTake(state)
+    activeOfferTake: offerTakes.activeOfferTake(state),
+    activeNetworkName: network.getActiveNetworkName(state),
 
   };
 }

@@ -14,7 +14,7 @@ const defaultProps = {};
 class OasisOfferTakeWarningBox extends PureComponent {
   render() {
     return (
-      <InfoBox color="danger" className={styles.base}>
+      <InfoBox className={styles.base}>
         <InfoBoxBody>
           If someone (partially) fills this order before you do, your offer may only be partially filled or even denied,
           in which case unused funds will be refunded to your balance and allowance.

@@ -31,6 +31,10 @@ const initialState = fromJS({
   loadingSellOffers: {},
   loadingBuyOffers: {},
   offersInitialized: false,
+  activeTradingPairBestOfferId : {
+    sell: null,
+    buy: null
+  }
 });
 
 
@@ -450,7 +454,7 @@ const loadSellOffersEpic = (offerCount, sellToken, buyToken) => async (dispatch)
   dispatch(loadSellOffers.pending(sellOffersTradingPair));
   while (offerCount.sellOfferCount) {
     dispatch(syncOffer(currentSellOfferId));
-    currentSellOfferId = (await dispatch(getWorseOffer(currentSellOfferId))).value.toNumber();
+    currentSellOfferId = (await dispatch(getWorseOffer(currentSellOfferId))).value.toNumber()
     --offerCount.sellOfferCount;
     if (!offerCount.sellOfferCount) {
       dispatch(loadSellOffers.fulfilled(sellOffersTradingPair));
@@ -799,11 +803,39 @@ const initOffersEpic = () => (dispatch, getState) => {
   dispatch(initOffers(initialOffersData));
 };
 
+
+const setActiveTradingPairBestOfferIds = createAction('OFFERS/SET_ACTIVE_TRADING_PAIR_BEST_OFFER_IDS',
+  ({ bestBuyOfferId, bestSellOfferId }) => ({ bestBuyOfferId, bestSellOfferId })
+);
+const getBestOfferIdsForActiveTradingPairEpic = () => async (dispatch, getState) => {
+  const { baseToken, quoteToken } = tokens.activeTradingPair(getState());
+  const bestBuyOfferId = (
+    await
+      dispatch(
+        getBestOffer(quoteToken, baseToken,
+        )
+    )
+  ).value;
+
+  const bestSellOfferId = (
+    await
+      dispatch(
+        getBestOffer(baseToken, quoteToken
+        )
+      )
+  ).value;
+
+  dispatch(
+    setActiveTradingPairBestOfferIds({
+      bestBuyOfferId: bestBuyOfferId.toString(), bestSellOfferId: bestSellOfferId.toString()
+    })
+  );
+};
+
+
 const actions = {
   Init,
   initOffersEpic,
-  // LogTakeToTrade,
-  // GetBlockNumberOfTheMostRecentBlock,
   FetchTradesIssuedForAddress,
   FetchTradesAcceptedForAddress,
   ListenForTheNewSortedOffers,
@@ -811,7 +843,8 @@ const actions = {
   cancelOfferEpic,
   syncOffersEpic,
   subscribeOffersEventsEpic,
-  checkOfferIsActive
+  checkOfferIsActive,
+  getBestOfferIdsForActiveTradingPairEpic
 };
 
 const reducer = handleActions({
@@ -925,6 +958,13 @@ const reducer = handleActions({
 
       }
     },
+  [setActiveTradingPairBestOfferIds]:
+    (state, {payload: { bestBuyOfferId, bestSellOfferId }}) =>
+      state
+        .setIn(['activeTradingPairBestOfferId', 'bestBuyOfferId'], bestBuyOfferId)
+        .setIn(['activeTradingPairBestOfferId', 'bestSellOfferId'], bestSellOfferId)
+
+
 }, initialState);
 
 export default {

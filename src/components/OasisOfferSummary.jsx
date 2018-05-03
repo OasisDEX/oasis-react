@@ -10,42 +10,52 @@ import OasisIsTokenTradingEnabledByUserWrapper from "../containers/OasisIsTokenT
 import InfoBox from "./InfoBox";
 import InfoBoxBody from "./InfoBoxBody";
 import FlexBox from "./FlexBox";
+import tokenToBeAllowedForOffer from "../utils/offers/tokenToBeAllowedForOffer";
 
 const propTypes = PropTypes && {
+  offerType: PropTypes.string.isRequired,
   sellToken: PropTypes.string.isRequired,
   buyToken: PropTypes.string.isRequired,
   amountSold: PropTypes.string.isRequired,
   amountReceived: PropTypes.string.isRequired,
-  gasEstimateInfo: ImmutablePropTypes.map.isRequired
+  gasEstimateInfo: ImmutablePropTypes.map.isRequired,
+  isTokenTradingEnabled: PropTypes.bool.isRequired
 };
-const defaultProps = {};
+const defaultProps = {
+};
 
 export class OasisOfferSummary extends PureComponent {
   renderGasEstimate() {
-    const {
-      gasEstimateInfo,
-      transactionGasCostEstimate,
-      isGasEstimatePending,
-      gasEstimateError
-    } = this.props;
+    const { gasEstimateInfo } = this.props;
 
-    console.log(gasEstimateInfo);
-    if (isGasEstimatePending || transactionGasCostEstimate) {
-      return (
-        <OasisGasPriceWrapper
-          gasEstimateError={gasEstimateError}
-          gasEstimatePending={isGasEstimatePending}
-          transactionGasCostEstimate={transactionGasCostEstimate}
-          className={styles.detailsTradingCol}
-        />
-      );
-    } else {
-      return null;
-    }
+    const gasEstimatePending = gasEstimateInfo.get("isGasEstimatePending");
+    const transactionGasCostEstimate = gasEstimateInfo.get(
+      "transactionGasCostEstimate"
+    );
+    return (
+      <OasisGasPriceWrapper
+        gasEstimateError={gasEstimateInfo.get("gasEstimateError")}
+        gasEstimatePending={gasEstimatePending}
+        transactionGasCostEstimate={transactionGasCostEstimate}
+        className={styles.detailsTradingCol}
+      />
+    );
+  }
+
+  static renderGasEstimateNotEnabledInfo() {
+    return (<div>Enable trading to unlock gas est.</div>);
   }
 
   render() {
-    const { sellToken, buyToken, amountSold, amountReceived } = this.props;
+    const {
+      sellToken,
+      buyToken,
+      amountSold,
+      amountReceived,
+      offerType,
+      isTokenTradingEnabled
+    } = this.props;
+
     return (
       <div className={styles.base}>
         <InfoBox vertical>
@@ -59,9 +69,15 @@ export class OasisOfferSummary extends PureComponent {
               />
               <div>
                 <OasisIsTokenTradingEnabledByUserWrapper
-                  tokenName={sellToken}
+                  tokenName={tokenToBeAllowedForOffer({
+                    buyToken,
+                    sellToken,
+                    offerType
+                  })}
                 />
-                {this.renderGasEstimate()}
+                {isTokenTradingEnabled
+                  ? this.renderGasEstimate()
+                  : OasisOfferSummary.renderGasEstimateNotEnabledInfo()}
               </div>
             </FlexBox>
           </InfoBoxBody>

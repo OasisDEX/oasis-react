@@ -1,18 +1,17 @@
 /* global shallow describe it expect */
 /* eslint-disable import/first */
 import React from 'react';
-import { fromJS } from 'immutable';
-
-import WithTransactionWatchWrapper from './WithTransactionWatch';
+import Immutable from 'immutable';
 
 import {
+  OasisNotTheBestOfferPriceWarningWrapper,
   mapStateToProps,
   mapDispatchToProps
-} from './WithTransactionWatch';
+} from './OasisNotTheBestOfferPriceWarning';
 import { shallow } from 'enzyme';
 
-describe('(Container) WithTransactionWatch', () => {
-  const state = fromJS(global.storeMock);
+describe('(Container) OasisNotTheBestOfferPriceWarning', () => {
+  const state = Immutable.fromJS({});
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
   const props = {
@@ -31,7 +30,7 @@ describe('(Container) WithTransactionWatch', () => {
 
   it('should render', () => {
     const wrapper = shallow(
-      <WithTransactionWatchWrapper {...props}/>
+      <OasisNotTheBestOfferPriceWarningWrapper {...props}/>
     );
     expect(wrapper).toMatchSnapshot();
   });
