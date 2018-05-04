@@ -36,6 +36,6 @@ Object {
 exports[`(Container) OasisTokenTransfer will receive right props 1`] = `
 Object {
   "selectedToken": "MKR",
-  "transaction": undefined,
+  "transactionReceipt": undefined,
 }
 `;

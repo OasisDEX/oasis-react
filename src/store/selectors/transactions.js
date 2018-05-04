@@ -111,7 +111,7 @@ const getTransactionByTxHash = createSelector(
 const getTransactionByTimestampAndType = createSelector(
   transactionsList,
   reselect.getProps,
-  (txList, { txType, txTimestamp }) =>
+  (txList, { txType, txTimestamp } = {}) =>
     txList.find(tx => tx.get('txType') === txType && tx.getIn(['txStats', 'txStartTimestamp']) === txTimestamp)
 );
 

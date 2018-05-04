@@ -5,11 +5,7 @@ import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import balances from "../store/selectors/balances";
-import balancesReducer, {
-  TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED,
-  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED,
-  TOKEN_ALLOWANCE_TRUST_STATUS_LOADING
-} from "../store/reducers/balances";
+import balancesReducer from "../store/reducers/balances";
 import platform from "../store/selectors/platform";
 import OasisButton from "../components/OasisButton";
 import { InfoBox } from "../components/InfoBox";
@@ -19,6 +15,11 @@ import OasisTransactionStatusWrapper from "./OasisTransactionStatus";
 import { TX_ALLOWANCE_TRUST_TOGGLE } from "../store/reducers/transactions";
 import network from "../store/selectors/network";
 import FlexBox from "../components/FlexBox";
+import {
+  TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED,
+  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED,
+  TOKEN_ALLOWANCE_TRUST_STATUS_LOADING,
+} from '../constants';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,

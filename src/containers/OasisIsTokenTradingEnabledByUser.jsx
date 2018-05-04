@@ -17,7 +17,6 @@ const propTypes = PropTypes && {
 export class OasisIsTokenTradingEnabledByUserWrapper extends PureComponent {
   componentDidMount() {
     const { tokenName,  isTokenTradingEnabledByUser } = this.props;
-    console.log(this.props);
     if (null === isTokenTradingEnabledByUser) {
       this.props.actions.getAllowanceStatus(tokenName)
     }

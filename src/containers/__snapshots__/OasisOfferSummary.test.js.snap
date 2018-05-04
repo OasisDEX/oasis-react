@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisOfferSummary should render 1`] = `
+<OasisInsufficientAmountOfToken
+  tokenName="W-ETH"
+/>
+`;
+
+exports[`(Container) OasisOfferSummary will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisOfferSummary will receive right props 1`] = `
+Object {
+  "gasEstimateInfo": Immutable.Map {
+    isGasEstimatePending: null,
+    transactionGasCostEstimate: null,
+    transactionGasCostEstimateError: null,
+},
+  "hasSufficientTokenAmount": undefined,
+  "isTokenTradingEnabled": false,
+  "offerBuyAndSellTokens": Immutable.Map {
+    buyToken: null,
+    sellToken: null,
+},
+  "offerFormValues": null,
+}
+`;

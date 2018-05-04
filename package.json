@@ -90,7 +90,11 @@
       "/blueprints/"
     ],
     "collectCoverage": false,
-    "coverageReporters": ["json", "lcov", "text"],
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text"
+    ],
     "notify": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"

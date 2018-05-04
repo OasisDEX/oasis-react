@@ -18,7 +18,7 @@ import offerTakes from "../store/selectors/offerTakes";
 import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from "../store/reducers/offerTakes";
 
 const propTypes = PropTypes && {
-  offerType: PropTypes.oneOf(TAKE_BUY_OFFER, TAKE_SELL_OFFER),
+  offerType: PropTypes.oneOf([TAKE_BUY_OFFER, TAKE_SELL_OFFER]),
   offerFormValues: ImmutablePropTypes.map.isRequired,
   offerBuyAndSellTokens: ImmutablePropTypes.map.isRequired,
   gasEstimateInfo: ImmutablePropTypes.map.isRequired,
@@ -56,6 +56,7 @@ export class OasisOfferSummaryWrapper extends PureComponent {
 }
 
 export function mapStateToProps(state, { offerType }) {
+  console.log({offerType})
   return {
     offerFormValues: getOfferFormValuesByOfferType(state, offerType),
     offerBuyAndSellTokens: getOfferBuyAndSellTokenByOfferType(state, offerType),

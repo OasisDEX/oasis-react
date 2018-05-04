@@ -2,12 +2,13 @@ import { createSelector } from 'reselect';
 import BigNumber from 'bignumber.js';
 import reselect from '../../utils/reselect';
 import web3 from '../../bootstrap/web3';
-import { ETH_UNIT_ETHER } from '../../constants';
 import {
+  ETH_UNIT_ETHER,
   TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED,
-  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED,
-  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN,
-} from '../reducers/balances';
+  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED, TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN,
+} from '../../constants';
+
+
 import tokens from './tokens';
 
 const balances = s => s.get('balances');

@@ -31,7 +31,6 @@ const linkStyle = {
 
 class EtherscanLink extends PureComponent {
   render() {
-    console.log('EtherscanLink', this.props)
     const { txHash, label, networkName, address } = this.props;
     const url =  createEtherscanTransactionLink({
       activeNetworkName: networkName,

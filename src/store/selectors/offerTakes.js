@@ -31,18 +31,14 @@ const activeOfferTake = createSelector(
   activeOfferTakeOfferId,
   tokens.activeTradingPair,
   (rootState, offerTakeType, offerId, activeTradingPair) => {
-
     const { baseToken, quoteToken } = activeTradingPair;
-
     let offer = null;
     switch (offerTakeType) {
       case TAKE_BUY_OFFER: {
-        offer = offers.activeTradingPairBuyOffers(rootState).find(offer => offer.id === offerId);
+        offer = offers.activeTradingPairBuyOffers(rootState).find(offer => fromJS(offer).get("id") === offerId);
       }
         break;
       case TAKE_SELL_OFFER: {
-        const sellOffers = offers.activeTradingPairSellOffers(rootState);
-        console.log(sellOffers);
         offer = offers.activeTradingPairSellOffers(rootState).find(offer => fromJS(offer).get("id") === offerId);
       }
         break;
@@ -113,7 +109,6 @@ const currentFormVolume = createSelector(
 const isVolumeEmptyOrZero = createSelector(
   rootState => takeFormValuesSelector(rootState, 'volume'),
   activeFormVolume => {
-    console.log({activeFormVolume});
     return !activeFormVolume || web3.toBigNumber(activeFormVolume).eq(0);
   }
 );

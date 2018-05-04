@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisTransactionStatus should render 1`] = `
+<div>
+  <FlexBox
+    alignConent="space-around"
+    alignContent="stretch"
+    alignItems="stretch"
+    className=""
+    justifyContent="normal"
+    vertical={false}
+    wrap={false}
+  >
+    <InfoBox
+      className=""
+      color="default"
+      justifyContent="normal"
+      size="md"
+      vertical={false}
+    >
+      <InfoBoxBody
+        className="no-padding"
+        color="default"
+        vertical={false}
+      >
+        <StatusPictogram />
+      </InfoBoxBody>
+    </InfoBox>
+    <InfoBox
+      className=""
+      color="default"
+      justifyContent="normal"
+      size="md"
+      vertical={false}
+    >
+      <InfoBoxBody
+        className="no-padding"
+        color="default"
+        vertical={false}
+      >
+        <Connect(WithTimerWrapper)
+          transaction={
+            Immutable.Map {
+              txType: "OFFER_TAKES/TAKE_BUY_OFFER",
+            }
+          }
+        />
+      </InfoBoxBody>
+    </InfoBox>
+    <InfoBox
+      className=""
+      color="default"
+      justifyContent="normal"
+      size="md"
+      vertical={false}
+    >
+      <InfoBoxBody
+        className="no-padding"
+        color="default"
+        vertical={false}
+      >
+        <TransactionStatus
+          transaction={
+            Immutable.Map {
+              txType: "OFFER_TAKES/TAKE_BUY_OFFER",
+            }
+          }
+        />
+      </InfoBoxBody>
+    </InfoBox>
+  </FlexBox>
+</div>
+`;
+
+exports[`(Container) OasisTransactionStatus will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisTransactionStatus will receive right props 1`] = `
+Object {
+  "transaction": undefined,
+}
+`;

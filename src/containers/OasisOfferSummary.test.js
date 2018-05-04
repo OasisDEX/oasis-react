@@ -1,7 +1,7 @@
 /* global shallow describe it expect */
 /* eslint-disable import/first */
 import React from 'react';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 
 import {
   OasisOfferSummaryWrapper,
@@ -9,14 +9,19 @@ import {
   mapDispatchToProps
 } from './OasisOfferSummary';
 import { shallow } from 'enzyme';
+import { TOKEN_MAKER, TOKEN_WRAPPED_ETH } from '../constants';
 
 describe('(Container) OasisOfferSummary', () => {
-  const state = Immutable.fromJS({});
-  const initialProps = mapStateToProps(state);
+  const state = fromJS(global.storeMock);
+  const initialProps = mapStateToProps(state, {});
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,
-    ...initialProps
+    ...initialProps,
+    offerFormValues: fromJS({}),
+    hasSufficientTokenAmount: false,
+    tokenName: TOKEN_MAKER,
+    offerBuyAndSellTokens: fromJS({ buyToken: TOKEN_MAKER, sellToken: TOKEN_WRAPPED_ETH })
   };
 
   it('will receive right props', () => {

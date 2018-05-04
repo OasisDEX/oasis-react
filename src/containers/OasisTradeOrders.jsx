@@ -25,6 +25,8 @@ import {FlexBox} from "../components/FlexBox";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
+  isOfferTakeModalOpen: PropTypes.bool,
+  activeTradingPair: PropTypes.object.isRequired
 };
 
 
@@ -35,12 +37,11 @@ export class OasisTradeOrdersWrapper extends PureComponent {
     const {
       isOfferTakeModalOpen,
       activeOfferTakeType,
-      activeOfferTake
     } = this.props;
 
     return isOfferTakeModalOpen && (
       <OasisTakeOfferModalWrapper
-        activeOfferTake={activeOfferTake}
+        // activeOfferTake={activeOfferTake}
         offerTakeType={activeOfferTakeType}
       />
     )

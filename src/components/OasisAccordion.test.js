@@ -8,9 +8,8 @@ import OasisAccordion from './OasisAccordion';
 describe('(Component) OasisAccordion', () => {
   it('should render', () => {
     const props = {
-      children: (
-        <span>test</span>
-      )
+      heading: (<div>This this a heading!</div>),
+      children: <div>content</div>
     };
     const wrapper = shallow(
       <OasisAccordion {...props}/>

@@ -320,6 +320,13 @@ Array [
   },
   Object {
     "payload": Object {
+      "thunk": [Function],
+      "thunkName": "",
+    },
+    "type": "thunk",
+  },
+  Object {
+    "payload": Object {
       "args": Array [],
       "thunk": [Function],
       "thunkName": "initializeOfferTakeFormEpic",

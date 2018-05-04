@@ -1,10 +1,8 @@
 /* eslint-disable no-unused-vars */
 import transactions, {
-  TX_STATUS_AWAITING_CONFIRMATION,
-  TX_STATUS_AWAITING_USER_ACCEPTANCE,
-  TX_STATUS_CANCELLED_BY_USER,
-  TX_STATUS_CONFIRMED
-} from "../../store/reducers/transactions";
+  TX_STATUS_AWAITING_CONFIRMATION, TX_STATUS_AWAITING_USER_ACCEPTANCE,
+  TX_STATUS_CANCELLED_BY_USER, TX_STATUS_CONFIRMED,
+} from '../../store/reducers/transactions';
 import { fromJS } from "immutable";
 import { getTimestamp } from "../time";
 

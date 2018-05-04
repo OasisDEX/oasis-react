@@ -13,10 +13,6 @@ exports[`(Container) OasisTradeOrders should render 1`] = `
   <Connect(OasisMakeSellOffer) />
   <div>
     <Connect(OasisTakeOfferModal)
-      activeOfferTake={
-        Immutable.Map {
-        }
-      }
       offerTakeType="OFFER_TAKES/TAKE_SELL_OFFER"
     />
   </div>
@@ -77,6 +73,7 @@ exports[`(Container) OasisTradeOrders should render 1`] = `
     }
   />
   <OasisMarketHistory
+    activeNetworkName="kovan"
     activeTradingPair={
       Object {
         "baseToken": "MKR",
@@ -106,6 +103,7 @@ Object {
 
 exports[`(Container) OasisTradeOrders will receive right props 1`] = `
 Object {
+  "activeNetworkName": "kovan",
   "activeOfferTake": Immutable.Map {
 },
   "activeOfferTakeType": "OFFER_TAKES/TAKE_SELL_OFFER",

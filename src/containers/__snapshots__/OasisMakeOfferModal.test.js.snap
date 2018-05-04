@@ -30,16 +30,6 @@ exports[`(Container) OasisMakeOfferModal should render 1`] = `
     <Connect(ReduxForm)
       offerMakeType="OFFER_MAKES/MAKE_BUY_OFFER"
     />
-    <Connect(WithTransactionWatchWrapper)
-      amountReceived="1.00000"
-      amountSold="1.00000"
-      buyToken="MKR"
-      hasSufficientTokenAmount={false}
-      isTransactionValid={true}
-      offerId={null}
-      sellToken="DAI"
-      transactionSubectType="TRANSACTIONS/GROUP__OFFERS/OFFER_MAKE"
-    />
     <Connect(SetTokenAllowanceTrust)
       allowanceSubjectAddress="0x8cf1cab422a0b6b554077a361f8419cdf122a9f9"
       tokenName="MKR"

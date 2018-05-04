@@ -28,7 +28,7 @@ export class OasisNotTheBestOfferPriceWarningWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
-    bestBuyOfferId: offers.activeTradingPairBestBuyOfferId,
+    bestBuyOfferId: offers.activeTradingPairBestBuyOfferId(state),
     bestSellOfferId: offers.activeTradingPairBestSellOfferId(state),
     isBestOffer: offerTakes.isActiveOfferTakeBestOffer(state)
   };

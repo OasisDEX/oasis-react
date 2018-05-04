@@ -20,7 +20,7 @@ import InfoBoxBody from '../components/InfoBoxBody';
 const propTypes = PropTypes && {
   actions: PropTypes.object,
   txTimestamp: PropTypes.number.isRequired,
-  txType: PropTypes.string.isRequired,
+  txType: PropTypes.string,
 };
 
 export class OasisTransactionStatusWrapper extends PureComponent {
@@ -76,7 +76,7 @@ export class OasisTransactionStatusWrapper extends PureComponent {
 
 export function mapStateToProps(state, { txTimestamp, txType }) {
   return {
-    transaction: transactions.getTransactionByTimestampAndType(state, { txTimestamp, txType })
+    transaction: transactions.getTransactionByTimestampAndType(state,  { txTimestamp, txType })
   };
 }
 export function mapDispatchToProps(dispatch) {

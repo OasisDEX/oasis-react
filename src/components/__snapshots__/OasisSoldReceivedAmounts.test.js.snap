@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisSoldReceivedAmounts should render 1`] = `
+<div>
+  <FlexBox
+    alignContent="stretch"
+    alignItems="stretch"
+    className=""
+    justifyContent="normal"
+    vertical={false}
+    wrap={false}
+  >
+    <TokenReceivedAmount
+      tokenAmount="1"
+      tokenName="MKR"
+    />
+  </FlexBox>
+  <FlexBox
+    alignContent="stretch"
+    alignItems="stretch"
+    className=""
+    justifyContent="normal"
+    vertical={false}
+    wrap={false}
+  >
+    <TokenSoldAmount
+      tokenAmount="1"
+      tokenName="W-ETH"
+    />
+  </FlexBox>
+</div>
+`;

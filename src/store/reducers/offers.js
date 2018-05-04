@@ -31,10 +31,7 @@ const initialState = fromJS({
   loadingSellOffers: {},
   loadingBuyOffers: {},
   offersInitialized: false,
-  activeTradingPairBestOfferId : {
-    sell: null,
-    buy: null
-  }
+  activeTradingPairBestOfferId : {}
 });
 
 

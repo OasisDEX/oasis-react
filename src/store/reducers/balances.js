@@ -6,7 +6,11 @@ import * as BigNumber from "bignumber.js";
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import { fulfilled } from "../../utils/store";
 import {
-  ETH_UNIT_ETHER, ETH_UNIT_WEI,
+  ETH_UNIT_ETHER,
+  ETH_UNIT_WEI,
+  TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED,
+  TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED_MIN_MAX,
+  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED,
 } from '../../constants';
 import web3, { web3p } from "../../bootstrap/web3";
 import balances from "../selectors/balances";
@@ -207,8 +211,7 @@ const subscribeTokenTransfersEventsEpic = (
     /**
      * Listen to all erc20 transfer events from now.
      */
-    tokenContract
-      .Transfer(
+    tokenContract.Transfer(
         {},
         { fromBlock: network.latestBlockNumber(getState()), toBlock: "latest" }
       )
@@ -285,20 +288,6 @@ const getDefaultAccountTokenAllowanceForMarket = createAction(
   (tokenName) => ({ tokenName, spenderAddress: window.contracts.market.address })
 );
 
-export const TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN =
-  "0xffffffffffffffffffffffffffffffff";
-export const TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MAX =
-  "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-export const TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED_MIN_MAX = 0;
-export const TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED = true;
-export const TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED = false;
-export const TOKEN_ALLOWANCE_TRUST_STATUS_NOT_SET = undefined;
-export const TOKEN_ALLOWANCE_TRUST_STATUS_LOADING = null;
-
-export const TOKEN_ALLOWANCE_TRUST_SUBJECT_TYPE_MARKET =
-  "BALANCES/TOKEN_ALLOWANCE_TRUST_SUBJECT_TYPE_MARKET";
-export const TOKEN_ALLOWANCE_TRUST_SUBJECT_TYPE_ADDRESS =
-  "BALANCES/TOKEN_ALLOWANCE_TRUST_SUBJECT_TYPE_ADDRESS";
 
 const setTokenAllowanceTrustStatus$ = createPromiseActions(
   "BALANCES/SET_TOKEN_ALLOWANCE_TRUST_STATUS"
