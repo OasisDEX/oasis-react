@@ -49,6 +49,7 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
       offerMakeType: MAKE_BUY_OFFER,
       form: MAKE_BUY_OFFER_FORM_NAME
     };
+    console.log({formProps})
 
     return (
       <OasisWidgetFrame heading={`Buy ${baseToken}`} spaceForContent={true}>

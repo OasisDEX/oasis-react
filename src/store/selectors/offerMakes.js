@@ -20,7 +20,10 @@ const offerMakes = state => state.get('offerMakes');
 // );
 
 const currentFormValues = createSelector(
-    (rootState, formName) => makeFormValuesSelector(formName)(rootState, 'volume', 'price', 'total'),
+    (rootState, formName) => {
+      console.log('Y',{formName})
+      return makeFormValuesSelector(formName)(rootState, 'volume', 'price', 'total')
+    },
     formValues => formValues
 );
 
@@ -44,7 +47,7 @@ const activeOfferMakePure = createSelector(
     currentFormValues,
     (offerMakeFormName, activeTradingPair, tokenAddresses, {total, volume}) => {
         const {baseToken, quoteToken} = activeTradingPair.toJS ? activeTradingPair.toJS() : activeTradingPair;
-
+        console.log('!!!',{offerMakeFormName})
         const offerMakeType = {
             makeBuyOffer: MAKE_BUY_OFFER,
             makeSellOffer: MAKE_SELL_OFFER}[offerMakeFormName];

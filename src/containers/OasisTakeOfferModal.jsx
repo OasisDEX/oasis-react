@@ -28,7 +28,7 @@ import OasisNotTheBestOfferPriceWarningWrapper from "./OasisNotTheBestOfferPrice
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
-  offerTakeType: PropTypes.oneOf(TAKE_BUY_OFFER, TAKE_SELL_OFFER).isRequired,
+  offerTakeType: PropTypes.oneOf([TAKE_BUY_OFFER, TAKE_SELL_OFFER]).isRequired,
   actions: PropTypes.object.isRequired
 };
 
@@ -158,18 +158,6 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     if (prevBlockNumber !== currentBlockNumber) {
       this.props.actions.checkIfOfferIsActive();
     }
-
-    // if (isTransactionConfirmed(this.state)) {
-    //   setTimeout(() => {
-    //     this.props.actions.setOfferTakeModalClosed();
-    //   }, TIMER_DEFAULT_INTERVAL_MS);
-    // }
-
-    // if (this.props.isCurrentOfferActive === false) {
-    //   setTimeout(() => {
-    //     this.props.actions.setOfferTakeModalClosed();
-    //   }, TIMER_DEFAULT_INTERVAL_MS);
-    // }
   }
 }
 

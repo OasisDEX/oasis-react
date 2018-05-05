@@ -21,6 +21,8 @@ import modalStyles from '../styles/modules/_modal.scss';
 import styles from './OasisMakeOfferModal.scss';
 import CSSModules from 'react-css-modules';
 import OasisButton from "../components/OasisButton";
+import OasisOfferSummaryWrapper  from './OasisOfferSummary';
+import OasisOfferNotAvailable from '../components/OasisOfferNotAvailable';
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -77,21 +79,21 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
       quoteToken,
       offerMakeType,
       canMakeOffer,
-      marketAddress,
+      activeMarketAddress,
       sellToken,
       buyToken,
-      currentOfferMakeTransaction,
       // isCurrentTransactionValid,
       form,
       // offerMakeFormValues,
       // hasSufficientTokenAmount,
     } = this.props;
 
+    console.log({form})
+
     return (
       <ReactModal ariaHideApp={false} isOpen={true} className={modalStyles.modal}>
           <h4 className={styles.heading}>{getOfferTitle(offerMakeType)}</h4>
           <button
-            hidden={currentOfferMakeTransaction}
             className={modalStyles.closeModalBtn}
             onClick={this.onCancel}>×
           </button>
@@ -103,6 +105,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
             offerMakeType={offerMakeType}
             form={form}
           />
+          <OasisOfferSummaryWrapper offerType={offerMakeType}/>
           {/*<OasisTransactionDetailsWrapper*/}
               {/*transactionSubectType={TX_OFFER_MAKE}*/}
               {/*isTransactionValid={isCurrentTransactionValid}*/}
@@ -115,12 +118,18 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
               {/*hasSufficientTokenAmount={hasSufficientTokenAmount}*/}
             {/*/>*/}
           <SetTokenAllowanceTrustWrapper
-            allowanceSubjectAddress={marketAddress}
-            tokenName={buyToken}
+            onTransactionPending={() =>
+              this.setState({ lockCancelButton: true })
+            }
+            onTransactionCompleted={() =>
+              this.setState({ lockCancelButton: false })
+            }
+            onCancelCleanup={() => this.setState({ lockCancelButton: false })}
+            allowanceSubjectAddress={activeMarketAddress}
+            tokenName={sellToken}
           />
           <div
             className={styles.footer}
-            hidden={currentOfferMakeTransaction}
           >
             <OasisButton onClick={this.onCancel}>Cancel</OasisButton>
             <OasisButton disabled={!canMakeOffer} onClick={this.onBuyOffer}>
@@ -131,35 +140,18 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
       </ReactModal>
     );
   }
-
-  componentWillUpdate(nextProps) {
-    if (isTransactionConfirmed(nextProps.currentOfferMakeTransaction)) {
-      setTimeout(
-        () => {
-          this.props.actions.setOfferMakeModalClosed(this.props.offerMakeType);
-        }, 10000,
-      );
-    }
-  }
 }
 
 export function mapStateToProps(state, props) {
+  const formName = props.form;
   return {
-    activeOfferMake: offerMakes.activeOfferMakePure(state, props.form),
-    // activeOfferMakeType: offerMakes.activeOfferMakeType(state, props.form),
-    userBalances: balances.tokenBalances(state),
-    offerMakeFormValues: getFormValues(props.form)(state, 'total', 'volume', 'price'),
-    marketAddress: markets.activeMarketAddress(state),
+    // activeOfferMake: offerMakes.activeOfferMakePure(state, props.form),
+    activeMarketAddress: markets.activeMarketAddress(state),
     canMakeOffer: offerMakes.canMakeOffer(state, props.offerMakeType),
-    formErrors: getFormSyncErrors(props.form)(state),
     isCurrentTransactionValid: !offerMakes.isVolumeEmptyOrZero(state, props.offerMakeType),
-    buyToken: offerMakes.activeOfferMakeBuyToken(state, props.form),
-    sellToken: offerMakes.activeOfferMakeSellToken(state, props.form),
-    currentOfferMakeTransaction: transactions.getOfferTransaction(
-      state, { offerId: offerMakes.activeOfferMakeTxSubjectId(state) },
-    ),
-    isCurrentOfferActive: offerMakes.isOfferActive(state) === true,
-    hasSufficientTokenAmount: offerMakes.hasSufficientTokenAmount(state, props.offerMakeType),
+    buyToken: offerMakes.activeOfferMakeBuyToken(state, formName),
+    sellToken: offerMakes.activeOfferMakeSellToken(state, formName),
+    // hasSufficientTokenAmount: offerMakes.hasSufficientTokenAmount(state, props.offerMakeType),
   };
 }
 

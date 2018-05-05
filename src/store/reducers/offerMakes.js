@@ -3,7 +3,12 @@ import {fromJS} from 'immutable';
 import {createPromiseActions} from '../../utils/createPromiseActions';
 import offerMakes from '../selectors/offerMakes';
 import {change, formValueSelector, initialize} from 'redux-form/immutable';
-import transactionsReducer, {DEFAULT_GAS_LIMIT, TX_OFFER_MAKE, TX_STATUS_CANCELLED_BY_USER} from './transactions';
+import transactionsReducer, {
+  DEFAULT_GAS_LIMIT,
+  TX_OFFER_MAKE,
+  TX_OFFER_TAKE,
+  TX_STATUS_CANCELLED_BY_USER,
+} from './transactions';
 import web3 from '../../bootstrap/web3';
 import balances from '../selectors/balances';
 import {fulfilled, pending, rejected} from '../../utils/store';
@@ -16,7 +21,8 @@ import { getTimestamp } from '../../utils/time';
 
 import {defer} from '../deferredThunk';
 
-import {MAKE_BUY_OFFER, MAKE_SELL_OFFER} from 'constants'
+import {MAKE_BUY_OFFER, MAKE_SELL_OFFER} from 'constants';
+import { handleTransaction } from '../../utils/transactions/handleTransaction';
 
 const initialState = fromJS(
   {
@@ -84,7 +90,7 @@ const makeOffer = createPromiseActions('OFFER_MAKES/MAKE_OFFER');
 
 
 //TODO: To many duties at once. Offer form and offer making logic needlessly coupled here...
-const makeOfferEpic = (offerMakeType) => async (dispatch, getState) => {
+const makeOfferEpic = (offerMakeType, withCallbacks) => async (dispatch, getState) => {
 
   //TODO: Already refactored?
   dispatch(makeOffer.pending());
@@ -98,44 +104,13 @@ const makeOfferEpic = (offerMakeType) => async (dispatch, getState) => {
   };
 
 
-  try {
-
-    //TODO: why indirection?
-    //TODO: Not sure about error handling?
-    const pendingMakeOfferAction = dispatch(
-      makeOfferTransaction(makeOfferPayload)
-    );
-
-    pendingMakeOfferAction.then((e, transactionHash) => {
-      dispatch(
-        transactionsReducer.actions.addTransactionEpic({
-          txType: TX_OFFER_MAKE,
-          txMeta: { offerMakeType },
-          txHash: transactionHash,
-        }),
-      );
-    });
-
-  } catch (e) {
-    dispatch(
-      transactionsReducer.actions.addTransactionEpic({
-        txType: TX_OFFER_MAKE,
-        txMeta: { offerMakeType },
-      }),
-    );
-    dispatch(makeOffer.rejected());
-    dispatch(
-      transactionsReducer.actions.transactionCancelledByUser({
-        txType: TX_OFFER_MAKE,
-        txMeta: { offerMakeType },
-        txStatus: TX_STATUS_CANCELLED_BY_USER,
-        txStats: {
-          txEndBlockNumber: network.latestBlockNumber(getState()),
-          txEndTimestamp: getTimestamp(),
-        },
-      }),
-    );
-  }
+  return handleTransaction({
+    dispatch,
+    transactionDispatcher: () => dispatch(makeOfferTransaction(makeOfferPayload)),
+    transactionType: TX_OFFER_MAKE,
+    txMeta: { offerMakeType, makeOfferPayload },
+    withCallbacks
+  });
 };
 
 /**

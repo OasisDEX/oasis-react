@@ -14,7 +14,7 @@ const getUsersSoldAndReceivedAmounts = (offerType, offerFormValues) => {
   switch (offerType) {
     case TAKE_SELL_OFFER:
       return {
-        amountReceived: formatAmount(volumeBN, false.null, 5), amountSold: formatAmount(totalBN, false, null, 5),
+        amountReceived: formatAmount(volumeBN, false, null, 5), amountSold: formatAmount(totalBN, false, null, 5),
       };
     case TAKE_BUY_OFFER:
       return {
@@ -23,7 +23,7 @@ const getUsersSoldAndReceivedAmounts = (offerType, offerFormValues) => {
 
     case MAKE_SELL_OFFER:
       return {
-        amountSold: formatAmount(volumeBN, false.null, 5), amountReceived: formatAmount(totalBN, false, null, 5),
+        amountSold: formatAmount(volumeBN, false, null, 5), amountReceived: formatAmount(totalBN, false, null, 5),
       };
     case MAKE_BUY_OFFER:
       return {

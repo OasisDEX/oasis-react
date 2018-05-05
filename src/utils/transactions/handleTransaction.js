@@ -105,7 +105,6 @@ const withHandleTransaction = (updateState, transactionAction) => {
     })
   });
 
-  console.log(TX_STATUS_AWAITING_USER_ACCEPTANCE, Date.now());
   transactionAction().then(
     async ({ transactionConfirmationPromise, transactionHash }) => {
       updateState({

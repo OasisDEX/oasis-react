@@ -5,7 +5,7 @@ import { fromJS } from "immutable";
 import offerTakes from "./offerTakes";
 import offerMakes from "./offerMakes";
 import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from '../reducers/offerTakes';
-import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from '../../constants';
+import { MAKE_BUY_OFFER, MAKE_BUY_OFFER_FORM_NAME, MAKE_SELL_OFFER, MAKE_SELL_OFFER_FORM_NAME } from '../../constants';
 
 const isGasEstimatePending = createSelector(
   s => s,
@@ -93,8 +93,10 @@ const getOfferFormValuesByOfferType = createSelector((state, offerType) => {
       formValues = offerTakes.takeFormValuesSelector(state, ...fields);
       break;
     case MAKE_BUY_OFFER:
+      formValues = offerMakes.activeOfferMakePure(state, MAKE_BUY_OFFER_FORM_NAME);
+      break;
     case MAKE_SELL_OFFER:
-      formValues = offerMakes.activeOfferMakePure(state, ...fields);
+      formValues = offerMakes.activeOfferMakePure(state, MAKE_SELL_OFFER_FORM_NAME);
       break;
   }
   return fromJS(formValues);
