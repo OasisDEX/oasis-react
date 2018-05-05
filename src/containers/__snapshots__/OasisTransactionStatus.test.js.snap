@@ -3,10 +3,10 @@
 exports[`(Container) OasisTransactionStatus should render 1`] = `
 <div>
   <FlexBox
-    alignConent="space-around"
+    alignConent="stretch"
     alignContent="stretch"
     alignItems="stretch"
-    className=""
+    className="full-width"
     justifyContent="normal"
     vertical={false}
     wrap={false}
@@ -14,6 +14,7 @@ exports[`(Container) OasisTransactionStatus should render 1`] = `
     <InfoBox
       className=""
       color="default"
+      fullWidth={true}
       justifyContent="normal"
       size="md"
       vertical={false}
@@ -24,41 +25,6 @@ exports[`(Container) OasisTransactionStatus should render 1`] = `
         vertical={false}
       >
         <StatusPictogram />
-      </InfoBoxBody>
-    </InfoBox>
-    <InfoBox
-      className=""
-      color="default"
-      justifyContent="normal"
-      size="md"
-      vertical={false}
-    >
-      <InfoBoxBody
-        className="no-padding"
-        color="default"
-        vertical={false}
-      >
-        <Connect(WithTimerWrapper)
-          transaction={
-            Immutable.Map {
-              txType: "OFFER_TAKES/TAKE_BUY_OFFER",
-            }
-          }
-        />
-      </InfoBoxBody>
-    </InfoBox>
-    <InfoBox
-      className=""
-      color="default"
-      justifyContent="normal"
-      size="md"
-      vertical={false}
-    >
-      <InfoBoxBody
-        className="no-padding"
-        color="default"
-        vertical={false}
-      >
         <TransactionStatus
           transaction={
             Immutable.Map {

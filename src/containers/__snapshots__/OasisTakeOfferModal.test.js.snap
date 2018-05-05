@@ -43,6 +43,7 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
           />
         </div>
       </div>
+      <div />
       <Connect(SetTokenAllowanceTrust)
         allowanceSubjectAddress="0x8cf1cab422a0b6b554077a361f8419cdf122a9f9"
         onCancelCleanup={[Function]}
@@ -92,38 +93,11 @@ Object {
 exports[`(Container) OasisTakeOfferModal will receive right props 1`] = `
 Object {
   "activeMarketAddress": "0x8cf1cab422a0b6b554077a361f8419cdf122a9f9",
-  "activeTradingPair": Object {
-    "baseToken": "MKR",
-    "quoteToken": "DAI",
-  },
   "buyToken": undefined,
   "canFulfillOffer": false,
-  "hasSufficientTokenAmount": false,
   "isCurrentOfferActive": true,
-  "isCurrentTransactionValid": true,
   "isOfferTakeModalOpen": true,
   "latestBlockNumber": 6716998,
   "sellToken": undefined,
-  "userBalances": Immutable.Map {
-    DGD: "0",
-    GUP: "0",
-    W-ETH: "0",
-    RHOC: "0",
-    DAI: "10000000000000000",
-    GNT: "0",
-    TIME: "0",
-    VSL: "0",
-    MLN: "0",
-    1ST: "0",
-    NMR: "0",
-    SNGLS: "0",
-    ICN: "0",
-    MKR: "0",
-    BAT: "0",
-    W-GNT: "0",
-    PLU: "0",
-    SAI: "0",
-    REP: "0",
-},
 }
 `;

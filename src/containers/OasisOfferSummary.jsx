@@ -7,24 +7,30 @@ import { bindActionCreators } from "redux";
 import getUsersSoldAndReceivedAmounts from "../utils/offers/getUsersSoldAndReceivedAmounts";
 import OasisOfferSummary from "../components/OasisOfferSummary";
 import {
-  gasEstimateInfo,
+  gasEstimateInfo, getActiveOfferAllowanceStatus,
   getOfferBuyAndSellTokenByOfferType,
   getOfferFormValuesByOfferType,
-  hasSufficientTokenAmountByOfferType
-} from "../store/selectors";
+  hasSufficientTokenAmountByOfferType,
+} from '../store/selectors';
 import OasisInsufficientAmountOfToken from "../components/OasisInsufficientAmountOfToken";
-import { TX_OFFER_TAKE } from "../store/reducers/transactions";
-import offerTakes from "../store/selectors/offerTakes";
 import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from "../store/reducers/offerTakes";
+import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from "../constants";
 
 const propTypes = PropTypes && {
-  offerType: PropTypes.oneOf([TAKE_BUY_OFFER, TAKE_SELL_OFFER]),
+  offerType: PropTypes.oneOf([
+    TAKE_BUY_OFFER,
+    MAKE_BUY_OFFER,
+    TAKE_SELL_OFFER,
+    MAKE_SELL_OFFER
+  ]),
   offerFormValues: ImmutablePropTypes.map.isRequired,
   offerBuyAndSellTokens: ImmutablePropTypes.map.isRequired,
   gasEstimateInfo: ImmutablePropTypes.map.isRequired,
   hasSufficientTokenAmount: PropTypes.bool.isRequired,
   isTokenTradingEnabled: PropTypes.bool.isRequired,
-  actions: PropTypes.object
+  actions: PropTypes.object,
+  buyToken: PropTypes.string,
+  sellToken: PropTypes.string
 };
 
 export class OasisOfferSummaryWrapper extends PureComponent {
@@ -45,7 +51,6 @@ export class OasisOfferSummaryWrapper extends PureComponent {
         buyToken={offerBuyAndSellTokens.get("buyToken")}
         sellToken={offerBuyAndSellTokens.get("sellToken")}
         isTokenTradingEnabled={isTokenTradingEnabled}
-        // getTransactionGasCostEstimate={getTransactionGasCostEstimate}
       />
     ) : (
       <OasisInsufficientAmountOfToken
@@ -56,16 +61,18 @@ export class OasisOfferSummaryWrapper extends PureComponent {
 }
 
 export function mapStateToProps(state, { offerType }) {
-  console.log({offerType})
   return {
     offerFormValues: getOfferFormValuesByOfferType(state, offerType),
     offerBuyAndSellTokens: getOfferBuyAndSellTokenByOfferType(state, offerType),
-    gasEstimateInfo: gasEstimateInfo(state, TX_OFFER_TAKE),
+    gasEstimateInfo: gasEstimateInfo(state, offerType),
     hasSufficientTokenAmount: hasSufficientTokenAmountByOfferType(
       state,
       offerType
     ),
-    isTokenTradingEnabled: offerTakes.getActiveOfferTakeAllowanceStatus(state)
+    isTokenTradingEnabled: getActiveOfferAllowanceStatus(
+      state,
+      offerType
+    )
   };
 }
 export function mapDispatchToProps(dispatch) {

@@ -12,8 +12,6 @@ import network from "../store/selectors/network";
 import offerTakesReducer from "../store/reducers/offerTakes";
 import offerTakes from "../store/selectors/offerTakes";
 import OfferTakeForm from "../components/OfferTakeForm";
-import balances from "../store/selectors/balances";
-import tokens from "../store/selectors/tokens";
 import OasisTokenBalanceSummary from "./OasisTokenBalanceSummary";
 import SetTokenAllowanceTrustWrapper from "./SetTokenAllowanceTrust";
 import modalStyles from "../styles/modules/_modal.scss";
@@ -25,11 +23,19 @@ import markets from "../store/selectors/markets";
 import OasisOfferSummaryWrapper from "./OasisOfferSummary";
 import OasisOfferTakeWarningBox from "../components/OasisOfferTakeWarningBox";
 import OasisNotTheBestOfferPriceWarningWrapper from "./OasisNotTheBestOfferPriceWarning";
+import { TX_OFFER_TAKE } from "../store/reducers/transactions";
+import OasisTransactionStatusWrapper from "./OasisTransactionStatus";
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
   offerTakeType: PropTypes.oneOf([TAKE_BUY_OFFER, TAKE_SELL_OFFER]).isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  activeMarketAddress: PropTypes.string,
+  canFulfillOffer: PropTypes.bool.isRequired,
+  buyToken: PropTypes.string,
+  sellToken: PropTypes.string,
+  latestBlockNumber: PropTypes.number,
+  isCurrentOfferActive: PropTypes.bool.isRequired
 };
 
 const getOfferTitle = offerTakeType => {
@@ -66,9 +72,11 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     const { actions } = this.props;
     actions.checkIfOfferIsActive().then(isActive => {
       if (isActive) {
+        this.setState({ disableOfferTakeButton: true });
         actions.takeOffer({
-          onPending: () => {
-            this.props.actions.setOfferTakeModalClosed();
+          onPending: txStartTimestamp => this.setState({ txStartTimestamp }),
+          onCancelCleanup: () => {
+            this.setState({ disableOfferTakeButton: false });
           }
         });
       }
@@ -76,8 +84,8 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
   }
 
   askForConfirmationBeforeModalClose() {
-    const { transaction, lockCancelButton } = this.state;
-    return transaction || lockCancelButton;
+    const { lockCancelButton } = this.state;
+    return lockCancelButton;
   }
 
   renderOfferSummary() {
@@ -90,6 +98,16 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     );
   }
 
+  renderTransactionStatus() {
+    const { txStartTimestamp } = this.state;
+    return txStartTimestamp ? (
+      <OasisTransactionStatusWrapper
+        txTimestamp={txStartTimestamp}
+        txType={TX_OFFER_TAKE}
+      />
+    ) : null;
+  }
+
   render() {
     const {
       offerTakeType,
@@ -97,7 +115,6 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
       activeMarketAddress,
       sellToken,
       buyToken,
-      isCurrentTransactionValid,
       actions: { getTransactionGasCostEstimate }
     } = this.props;
 
@@ -118,6 +135,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
           </div>
           <div className="statusSection">
             <div>{this.renderOfferSummary()}</div>
+            <div>{this.renderTransactionStatus()}</div>
             <SetTokenAllowanceTrustWrapper
               onTransactionPending={() =>
                 this.setState({ lockCancelButton: true })
@@ -138,7 +156,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
             </OasisButton>
             <div className="notificationsSection" />
             <OasisButton
-              disabled={!isCurrentTransactionValid || !canFulfillOffer}
+              disabled={!canFulfillOffer || this.state.disableOfferTakeButton}
               onClick={this.onBuyOffer}
             >
               {OasisTakeOfferModalWrapper.takeOfferBtnLabel(offerTakeType, {
@@ -165,15 +183,11 @@ export function mapStateToProps(state) {
   return {
     latestBlockNumber: network.latestBlockNumber(state),
     isOfferTakeModalOpen: offerTakes.isOfferTakeModalOpen(state),
-    userBalances: balances.tokenBalances(state),
-    activeTradingPair: tokens.activeTradingPair(state),
     activeMarketAddress: markets.activeMarketAddress(state),
     canFulfillOffer: offerTakes.canFulfillOffer(state),
     buyToken: offerTakes.activeOfferTakeBuyToken(state),
     sellToken: offerTakes.activeOfferTakeSellToken(state),
-    isCurrentTransactionValid: !offerTakes.isVolumeEmptyOrZero(state),
-    isCurrentOfferActive: offerTakes.isOfferActive(state) === true,
-    hasSufficientTokenAmount: offerTakes.hasSufficientTokenAmount(state)
+    isCurrentOfferActive: offerTakes.isOfferActive(state) === true
   };
 }
 

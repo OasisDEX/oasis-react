@@ -112,14 +112,7 @@ const isVolumeEmptyOrZero = createSelector(
     return !activeFormVolume || web3.toBigNumber(activeFormVolume).eq(0);
   }
 );
-const tokenToBeAllowed = createSelector(
-  activeOfferTakeType,
-  activeOfferTakeSellToken,
-  activeOfferTakeBuyToken,
-  (offerType, sellToken, buyToken) => {
-    return tokenToBeAllowedForOffer({ offerType, sellToken, buyToken })
-  }
-);
+
 
 const isVolumeGreaterThanOfferMax = createSelector(
   currentFormVolume,
@@ -138,6 +131,16 @@ const isVolumeGreaterThanOfferMax = createSelector(
     }
   }
 );
+
+const tokenToBeAllowed = createSelector(
+  activeOfferTakeType,
+  activeOfferTakeSellToken,
+  activeOfferTakeBuyToken,
+  (offerType, sellToken, buyToken) => {
+    return tokenToBeAllowedForOffer({ offerType, sellToken, buyToken })
+  }
+);
+
 
 const canFulfillOffer = createSelector(
   hasSufficientTokenAmount,

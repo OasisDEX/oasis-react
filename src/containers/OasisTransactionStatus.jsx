@@ -52,19 +52,10 @@ export class OasisTransactionStatusWrapper extends PureComponent {
     const { transaction } = this.props;
     return (
       <div>
-        <FlexBox alignConent="space-around">
-          <InfoBox>
+        <FlexBox className={"full-width"} alignConent="stretch">
+          <InfoBox fullWidth>
             <InfoBoxBody className="no-padding">
               <StatusPictogram status={transaction.get('txStatus')}/>
-            </InfoBoxBody>
-          </InfoBox>
-          <InfoBox>
-            <InfoBoxBody className="no-padding">
-              {this.renderTimer()}
-            </InfoBoxBody>
-          </InfoBox>
-          <InfoBox>
-            <InfoBoxBody className="no-padding">
               <TransactionStatus transaction={transaction}/>
             </InfoBoxBody>
           </InfoBox>

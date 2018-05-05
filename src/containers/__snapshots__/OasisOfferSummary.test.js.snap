@@ -15,16 +15,20 @@ Object {
 exports[`(Container) OasisOfferSummary will receive right props 1`] = `
 Object {
   "gasEstimateInfo": Immutable.Map {
-    isGasEstimatePending: null,
-    transactionGasCostEstimate: null,
-    transactionGasCostEstimateError: null,
+    isGasEstimatePending: undefined,
+    transactionGasCostEstimate: undefined,
+    transactionGasCostEstimateError: undefined,
 },
-  "hasSufficientTokenAmount": undefined,
+  "hasSufficientTokenAmount": false,
   "isTokenTradingEnabled": false,
   "offerBuyAndSellTokens": Immutable.Map {
-    buyToken: null,
-    sellToken: null,
+    buyToken: "MKR",
+    sellToken: "DAI",
 },
-  "offerFormValues": null,
+  "offerFormValues": Immutable.Map {
+    volume: "1",
+    price: "1",
+    total: "1",
+},
 }
 `;

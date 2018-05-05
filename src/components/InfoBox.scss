@@ -9,6 +9,9 @@
   display: flex;
 }
 
+.noBorder {
+  border: none !important;
+}
 
 .sm {
   padding: 7px 16px;
@@ -19,6 +22,10 @@
 .md {
   padding: 16px;
   font-size: 13px;
+}
+
+.fullWidth {
+  width: 100%;
 }
 
 

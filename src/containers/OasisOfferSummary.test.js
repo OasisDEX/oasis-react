@@ -9,11 +9,11 @@ import {
   mapDispatchToProps
 } from './OasisOfferSummary';
 import { shallow } from 'enzyme';
-import { TOKEN_MAKER, TOKEN_WRAPPED_ETH } from '../constants';
+import { MAKE_BUY_OFFER, TOKEN_MAKER, TOKEN_WRAPPED_ETH } from '../constants';
 
 describe('(Container) OasisOfferSummary', () => {
   const state = fromJS(global.storeMock);
-  const initialProps = mapStateToProps(state, {});
+  const initialProps = mapStateToProps(state, { offerType: MAKE_BUY_OFFER });
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,

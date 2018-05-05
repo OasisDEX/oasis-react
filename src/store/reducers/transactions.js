@@ -14,7 +14,6 @@ export const DEFAULT_GAS_PRICE = '1000000';
 
 const initialState = fromJS({
   txList: [],
-  pendingTxSubjectIds: [],
   defaultGasLimit: DEFAULT_GAS_LIMIT,
   activeGasLimit: DEFAULT_GAS_LIMIT,
   defaultGasPrice: DEFAULT_GAS_PRICE,
@@ -88,7 +87,6 @@ const transactionCancelledByUser = createAction(
 
 const addTransaction = createPromiseActions(ADD_TRANSACTION);
 const addTransactionEpic = ({ txType, txHash, txMeta, txDispatchedTimestamp, txStartTimestamp }) => async (dispatch, getState) => {
-  console.log('addTransactionEpic', { txType, txHash, txMeta, txDispatchedTimestamp, txStartTimestamp })
   let previousBlockNumber = network.latestBlockNumber(getState());
   dispatch(
     addTransaction.pending({
@@ -138,7 +136,10 @@ const addTransactionEpic = ({ txType, txHash, txMeta, txDispatchedTimestamp, txS
                 txRejectedBlockNumber: txReceipt.blockNumber,
                 txStatus: TX_STATUS_REJECTED,
                 txGasCost: txReceipt.gasCost,
-                txEndTimestamp: getTimestamp()
+                txStats: {
+                  txEndBlockNumber: previousBlockNumber,
+                  txEndTimestamp: getTimestamp()
+                }
               };
               dispatch(
                 addTransaction.rejected(payload)
@@ -195,13 +196,12 @@ const actions = {
 const reducer = handleActions({
   [addTransaction.pending]:
     (
-      state, { payload: { txHash, txSubjectId, txType, txStats, txMeta } },
+      state, { payload: { txHash, txType, txStats, txMeta } },
     ) => {
 
       const txPayload = fromJS({
         txHash,
         txReceipt: null,
-        txSubjectId,
         txType,
         txStatus : TX_STATUS_AWAITING_CONFIRMATION,
         txStats,
@@ -242,18 +242,6 @@ const reducer = handleActions({
           .setIn(['txStats','txEndBlockNumber'], txStats.txEndBlockNumber)
           .setIn(['txStats','txTotalTimeSec'], txStats.txEndBlockNumber - transaction.getIn('txStartTimestamp'))
       );
-  },
-  [transactionCancelledByUser]: (state, { payload: { txSubjectId, txStats } }) => {
-    const txListIndex = state.get('txList').findIndex(tx => tx.get('txSubjectId') === txSubjectId);
-    return state.updateIn(
-      ['txList', txListIndex],
-      transaction => transaction
-        .set('txStatus', TX_STATUS_CANCELLED_BY_USER)
-        .setIn(['txStats','txEndTimestamp'], txStats.txEndTimestamp)
-        .setIn(['txStats','txEndBlockNumber'], txStats.txEndBlockNumber)
-        .setIn(['txStats','txTotalTimeSec'], txStats.txEndBlockNumber - transaction.getIn('txStartTimestamp'))
-    );
-
   },
   [fulfilled(getCurrentTxNonce)]: (state, { payload }) => state.set('txNonce', parseInt(payload) + 1 ),
   [fulfilled(getCurrentGasPrice)]: (state, { payload }) => state.set('currentGasPriceInWei', payload.toString()),

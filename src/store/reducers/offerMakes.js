@@ -3,21 +3,17 @@ import {fromJS} from 'immutable';
 import {createPromiseActions} from '../../utils/createPromiseActions';
 import offerMakes from '../selectors/offerMakes';
 import {change, formValueSelector, initialize} from 'redux-form/immutable';
-import transactionsReducer, {
+import  {
   DEFAULT_GAS_LIMIT,
   TX_OFFER_MAKE,
-  TX_OFFER_TAKE,
-  TX_STATUS_CANCELLED_BY_USER,
 } from './transactions';
 import web3 from '../../bootstrap/web3';
 import balances from '../selectors/balances';
 import {fulfilled, pending, rejected} from '../../utils/store';
-import network from '../selectors/network';
 
 import offerMakeToFormName from '../../utils/offers/offerMakeToFormName';
 
 import throttle from 'lodash/throttle';
-import { getTimestamp } from '../../utils/time';
 
 import {defer} from '../deferredThunk';
 
@@ -29,18 +25,12 @@ const initialState = fromJS(
     makeBuyOffer: {
       type: MAKE_BUY_OFFER,
       isOfferMakeModalOpen: false,
-      activeOfferMakeOfferDraftId: null,
       transactionGasCostEstimate: null,
-      txSubjectId: null,
-      drafts: [],
     },
     makeSellOffer: {
       type: MAKE_SELL_OFFER,
       isOfferMakeModalOpen: false,
-      activeOfferMakeOfferDraftId: null,
       transactionGasCostEstimate: null,
-      txSubjectId: null,
-      drafts: [],
     },
     activeOfferMakeType: null,
   },
@@ -88,9 +78,8 @@ const makeOfferTransaction = createAction(
 
 const makeOffer = createPromiseActions('OFFER_MAKES/MAKE_OFFER');
 
-
 //TODO: To many duties at once. Offer form and offer making logic needlessly coupled here...
-const makeOfferEpic = (offerMakeType, withCallbacks) => async (dispatch, getState) => {
+const makeOfferEpic = (offerMakeType, withCallbacks = {}) => async (dispatch, getState) => {
 
   //TODO: Already refactored?
   dispatch(makeOffer.pending());

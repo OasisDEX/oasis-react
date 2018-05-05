@@ -99,8 +99,8 @@ const setOfferTakeModalOpen = createAction('OFFER_TAKES/SET_MODAL_OPEN');
 const setOfferTakeModalOpenEpic = ({ offerId, offerTakeType }) => (dispatch) => {
   dispatch(setActiveOfferTakeOfferId(offerId));
   dispatch(setActiveOfferTakeType(offerTakeType));
-  dispatch(getTransactionGasCostEstimateEpic());
   dispatch(defer(initializeOfferTakeFormEpic));
+  dispatch(defer(getTransactionGasCostEstimateEpic));
   dispatch(setOfferTakeModalOpen());
 };
 

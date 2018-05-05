@@ -4,8 +4,14 @@ import { TX_OFFER_MAKE, TX_OFFER_TAKE } from "../reducers/transactions";
 import { fromJS } from "immutable";
 import offerTakes from "./offerTakes";
 import offerMakes from "./offerMakes";
-import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from '../reducers/offerTakes';
-import { MAKE_BUY_OFFER, MAKE_BUY_OFFER_FORM_NAME, MAKE_SELL_OFFER, MAKE_SELL_OFFER_FORM_NAME } from '../../constants';
+import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from "../reducers/offerTakes";
+import {
+  MAKE_BUY_OFFER,
+  MAKE_BUY_OFFER_FORM_NAME,
+  MAKE_SELL_OFFER,
+  MAKE_SELL_OFFER_FORM_NAME
+} from "../../constants";
+import offerMakeToFormName from "../../utils/offers/offerMakeToFormName";
 
 const isGasEstimatePending = createSelector(
   s => s,
@@ -61,9 +67,10 @@ const transactionGasCostEstimate = createSelector(
 const gasEstimateInfo = createSelector(
   s => s,
   reselect.getProps,
-  (rootState, transactionSubjectType) => {
-    switch (transactionSubjectType) {
-      case TX_OFFER_TAKE:
+  (rootState, offerType) => {
+    switch (offerType) {
+      case TAKE_BUY_OFFER:
+      case TAKE_SELL_OFFER:
         return fromJS({
           isGasEstimatePending: rootState.getIn([
             "offerTakes",
@@ -78,8 +85,22 @@ const gasEstimateInfo = createSelector(
             "transactionGasCostEstimateError"
           ])
         });
-      case TX_OFFER_MAKE:
-        return rootState.getIn(["offerMakes", "transactionGasCostEstimate"]);
+      case MAKE_BUY_OFFER:
+      case MAKE_SELL_OFFER:
+        return fromJS({
+          isGasEstimatePending: rootState.getIn([
+            "offerMakes",
+            "transactionGasCostEstimatePending"
+          ]),
+          transactionGasCostEstimate: rootState.getIn([
+            "offerMakes",
+            "transactionGasCostEstimate"
+          ]),
+          transactionGasCostEstimateError: rootState.getIn([
+            "offerMakes",
+            "transactionGasCostEstimateError"
+          ])
+        });
     }
   }
 );
@@ -93,10 +114,16 @@ const getOfferFormValuesByOfferType = createSelector((state, offerType) => {
       formValues = offerTakes.takeFormValuesSelector(state, ...fields);
       break;
     case MAKE_BUY_OFFER:
-      formValues = offerMakes.activeOfferMakePure(state, MAKE_BUY_OFFER_FORM_NAME);
+      formValues = offerMakes.currentFormValues(
+        state,
+        MAKE_BUY_OFFER_FORM_NAME
+      );
       break;
     case MAKE_SELL_OFFER:
-      formValues = offerMakes.activeOfferMakePure(state, MAKE_SELL_OFFER_FORM_NAME);
+      formValues = offerMakes.currentFormValues(
+        state,
+        MAKE_SELL_OFFER_FORM_NAME
+      );
       break;
   }
   return fromJS(formValues);
@@ -116,10 +143,13 @@ const getOfferBuyAndSellTokenByOfferType = createSelector(
         break;
       case MAKE_BUY_OFFER:
       case MAKE_SELL_OFFER:
-        [buyToken, sellToken] = [
-          offerMakes.activeOfferMakeBuyToken(state),
-          offerMakes.activeOfferMakeSellToken(state)
-        ];
+        {
+          const formName = offerMakeToFormName(offerType);
+          [buyToken, sellToken] = [
+            offerMakes.activeOfferMakeBuyToken(state, formName),
+            offerMakes.activeOfferMakeSellToken(state, formName)
+          ];
+        }
         break;
     }
     return fromJS({ buyToken, sellToken });
@@ -127,20 +157,17 @@ const getOfferBuyAndSellTokenByOfferType = createSelector(
   offerFormValues => offerFormValues
 );
 
-const getOfferGasEstimateByOfferType = createSelector(
-  (state, offerType) => {
-    switch (offerType) {
-      case TAKE_BUY_OFFER:
-      case TAKE_SELL_OFFER:
-        return offerMakes.transactionGasCostEstimate(state);
-      case MAKE_BUY_OFFER:
-      case MAKE_SELL_OFFER:
-        return offerTakes.transactionGasCostEstimate(state);
-    }
-  },
-  offerFormValues => offerFormValues
-);
-
+// eslint-disable-next-line no-unused-vars
+const getOfferGasEstimateByOfferType = createSelector((state, offerType) => {
+  switch (offerType) {
+    case TAKE_BUY_OFFER:
+    case TAKE_SELL_OFFER:
+      return offerTakes.transactionGasCostEstimate(state);
+    case MAKE_BUY_OFFER:
+    case MAKE_SELL_OFFER:
+      return offerMakes.transactionGasCostEstimate(state);
+  }
+}, offerFormValues => offerFormValues);
 
 const hasSufficientTokenAmountByOfferType = createSelector(
   (state, offerType) => {
@@ -156,6 +183,22 @@ const hasSufficientTokenAmountByOfferType = createSelector(
   offerFormValues => offerFormValues
 );
 
+const getActiveOfferAllowanceStatus = createSelector(
+
+  (
+    rootState, offerType
+  ) => {
+    switch (offerType) {
+      case TAKE_SELL_OFFER:
+      case TAKE_BUY_OFFER:
+        return offerTakes.getActiveOfferTakeAllowanceStatus(rootState, offerType);
+      case MAKE_SELL_OFFER:
+      case MAKE_BUY_OFFER:
+        return offerMakes.getActiveOfferMakeAllowanceStatus(rootState, offerType);
+    }
+  }, allowanceStatus => Boolean(allowanceStatus)
+);
+
 export {
   isGasEstimatePending,
   gasEstimateError,
@@ -163,6 +206,6 @@ export {
   gasEstimateInfo,
   getOfferFormValuesByOfferType,
   getOfferBuyAndSellTokenByOfferType,
-  getOfferGasEstimateByOfferType,
-  hasSufficientTokenAmountByOfferType
+  hasSufficientTokenAmountByOfferType,
+  getActiveOfferAllowanceStatus
 };

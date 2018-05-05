@@ -320,16 +320,17 @@ Array [
   },
   Object {
     "payload": Object {
+      "args": Array [],
       "thunk": [Function],
-      "thunkName": "",
+      "thunkName": "initializeOfferTakeFormEpic",
     },
-    "type": "thunk",
+    "type": "deferred-thunk",
   },
   Object {
     "payload": Object {
       "args": Array [],
       "thunk": [Function],
-      "thunkName": "initializeOfferTakeFormEpic",
+      "thunkName": "getTransactionGasCostEstimateEpic",
     },
     "type": "deferred-thunk",
   },
