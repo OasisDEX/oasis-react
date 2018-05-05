@@ -505,10 +505,6 @@ Array [
   },
   Object {
     "payload": "OFFER_MAKES/MAKE_BUY_OFFER",
-    "type": "OFFER_MAKES/RESET_ACTIVE_OFFER_MAKE_TX_SUBJECT_ID",
-  },
-  Object {
-    "payload": "OFFER_MAKES/MAKE_BUY_OFFER",
     "type": "OFFER_MAKES/RESET_TRANSACTION_GAS_ESTIMATE",
   },
 ]
@@ -519,6 +515,13 @@ Array [
   Object {
     "payload": "OFFER_MAKES/MAKE_BUY_OFFER",
     "type": "OFFER_MAKES/SET_ACTIVE_OFFER_MAKE_TYPE",
+  },
+  Object {
+    "payload": Object {
+      "thunk": [Function],
+      "thunkName": "",
+    },
+    "type": "thunk",
   },
   Object {
     "payload": Object {
@@ -581,40 +584,6 @@ Array [
 ]
 `;
 
-exports[`updateTransactionGasCostEstimateEpic 1`] = `
-Array [
-  Object {
-    "payload": Object {
-      "args": Array [
-        "1000000000000000000",
-        "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
-        "1000000000000000000",
-        "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
-        undefined,
-      ],
-      "thunk": [Function],
-      "thunkName": "actionCreator",
-    },
-    "type": "deferred-thunk",
-  },
-]
-`;
+exports[`updateTransactionGasCostEstimateEpic 1`] = `Array []`;
 
-exports[`updateTransactionGasCostEstimateEpic 2`] = `
-Array [
-  Object {
-    "payload": Object {
-      "args": Array [
-        "1000000000000000000",
-        "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
-        "1000000000000000000",
-        "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
-        undefined,
-      ],
-      "thunk": [Function],
-      "thunkName": "actionCreator",
-    },
-    "type": "deferred-thunk",
-  },
-]
-`;
+exports[`updateTransactionGasCostEstimateEpic 2`] = `Array []`;

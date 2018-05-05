@@ -13,12 +13,6 @@ import { fromJS } from 'immutable';
 
 const offerMakes = state => state.get('offerMakes');
 
-// const activeOfferMake = createSelector(
-//   offerMakes,
-//   reselect.getProps,
-//   (state, offerMakeType) => state.getIn([ offerMakeType, 'activeOfferMake'])
-// );
-
 const currentFormValues = createSelector(
     (rootState, formName) => makeFormValuesSelector(formName)(rootState, 'volume', 'price', 'total'),
     formValues => formValues
@@ -35,7 +29,7 @@ const selector = createSelector(
         c: a * 2,
         d: b * 3
     })
-)
+);
 
 const activeOfferMakePure = createSelector(
     (...args) => args[1], //provides original selector argument
@@ -44,7 +38,6 @@ const activeOfferMakePure = createSelector(
     currentFormValues,
     (offerMakeFormName, activeTradingPair, tokenAddresses, {total, volume}) => {
         const {baseToken, quoteToken} = activeTradingPair.toJS ? activeTradingPair.toJS() : activeTradingPair;
-
         const offerMakeType = {
             makeBuyOffer: MAKE_BUY_OFFER,
             makeSellOffer: MAKE_SELL_OFFER}[offerMakeFormName];
@@ -147,24 +140,11 @@ const canMakeOffer = createSelector(
   hasSufficientTokenAmount,
   rootState => transactions.canSendTransaction(rootState),
   markets.isBuyEnabled,
-  (rootState, offerMakeType) => {
-
-      // console.log("tokenAllowanceTrustStatus",
-      //     "tokenName:", activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerMakeType)),
-      //     "allowanceSubjectAddress:", window.contracts.market.address,
-      //     "tokenAllowanceTrustStatus:", balances.tokenAllowanceTrustStatus(
-      //         rootState,
-      //         {
-      //             tokenName: activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerMakeType)),
-      //             allowanceSubjectAddress: window.contracts.market.address
-      //         }
-      //     )
-      //     );
-
+  (rootState, offerType) => {
       return balances.tokenAllowanceTrustStatus(
           rootState,
           {
-            tokenName: activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerMakeType)),
+            tokenName: activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerType)),
             allowanceSubjectAddress: window.contracts.market.address
           }
       )
@@ -205,10 +185,17 @@ const gasEstimatePending = createSelector(
   state => state.get('transactionGasCostEstimatePending')
 );
 
-const activeOfferMakeTxSubjectId = createSelector(
-  offerMakes,
-  activeOfferMakeType,
-  (state, aomt) => state.getIn([offerMakeToFormName(aomt), 'txSubjectId'])
+
+
+const getActiveOfferMakeAllowanceStatus = createSelector(
+  (rootState, offerType) => {
+    return balances.tokenAllowanceStatusForActiveMarket(
+      rootState, {
+        tokenName: activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerType))
+      }
+    );
+  },
+  status => Boolean(status)
 );
 
 export default {
@@ -229,7 +216,6 @@ export default {
   isOfferActive,
   checkingIfOfferIsActive,
   currentFormValues,
-  activeOfferMakeTxSubjectId,
   gasEstimatePending,
-
+  getActiveOfferMakeAllowanceStatus
 };

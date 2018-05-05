@@ -15,6 +15,7 @@ import transferHistory from '../store/selectors/transferHistory';
 import { formatAmount } from '../utils/tokens/pair';
 import { Map } from 'immutable';
 import styles from './OasisTokenTransferHistory.scss';
+import createEtherscanTransactionLink from '../utils/createEtherscanTransactionLink';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -46,9 +47,10 @@ export class OasisTokenTransferHistoryWrapper extends PureComponent {
     super(props);
   }
 
-  onRowClick({ transactionHash }, { activeNetworkName }) {
-    const url = `https://${activeNetworkName}.etherscan.io/tx/${transactionHash}`;
-    window.open(url, '_blank');
+  static onRowClick({ transactionHash }, { activeNetworkName }) {
+    window.open(
+      createEtherscanTransactionLink({ activeNetworkName, transactionHash }), '_blank'
+    );
     window.focus();
   }
 
@@ -59,7 +61,7 @@ export class OasisTokenTransferHistoryWrapper extends PureComponent {
         <div>
           {<OasisTable metadata={{activeNetworkName}}
             className={styles.table}
-            onRowClick={this.onRowClick}
+            onRowClick={OasisTokenTransferHistoryWrapper.onRowClick}
             rows={transferHistoryList.toJSON()}
             col={transferHistoryColsDefinition()}
           />}

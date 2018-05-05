@@ -8,7 +8,7 @@ const initialState = fromJS({
 });
 
 
-export const TIMER_DEFAULT_INTERVAL_MS = 5000;
+export const TIMER_DEFAULT_INTERVAL_MS = 1000;
 
 const Init = createPromiseActions('TIMERS/INIT');
 const InitEpic = () => (dispatch) => {

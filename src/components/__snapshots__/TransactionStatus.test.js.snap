@@ -1,14 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`(Component) TransactionStatus should render 1`] = `
-<div>
-  Transaction is awaiting confirmation 
-  <Connect(WithTimerWrapper)
-    transaction={
-      Immutable.Map {
-        txStatus: "TX/STATUS_AWAITING_CONFIRMATION",
-      }
-    }
-  />
-</div>
-`;
+exports[`(Component) TransactionStatus should render 1`] = `""`;

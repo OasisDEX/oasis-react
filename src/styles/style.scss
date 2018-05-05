@@ -107,6 +107,11 @@ $i: '';
 $max: 7;
 /* / MIXIN TABLE SCROLLING */
 
+
+.full-width {
+  width: 100%;
+}
+
 body {
   background-color: $background-color;
   margin-top: 40px;

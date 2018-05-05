@@ -75,12 +75,16 @@ const getVisibleTradingPairs = createSelector(
   tokens,
   widgets.marketWidget,
   (state, marketWidget) => {
-    if(marketWidget.get('isExpanded')) {
+    if(marketWidget.get('isOpen')) {
       return state.get('tradingPairs');
     } else {
       return state.get('tradingPairs').filter(tp => tp.get('isDefault'));
     }
   }
+);
+
+const getErc20Tokens = createSelector(
+  tokens, s => s.get('erc20Tokens'),
 );
 
 export default {
@@ -98,5 +102,6 @@ export default {
   precision,
   baseTokens,
   activeTradingPairBaseToken,
-  activeTradingPairQuoteToken
+  activeTradingPairQuoteToken,
+  getErc20Tokens
 };

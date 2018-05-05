@@ -19,47 +19,62 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
   <button
     onClick={[Function]}
   >
-    ×
+    <span>
+      ×
+    </span>
   </button>
   <OasisTokenBalance
     className=""
     summary="Available"
   />
-  <Connect(ReduxForm) />
-  <div
-    className="statusSection"
-  >
-    <Connect(WithTransactionWatchWrapper)
-      amountReceived="0.01110"
-      amountSold="0.00010"
-      hasSufficientTokenAmount={false}
-      isTransactionValid={true}
-      offerId="12"
-      transactionSubectType="TRANSACTIONS/GROUP__OFFERS/OFFER_TAKE"
-    />
-  </div>
-  <Connect(SetTokenAllowanceTrust) />
   <div>
-    <OasisButton
-      btnType="button"
-      color="default"
-      onClick={[Function]}
-      size="md"
-    >
-      Cancel
-    </OasisButton>
+    <div>
+      <Connect(ReduxForm)
+        estimateGas={[Function]}
+      />
+    </div>
     <div
-      className="notificationsSection"
-    />
-    <OasisButton
-      btnType="button"
-      color="default"
-      disabled={true}
-      onClick={[Function]}
-      size="md"
+      className="statusSection"
     >
-      Sell undefined
-    </OasisButton>
+      <div>
+        <div>
+          <Connect(OasisOfferSummary)
+            offerType="OFFER_TAKES/TAKE_BUY_OFFER"
+          />
+        </div>
+      </div>
+      <div />
+      <Connect(SetTokenAllowanceTrust)
+        allowanceSubjectAddress="0x8cf1cab422a0b6b554077a361f8419cdf122a9f9"
+        onCancelCleanup={[Function]}
+        onTransactionCompleted={[Function]}
+        onTransactionPending={[Function]}
+      />
+      <OasisOfferTakeWarningBox />
+      <Connect(OasisNotTheBestOfferPriceWarning) />
+    </div>
+    <div>
+      <OasisButton
+        btnType="button"
+        color="default"
+        onClick={[Function]}
+        size="md"
+      >
+        Cancel
+      </OasisButton>
+      <div
+        className="notificationsSection"
+      />
+      <OasisButton
+        btnType="button"
+        color="default"
+        disabled={true}
+        onClick={[Function]}
+        size="md"
+      >
+        Sell undefined
+      </OasisButton>
+    </div>
   </div>
 </Modal>
 `;
@@ -68,6 +83,7 @@ exports[`(Container) OasisTakeOfferModal will receive right actions 1`] = `
 Object {
   "actions": Object {
     "checkIfOfferIsActive": [Function],
+    "getTransactionGasCostEstimate": [Function],
     "setOfferTakeModalClosed": [Function],
     "takeOffer": [Function],
   },
@@ -76,51 +92,12 @@ Object {
 
 exports[`(Container) OasisTakeOfferModal will receive right props 1`] = `
 Object {
-  "activeOfferTake": Immutable.Map {
-},
-  "activeOfferTakeOfferId": "12",
-  "activeOfferTakeOfferOwner": undefined,
-  "activeOfferTakeType": "OFFER_TAKES/TAKE_SELL_OFFER",
-  "activeTradingPair": Object {
-    "baseToken": "MKR",
-    "quoteToken": "DAI",
-  },
+  "activeMarketAddress": "0x8cf1cab422a0b6b554077a361f8419cdf122a9f9",
   "buyToken": undefined,
-  "canBuyOffer": false,
-  "currentOfferTakeTransaction": undefined,
-  "formErrors": Immutable.Map {
-},
-  "hasSufficientTokenAmount": false,
+  "canFulfillOffer": false,
   "isCurrentOfferActive": true,
-  "isCurrentTransactionValid": true,
   "isOfferTakeModalOpen": true,
   "latestBlockNumber": 6716998,
-  "offerTakeFormValues": Immutable.Map {
-    price: "111",
-    volume: "0.0001",
-    total: "0.0111",
-},
   "sellToken": undefined,
-  "userBalances": Immutable.Map {
-    DGD: "0",
-    GUP: "0",
-    W-ETH: "0",
-    RHOC: "0",
-    DAI: "10000000000000000",
-    GNT: "0",
-    TIME: "0",
-    VSL: "0",
-    MLN: "0",
-    1ST: "0",
-    NMR: "0",
-    SNGLS: "0",
-    ICN: "0",
-    MKR: "0",
-    BAT: "0",
-    W-GNT: "0",
-    PLU: "0",
-    SAI: "0",
-    REP: "0",
-},
 }
 `;

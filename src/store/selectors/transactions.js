@@ -66,9 +66,9 @@ const getTokenTransaction = createSelector(
 const getLimitTransaction = createSelector(
   limitsTransactions,
   reselect.getProps,
-  (limitsTransactionsList, { address }) =>
+  (limitsTransactionsList, { txTimestamp }) =>
     limitsTransactionsList.find(
-      txEl => txEl.get('txSubjectId') === address
+      txEl => txEl.getIn(['txStats', 'txStartTimestamp']) === txTimestamp
     )
 );
 
@@ -108,11 +108,11 @@ const getTransactionByTxHash = createSelector(
     txList.find(tx => tx.get('txHash') === txHash)
 );
 
-
-const getAllowanceTxNonce = createSelector(
-  limitsTransactions,
+const getTransactionByTimestampAndType = createSelector(
+  transactionsList,
   reselect.getProps,
-  (limitsTxList, filter) => limitsTxList.filter(limitTx => limitTx.get('txSubjectId') == filter).size()
+  (txList, { txType, txTimestamp } = {}) =>
+    txList.find(tx => tx.get('txType') === txType && tx.getIn(['txStats', 'txStartTimestamp']) === txTimestamp)
 );
 
 
@@ -120,6 +120,12 @@ const currentTxNonce = createSelector(
   transactions,
   s => s.get('txNonce')
 );
+
+const transactionCheckInterval = createSelector(
+  transactions,
+  s => s.get('transactionCheckInterval')
+);
+
 
 export default {
   state: transactions,
@@ -134,7 +140,8 @@ export default {
   canSendTransaction,
   currentGasPriceWei,
   getTransactionByTxHash,
-  getAllowanceTxNonce,
   currentTxNonce,
-  getTransferTransaction
+  getTransferTransaction,
+  getTransactionByTimestampAndType,
+  transactionCheckInterval
 };

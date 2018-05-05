@@ -30,6 +30,12 @@ exports[`(Component) OasisMarketHistory should render 1`] = `
         },
       ]
     }
+    metadata={
+      Object {
+        "activeNetworkName": undefined,
+      }
+    }
+    onRowClick={[Function]}
     rows={Array []}
   />
 </OasisWidgetFrame>

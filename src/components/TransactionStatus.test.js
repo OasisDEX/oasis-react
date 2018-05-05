@@ -9,7 +9,8 @@ import { Map }                           from 'immutable';
 describe('(Component) TransactionStatus', () => {
   it('should render', () => {
     const props = {
-      transaction: Map({
+      transaction: Map({}),
+      transactionReceipt: Map({
         txStatus: TX_STATUS_AWAITING_CONFIRMATION
       })
     };

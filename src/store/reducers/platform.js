@@ -20,6 +20,7 @@ const initialState = fromJS(
     defaultPeriod: WEEK,
     activePeriod: WEEK,
     defaultUnit: ETH_UNIT_WEI,
+    activeOfferType: null
   });
 
 export const STATUS_PRISTINE = 'STATUS_PRISTINE';
@@ -130,6 +131,14 @@ const dismissMessage = (
   dispatch(dismissMessageAction(msgType));
 };
 
+
+const setActiveOfferType = createAction(
+  'PLATFORM/SET_ACTIVE_OFFER_TYPE',
+  offerType => offerType
+);
+
+const resetActiveOfferType = createAction('PLATFORM/RESET_ACTIVE_OFFER_TYPE');
+
 const actions = {
   platformInitEpic,
   web3Initialized,
@@ -147,7 +156,9 @@ const actions = {
   networkChanged,
   setProviderType,
   dismissMessage,
-  changeRouteEpic
+  changeRouteEpic,
+  setActiveOfferType,
+  resetActiveOfferType,
 };
 
 const reducer = handleActions({
@@ -158,6 +169,9 @@ const reducer = handleActions({
   [metamaskUnlocked]: (state) => state.set('metamaskLocked', false),
   [networkChanged]: (state) => state.set('lastNetworkSwitchAt', Date.now()),
   [setProviderType]: (state, { payload }) => state.update('providerType', () => payload),
+  [setProviderType]: (state, { payload }) => state.set('activeOfferType', payload),
+  [resetActiveOfferType]: state => state.set('activeOfferType', null),
+
 }, initialState);
 
 export default {

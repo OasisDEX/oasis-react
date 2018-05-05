@@ -1,41 +1,52 @@
-import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
-import ImmutablePropTypes from 'react-immutable-proptypes';
-import moment from 'moment';
-import withTimer from '../containers/WithTimer';
+import React, { PureComponent } from "react";
+import { PropTypes } from "prop-types";
+import ImmutablePropTypes from "react-immutable-proptypes";
+import moment from "moment";
+import withTimer from "../containers/WithTimer";
 
-export const TIMER_TIME_UNIT_SECOND = 'second';
-export const TIMER_TIME_UNIT_MINUTE = 'minute';
+export const TIMER_TIME_UNIT_SECOND = "second";
+export const TIMER_TIME_UNIT_MINUTE = "minute";
 
 const propTypes = PropTypes && {
-  transaction: ImmutablePropTypes.map,
+  transactionReceipt: ImmutablePropTypes.map,
   timer: PropTypes.number.isRequired,
-  timeUnit: PropTypes.oneOf([
-    TIMER_TIME_UNIT_MINUTE,
-    TIMER_TIME_UNIT_SECOND
-  ])
+  timeUnit: PropTypes.oneOf([TIMER_TIME_UNIT_MINUTE, TIMER_TIME_UNIT_SECOND])
 };
 
 const defaultProps = {};
-window.moment = moment;
-class TransactionTimer extends PureComponent {
+export class TransactionTimer extends PureComponent {
   render() {
+    const { timer } = this.props;
     const { transaction } = this.props;
-    const startTimestamp = transaction.getIn(['txStats','txStartTimestamp']);
     let timeDiff = null;
-    if(!transaction.hasIn(['txStats', 'txEndTimestamp'])) {
-      timeDiff = moment.unix(this.props.timer).diff(moment.unix(startTimestamp), TIMER_TIME_UNIT_SECOND);
-      return (<div hidden={timeDiff===null}>{timeDiff} sec.</div>);
+    const startTimestamp = transaction.getIn(["txStats", "txStartTimestamp"]);
+
+    if (!transaction.hasIn(["txStats", "txEndTimestamp"])) {
+      timeDiff = moment(timer).diff(moment(startTimestamp));
     } else {
-      const endTimestamp = transaction.getIn(['txStats','txEndTimestamp']);
-      timeDiff = moment.unix(endTimestamp).diff(moment.unix(startTimestamp), TIMER_TIME_UNIT_SECOND);
-      return (<div hidden={timeDiff===null}>{timeDiff} sec.</div>);
+      timeDiff = moment(
+        transaction.getIn(["txStats", "txEndTimestamp"])
+      ).diff(moment(startTimestamp));
     }
 
+    const momentDuration = moment.duration(timeDiff);
+    const [minutes, seconds] = [
+      momentDuration.get("minutes"),
+      momentDuration.get("seconds")
+    ];
+
+    return (
+      <div>
+        <span style={{padding:'0 10px'}}>Time</span>
+        <span>
+           {minutes < 10 ? `0${minutes}`: minutes} : {seconds < 10 ? `0${seconds}` : seconds} min
+        </span>
+      </div>
+    );
   }
 }
 
-TransactionTimer.displayName = 'TransactionTimer';
+TransactionTimer.displayName = "TransactionTimer";
 TransactionTimer.propTypes = propTypes;
 TransactionTimer.defaultProps = defaultProps;
 export default withTimer(TransactionTimer);

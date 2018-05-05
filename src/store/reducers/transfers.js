@@ -12,6 +12,7 @@ import { TX_TRANSFER_FROM, TX_STATUS_CANCELLED_BY_USER } from './transactions';
 import transactionsReducer from './transactions';
 import generateTxSubjectId from '../../utils/transactions/generateTxSubjectId';
 import balances from '../selectors/balances';
+import { getTimestamp } from '../../utils/time';
 
 const initialState = Immutable.fromJS({
   txSubjectId: null
@@ -81,7 +82,7 @@ const makeTransferEpic = () => async (dispatch, getState) => {
         txSubjectId,
         txStats: {
           txEndBlockNumber: network.latestBlockNumber(getState()),
-          txEndTimestamp: parseInt(Date.now() / 1000),
+          txEndTimestamp: getTimestamp(),
         },
       }),
     );

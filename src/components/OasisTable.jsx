@@ -9,7 +9,8 @@ import styles from './OasisTable.scss';
 
 const propTypes = PropTypes && {
   rows: PropTypes.any.isRequired,
-  col: PropTypes.arrayOf(PropTypes.object).isRequired
+  col: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onRowClick: PropTypes.func
 };
 const defaultProps = {};
 
@@ -57,11 +58,11 @@ export class OasisTable extends PureComponent {
   }
 
   renderRows() {
-    const { rows } = this.props;
+    const { rows, onRowClick } = this.props;
     return rows.map( (row, i) => {
       return (
         <tr
-          className={`${row.isActive ? styles.active: ''} ${this.props.onRowClick ? styles.clickable : ''}`}
+          className={`${row.isActive ? styles.active: ''} ${onRowClick ? styles.clickable : ''}`}
           key={i}
           data-tradingpair={row.tradingPair}
           onClick={this.rowClickHandler.bind(null, row)}

@@ -528,8 +528,22 @@ global.storeMock = {
     transferHistory: []
   },
   transactions: {
-    txList: [],
-    pendingTxSubjectIds: [],
+    txList: [
+      {
+        txHash: '0x110b48acd19927bae9f4f492efd60953e4e173000885cb5df43761b7c8a7e711',
+        txReceipt: {},
+        txType: 'TRANSACTIONS/GROUP__OFFERS/OFFER_TAKE',
+        txStatus: 'TX/STATUS_CONFIRMED',
+        txStats: {
+          txDispatchedTimestamp: 1525383864197,
+          txStartBlockNumber: 7116380,
+          txStartTimestamp: 1525383907883,
+          txEndTimestamp: 1525383921570,
+          txEndBlockNumber: 7116384,
+          txTotalTimeSec: null
+        }
+      }
+    ],
     defaultGasLimit: '10000000',
     activeGasLimit: '10000000',
     defaultGasPrice: '1000000',
@@ -625,7 +639,12 @@ global.storeMock = {
     },
     tokenAllowances: {}
   },
+
   offers: {
+    activeTradingPairBestOfferId: {
+      bestBuyOfferId: '377',
+      bestSellOfferId: '7'
+    },
     offers: {
       'Map { "baseToken": "BAT", "quoteToken": "W-ETH" }': {
         buyOfferCount: null,

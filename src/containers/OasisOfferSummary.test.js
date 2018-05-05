@@ -4,26 +4,24 @@ import React from 'react';
 import { fromJS } from 'immutable';
 
 import {
-  OasisTransactionDetailsWrapper,
+  OasisOfferSummaryWrapper,
   mapStateToProps,
   mapDispatchToProps
-} from './OasisTransactionDetails';
+} from './OasisOfferSummary';
 import { shallow } from 'enzyme';
-import { TX_OFFER_TAKE } from '../store/reducers/transactions';
-import { TOKEN_DAI, TOKEN_WRAPPED_ETH } from '../constants';
+import { MAKE_BUY_OFFER, TOKEN_MAKER, TOKEN_WRAPPED_ETH } from '../constants';
 
-describe('(Container) OasisTransactionDetails', () => {
+describe('(Container) OasisOfferSummary', () => {
   const state = fromJS(global.storeMock);
-  const initialProps = mapStateToProps(state, { transactionSubectType: TX_OFFER_TAKE });
+  const initialProps = mapStateToProps(state, { offerType: MAKE_BUY_OFFER });
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,
     ...initialProps,
-    transactionSubectType: TX_OFFER_TAKE,
-    getTransactionGasCostEstimate: jest.fn,
-    buyToken: TOKEN_DAI,
-    sellToken: TOKEN_WRAPPED_ETH,
-    transactionSubjectAddress: '0x0000000000000000000000000000000000000000'
+    offerFormValues: fromJS({}),
+    hasSufficientTokenAmount: false,
+    tokenName: TOKEN_MAKER,
+    offerBuyAndSellTokens: fromJS({ buyToken: TOKEN_MAKER, sellToken: TOKEN_WRAPPED_ETH })
   };
 
   it('will receive right props', () => {
@@ -37,7 +35,7 @@ describe('(Container) OasisTransactionDetails', () => {
 
   it('should render', () => {
     const wrapper = shallow(
-      <OasisTransactionDetailsWrapper {...props}/>
+      <OasisOfferSummaryWrapper {...props}/>
     );
     expect(wrapper).toMatchSnapshot();
   });

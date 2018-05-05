@@ -25,6 +25,8 @@ import transactionsReducer from './transactions';
 import { HEALTHCHECK_INTERVAL_MS } from '../../index';
 import accounts from '../selectors/accounts';
 
+import tokensReducer from './tokens';
+
 const initialState = fromJS(
   {
     status: CLOSED,
@@ -183,7 +185,8 @@ const subscribeLatestBlockFilterEpic = () => async (dispatch, getState) => {
     dispatch(getLatestBlockNumber());
     dispatch(fetchEthereumPrice());
     dispatch(transactionsReducer.actions.getCurrentGasPrice());
-    dispatch(balancesReducer.actions.syncTokenBalances(window.contracts.tokens, accounts.defaultAccount(getState())))
+    dispatch(balancesReducer.actions.syncTokenBalances(window.contracts.tokens, accounts.defaultAccount(getState())));
+    dispatch(offersReducer.actions.getBestOfferIdsForActiveTradingPairEpic());
 
   }, HEALTHCHECK_INTERVAL_MS);
 
@@ -191,10 +194,12 @@ const subscribeLatestBlockFilterEpic = () => async (dispatch, getState) => {
     console.log(b);
     clearInterval(tid);
     dispatch(getLatestBlockNumber());
-    dispatch(transactionsReducer.actions.getCurrentTxNonceEpic());
     dispatch(fetchEthereumPrice());
+    dispatch(transactionsReducer.actions.getCurrentTxNonceEpic());
     dispatch(transactionsReducer.actions.getCurrentGasPrice());
-    dispatch(balancesReducer.actions.syncTokenBalances(window.contracts.tokens, accounts.defaultAccount(getState())))
+    dispatch(balancesReducer.actions.syncTokenBalances(window.contracts.tokens, accounts.defaultAccount(getState())));
+    dispatch(offersReducer.actions.getBestOfferIdsForActiveTradingPairEpic());
+    dispatch(tokensReducer.actions.getActiveTradingPairAllowanceStatus());
   });
 
   dispatch(subscribeLatestBlockFilter.fulfilled());
@@ -205,7 +210,9 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
   dispatch(CheckNetworkAction.pending());
   const onNetworkCheckCompleted = async () => {
     const currentLatestBlock = network.latestBlockNumber(getState());
+    dispatch(tokensReducer.actions.getActiveTradingPairAllowanceStatus());
     dispatch(subscribeLatestBlockFilterEpic());
+
 
     /**
      * Inital offersReducer sync

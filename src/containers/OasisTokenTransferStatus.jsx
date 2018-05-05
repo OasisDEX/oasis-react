@@ -16,7 +16,7 @@ import transfers from '../store/selectors/transfers';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
-  transaction: ImmutablePropTypes.map
+  transactionReceipt: ImmutablePropTypes.map
 };
 
 
@@ -80,8 +80,8 @@ export class OasisTokenTransferStatusWrapper extends PureComponent {
     return (this.transferStatus());
   }
   componentWillUpdate(nextProps) {
-    if (!nextProps.transaction) { return; }
-    else if (isCancelledConfirmedOrFailed(nextProps.transaction)) {
+    if (!nextProps.transactionReceipt) { return; }
+    else if (isCancelledConfirmedOrFailed(nextProps.transactionReceipt)) {
       setTimeout(
         () => {
           this.props.actions.resetTransactionSubjectId();
@@ -96,7 +96,7 @@ export function mapStateToProps(state) {
   const pendingTransferTxSubjectId = transfers.transactionSubjectId(state);
   return {
     pendingTransferTxSubjectId,
-    transaction: transactions.getTransferTransaction(state, pendingTransferTxSubjectId)
+    transactionReceipt: transactions.getTransferTransaction(state, pendingTransferTxSubjectId)
   };
 }
 export function mapDispatchToProps(dispatch) {

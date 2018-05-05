@@ -3,15 +3,14 @@
 import React from 'react';
 import { fromJS } from 'immutable';
 
-import WithTransactionWatchWrapper from './WithTransactionWatch';
-
 import {
+  OasisNotTheBestOfferPriceWarningWrapper,
   mapStateToProps,
   mapDispatchToProps
-} from './WithTransactionWatch';
+} from './OasisNotTheBestOfferPriceWarning';
 import { shallow } from 'enzyme';
 
-describe('(Container) WithTransactionWatch', () => {
+describe('(Container) OasisNotTheBestOfferPriceWarning', () => {
   const state = fromJS(global.storeMock);
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
@@ -31,7 +30,7 @@ describe('(Container) WithTransactionWatch', () => {
 
   it('should render', () => {
     const wrapper = shallow(
-      <WithTransactionWatchWrapper {...props}/>
+      <OasisNotTheBestOfferPriceWarningWrapper {...props}/>
     );
     expect(wrapper).toMatchSnapshot();
   });
