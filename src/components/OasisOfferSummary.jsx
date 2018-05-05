@@ -32,9 +32,10 @@ export class OasisOfferSummary extends PureComponent {
     const transactionGasCostEstimate = gasEstimateInfo.get(
       "transactionGasCostEstimate"
     );
+    const gasEstimateError = gasEstimateInfo.get("transactionGasCostEstimateError");
     return (
       <OasisGasPriceWrapper
-        gasEstimateError={gasEstimateInfo.get("gasEstimateError")}
+        gasEstimateError={gasEstimateError}
         gasEstimatePending={gasEstimatePending}
         transactionGasCostEstimate={transactionGasCostEstimate}
         className={styles.detailsTradingCol}
