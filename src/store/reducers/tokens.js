@@ -15,6 +15,8 @@ import tokens from '../selectors/tokens';
 import offersReducer from './offers';
 import offers from '../selectors/offers';
 import { STATUS_PRISTINE } from './platform';
+import { createPromiseActions } from '../../utils/createPromiseActions';
+import balancesReducer from './balances';
 
 const initialState = Immutable.fromJS({
   allTokens: [
@@ -36,7 +38,26 @@ const initialState = Immutable.fromJS({
     TOKEN_BAT,
     TOKEN_NMR,
     TOKEN_SAI,
-    TOKEN_DAI
+    TOKEN_DAI,
+  ],
+  erc20Tokens: [
+    TOKEN_WRAPPED_ETH,
+    TOKEN_DAI,
+    TOKEN_SAI,
+    TOKEN_MAKER,
+    TOKEN_WRAPPED_GNT,
+    TOKEN_AUGUR,
+    TOKEN_TIME,
+    TOKEN_SINGULARDTV,
+    TOKEN_1ST,
+    TOKEN_DIGIX,
+    TOKEN_BAT,
+    TOKEN_ICONOMI,
+    TOKEN_MLN,
+    TOKEN_PLUTON,
+    TOKEN_RHOC,
+    TOKEN_NMR,
+    TOKEN_VSL,
   ],
   baseTokens: BASE_TOKENS,
   quoteTokens: QUOTE_TOKENS,
@@ -83,25 +104,27 @@ const setDefaultTradingPair = createAction(
   (baseToken, quoteToken) => ({ baseToken, quoteToken }),
 );
 
-
 const setActiveTradingPair = createAction(
   'TOKENS/SET_ACTIVE_TRADING_PAIR',
-  tradingPair => tradingPair
+  tradingPair => tradingPair,
 );
 
 const setActiveTradingPairEpic = (args, sync = true) => (dispatch, getState) => {
   const previousActiveTradingPair = tokens.activeTradingPair(getState());
-  if(previousActiveTradingPair === null || previousActiveTradingPair.baseToken !== args.baseToken || previousActiveTradingPair.quoteToken !== args.quoteToken) {
+  if(previousActiveTradingPair) {
+    dispatch(getActiveTradingPairAllowanceStatus());
+  }
+  if (previousActiveTradingPair === null || previousActiveTradingPair.baseToken !== args.baseToken || previousActiveTradingPair.quoteToken !== args.quoteToken) {
     dispatch(setActiveTradingPair(args));
     const currentActiveTradingPair = tokens.activeTradingPair(getState());
-    if(sync && offers.activeTradingPairOffersInitialLoadStatus(getState()) === STATUS_PRISTINE) {
+    if (sync && offers.activeTradingPairOffersInitialLoadStatus(getState()) === STATUS_PRISTINE) {
       dispatch(offersReducer.actions.syncOffersEpic(currentActiveTradingPair));
     }
   }
 };
 
 const setPrecision = createAction(
-  'TOKENS/SET_PRECISION', precision => precision
+  'TOKENS/SET_PRECISION', precision => precision,
 );
 
 const denotePrecision = () => (dispatch, getState) => {
@@ -117,17 +140,44 @@ const denotePrecision = () => (dispatch, getState) => {
 };
 
 
+const getActiveTradingPairAllowanceStatus$ = createPromiseActions('TOKENS/GET_ACTIVE_TRADING_PAIR_ALLOWANCE_STATUS');
+
+const getActiveTradingPairAllowanceStatus = () => async (dispatch, getState) => {
+
+  dispatch(
+    getActiveTradingPairAllowanceStatus$.pending()
+  );
+  const { baseToken , quoteToken } = tokens.activeTradingPair(getState());
+  await dispatch(
+    balancesReducer.actions.getDefaultAccountTokenAllowanceForMarket(
+      baseToken
+    )
+  );
+  await dispatch(
+    balancesReducer.actions.getDefaultAccountTokenAllowanceForMarket(
+      quoteToken
+    )
+  );
+
+  dispatch(
+    getActiveTradingPairAllowanceStatus$.fulfilled()
+  );
+
+};
+
+
 const actions = {
   Init,
   setDefaultTradingPair,
   setActiveTradingPairEpic,
   denotePrecision,
+  getActiveTradingPairAllowanceStatus
 };
 
 const reducer = handleActions({
   [setDefaultTradingPair]: (state, { payload }) =>
     state.update('defaultTradingPair', () => payload),
-  [setActiveTradingPair]:(state, { payload }) => state.set('activeTradingPair', payload),
+  [setActiveTradingPair]: (state, { payload }) => state.set('activeTradingPair', payload),
   [setPrecision]: (state, { payload }) => state.set('precision', payload),
 }, initialState);
 

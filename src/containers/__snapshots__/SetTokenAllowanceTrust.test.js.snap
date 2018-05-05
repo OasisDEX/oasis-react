@@ -1,35 +1,63 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
-<InfoBox
-  className=""
-  color="default"
-  justifyContent="space-between"
-  size="md"
-  vertical={false}
+<div
+  hidden={true}
 >
-  <InfoBoxBody
+  <InfoBox
     className=""
     color="default"
+    justifyContent="space-between"
+    size="md"
     vertical={false}
   >
-    <h1 />
-  </InfoBoxBody>
-  <InfoBoxBody
-    className=""
-    color="default"
-    vertical={false}
-  >
-    <OasisButton
-      btnType="button"
-      color="success"
-      onClick={[Function]}
-      size="md"
+    <InfoBoxBody
+      className=""
+      color="default"
+      vertical={false}
     >
-      Loading
-    </OasisButton>
-  </InfoBoxBody>
-</InfoBox>
+      <OasisAccordion
+        heading={
+          <FlexBox
+            alignContent="space-between"
+            alignItems="stretch"
+            className=""
+            justifyContent="normal"
+            vertical={false}
+            wrap={false}
+          >
+            <span>
+              Enable
+               
+              <b>
+                W-ETH
+              </b>
+               for trading
+            </span>
+            <OasisButton
+              btnType="button"
+              color="success"
+              disabled={false}
+              onClick={[Function]}
+              size="md"
+            >
+              Loading
+            </OasisButton>
+          </FlexBox>
+        }
+        isOpen={true}
+      >
+        <div
+          hidden={false}
+        >
+          You need first grant access to withdraw from your personal account. To disable 
+          W-ETH
+           trading use Allowance widget on the funds page.
+        </div>
+      </OasisAccordion>
+    </InfoBoxBody>
+  </InfoBox>
+</div>
 `;
 
 exports[`(Container) SetTokenAllowanceTrust will receive right actions 1`] = `
@@ -44,7 +72,7 @@ Object {
 exports[`(Container) SetTokenAllowanceTrust will receive right props 1`] = `
 Object {
   "contractsLoaded": true,
-  "currentTransaction": [Function],
+  "latestBlockNumber": 6716998,
   "subjectTrustStatus": null,
 }
 `;

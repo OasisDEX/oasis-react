@@ -44,7 +44,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
 export function mapStateToProps(state) {
   const pendingTransferTxSubjectId = transfers.transactionSubjectId(state);
   return {
-    transaction: transactions.getTransferTransaction(state, pendingTransferTxSubjectId),
+    transactionReceipt: transactions.getTransferTransaction(state, pendingTransferTxSubjectId),
     selectedToken: transfers.selectedToken(state),
   };
 }

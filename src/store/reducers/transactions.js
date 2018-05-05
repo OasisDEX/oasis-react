@@ -6,19 +6,21 @@ import network from '../selectors/network';
 import { fulfilled } from '../../utils/store';
 import web3 from '../../bootstrap/web3';
 import accounts from '../selectors/accounts';
+import { getTimestamp } from '../../utils/time';
+import transactions from '../selectors/transactions';
 
 export const DEFAULT_GAS_LIMIT = '10000000';
 export const DEFAULT_GAS_PRICE = '1000000';
 
 const initialState = fromJS({
   txList: [],
-  pendingTxSubjectIds: [],
   defaultGasLimit: DEFAULT_GAS_LIMIT,
   activeGasLimit: DEFAULT_GAS_LIMIT,
   defaultGasPrice: DEFAULT_GAS_PRICE,
   activeGasPrice: DEFAULT_GAS_PRICE,
   currentGasPriceInWei: null,
-  txNonce: null
+  txNonce: null,
+  transactionCheckIntervalMs: 1000
 });
 
 const INIT = 'TX/INIT';
@@ -55,7 +57,10 @@ export const TX_STATUS_REJECTED = 'TX/STATUS_REJECTED';
 
 export const TX_ALLOWANCE_TRUST_ENABLE = TX__GROUP__LIMITS + 'TX/ALLOWANCE_TRUST_ENABLE';
 export const TX_ALLOWANCE_TRUST_DISABLE = TX__GROUP__LIMITS + 'TX/ALLOWANCE_TRUST_DISABLE';
+export const TX_ALLOWANCE_TRUST_TOGGLE = TX__GROUP__LIMITS + 'TX/ALLOWANCE_TRUST_TOGGLE';
 
+export const TRANSACTION_IS_CONFIRMED = '0x1';
+export const TRANSACTION_IS_REJECTED = '0x0';
 
 export const getTransactionGroup = (transactionType) => {
   if (0 === transactionType.indexOf(TX__GROUP__OFFERS)) {
@@ -77,11 +82,11 @@ const init = createAction(
 
 const transactionCancelledByUser = createAction(
   'TX/TRANSACTION_CANCELLED_BY_USER',
-  ({ txType, txStatus, txSubjectId, txStats }) => ({ txType, txStatus, txSubjectId, txStats })
+  ({ txType, txStatus, txStats }) => ({ txType, txStatus, txStats })
 );
 
 const addTransaction = createPromiseActions(ADD_TRANSACTION);
-const addTransactionEpic = ({ txType, txHash, txSubjectId, txMeta }) => async (dispatch, getState) => {
+const addTransactionEpic = ({ txType, txHash, txMeta, txDispatchedTimestamp, txStartTimestamp }) => async (dispatch, getState) => {
   let previousBlockNumber = network.latestBlockNumber(getState());
   dispatch(
     addTransaction.pending({
@@ -89,10 +94,10 @@ const addTransactionEpic = ({ txType, txHash, txSubjectId, txMeta }) => async (d
       txType,
       txMeta,
       txStatus: TX_STATUS_AWAITING_CONFIRMATION,
-      txSubjectId,
       txStats: {
+        txDispatchedTimestamp,
         txStartBlockNumber: previousBlockNumber,
-        txStartTimestamp: parseInt(Date.now() / 1000)
+        txStartTimestamp
       }
     }),
   );
@@ -102,45 +107,51 @@ const addTransactionEpic = ({ txType, txHash, txSubjectId, txMeta }) => async (d
       if (currentBlockNumber !== previousBlockNumber) {
         const txReceipt = (await dispatch(syncTransaction(txHash))).value;
         if (txReceipt !== null) {
-          if (txReceipt.status) {
-            const payload = {
-              txHash,
-              txReceipt,
-              txSubjectId,
-              txType,
-              txConfirmedBlockNumber: txReceipt.blockNumber,
-              txStatus: TX_STATUS_CONFIRMED,
-              txGasCost: txReceipt.gasCost,
-              txStats: {
-                txEndBlockNumber: previousBlockNumber,
-                txEndTimestamp: parseInt(Date.now() / 1000)
-              }
-            };
-            dispatch(
-              addTransaction.fulfilled(payload)
-            );
-            resolve(payload);
-          } else {
-            const payload = {
-              txHash,
-              txReceipt,
-              txSubjectId,
-              txType,
-              txRejectedBlockNumber: txReceipt.blockNumber,
-              txStatus: TX_STATUS_REJECTED,
-              txGasCost: txReceipt.gasCost,
+          switch (txReceipt.status) {
+            case TRANSACTION_IS_CONFIRMED: {
+              const payload = {
+                txHash,
+                txReceipt,
+                txType,
+                txConfirmedBlockNumber: txReceipt.blockNumber,
+                txStatus: TX_STATUS_CONFIRMED,
+                txGasCost: txReceipt.gasCost,
+                txStats: {
+                  txEndBlockNumber: previousBlockNumber,
+                  txEndTimestamp: getTimestamp()
+                }
+              };
+              dispatch(
+                addTransaction.fulfilled(payload)
+              );
+              clearInterval(complete);
+              resolve(payload);
 
-            };
-            dispatch(
-              addTransaction.rejected(payload)
-            );
-            reject(payload);
+            } break;
+            case TRANSACTION_IS_REJECTED: {
+              const payload = {
+                txHash,
+                txReceipt,
+                txType,
+                txRejectedBlockNumber: txReceipt.blockNumber,
+                txStatus: TX_STATUS_REJECTED,
+                txGasCost: txReceipt.gasCost,
+                txStats: {
+                  txEndBlockNumber: previousBlockNumber,
+                  txEndTimestamp: getTimestamp()
+                }
+              };
+              dispatch(
+                addTransaction.rejected(payload)
+              );
+              clearInterval(complete);
+              reject(payload);
+            } break;
           }
-          clearInterval(complete);
         }
       }
       previousBlockNumber = network.latestBlockNumber(getState());
-    }, 1000);
+    }, transactions.transactionCheckInterval(getState()));
 
   });
 
@@ -149,23 +160,6 @@ const addTransactionEpic = ({ txType, txHash, txSubjectId, txMeta }) => async (d
 const syncTransaction = createAction(
   SYNC_TRANSACTION,
   txHash => web3p.eth.getTransactionReceipt(txHash),
-  // if (index >= 0 && index < open.length) {
-  //   const document = open[index];
-  //   web3Obj.eth.getTransactionReceipt(document.tx, (error, result) => {
-  //     if (!error && result != null) {
-  //       if (result.logs.length > 0) {
-  //         console.log('tx_success', document.tx, result.gasUsed);
-  //       } else {
-  //         console.error('tx_oog', document.tx, result.gasUsed);
-  //       }
-  //       super.update({tx: document.tx}, {$set: {receipt: result}}, () => {
-  //         super.remove({tx: document.tx});
-  //       });
-  //     }
-  //     // Sync next transaction
-  //     syncTransaction(index + 1);
-  //   });
-  // }
 );
 
 
@@ -202,13 +196,12 @@ const actions = {
 const reducer = handleActions({
   [addTransaction.pending]:
     (
-      state, { payload: { txHash, txSubjectId, txType, txStats, txMeta } },
+      state, { payload: { txHash, txType, txStats, txMeta } },
     ) => {
 
       const txPayload = fromJS({
         txHash,
         txReceipt: null,
-        txSubjectId,
         txType,
         txStatus : TX_STATUS_AWAITING_CONFIRMATION,
         txStats,
@@ -249,18 +242,6 @@ const reducer = handleActions({
           .setIn(['txStats','txEndBlockNumber'], txStats.txEndBlockNumber)
           .setIn(['txStats','txTotalTimeSec'], txStats.txEndBlockNumber - transaction.getIn('txStartTimestamp'))
       );
-  },
-  [transactionCancelledByUser]: (state, { payload: { txSubjectId, txStats } }) => {
-    const txListIndex = state.get('txList').findIndex(tx => tx.get('txSubjectId') === txSubjectId);
-    return state.updateIn(
-      ['txList', txListIndex],
-      transaction => transaction
-        .set('txStatus', TX_STATUS_CANCELLED_BY_USER)
-        .setIn(['txStats','txEndTimestamp'], txStats.txEndTimestamp)
-        .setIn(['txStats','txEndBlockNumber'], txStats.txEndBlockNumber)
-        .setIn(['txStats','txTotalTimeSec'], txStats.txEndBlockNumber - transaction.getIn('txStartTimestamp'))
-    );
-
   },
   [fulfilled(getCurrentTxNonce)]: (state, { payload }) => state.set('txNonce', parseInt(payload) + 1 ),
   [fulfilled(getCurrentGasPrice)]: (state, { payload }) => state.set('currentGasPriceInWei', payload.toString()),

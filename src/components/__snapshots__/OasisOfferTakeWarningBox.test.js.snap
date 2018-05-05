@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisOfferTakeWarningBox should render 1`] = `
+<InfoBox
+  className=""
+  color="default"
+  justifyContent="normal"
+  size="md"
+  vertical={false}
+>
+  <InfoBoxBody
+    className=""
+    color="default"
+    vertical={false}
+  >
+    If someone (partially) fills this order before you do, your offer may only be partially filled or even denied, in which case unused funds will be refunded to your balance and allowance.
+  </InfoBoxBody>
+</InfoBox>
+`;

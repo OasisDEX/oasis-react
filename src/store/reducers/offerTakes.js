@@ -5,14 +5,13 @@ import tokens from '../selectors/tokens';
 import offerTakes from '../selectors/offerTakes';
 import offersReducer from './offers';
 import { initialize } from 'redux-form';
-import { DEFAULT_GAS_LIMIT, TX_OFFER_TAKE, TX_STATUS_CANCELLED_BY_USER } from './transactions';
+import { DEFAULT_GAS_LIMIT, TX_OFFER_TAKE } from './transactions';
 import * as form from 'redux-form/immutable';
 import web3 from '../../bootstrap/web3';
 import { ETH_UNIT_ETHER } from '../../constants';
 import balances from '../selectors/balances';
 import { fulfilled, pending, rejected } from '../../utils/store';
-import transactions from './transactions';
-import network from '../selectors/network';
+import { handleTransaction } from '../../utils/transactions/handleTransaction';
 
 export const TAKE_BUY_OFFER = 'OFFER_TAKES/TAKE_BUY_OFFER';
 export const TAKE_SELL_OFFER = 'OFFER_TAKES/TAKE_SELL_OFFER';
@@ -79,48 +78,18 @@ const sendBuyTransaction = createAction(
 
 const takeOffer = createPromiseActions('OFFER_TAKES/TAKE_OFFER');
 
-const takeOfferEpic = () => async (dispatch, getState) => {
+const takeOfferEpic = (withCallbacks = {}) => async (dispatch, getState) => {
   const volume = form.formValueSelector('takeOffer')(getState(), 'volume');
   const volumeInWei = web3.toWei(volume, ETH_UNIT_ETHER);
   const activeOfferTakeOfferId = offerTakes.activeOfferTakeOfferId(getState());
   dispatch(takeOffer.pending());
-  try {
-    const pendingBuyAction = dispatch(
-      sendBuyTransaction(activeOfferTakeOfferId, volumeInWei),
-    );
 
-    const transactionHash = (await pendingBuyAction).value;
-    dispatch(
-      transactions.actions.addTransactionEpic({
-        txType: TX_OFFER_TAKE,
-        txHash: transactionHash,
-        txSubjectId: activeOfferTakeOfferId,
-      }),
-    );
-  } catch (e) {
-    dispatch(
-      transactions.actions.addTransactionEpic({
-        txType: TX_OFFER_TAKE,
-        txSubjectId: activeOfferTakeOfferId,
-      }),
-    );
-    dispatch(takeOffer.rejected());
-    dispatch(
-      transactions.actions.transactionCancelledByUser({
-        txType: TX_OFFER_TAKE,
-        txStatus: TX_STATUS_CANCELLED_BY_USER,
-        txSubjectId: activeOfferTakeOfferId,
-        txStats: {
-          txEndBlockNumber: network.latestBlockNumber(getState()),
-          txEndTimestamp: parseInt(Date.now() / 1000),
-        },
-      }),
-    );
-
-    setTimeout(() => {
-      dispatch(setOfferTakeModalClosedEpic());
-    }, 5000);
-  }
+  return handleTransaction({
+    dispatch,
+    transactionDispatcher: () => dispatch(sendBuyTransaction(activeOfferTakeOfferId, volumeInWei)),
+    transactionType: TX_OFFER_TAKE,
+    withCallbacks
+  });
 };
 
 const setActiveOfferTakeType = createAction('OFFER_TAKES/SET_ACTIVE_OFFER_TAKE_TYPE', takeType => takeType);
@@ -131,6 +100,7 @@ const setOfferTakeModalOpenEpic = ({ offerId, offerTakeType }) => (dispatch) => 
   dispatch(setActiveOfferTakeOfferId(offerId));
   dispatch(setActiveOfferTakeType(offerTakeType));
   dispatch(defer(initializeOfferTakeFormEpic));
+  dispatch(defer(getTransactionGasCostEstimateEpic));
   dispatch(setOfferTakeModalOpen());
 };
 
@@ -242,7 +212,7 @@ const getTransactionGasCostEstimate = createAction(
 );
 
 const getTransactionGasCostEstimateEpic = (
-  { canBuyOffer = offerTakes.canBuyOffer,
+  { canFulfillOffer = offerTakes.canFulfillOffer,
     activeOfferTakeOfferId = offerTakes.activeOfferTakeOfferId,
     takeFormValuesSelector = offerTakes.takeFormValuesSelector,
     activeOfferTakeOfferOwner = offerTakes.activeOfferTakeOfferOwner,
@@ -252,7 +222,7 @@ const getTransactionGasCostEstimateEpic = (
   const offerId = activeOfferTakeOfferId(getState());
   const volume = takeFormValuesSelector(getState(), 'volume');
 
-  if (!canBuyOffer(getState()) || !volume) {
+  if (!canFulfillOffer(getState()) || !volume) {
     return null;
   }
   const offerOwner = activeOfferTakeOfferOwner(getState());

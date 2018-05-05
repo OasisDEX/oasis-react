@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisIsTokenTradingEnabledByUser should render 1`] = `
+<FlexBox
+  alignContent="stretch"
+  alignItems="stretch"
+  className="undefined undefined"
+  justifyContent="normal"
+  vertical={false}
+  wrap={false}
+>
+  <div>
+    trading of 
+    <span>
+      MKR
+    </span>
+  </div>
+  <div>
+    <span
+      className="undefined undefined"
+    >
+      disabled
+    </span>
+  </div>
+</FlexBox>
+`;
+
+exports[`(Container) OasisIsTokenTradingEnabledByUser will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "getAllowanceStatus": [Function],
+  },
+}
+`;
+
+exports[`(Container) OasisIsTokenTradingEnabledByUser will receive right props 1`] = `
+Object {
+  "isTokenTradingEnabledByUser": null,
+}
+`;

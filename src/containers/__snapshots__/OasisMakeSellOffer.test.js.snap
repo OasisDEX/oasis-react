@@ -21,6 +21,7 @@ exports[`(Container) OasisMakeSellOffer should render 1`] = `
   <div>
     <div>
       <OasisInsufficientAmountOfToken
+        noBorder={true}
         tokenName="W-ETH"
       />
     </div>

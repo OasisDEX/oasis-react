@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisAccordion should render 1`] = `
+<div>
+  <FlexBox
+    alignContent="stretch"
+    alignItems="stretch"
+    className=""
+    justifyContent="space-between"
+    vertical={false}
+    wrap={false}
+  >
+    <span
+      onClick={[Function]}
+    >
+      [+]
+    </span>
+    <div>
+      <div>
+        This this a heading!
+      </div>
+    </div>
+  </FlexBox>
+  <div />
+</div>
+`;

@@ -1,147 +1,170 @@
-import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { PureComponent } from "react";
+import { PropTypes } from "prop-types";
 
 // import ImmutablePropTypes from 'react-immutable-proptypes';
-import ReactModal from 'react-modal';
+import ReactModal from "react-modal";
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from '../store/reducers/offerTakes';
-import network from '../store/selectors/network';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from "../store/reducers/offerTakes";
+import network from "../store/selectors/network";
 
-import offerTakesReducer from '../store/reducers/offerTakes';
-import offerTakes from '../store/selectors/offerTakes';
-import OfferTakeForm from '../components/OfferTakeForm';
-import balances from '../store/selectors/balances';
-import tokens from '../store/selectors/tokens';
-import { getFormValues, getFormSyncErrors } from 'redux-form/immutable';
-import OasisTransactionDetailsWrapper  from './OasisTransactionDetails';
-import OasisTokenBalanceSummary  from './OasisTokenBalanceSummary';
-import SetTokenAllowanceTrustWrapper from './SetTokenAllowanceTrust';
-import transactions from '../store/selectors/transactions';
-import { TX_OFFER_TAKE, TX_STATUS_CONFIRMED } from '../store/reducers/transactions';
-import getUsersSoldAndReceivedAmounts from '../utils/offers/getUsersSoldAndReceivedAmounts';
-import modalStyles from '../styles/modules/_modal.scss';
-import styles from './OasisMakeOfferModal.scss';
-import CSSModules from 'react-css-modules';
+import offerTakesReducer from "../store/reducers/offerTakes";
+import offerTakes from "../store/selectors/offerTakes";
+import OfferTakeForm from "../components/OfferTakeForm";
+import OasisTokenBalanceSummary from "./OasisTokenBalanceSummary";
+import SetTokenAllowanceTrustWrapper from "./SetTokenAllowanceTrust";
+import modalStyles from "../styles/modules/_modal.scss";
+import styles from "./OasisMakeOfferModal.scss";
+import CSSModules from "react-css-modules";
 import OasisButton from "../components/OasisButton";
-
-
-const OfferNotAvailable = () => (
-  <div>
-    <div>Offer is not available anymore</div>
-    <div>Will close shortly</div>
-  </div>
-);
-
+import OasisOfferNotAvailable from "../components/OasisOfferNotAvailable";
+import markets from "../store/selectors/markets";
+import OasisOfferSummaryWrapper from "./OasisOfferSummary";
+import OasisOfferTakeWarningBox from "../components/OasisOfferTakeWarningBox";
+import OasisNotTheBestOfferPriceWarningWrapper from "./OasisNotTheBestOfferPriceWarning";
+import { TX_OFFER_TAKE } from "../store/reducers/transactions";
+import OasisTransactionStatusWrapper from "./OasisTransactionStatus";
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
-  offerTakeType: PropTypes.oneOf([
-    TAKE_BUY_OFFER,
-    TAKE_SELL_OFFER,
-  ]).isRequired,
+  offerTakeType: PropTypes.oneOf([TAKE_BUY_OFFER, TAKE_SELL_OFFER]).isRequired,
   actions: PropTypes.object.isRequired,
+  activeMarketAddress: PropTypes.string,
+  canFulfillOffer: PropTypes.bool.isRequired,
+  buyToken: PropTypes.string,
+  sellToken: PropTypes.string,
+  latestBlockNumber: PropTypes.number,
+  isCurrentOfferActive: PropTypes.bool.isRequired
 };
 
-const getOfferTitle = (offerTakeType) => {
+const getOfferTitle = offerTakeType => {
   switch (offerTakeType) {
-    case TAKE_BUY_OFFER:  return 'Buy offer';
-    case TAKE_SELL_OFFER: return 'Sell offer';
+    case TAKE_BUY_OFFER:
+      return "Buy offer";
+    case TAKE_SELL_OFFER:
+      return "Sell offer";
   }
 };
 
-export const isTransactionConfirmed = (transaction) =>
-  transaction && transaction.get('txStatus') === TX_STATUS_CONFIRMED;
-
 export class OasisTakeOfferModalWrapper extends PureComponent {
-
   static takeOfferBtnLabel(offerTakeType, { buyToken, sellToken }) {
     switch (offerTakeType) {
-      case TAKE_SELL_OFFER: return `Buy ${buyToken}`;
-      case TAKE_BUY_OFFER:  return `Sell ${sellToken}`;
+      case TAKE_SELL_OFFER:
+        return `Buy ${buyToken}`;
+      case TAKE_BUY_OFFER:
+        return `Sell ${sellToken}`;
     }
   }
 
   constructor(props) {
     super(props);
+    this.state = {};
     this.onBuyOffer = this.onBuyOffer.bind(this);
     this.onCancel = this.onCancel.bind(this);
   }
 
-  onCancel() { this.props.actions.setOfferTakeModalClosed(); }
+  onCancel() {
+    this.props.actions.setOfferTakeModalClosed();
+  }
 
   async onBuyOffer() {
     const { actions } = this.props;
-    actions.checkIfOfferIsActive().then(
-      (isActive) => {
-        if(isActive) { actions.takeOffer() }
+    actions.checkIfOfferIsActive().then(isActive => {
+      if (isActive) {
+        this.setState({ disableOfferTakeButton: true });
+        actions.takeOffer({
+          onPending: txStartTimestamp => this.setState({ txStartTimestamp }),
+          onCancelCleanup: () => {
+            this.setState({ disableOfferTakeButton: false });
+          }
+        });
       }
-    )
-
+    });
   }
 
+  askForConfirmationBeforeModalClose() {
+    const { lockCancelButton } = this.state;
+    return lockCancelButton;
+  }
+
+  renderOfferSummary() {
+    const { offerTakeType, isCurrentOfferActive } = this.props;
+    return (
+      <div>
+        <OasisOfferSummaryWrapper offerType={offerTakeType} />
+        {isCurrentOfferActive ? null : <OasisOfferNotAvailable />}
+      </div>
+    );
+  }
+
+  renderTransactionStatus() {
+    const { txStartTimestamp } = this.state;
+    return txStartTimestamp ? (
+      <OasisTransactionStatusWrapper
+        txTimestamp={txStartTimestamp}
+        txType={TX_OFFER_TAKE}
+      />
+    ) : null;
+  }
 
   render() {
     const {
       offerTakeType,
-      // userBalances,
-      canBuyOffer,
-      activeOfferTakeOfferOwner,
+      canFulfillOffer,
+      activeMarketAddress,
       sellToken,
       buyToken,
-      activeOfferTakeOfferId,
-      currentOfferTakeTransaction,
-      isCurrentTransactionValid,
-      isCurrentOfferActive,
-      offerTakeFormValues,
-      hasSufficientTokenAmount,
-      // actions: {
-      //   getTransactionGasCostEstimate
-      // }
+      actions: { getTransactionGasCostEstimate }
     } = this.props;
 
     return (
-      <ReactModal ariaHideApp={false} isOpen={true} className={modalStyles.modal}>
+      <ReactModal
+        ariaHideApp={false}
+        isOpen={true}
+        className={modalStyles.modal}
+      >
         <h4 className={styles.heading}>{getOfferTitle(offerTakeType)}</h4>
-        <button
-          hidden={currentOfferTakeTransaction}
-          className={modalStyles.closeModalBtn}
-          onClick={this.onCancel}>×
+        <button className={modalStyles.closeModalBtn} onClick={this.onCancel}>
+          <span>×</span>
         </button>
-        <OasisTokenBalanceSummary summary="Available" token={sellToken}/>
-
-        <OfferTakeForm
-            // estimateGas={getTransactionGasCostEstimate}
-        />
-        <div className="statusSection">
-          <OasisTransactionDetailsWrapper
-            hasSufficientTokenAmount={hasSufficientTokenAmount}
-            transactionSubectType={TX_OFFER_TAKE}
-            isTransactionValid={isCurrentTransactionValid}
-            {...getUsersSoldAndReceivedAmounts(offerTakeType, offerTakeFormValues)}
-            buyToken={buyToken}
-            transaction={currentOfferTakeTransaction}
-            sellToken={sellToken}
-            offerId={activeOfferTakeOfferId}
-            // getTransactionGasCostEstimate={getTransactionGasCostEstimate}
-          />
-        </div>
-        <SetTokenAllowanceTrustWrapper
-          allowanceSubjectAddress={activeOfferTakeOfferOwner}
-          tokenName={buyToken}
-        />
-        <div
-          className={styles.footer}
-          hidden={currentOfferTakeTransaction}
-        >
-          <OasisButton onClick={this.onCancel}>Cancel</OasisButton>
-          <div className="notificationsSection">
-            { !isCurrentOfferActive && <OfferNotAvailable/>}
+        <OasisTokenBalanceSummary summary="Available" token={sellToken} />
+        <div>
+          <div>
+            <OfferTakeForm estimateGas={getTransactionGasCostEstimate} />
           </div>
-          <OasisButton disabled={!canBuyOffer} onClick={this.onBuyOffer}>
-            {OasisTakeOfferModalWrapper.takeOfferBtnLabel(offerTakeType, { buyToken, sellToken })}
-          </OasisButton>
+          <div className="statusSection">
+            <div>{this.renderOfferSummary()}</div>
+            <div>{this.renderTransactionStatus()}</div>
+            <SetTokenAllowanceTrustWrapper
+              onTransactionPending={() =>
+                this.setState({ lockCancelButton: true })
+              }
+              onTransactionCompleted={() =>
+                this.setState({ lockCancelButton: false })
+              }
+              onCancelCleanup={() => this.setState({ lockCancelButton: false })}
+              allowanceSubjectAddress={activeMarketAddress}
+              tokenName={sellToken}
+            />
+            <OasisOfferTakeWarningBox />
+            <OasisNotTheBestOfferPriceWarningWrapper />
+          </div>
+          <div className={styles.footer}>
+            <OasisButton onClick={this.onCancel}>
+              {this.askForConfirmationBeforeModalClose() ? "Close" : "Cancel"}
+            </OasisButton>
+            <div className="notificationsSection" />
+            <OasisButton
+              disabled={!canFulfillOffer || this.state.disableOfferTakeButton}
+              onClick={this.onBuyOffer}
+            >
+              {OasisTakeOfferModalWrapper.takeOfferBtnLabel(offerTakeType, {
+                buyToken,
+                sellToken
+              })}
+            </OasisButton>
+          </div>
         </div>
       </ReactModal>
     );
@@ -153,55 +176,40 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     if (prevBlockNumber !== currentBlockNumber) {
       this.props.actions.checkIfOfferIsActive();
     }
-
-    if(isTransactionConfirmed(nextProps.currentOfferTakeTransaction)) {
-      setTimeout(
-        () => { this.props.actions.setOfferTakeModalClosed(); }, 10000
-      )
-    }
-
-    if(this.props.isCurrentOfferActive === false) {
-      setTimeout(
-        () => { this.props.actions.setOfferTakeModalClosed(); }, 10000
-      )
-    }
   }
 }
 
 export function mapStateToProps(state) {
   return {
     latestBlockNumber: network.latestBlockNumber(state),
-    activeOfferTake: offerTakes.activeOfferTake(state),
-    activeOfferTakeType: offerTakes.activeOfferTakeType(state),
     isOfferTakeModalOpen: offerTakes.isOfferTakeModalOpen(state),
-    userBalances: balances.tokenBalances(state),
-    activeTradingPair: tokens.activeTradingPair(state),
-    offerTakeFormValues: getFormValues('takeOffer')(state, [ 'total', 'volume', 'price' ]),
-    activeOfferTakeOfferOwner: offerTakes.activeOfferTakeOfferOwner(state),
-    canBuyOffer: offerTakes.canBuyOffer(state),
+    activeMarketAddress: markets.activeMarketAddress(state),
+    canFulfillOffer: offerTakes.canFulfillOffer(state),
     buyToken: offerTakes.activeOfferTakeBuyToken(state),
     sellToken: offerTakes.activeOfferTakeSellToken(state),
-    activeOfferTakeOfferId: offerTakes.activeOfferTakeOfferId(state),
-    formErrors: getFormSyncErrors('takeOffer')(state),
-    isCurrentTransactionValid: !offerTakes.isVolumeEmptyOrZero(state),
-    currentOfferTakeTransaction: transactions.getOfferTransaction(
-      state, { offerId: offerTakes.activeOfferTakeOfferId(state) }
-    ),
-    isCurrentOfferActive: offerTakes.isOfferActive(state) === true,
-    hasSufficientTokenAmount: offerTakes.hasSufficientTokenAmount(state)
+    isCurrentOfferActive: offerTakes.isOfferActive(state) === true
   };
 }
 
 export function mapDispatchToProps(dispatch) {
   const actions = {
-    checkIfOfferIsActive: offerTakesReducer.actions.checkIfOfferTakeSubjectStillActiveEpic,
-    setOfferTakeModalClosed: offerTakesReducer.actions.setOfferTakeModalClosedEpic,
+    checkIfOfferIsActive:
+      offerTakesReducer.actions.checkIfOfferTakeSubjectStillActiveEpic,
+    setOfferTakeModalClosed:
+      offerTakesReducer.actions.setOfferTakeModalClosedEpic,
     takeOffer: offerTakesReducer.actions.takeOfferEpic,
-    // getTransactionGasCostEstimate: offerTakesReducer.actions.getTransactionGasCostEstimateEpic
+    getTransactionGasCostEstimate:
+      offerTakesReducer.actions.getTransactionGasCostEstimateEpic
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }
 
 OasisTakeOfferModalWrapper.propTypes = propTypes;
-OasisTakeOfferModalWrapper.displayName = 'OasisTakeOfferModal';
-export default connect(mapStateToProps, mapDispatchToProps)(CSSModules(OasisTakeOfferModalWrapper, {modalStyles, styles}, { allowMultiple: true }));
+OasisTakeOfferModalWrapper.displayName = "OasisTakeOfferModal";
+export default connect(mapStateToProps, mapDispatchToProps)(
+  CSSModules(
+    OasisTakeOfferModalWrapper,
+    { modalStyles, styles },
+    { allowMultiple: true }
+  )
+);

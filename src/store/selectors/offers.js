@@ -80,6 +80,17 @@ const allOffers = createSelector(
   state => state.get('offers')
 );
 
+const activeTradingPairBestBuyOfferId = createSelector(
+  offers,
+  state => state.getIn(['activeTradingPairBestOfferId', 'bestBuyOfferId'])
+);
+
+const activeTradingPairBestSellOfferId = createSelector(
+  offers,
+  state => state.getIn(['activeTradingPairBestOfferId', 'bestSellOfferId'])
+);
+
+
 export default {
   state: offers,
   offersInitialized,
@@ -93,5 +104,7 @@ export default {
   activeTradingPairOffersInitiallyLoaded,
   activeTradingPairOffersInitialLoadStatus,
   tradingPairOffersInitialLoadStatus,
-  allOffers
+  allOffers,
+  activeTradingPairBestBuyOfferId,
+  activeTradingPairBestSellOfferId
 }

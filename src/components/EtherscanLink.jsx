@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
+import createEtherscanTransactionLink from '../utils/createEtherscanTransactionLink';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 export const ETHERSCAN_LINK_TYPE_ADDRESS = 'ETHERSCAN_LINK_TYPE_ADDRESS';
@@ -21,27 +22,31 @@ const defaultProps = {
   networkName: 'kovan'
 };
 
-
-
-
-const linkStyle = { maxWidth:'100px', textOverflow: 'ellipsis', display: 'inline-block', overflow: 'hidden' };
+const linkStyle = {
+  maxWidth:'100px',
+  textOverflow: 'ellipsis',
+  display: 'inline-block',
+  overflow: 'hidden'
+};
 
 class EtherscanLink extends PureComponent {
   render() {
     const { txHash, label, networkName, address } = this.props;
+    const url =  createEtherscanTransactionLink({
+      activeNetworkName: networkName,
+      transactionHash: txHash
+    });
     switch (this.props.type) {
       case ETHERSCAN_LINK_TYPE_TRANSACTION: {
-        const url = `https://${networkName}.etherscan.io/tx/${txHash}`;
         return (
-          <a style={linkStyle} href={url}>
+          <a target="_blank" style={linkStyle} href={url}>
             <span>{label||txHash}</span>
           </a>
         );
       }
       case ETHERSCAN_LINK_TYPE_ADDRESS: {
-        const url = `https://${networkName}.etherscan.io/address/${address}`;
         return (
-          <a style={linkStyle} href={url}>
+          <a target="_blank" style={linkStyle} href={url}>
             <span>{label||address}</span>
           </a>
         );
@@ -50,7 +55,7 @@ class EtherscanLink extends PureComponent {
   }
 }
 
-EtherscanLink.displayName = 'EthercanLink';
+EtherscanLink.displayName = 'EtherscanLink';
 EtherscanLink.propTypes = propTypes;
 EtherscanLink.defaultProps = defaultProps;
 export default EtherscanLink;

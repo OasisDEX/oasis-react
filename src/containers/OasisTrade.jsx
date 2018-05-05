@@ -14,7 +14,6 @@ import OasisChart from '../components/OasisChart';
 import trades from '../store/selectors/trades';
 import tokens from './../store/selectors/tokens';
 import platform from '../store/selectors/platform';
-import { DAY, WEEK } from '../utils/period';
 import OasisTradeOrdersWrapper from './OasisTradeOrders';
 import offers from '../store/selectors/offers';
 import platformReducer from '../store/reducers/platform';
@@ -23,10 +22,7 @@ import {FlexBox} from "../components/FlexBox";
 const propTypes = PropTypes && {
   actions: PropTypes.object,
   defaultTradingPair: PropTypes.object,
-  defaultPeriod: PropTypes.oneOf([
-    DAY,
-    WEEK,
-  ])
+  defaultPeriod: PropTypes.string.isRequired
 };
 
 export class OasisTradeWrapper extends PureComponent {

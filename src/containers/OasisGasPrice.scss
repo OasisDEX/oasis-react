@@ -1,6 +1,10 @@
+.base {
+  margin-top: 20px;
+}
 
 .detailsTradingFirstCol {
   flex-basis: 55%;
+  margin-right: 10px;
 }
 
 .detailsTradingSecCol {
@@ -21,4 +25,8 @@
   text-align: center;
   vertical-align: middle;
   width: 92px;
+}
+
+.gasLabel, .gasPriceETH {
+  margin-right: 10px;
 }

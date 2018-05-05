@@ -327,6 +327,14 @@ Array [
     "type": "deferred-thunk",
   },
   Object {
+    "payload": Object {
+      "args": Array [],
+      "thunk": [Function],
+      "thunkName": "getTransactionGasCostEstimateEpic",
+    },
+    "type": "deferred-thunk",
+  },
+  Object {
     "type": "OFFER_TAKES/SET_MODAL_OPEN",
   },
 ]
