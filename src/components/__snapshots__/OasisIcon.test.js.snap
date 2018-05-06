@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisIcon should render 1`] = `
+<div>
+  <img
+    src="icon-loading.svg"
+    style={
+      Object {
+        "height": "24px",
+        "width": "24px",
+      }
+    }
+  />
+</div>
+`;
