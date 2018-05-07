@@ -25,6 +25,23 @@ exports[`(Container) OasisMakeSellOffer should render 1`] = `
         tokenName="W-ETH"
       />
     </div>
+    <InfoBox
+      className=""
+      color="default"
+      hidden={true}
+      justifyContent="normal"
+      noBorder={true}
+      size="md"
+      vertical={false}
+    >
+      <InfoBoxBody
+        className=""
+        color="default"
+        vertical={false}
+      >
+        Enter a price to unlock amount and total.
+      </InfoBoxBody>
+    </InfoBox>
     <OasisButton
       btnType="button"
       color="danger"
@@ -57,6 +74,7 @@ Object {
   "contractsLoaded": true,
   "hasSufficientTokenAmount": false,
   "isModalOpen": false,
+  "isPriceSet": true,
   "quoteToken": undefined,
 }
 `;
