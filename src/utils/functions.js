@@ -1,8 +1,14 @@
-import { Session } from 'meteor/session';
-import { $ } from 'meteor/jquery';
-import { BigNumber } from 'meteor/ethereum:web3';
-import { Dapple, web3Obj } from 'meteor/makerotc:dapple';
-import { Spacebars } from 'meteor/spacebars';
+//import { Session } from 'meteor/session';
+//import { $ } from 'meteor/jquery';
+//import { BigNumber } from 'meteor/ethereum:web3';
+import BigNumber from 'bignumber.js';
+//import { Dapple, web3Obj } from 'meteor/makerotc:dapple';
+//import { Spacebars } from 'meteor/spacebars';
+
+const $ = undefined
+const Dapple = undefined
+const web3Obj = undefined
+const Session = undefined
 
 /**
  * Best case scenario:
@@ -154,9 +160,9 @@ export function thousandSeparator(number) {
 
 export function formatNumber(number, dec) {
   let decimals = dec;
-  if (decimals instanceof Spacebars.kw) {
-    decimals = 5;
-  }
+  // if (decimals instanceof Spacebars.kw) {
+  //   decimals = 5;
+  // }
   let n = number;
   if (typeof number !== 'object') {
     n = new BigNumber(`${number}`);
