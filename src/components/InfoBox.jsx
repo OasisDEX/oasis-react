@@ -11,7 +11,8 @@ const propTypes = PropTypes && {
   justifyContent: PropTypes.string,
   vertical: PropTypes.bool,
   fullWidth: PropTypes.bool,
-  noBorder: PropTypes.bool
+  noBorder: PropTypes.bool,
+  hidden: PropTypes.bool
 };
 
 const defaultProps = {
@@ -35,6 +36,7 @@ export class InfoBox extends PureComponent {
     } = this.props;
     return (
       <div
+        hidden={this.props.hidden}
         style={{ justifyContent: justifyContent }}
         className={
          `${!noBorder ? styles.box: ''}
