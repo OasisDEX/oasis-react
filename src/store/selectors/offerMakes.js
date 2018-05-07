@@ -144,7 +144,7 @@ const canMakeOffer = createSelector(
       return balances.tokenAllowanceTrustStatus(
           rootState,
           {
-            tokenName: activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerType)),
+            tokenName: activeOfferMakeSellToken(rootState, offerMakeToFormName(offerType)),
             allowanceSubjectAddress: window.contracts.market.address
           }
       )
@@ -191,7 +191,7 @@ const getActiveOfferMakeAllowanceStatus = createSelector(
   (rootState, offerType) => {
     return balances.tokenAllowanceStatusForActiveMarket(
       rootState, {
-        tokenName: activeOfferMakeBuyToken(rootState, offerMakeToFormName(offerType))
+        tokenName: activeOfferMakeSellToken(rootState, offerMakeToFormName(offerType))
       }
     );
   },
