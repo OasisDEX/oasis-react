@@ -70,11 +70,7 @@ export class OasisOfferSummary extends PureComponent {
               />
               <div>
                 <OasisIsTokenTradingEnabledByUserWrapper
-                  tokenName={tokenToBeAllowedForOffer({
-                    buyToken,
-                    sellToken,
-                    offerType
-                  })}
+                  tokenName={sellToken}
                 />
                 {isTokenTradingEnabled
                   ? this.renderGasEstimate()
