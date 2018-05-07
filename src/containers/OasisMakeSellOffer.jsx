@@ -17,8 +17,6 @@ import OasisButton from "../components/OasisButton";
 import platform from "../store/selectors/platform";
 import styles from "./OasisMakeOffer.scss";
 import CSSModules from "react-css-modules";
-import InfoBox from '../components/InfoBox';
-import InfoBoxBody from '../components/InfoBoxBody';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -66,9 +64,6 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
               />
             )}
           </div>
-          <InfoBox hidden={this.props.isPriceSet} noBorder>
-            <InfoBoxBody>Enter a price to unlock amount and total.</InfoBoxBody>
-          </InfoBox>
           <OasisButton
             className={styles.callToAction}
             color="danger"
@@ -104,8 +99,7 @@ export function mapStateToProps(state) {
     baseToken: tokens.activeTradingPairBaseToken(state),
     quoteToken: tokens.activeTradingPairQuoteToken(state),
     activeTradingPair: tokens.activeTradingPair(state),
-    contractsLoaded: platform.contractsLoaded(state),
-    isPriceSet: offerMakes.isMakeSellOfferPriceSet(state),
+    contractsLoaded: platform.contractsLoaded(state)
   };
 }
 export function mapDispatchToProps(dispatch) {

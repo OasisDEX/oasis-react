@@ -4,7 +4,7 @@ import balances from './balances';
 import transactions from './transactions';
 import markets from './markets';
 import web3 from '../../bootstrap/web3';
-import { MAKE_BUY_OFFER, MAKE_BUY_OFFER_FORM_NAME, MAKE_SELL_OFFER, MAKE_SELL_OFFER_FORM_NAME } from '../../constants';
+import {MAKE_BUY_OFFER, MAKE_SELL_OFFER} from '../../constants'
 import reselect from '../../utils/reselect';
 import offerMakeToFormName from '../../utils/offers/offerMakeToFormName';
 import tokens from './tokens';
@@ -198,16 +198,6 @@ const getActiveOfferMakeAllowanceStatus = createSelector(
   status => Boolean(status)
 );
 
-const isMakeBuyOfferPriceSet = createSelector(
-  rootState => currentFormValues(rootState, MAKE_BUY_OFFER_FORM_NAME),
-  ({ price })=> Boolean(price)
-);
-const isMakeSellOfferPriceSet = createSelector(
-  rootState => currentFormValues(rootState, MAKE_SELL_OFFER_FORM_NAME),
-  ({ price }) => Boolean(price)
-);
-
-
 export default {
   state: offerMakes,
   selector,
@@ -227,8 +217,5 @@ export default {
   checkingIfOfferIsActive,
   currentFormValues,
   gasEstimatePending,
-  getActiveOfferMakeAllowanceStatus,
-  isMakeBuyOfferPriceSet,
-  isMakeSellOfferPriceSet
-
+  getActiveOfferMakeAllowanceStatus
 };
