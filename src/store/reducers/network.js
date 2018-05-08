@@ -191,7 +191,7 @@ const subscribeLatestBlockFilterEpic = () => async (dispatch, getState) => {
   }, HEALTHCHECK_INTERVAL_MS);
 
   web3.eth.filter('latest', (e, b) => {
-    console.log(b);
+    // console.log(b);
     clearInterval(tid);
     dispatch(getLatestBlockNumber());
     dispatch(fetchEthereumPrice());

@@ -200,10 +200,12 @@ const getTransactionGasCostEstimate = createAction(
       offerId, amount, { to: offerOwner, gasLimit: DEFAULT_GAS_LIMIT },
       (e, estimation) => {
         if (e) {
+          console.log(`call: window.contracts.marketNoProxy.buy.estimateGas(${offerId}, ${amount}, { to: ${offerOwner}, gasLimit: ${DEFAULT_GAS_LIMIT} }, console.log) failed!`);
           reject({
             offerId, amount, to: offerOwner, activeOfferData,
           });
         } else {
+          console.log("gas estimation:", offerId, amount, offerOwner, estimation);
           resolve(estimation);
         }
       },
@@ -226,6 +228,8 @@ const getTransactionGasCostEstimateEpic = (
     return null;
   }
   const offerOwner = activeOfferTakeOfferOwner(getState());
+
+  console.log("estimating: ", volume, web3.toWei(volume, ETH_UNIT_ETHER).toString());
 
   return await dispatch(defer(
     getTransactionGasCostEstimate,
@@ -269,17 +273,18 @@ const reducer = handleActions({
     .set('checkingIfOfferActive', false)
   ,
   [pending(getTransactionGasCostEstimate)]:
-    state => state.set('transactionGasCostEstimatePending', true),
+    state => state
+      .set('transactionGasCostEstimateError', false)
+      .set('transactionGasCostEstimatePending', true),
   [fulfilled(getTransactionGasCostEstimate)]:
-    (state, { payload }) =>
-      state
-        .set('transactionGasCostEstimate', payload.toString())
-        .set('transactionGasCostEstimatePending', false),
+    (state, { payload }) => state
+      .set('transactionGasCostEstimateError', false)
+      .set('transactionGasCostEstimate', payload.toString())
+      .set('transactionGasCostEstimatePending', false),
   [rejected(getTransactionGasCostEstimate)]:
-    state =>
-      state
-        .set('transactionGasCostEstimateError', true)
-        .set('transactionGasCostEstimatePending', false),
+    state => state
+      .set('transactionGasCostEstimateError', true)
+      .set('transactionGasCostEstimatePending', false),
   [resetActiveOfferTakeGasCostEstimate]:
     state => state
       .set('transactionGasCostEstimate', null)

@@ -252,17 +252,18 @@ const reducer = handleActions({
   [setActiveOfferMakeType]: (state, {payload}) => state.set('activeOfferMakeType', payload),
   [resetActiveOfferMakeType]: state => state.set('activeOfferMakeType', null),
   [pending(getTransactionGasEstimate)]:
-    state => state.set('transactionGasCostEstimatePending', true),
+    state => state
+      .set('transactionGasCostEstimateError', false)
+      .set('transactionGasCostEstimatePending', true),
   [fulfilled(getTransactionGasEstimate)]:
-    (state, {payload}) =>
-      state
-        .set('transactionGasCostEstimate', payload.toString())
-        .set('transactionGasCostEstimatePending', false),
+    (state, {payload}) => state
+      .set('transactionGasCostEstimateError', false)
+      .set('transactionGasCostEstimate', payload.toString())
+      .set('transactionGasCostEstimatePending', false),
   [rejected(getTransactionGasEstimate)]:
-    state =>
-      state
-        .set('transactionGasCostEstimateError', true)
-        .set('transactionGasCostEstimatePending', false),
+    state => state
+      .set('transactionGasCostEstimateError', true)
+      .set('transactionGasCostEstimatePending', false),
   [resetActiveOfferMakeGasCostEstimate]:
     state => state
       .set('transactionGasCostEstimate', null)
