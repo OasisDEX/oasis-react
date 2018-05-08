@@ -111,7 +111,7 @@ const hasSufficientTokenAmount = createSelector(
   )(rootState, 'volume', 'total'),
   tokens.activeTradingPair,
   (tokenBalances,  activeOfferMakeType, { total, volume }, { baseToken, quoteToken }) => {
-    if( !total || parseFloat(total) === 0) { return null; }
+    if(!volume) { return true; }
     else {
       switch (activeOfferMakeType) {
         case MAKE_BUY_OFFER:  {
@@ -129,10 +129,10 @@ const hasSufficientTokenAmount = createSelector(
 );
 
 
-const isVolumeEmptyOrZero = createSelector(
-  (rootState, offerMakeType) => makeFormValuesSelector(offerMakeToFormName(offerMakeType))(rootState, 'volume'),
-  activeFormVolume => {
-    return !activeFormVolume || web3.toBigNumber(activeFormVolume).lte(0);
+const isVolumeOrPriceEmptyOrZero = createSelector(
+  (rootState, offerMakeType) => makeFormValuesSelector(offerMakeToFormName(offerMakeType))(rootState, 'volume', 'price'),
+  ({volume, price} = {}) => {
+    return  (!price || web3.toBigNumber(price).lte(0)) || (!volume || web3.toBigNumber(volume).lte(0));
   }
 );
 
@@ -149,15 +149,15 @@ const canMakeOffer = createSelector(
           }
       )
   },
-  isVolumeEmptyOrZero,
+  isVolumeOrPriceEmptyOrZero,
   (
     hasSufficientTokenAmount,
     canSendTransaction,
     isBuyEnabled,
     isMarketTrusted,
-    isVolumeZero,
+    isVolumeOrPriceEmptyOrZero,
   ) => {
-    if (isVolumeZero || !hasSufficientTokenAmount || !canSendTransaction || !isBuyEnabled || !isMarketTrusted ) {
+    if (isVolumeOrPriceEmptyOrZero || !hasSufficientTokenAmount || !canSendTransaction || !isBuyEnabled || !isMarketTrusted ) {
 
       return false;
     } else {
@@ -222,7 +222,7 @@ export default {
   isOfferBelowLimit,
   hasSufficientTokenAmount,
   transactionGasCostEstimate,
-  isVolumeEmptyOrZero,
+  isVolumeOrPriceEmptyOrZero,
   isOfferActive,
   checkingIfOfferIsActive,
   currentFormValues,

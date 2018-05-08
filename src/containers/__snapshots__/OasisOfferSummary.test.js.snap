@@ -21,6 +21,7 @@ Object {
 },
   "hasSufficientTokenAmount": false,
   "isTokenTradingEnabled": false,
+  "isVolumeOrPriceEmptyOrZero": false,
   "offerBuyAndSellTokens": Immutable.Map {
     buyToken: "MKR",
     sellToken: "DAI",

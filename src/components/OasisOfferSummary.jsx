@@ -11,6 +11,7 @@ import InfoBox from "./InfoBox";
 import InfoBoxBody from "./InfoBoxBody";
 import FlexBox from "./FlexBox";
 import tokenToBeAllowedForOffer from "../utils/offers/tokenToBeAllowedForOffer";
+import { isVolumeOrPriceEmptyOrZero } from '../store/selectors';
 
 const propTypes = PropTypes && {
   offerType: PropTypes.string.isRequired,
@@ -19,28 +20,33 @@ const propTypes = PropTypes && {
   amountSold: PropTypes.string.isRequired,
   amountReceived: PropTypes.string.isRequired,
   gasEstimateInfo: ImmutablePropTypes.map.isRequired,
-  isTokenTradingEnabled: PropTypes.bool.isRequired
+  isTokenTradingEnabled: PropTypes.bool.isRequired,
+  isVolumeOrPriceEmptyOrZero: PropTypes.bool
 };
 const defaultProps = {
 };
 
 export class OasisOfferSummary extends PureComponent {
   renderGasEstimate() {
-    const { gasEstimateInfo } = this.props;
+    const { gasEstimateInfo, isVolumeOrPriceEmptyOrZero } = this.props;
+    if (isVolumeOrPriceEmptyOrZero) {
+      return (null);
+    } else {
+      const gasEstimatePending = gasEstimateInfo.get("isGasEstimatePending");
+      const transactionGasCostEstimate = gasEstimateInfo.get(
+        "transactionGasCostEstimate"
+      );
+      const gasEstimateError = gasEstimateInfo.get("transactionGasCostEstimateError");
+      return (
+        <OasisGasPriceWrapper
+          gasEstimateError={gasEstimateError}
+          gasEstimatePending={gasEstimatePending}
+          transactionGasCostEstimate={transactionGasCostEstimate}
+          className={styles.detailsTradingCol}
+        />
+      );
+    }
 
-    const gasEstimatePending = gasEstimateInfo.get("isGasEstimatePending");
-    const transactionGasCostEstimate = gasEstimateInfo.get(
-      "transactionGasCostEstimate"
-    );
-    const gasEstimateError = gasEstimateInfo.get("transactionGasCostEstimateError");
-    return (
-      <OasisGasPriceWrapper
-        gasEstimateError={gasEstimateError}
-        gasEstimatePending={gasEstimatePending}
-        transactionGasCostEstimate={transactionGasCostEstimate}
-        className={styles.detailsTradingCol}
-      />
-    );
   }
 
   static renderGasEstimateNotEnabledInfo() {
