@@ -86,7 +86,7 @@ const hasSufficientTokenAmount = createSelector(
   activeOfferTakeSellToken,
   activeOfferTakeType,
   rootState => takeFormValuesSelector(rootState, 'volume', 'total', 'price'),
-  (tokenBalances, sellToken,  activeOfferTakeType, { total, volume, price }) => {
+  (tokenBalances, sellToken,  activeOfferTakeType, { total, volume }) => {
     if(!total) { return true; }
     else {
       const totalInWei = web3.toWei(total, ETH_UNIT_ETHER);

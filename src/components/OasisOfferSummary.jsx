@@ -11,7 +11,7 @@ import InfoBox from "./InfoBox";
 import InfoBoxBody from "./InfoBoxBody";
 import FlexBox from "./FlexBox";
 // import tokenToBeAllowedForOffer from "../utils/offers/tokenToBeAllowedForOffer";
-import { isVolumeOrPriceEmptyOrZero } from '../store/selectors';
+// import { isVolumeOrPriceEmptyOrZero } from '../store/selectors';
 
 const propTypes = PropTypes && {
   offerType: PropTypes.string.isRequired,
