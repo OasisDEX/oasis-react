@@ -15,7 +15,7 @@ import OasisChartDepth from './OasisChartDepth';
 const propTypes = PropTypes && {};
 const defaultProps = {};
 
-class OasisChart extends PureComponent {
+export class OasisChart extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {chart: 'PRICE'};

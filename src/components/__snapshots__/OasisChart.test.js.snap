@@ -5,8 +5,35 @@ exports[`(Component) OasisChart should render 1`] = `
   className=""
   heading="Charts"
 >
+  <select
+    onChange={[Function]}
+    value="PRICE"
+  >
+    <option
+      key="PRICE"
+    >
+      PRICE
+    </option>
+    <option
+      key="VOLUME"
+    >
+      VOLUME
+    </option>
+    <option
+      key="DEPTH"
+    >
+      DEPTH
+    </option>
+  </select>
   <div>
-    To be continued...
+    <Connect(OasisChartPrice)
+      tradingPair={
+        Object {
+          "baseToken": "MKR",
+          "quoteToken": "DAI",
+        }
+      }
+    />
   </div>
 </OasisWidgetFrame>
 `;
