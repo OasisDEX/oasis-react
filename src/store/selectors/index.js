@@ -199,6 +199,7 @@ const getActiveOfferAllowanceStatus = createSelector(
   }, allowanceStatus => Boolean(allowanceStatus)
 );
 
+
 export {
   isGasEstimatePending,
   gasEstimateError,
@@ -207,5 +208,5 @@ export {
   getOfferFormValuesByOfferType,
   getOfferBuyAndSellTokenByOfferType,
   hasSufficientTokenAmountByOfferType,
-  getActiveOfferAllowanceStatus
+  getActiveOfferAllowanceStatus,
 };

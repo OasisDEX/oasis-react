@@ -15,6 +15,7 @@ import {
 import OasisInsufficientAmountOfToken from "../components/OasisInsufficientAmountOfToken";
 import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from "../store/reducers/offerTakes";
 import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from "../constants";
+import isVolumeOrPriceEmptyOrZero from '../store/selectors/isVolumeOrPriceEmptyOrZero';
 
 const propTypes = PropTypes && {
   offerType: PropTypes.oneOf([
@@ -41,10 +42,12 @@ export class OasisOfferSummaryWrapper extends PureComponent {
       offerBuyAndSellTokens,
       gasEstimateInfo,
       hasSufficientTokenAmount,
-      isTokenTradingEnabled
+      isTokenTradingEnabled,
+      isVolumeOrPriceEmptyOrZero
     } = this.props;
     return hasSufficientTokenAmount ? (
       <OasisOfferSummary
+        isVolumeOrPriceEmptyOrZero={isVolumeOrPriceEmptyOrZero}
         gasEstimateInfo={gasEstimateInfo}
         {...getUsersSoldAndReceivedAmounts(offerType, offerFormValues)}
         offerType={offerType}
@@ -69,6 +72,7 @@ export function mapStateToProps(state, { offerType }) {
       state,
       offerType
     ),
+    isVolumeOrPriceEmptyOrZero: isVolumeOrPriceEmptyOrZero(state, offerType),
     isTokenTradingEnabled: getActiveOfferAllowanceStatus(
       state,
       offerType
