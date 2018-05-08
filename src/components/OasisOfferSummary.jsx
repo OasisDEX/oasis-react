@@ -10,7 +10,7 @@ import OasisIsTokenTradingEnabledByUserWrapper from "../containers/OasisIsTokenT
 import InfoBox from "./InfoBox";
 import InfoBoxBody from "./InfoBoxBody";
 import FlexBox from "./FlexBox";
-import tokenToBeAllowedForOffer from "../utils/offers/tokenToBeAllowedForOffer";
+// import tokenToBeAllowedForOffer from "../utils/offers/tokenToBeAllowedForOffer";
 import { isVolumeOrPriceEmptyOrZero } from '../store/selectors';
 
 const propTypes = PropTypes && {
@@ -59,7 +59,7 @@ export class OasisOfferSummary extends PureComponent {
       buyToken,
       amountSold,
       amountReceived,
-      offerType,
+      // offerType,
       isTokenTradingEnabled
     } = this.props;
 

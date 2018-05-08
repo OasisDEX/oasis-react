@@ -37,23 +37,10 @@ const initialState = fromJS({
   tokenAllowances: {}
 });
 
-const INIT = "BALANCES/INIT";
-const GET_DEFAULT_ACCOUNT_ETH_BALANCE =
-  "BALANCES/GET_DEFAULT_ACCOUNT_ETH_BALANCE";
-const GET_ALL_TRADED_TOKENS_BALANCES =
-  "BALANCES/GET_ALL_TRADED_TOKENS_BALANCES";
-const GET_ALL_TRADED_TOKENS_ALLOWANCES =
-  "BALANCES/GET_ALL_TRADED_TOKENS_ALLOWANCES";
-
-const SET_ALLOWANCE = "BALANCES/SET_ALLOWANCE";
-
-export const ALLOWANCE_STATUS_NO_ENTRY_SET =
-  "BALANCES/ALLOWANCE_STATUS_NO_ENTRY_SET";
-
-const Init = createAction(INIT, () => null);
+const Init = createAction("BALANCES/INIT", () => null);
 
 const getDefaultAccountEthBalance = createAction(
-  GET_DEFAULT_ACCOUNT_ETH_BALANCE,
+  "BALANCES/GET_DEFAULT_ACCOUNT_ETH_BALANCE",
   async () =>
     web3p.eth
       .getBalance(web3.eth.defaultAccount)
@@ -61,7 +48,7 @@ const getDefaultAccountEthBalance = createAction(
 );
 
 const getAllTradedTokensBalances = createAction(
-  GET_ALL_TRADED_TOKENS_BALANCES,
+  "BALANCES/GET_ALL_TRADED_TOKENS_BALANCES",
   async tokensContractsLists => {
     const tokensBalancesPromises = [];
 
@@ -85,7 +72,7 @@ const getAllTradedTokensBalances = createAction(
 );
 
 const getAllTradedTokensAllowances = createAction(
-  GET_ALL_TRADED_TOKENS_ALLOWANCES,
+  "BALANCES/GET_ALL_TRADED_TOKENS_ALLOWANCES",
   async (tokensContractsLists, spenderAddress) => {
     const tokensAllowancesPromises = [];
 
@@ -242,7 +229,7 @@ const subscribeTokenTransfersEventsEpic = (
 };
 
 const setAllowance = createAction(
-  SET_ALLOWANCE,
+  "BALANCES/SET_ALLOWANCE",
   (tokenName, spenderAddress, newAllowance) =>
     window.contracts.tokens[tokenName].approve(spenderAddress, newAllowance)
 );
@@ -278,6 +265,7 @@ const getDefaultAccountTokenAllowanceForAddress = createAction(
   (tokenName, spenderAddress) => ({ tokenName, spenderAddress })
 );
 
+//TODO: what is it for? no side efects?
 const getDefaultAccountTokenAllowanceForMarket = createAction(
   "BALANCES/GET_DEFAULT_ACCOUNT_TOKEN_ALLOWANCE_FOR_ADDRESS",
   tokenName =>
@@ -367,7 +355,9 @@ const actions = {
   getDefaultAccountTokenAllowanceForAddress,
   setAllowance,
   syncTokenBalances,
-  getDefaultAccountTokenAllowanceForMarket
+  getDefaultAccountTokenAllowanceForMarket,
+  setTokenTrustAddressDisabled,
+  setTokenTrustAddressEnabled
 };
 
 const reducer = handleActions(

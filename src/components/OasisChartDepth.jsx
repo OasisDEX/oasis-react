@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import charts from './../store/selectors/charts';
+// import charts from './../store/selectors/charts';
 
 const propTypes = PropTypes && {};
 const defaultProps = {};
@@ -16,7 +16,7 @@ class OasisChartDepth extends PureComponent {
   }
 }
 
-export function mapStateToProps(state, props) {
+export function mapStateToProps() {
   return {
   };
 }

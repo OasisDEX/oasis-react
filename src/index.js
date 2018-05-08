@@ -19,8 +19,11 @@ import period from './utils/period';
 import conversion from './utils/conversion';
 import { errorHandler } from './utils/errorHandlers';
 import timers from './bootstrap/timers';
+import sak from './utils/sak';
 
 const { store, history } = configureStore();
+
+sak(store);
 
 export const HEALTHCHECK_INTERVAL_MS = 10000;
 
