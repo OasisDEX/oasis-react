@@ -17,8 +17,9 @@ import OasisButton from "../components/OasisButton";
 import platform from "../store/selectors/platform";
 import styles from "./OasisMakeOffer.scss";
 import CSSModules from "react-css-modules";
-import InfoBox from '../components/InfoBox';
-import InfoBoxBody from '../components/InfoBoxBody';
+import InfoBox from "../components/InfoBox";
+import InfoBoxBody from "../components/InfoBoxBody";
+import isVolumeOrPriceEmptyOrZero from "../store/selectors/isVolumeOrPriceEmptyOrZero";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -42,7 +43,13 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
   }
 
   render() {
-    const { baseToken, quoteToken, hasSufficientTokenAmount } = this.props;
+    const {
+      baseToken,
+      quoteToken,
+      hasSufficientTokenAmount,
+      isVolumeEmptyOrZero,
+      isPriceSet
+    } = this.props;
 
     const formProps = {
       baseToken,
@@ -60,7 +67,10 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
         <div className={styles.footer}>
           <div className={styles.helpBlock}>
             {hasSufficientTokenAmount === false && (
-              <OasisInsufficientAmountOfToken tokenName={quoteToken} noBorder={true} />
+              <OasisInsufficientAmountOfToken
+                tokenName={quoteToken}
+                noBorder={true}
+              />
             )}
           </div>
           <InfoBox hidden={this.props.isPriceSet} noBorder>
@@ -70,7 +80,9 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
             className={styles.callToAction}
             color="success"
             size="md"
-            disabled={!hasSufficientTokenAmount}
+            disabled={
+              !isPriceSet || isVolumeEmptyOrZero || !hasSufficientTokenAmount
+            }
             onClick={this.onModalOpen}
           >
             Buy
@@ -103,6 +115,7 @@ export function mapStateToProps(state) {
     activeTradingPair: tokens.activeTradingPair(state),
     contractsLoaded: platform.contractsLoaded(state),
     isPriceSet: offerMakes.isMakeBuyOfferPriceSet(state),
+    isVolumeEmptyOrZero: isVolumeOrPriceEmptyOrZero(state, MAKE_BUY_OFFER)
   };
 }
 export function mapDispatchToProps(dispatch) {

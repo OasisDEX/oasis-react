@@ -3,8 +3,8 @@
 exports[`(Component) OasisYourTransactionFailed should render 1`] = `
 <div>
   <InfoBox
-    className="danger"
-    color="default"
+    className=""
+    color="danger"
     justifyContent="normal"
     size="md"
     vertical={false}

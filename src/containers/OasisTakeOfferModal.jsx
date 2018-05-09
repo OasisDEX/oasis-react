@@ -23,8 +23,14 @@ import markets from "../store/selectors/markets";
 import OasisOfferSummaryWrapper from "./OasisOfferSummary";
 import OasisOfferTakeWarningBox from "../components/OasisOfferTakeWarningBox";
 import OasisNotTheBestOfferPriceWarningWrapper from "./OasisNotTheBestOfferPriceWarning";
-import { TX_OFFER_TAKE } from "../store/reducers/transactions";
-import OasisTransactionStatusWrapper from "./OasisTransactionStatus";
+import {
+  TX_OFFER_TAKE,
+  TX_STATUS_AWAITING_CONFIRMATION,
+  TX_STATUS_AWAITING_USER_ACCEPTANCE,
+  TX_STATUS_CONFIRMED,
+  TX_STATUS_REJECTED
+} from "../store/reducers/transactions";
+import OasisProcessingOrder from "../components/OasisProcessingOrder";
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -72,20 +78,66 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     const { actions } = this.props;
     actions.checkIfOfferIsActive().then(isActive => {
       if (isActive) {
-        this.setState({ disableOfferTakeButton: true });
-        actions.takeOffer({
-          onPending: txStartTimestamp => this.setState({ txStartTimestamp }),
-          onCancelCleanup: () => {
-            this.setState({ disableOfferTakeButton: false });
-          }
-        });
+        this.setState({
+          disableOfferTakeButton: true,
+          txStatus: undefined,
+          txStartTimestamp: undefined
+        }, () =>
+          actions.takeOffer({
+            onStart: this.onTransactionStart.bind(this),
+            onCancelCleanup: this.onTransactionCancelledByUser.bind(this),
+            onPending: this.onTransactionPending.bind(this),
+            onCompleted: this.onTransactionCompleted.bind(this),
+            onRejected: this.onTransactionRejected.bind(this)
+          })
+        );
+
       }
+    });
+  }
+
+  onTransactionStart() {
+    this.setState({
+      txStatus: TX_STATUS_AWAITING_USER_ACCEPTANCE,
+      disableForm: true,
+      lockCancelButton: true
+    });
+  }
+
+  onTransactionCancelledByUser() {
+    this.setState({ disableOfferTakeButton: false });
+    this.setState({
+      txStatus: undefined,
+      disableForm: false,
+      lockCancelButton: false
+    });
+  }
+  onTransactionPending({ txStartTimestamp }) {
+    this.setState({
+      txStatus: TX_STATUS_AWAITING_CONFIRMATION,
+      txStartTimestamp
     });
   }
 
   askForConfirmationBeforeModalClose() {
     const { lockCancelButton } = this.state;
     return lockCancelButton;
+  }
+
+  onTransactionCompleted() {
+    this.setState({
+      txStatus: TX_STATUS_CONFIRMED
+    });
+  }
+
+  onTransactionRejected({ txHash }) {
+    this.setState({
+      txStatus: TX_STATUS_REJECTED,
+      txHash,
+      disableForm: false,
+      lockCancelButton: false,
+      disableOfferTakeButton: false
+    });
   }
 
   renderOfferSummary() {
@@ -101,21 +153,10 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     );
   }
 
-  renderTransactionStatus() {
-    const { txStartTimestamp } = this.state;
-    return txStartTimestamp ? (
-      <OasisTransactionStatusWrapper
-        txTimestamp={txStartTimestamp}
-        txType={TX_OFFER_TAKE}
-      />
-    ) : null;
-  }
-
-
   shouldDisableTakeOfferButton() {
-    const {isCurrentOfferActive, canFulfillOffer } = this.props;
+    const { isCurrentOfferActive, canFulfillOffer } = this.props;
     const { disableOfferTakeButton } = this.state;
-    return (!isCurrentOfferActive || !canFulfillOffer || disableOfferTakeButton);
+    return !isCurrentOfferActive || !canFulfillOffer || disableOfferTakeButton;
   }
 
   render() {
@@ -126,7 +167,6 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
       buyToken,
       actions: { getTransactionGasCostEstimate }
     } = this.props;
-
 
     return (
       <ReactModal
@@ -141,25 +181,39 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
         <OasisTokenBalanceSummary summary="Available" token={sellToken} />
         <div>
           <div>
-            <OfferTakeForm estimateGas={getTransactionGasCostEstimate} />
+            <OfferTakeForm
+              disableForm={this.state.disableForm}
+              estimateGas={getTransactionGasCostEstimate}
+            />
           </div>
           <div className="statusSection">
             <div>{this.renderOfferSummary()}</div>
-            <div>{this.renderTransactionStatus()}</div>
             <SetTokenAllowanceTrustWrapper
-              isToggleEnabled={true}
               onTransactionPending={() =>
                 this.setState({ lockCancelButton: true })
               }
               onTransactionCompleted={() =>
                 this.setState({ lockCancelButton: false })
               }
+              onTransactionRejected={() =>
+                this.setState({ lockCancelButton: false })
+              }
               onCancelCleanup={() => this.setState({ lockCancelButton: false })}
               allowanceSubjectAddress={activeMarketAddress}
               tokenName={sellToken}
             />
-            <OasisOfferTakeWarningBox />
-            <OasisNotTheBestOfferPriceWarningWrapper />
+            {this.state.txStatus ? (
+              <OasisProcessingOrder
+                txTimestamp={this.state.txStartTimestamp}
+                localStatus={this.state.txStatus}
+                txType={TX_OFFER_TAKE}
+              />
+            ) : (
+              <div>
+                <OasisOfferTakeWarningBox />
+                <OasisNotTheBestOfferPriceWarningWrapper />
+              </div>
+            )}
           </div>
           <div className={styles.footer}>
             <OasisButton onClick={this.onCancel}>

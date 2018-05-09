@@ -17,8 +17,9 @@ import OasisButton from "../components/OasisButton";
 import platform from "../store/selectors/platform";
 import styles from "./OasisMakeOffer.scss";
 import CSSModules from "react-css-modules";
-import InfoBox from '../components/InfoBox';
-import InfoBoxBody from '../components/InfoBoxBody';
+import InfoBox from "../components/InfoBox";
+import InfoBoxBody from "../components/InfoBoxBody";
+import isVolumeOrPriceEmptyOrZero from "../store/selectors/isVolumeOrPriceEmptyOrZero";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -42,7 +43,13 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
   }
 
   render() {
-    const { baseToken, quoteToken, hasSufficientTokenAmount } = this.props;
+    const {
+      baseToken,
+      quoteToken,
+      hasSufficientTokenAmount,
+      isPriceSet,
+      isVolumeEmptyOrZero
+    } = this.props;
     const formProps = {
       baseToken,
       quoteToken,
@@ -73,7 +80,9 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
             className={styles.callToAction}
             color="danger"
             size="md"
-            disabled={!hasSufficientTokenAmount}
+            disabled={
+              !isPriceSet || isVolumeEmptyOrZero || !hasSufficientTokenAmount
+            }
             onClick={this.onModalOpen}
           >
             Sell
@@ -106,6 +115,7 @@ export function mapStateToProps(state) {
     activeTradingPair: tokens.activeTradingPair(state),
     contractsLoaded: platform.contractsLoaded(state),
     isPriceSet: offerMakes.isMakeSellOfferPriceSet(state),
+    isVolumeEmptyOrZero: isVolumeOrPriceEmptyOrZero(state, MAKE_SELL_OFFER)
   };
 }
 export function mapDispatchToProps(dispatch) {

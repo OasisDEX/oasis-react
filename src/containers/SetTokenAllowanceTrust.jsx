@@ -36,6 +36,7 @@ const propTypes = PropTypes && {
   isToggleEnabled: PropTypes.bool,
   onTransactionPending: PropTypes.func,
   onTransactionCompleted: PropTypes.func,
+  onTransactionRejected: PropTypes.func,
   onCancelCleanup: PropTypes.func
 };
 
@@ -94,6 +95,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
         onStart: this.onTransactionAwaitingSign.bind(this),
         onPending: this.onTransactionPending.bind(this),
         onCompleted: this.onTransactionCompleted.bind(this),
+        onFailed: this.onTransactionRejected.bind(this),
         onCancelCleanup: this.onUserCancel.bind(this)
       }
     );
@@ -113,6 +115,14 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
     this.props.onTransactionCompleted();
     this.setState({
       txStatus: TX_STATUS_CONFIRMED
+    });
+  }
+
+  onTransactionRejected() {
+    this.setState({ disableActionDispatchButton: false });
+    this.props.onTransactionRejected();
+    this.setState({
+      txStatus: TX_STATUS_REJECTED
     });
   }
 
