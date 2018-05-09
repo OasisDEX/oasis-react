@@ -47,7 +47,6 @@ export class OasisAppWrapper extends PureComponent {
           version: {version.version},
           branch: {version.branch},
           hash: {version.hash},
-          commits: {version.numCommits},
           build date: {version.buildDate.toUTCString()}
         </div>
       </div>

@@ -94,8 +94,7 @@
     "collectCoverage": false,
     "coverageReporters": [
       "json",
-      "lcov",
-      "text"
+      "lcov"
     ],
     "notify": true,
     "collectCoverageFrom": [
