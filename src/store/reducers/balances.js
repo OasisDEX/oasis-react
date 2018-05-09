@@ -266,7 +266,7 @@ const getDefaultAccountTokenAllowanceForAddress = createAction(
 
 //TODO: what is it for? no side efects?
 const getDefaultAccountTokenAllowanceForMarket = createAction(
-  "BALANCES/TOKEN_ALLOWANCE_TRUST_SUBJECT_TYPE_MARKET",
+  "BALANCES/GET_DEFAULT_ACCOUNT_TOKEN_ALLOWANCE_FOR_ADDRESS",
   tokenName =>
     window.contracts.tokens[tokenName].allowance(
       web3.eth.defaultAccount,
