@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`setTokenAllowanceTrustEpic token: MKR, status: false set to: false 1`] = `
+Array [
+  Object {
+    "type": "BALANCES/SET_TOKEN_ALLOWANCE_TRUST_STATUS_PENDING",
+  },
+  Object {
+    "payload": "Trust status did not change",
+    "type": Array [
+      "BALANCES/SET_TOKEN_ALLOWANCE_TRUST_STATUS_REJECTED",
+    ],
+  },
+]
+`;
+
+exports[`setTokenAllowanceTrustEpic token: MKR, status: false set to: true 1`] = `
+Array [
+  Object {
+    "type": "BALANCES/SET_TOKEN_ALLOWANCE_TRUST_STATUS_PENDING",
+  },
+]
+`;
+
+exports[`setTokenAllowanceTrustEpic token: MKR, status: false set to: true 2`] = `
+Object {
+  "dispatch": [Function],
+  "onTransactionCompleted": [Function],
+  "transactionDispatcher": [Function],
+  "transactionType": "TX/GROUP__LIMITS/TX/ALLOWANCE_TRUST_TOGGLE",
+  "txMeta": Object {
+    "account": "mock address",
+    "tokenName": "MKR",
+  },
+  "withCallbacks": Object {},
+}
+`;
+
+exports[`setTokenAllowanceTrustEpic token: MKR, status: true set to: false 1`] = `
+Array [
+  Object {
+    "type": "BALANCES/SET_TOKEN_ALLOWANCE_TRUST_STATUS_PENDING",
+  },
+]
+`;
+
+exports[`setTokenAllowanceTrustEpic token: MKR, status: true set to: false 2`] = `
+Object {
+  "dispatch": [Function],
+  "onTransactionCompleted": [Function],
+  "transactionDispatcher": [Function],
+  "transactionType": "TX/GROUP__LIMITS/TX/ALLOWANCE_TRUST_TOGGLE",
+  "txMeta": Object {
+    "account": "mock address",
+    "tokenName": "MKR",
+  },
+  "withCallbacks": Object {},
+}
+`;
+
+exports[`setTokenAllowanceTrustEpic token: MKR, status: true set to: true 1`] = `
+Array [
+  Object {
+    "type": "BALANCES/SET_TOKEN_ALLOWANCE_TRUST_STATUS_PENDING",
+  },
+  Object {
+    "payload": "Trust status did not change",
+    "type": Array [
+      "BALANCES/SET_TOKEN_ALLOWANCE_TRUST_STATUS_REJECTED",
+    ],
+  },
+]
+`;
