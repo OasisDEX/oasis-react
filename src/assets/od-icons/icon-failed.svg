@@ -4,10 +4,10 @@
     <title>Group</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="order-walkthrough" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="icon_failed" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="popup-idle-copy-7" transform="translate(-97.000000, -499.000000)">
             <g id="Group" transform="translate(97.000000, 499.000000)">
-                <circle id="Oval-8" fill="#000000" cx="10" cy="10" r="10"></circle>
+                <circle id="Oval-8" fill="#EF5350" cx="10" cy="10" r="10"></circle>
                 <polygon id="Path" fill="#FFFFFF" points="10.9027778 14.5138889 9.09722222 14.5138889 9.09722222 12.7083333 10.9027778 12.7083333"></polygon>
                 <polygon id="Path" fill="#FFFFFF" points="10.9027778 10.9027778 9.09722222 10.9027778 9.09722222 5.48611111 10.9027778 5.48611111"></polygon>
             </g>

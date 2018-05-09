@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
 import ImmutablePropTypes from "react-immutable-proptypes";
-import StatusPictogram from './StatusPictogram';
+import StatusPictogram from "./StatusPictogram";
 
 import {
   TX_STATUS_AWAITING_CONFIRMATION,
@@ -26,9 +26,9 @@ class TransactionStatus extends PureComponent {
       case TX_STATUS_AWAITING_USER_ACCEPTANCE:
         return (
           <div>
-            Sign Trans. <StatusPictogram status={transaction.get('txStatus')}/>
+            Sign Trans. <StatusPictogram status={transaction.get("txStatus")} />
           </div>
-          );
+        );
       case TX_STATUS_CANCELLED_BY_USER:
         return <div>Transaction cancelled by the user</div>;
       case TX_STATUS_AWAITING_CONFIRMATION:
@@ -38,30 +38,31 @@ class TransactionStatus extends PureComponent {
               type={ETHERSCAN_LINK_TYPE_TRANSACTION}
               txHash={transaction.get("txHash")}
             />
-            <StatusPictogram status={transaction.get('txStatus')}/>
+            <StatusPictogram status={transaction.get("txStatus")} />
           </div>
         );
       case TX_STATUS_CONFIRMED:
         return (
           <div>
             <EtherscanLink
-              label={'Confirmed'}
+              label={"Confirmed"}
               type={ETHERSCAN_LINK_TYPE_TRANSACTION}
               txHash={transaction.get("txHash")}
             />
-            <StatusPictogram status={transaction.get('txStatus')}/>
+            <StatusPictogram status={transaction.get("txStatus")} />
           </div>
         );
 
       case TX_STATUS_REJECTED:
         return (
           <div>
-            <StatusPictogram status={transaction.get('txStatus')}/>
+            <StatusPictogram status={transaction.get("txStatus")} />
             Your transaction
             <EtherscanLink
               type={ETHERSCAN_LINK_TYPE_TRANSACTION}
               txHash={transaction.get("txHash")}
-            /> failed
+            />{" "}
+            failed
           </div>
         );
     }

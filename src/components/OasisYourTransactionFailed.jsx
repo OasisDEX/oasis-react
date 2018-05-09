@@ -20,7 +20,7 @@ class OasisYourTransactionFailed extends PureComponent {
     const { txHash } = this.props;
     return (
       <div className={styles.base}>
-        <InfoBox className="danger">
+        <InfoBox color="danger">
           <InfoBoxBody>
             <StatusPictogram status={TX_STATUS_REJECTED}/>
             Your transaction

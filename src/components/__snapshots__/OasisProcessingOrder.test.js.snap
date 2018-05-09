@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisProcessingOrder should render 1`] = `
+<div>
+  <Connect(OasisTransactionStatus)
+    customBlock={
+      <div>
+        Process order
+      </div>
+    }
+  />
+</div>
+`;

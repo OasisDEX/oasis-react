@@ -18,8 +18,14 @@ import styles from "./OasisMakeOfferModal.scss";
 import CSSModules from "react-css-modules";
 import OasisButton from "../components/OasisButton";
 import OasisOfferSummary from "./OasisOfferSummary";
-import OasisTransactionStatusWrapper from "./OasisTransactionStatus";
-import { TX_OFFER_MAKE } from "../store/reducers/transactions";
+import {
+  TX_OFFER_MAKE,
+  TX_STATUS_AWAITING_CONFIRMATION,
+  TX_STATUS_AWAITING_USER_ACCEPTANCE,
+  TX_STATUS_CONFIRMED,
+  TX_STATUS_REJECTED
+} from "../store/reducers/transactions";
+import OasisProcessingOrder from "../components/OasisProcessingOrder";
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -61,28 +67,73 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
     this.props.actions.setOfferMakeModalClosed(this.props.offerMakeType);
   }
 
+  async onBuyOffer() {
+    this.setState({
+        disableOfferMakeButton: true,
+        txStatus: false,
+        txStartTimestamp: undefined
+      },
+      () =>
+      this.props.actions.makeOffer(this.props.offerMakeType, {
+        onStart: this.onTransactionStart.bind(this),
+        onCancelCleanup: this.onTransactionCancelledByUser.bind(this),
+        onPending: this.onTransactionPending.bind(this),
+        onCompleted: this.onTransactionCompleted.bind(this),
+        onRejected: this.onTransactionRejected.bind(this)
+      })
+    );
+  }
+
+  onTransactionStart() {
+    this.setState({
+      txStatus: TX_STATUS_AWAITING_USER_ACCEPTANCE,
+      disableForm: true,
+      lockCancelButton: true
+    });
+  }
+
+  onTransactionCancelledByUser() {
+    this.setState({ disableOfferMakeButton: false });
+    this.setState({
+      txStatus: undefined,
+      disableForm: false,
+      lockCancelButton: false
+    });
+  }
+  onTransactionPending({ txStartTimestamp }) {
+    this.setState({
+      txStatus: TX_STATUS_AWAITING_CONFIRMATION,
+      txStartTimestamp
+    });
+  }
+
   askForConfirmationBeforeModalClose() {
     const { lockCancelButton } = this.state;
     return lockCancelButton;
   }
 
-  async onBuyOffer() {
-    this.setState({ disableOfferMakeButton: true });
-    this.props.actions.makeOffer(this.props.offerMakeType, {
-      onCancelCleanup: () => {
-        this.setState({ disableOfferMakeButton: false });
-      },
-      onStart: () => {},
-      onPending: txStartTimestamp => this.setState({ txStartTimestamp }),
-      onCompleted: () => {}
+  onTransactionCompleted() {
+    this.setState({
+      txStatus: TX_STATUS_CONFIRMED
+    });
+  }
+
+  onTransactionRejected({ txHash }) {
+    this.setState({
+      txStatus: TX_STATUS_REJECTED,
+      txHash,
+      disableForm: true,
+      lockCancelButton: false,
+      disableOfferMakeButton: false
     });
   }
 
   renderTransactionStatus() {
-    const { txStartTimestamp } = this.state;
-    return txStartTimestamp ? (
-      <OasisTransactionStatusWrapper
+    const { txStartTimestamp, txStatus } = this.state;
+    return this.state.txStatus ? (
+      <OasisProcessingOrder
         txTimestamp={txStartTimestamp}
+        localStatus={txStatus}
         txType={TX_OFFER_MAKE}
       />
     ) : null;
@@ -116,6 +167,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
             quoteToken={quoteToken}
             offerMakeType={offerMakeType}
             form={form}
+            disableForm={this.state.disableForm}
           />
 
           <OasisOfferSummary offerType={offerMakeType} />
@@ -125,9 +177,15 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
               this.setState({ lockCancelButton: true })
             }
             onTransactionCompleted={() =>
-              this.setState({ lockCancelButton: false })
+              this.setState({
+                lockCancelButton: false
+              })
             }
-            onCancelCleanup={() => this.setState({ lockCancelButton: false })}
+            onCancelCleanup={() =>
+              this.setState({
+                lockCancelButton: false
+              })
+            }
             allowanceSubjectAddress={marketAddress}
             tokenName={sellToken}
           />

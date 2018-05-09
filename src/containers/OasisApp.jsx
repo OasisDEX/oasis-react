@@ -43,7 +43,7 @@ export class OasisAppWrapper extends PureComponent {
             <OasisFooterWrapper/>
           </div>
         </BrowserRouter>
-        <div style={{'text-align': 'center'}}>
+        <div style={{ textAlign: 'center' }}>
           version: {version.version},
           branch: {version.branch},
           hash: {version.hash},

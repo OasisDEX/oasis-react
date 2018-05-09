@@ -15,7 +15,7 @@ exports[`(Container) OasisTransactionStatus should render 1`] = `
   >
     <InfoBox
       className=""
-      color="default"
+      color=""
       fullWidth={true}
       justifyContent="normal"
       size="md"
@@ -27,6 +27,7 @@ exports[`(Container) OasisTransactionStatus should render 1`] = `
         vertical={false}
       >
         <TransactionStatus
+          noBorder={true}
           transaction={
             Immutable.Map {
               txType: "OFFER_TAKES/TAKE_BUY_OFFER",

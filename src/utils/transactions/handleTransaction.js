@@ -19,8 +19,9 @@ import { getTimestamp } from "../time";
 
  * @param onTransactionCancelled   [optional]   Function passed from within the Epic -> handles user cancel.
  * @param onTransactionPending     [optional]   Function passed from within the Epic -> handles transaction start.
- * @param onTransactionCompleted  [optional]    Function passed from within the Epic -> handles transaction complete.
+ * @param onTransactionCompleted  [optional]    Function passed from within the Epic -> handles transaction complete (with success !).
 
+ * @param onTransactionRejected   [optional]    Function passed from within the Epic -> handles transaction complete (with failure !).
  * @param onStart                 [optional]    Function passed from the component dispatching the action
  *                                              called on before start (just after users calls action creator ).
  * @param onPending               [optional]    Function passed from the component dispatching the action
@@ -39,7 +40,8 @@ const handleTransaction = async ({
   onTransactionCancelled,
   onTransactionPending,
   onTransactionCompleted,
-  withCallbacks: { onCancelCleanup, onStart, onPending, onCompleted }
+  onTransactionRejected,
+  withCallbacks: { onCancelCleanup, onStart, onPending, onCompleted, onRejected }
 }) =>
   new Promise(async (resolve, reject) => {
     if (!transactionType) {
@@ -87,7 +89,10 @@ const handleTransaction = async ({
             onCompleted && onCompleted(to);
             return fromJS(to);
           }
-        ),
+        ).catch(to => {
+          onTransactionRejected&& onTransactionRejected(to);
+          onRejected && onRejected(to);
+        }),
         transactionHash
       });
     }
