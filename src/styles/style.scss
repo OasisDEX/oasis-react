@@ -112,6 +112,10 @@ $max: 7;
   width: 100%;
 }
 
+.inlineBlock {
+  display: inline-block;
+}
+
 body {
   background-color: $background-color;
   margin-top: 40px;

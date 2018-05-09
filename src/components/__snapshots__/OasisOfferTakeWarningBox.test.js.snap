@@ -13,7 +13,15 @@ exports[`(Component) OasisOfferTakeWarningBox should render 1`] = `
     color="default"
     vertical={false}
   >
-    If someone (partially) fills this order before you do, your offer may only be partially filled or even denied, in which case unused funds will be refunded to your balance and allowance.
+    <div>
+      <OasisIcon
+        icon="info"
+        size="md"
+      />
+    </div>
+    <div>
+      If someone (partially) fills this order before you do, your offer may only be partially filled or even denied, in which case unused funds will be refunded to your balance and allowance.
+    </div>
   </InfoBoxBody>
 </InfoBox>
 `;

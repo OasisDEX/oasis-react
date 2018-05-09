@@ -8,6 +8,7 @@ import InfoBox from '../components/InfoBox';
 import InfoBoxBody from '../components/InfoBoxBody';
 import offerTakes from '../store/selectors/offerTakes';
 import offers from '../store/selectors/offers';
+import OasisIcon from '../components/OasisIcon';
 
 const propTypes = PropTypes && {
 
@@ -19,7 +20,12 @@ export class OasisNotTheBestOfferPriceWarningWrapper extends PureComponent {
     return !isBestOffer ? (
       <InfoBox color="danger">
         <InfoBoxBody>
-          WARNING: You have not chosen the best price available. Review the order book to find a better trade.
+          <div style={{ width: '10%', display:'inline-block' }}>
+            <OasisIcon icon="warning"/>
+          </div>
+          <div style={{ width:'90%', display:'inline-block' }}>
+            WARNING: You have not chosen the best price available. Review the order book to find a better trade.
+          </div>
         </InfoBoxBody>
       </InfoBox>
     ) : null;

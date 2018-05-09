@@ -1,8 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Component) OasisIcon should render 1`] = `
-<div>
+<div
+  className="undefined "
+>
   <img
+    className=""
     src="icon-loading.svg"
     style={
       Object {

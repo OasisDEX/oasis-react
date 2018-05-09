@@ -1,2 +1,9 @@
 .base {
+  display: inline-block;
+}
+
+.clickable {
+  &:hover {
+    cursor: pointer;
+  }
 }

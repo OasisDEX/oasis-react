@@ -92,8 +92,11 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     const { offerTakeType, isCurrentOfferActive } = this.props;
     return (
       <div>
-        <OasisOfferSummaryWrapper offerType={offerTakeType} />
-        {isCurrentOfferActive ? null : <OasisOfferNotAvailable />}
+        {isCurrentOfferActive ? (
+          <OasisOfferSummaryWrapper offerType={offerTakeType} />
+        ) : (
+          <OasisOfferNotAvailable />
+        )}
       </div>
     );
   }
@@ -108,15 +111,22 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     ) : null;
   }
 
+
+  shouldDisableTakeOfferButton() {
+    const {isCurrentOfferActive, canFulfillOffer } = this.props;
+    const { disableOfferTakeButton } = this.state;
+    return (!isCurrentOfferActive || !canFulfillOffer || disableOfferTakeButton);
+  }
+
   render() {
     const {
       offerTakeType,
-      canFulfillOffer,
       activeMarketAddress,
       sellToken,
       buyToken,
       actions: { getTransactionGasCostEstimate }
     } = this.props;
+
 
     return (
       <ReactModal
@@ -137,6 +147,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
             <div>{this.renderOfferSummary()}</div>
             <div>{this.renderTransactionStatus()}</div>
             <SetTokenAllowanceTrustWrapper
+              isToggleEnabled={true}
               onTransactionPending={() =>
                 this.setState({ lockCancelButton: true })
               }
@@ -156,7 +167,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
             </OasisButton>
             <div className="notificationsSection" />
             <OasisButton
-              disabled={!canFulfillOffer || this.state.disableOfferTakeButton}
+              disabled={this.shouldDisableTakeOfferButton()}
               onClick={this.onBuyOffer}
             >
               {OasisTakeOfferModalWrapper.takeOfferBtnLabel(offerTakeType, {
