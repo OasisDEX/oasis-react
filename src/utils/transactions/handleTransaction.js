@@ -32,7 +32,7 @@ import { getTimestamp } from "../time";
 
  * @returns {Promise}
  */
-const handleTransaction = async ({
+const handleTransaction = ({
   dispatch,
   transactionDispatcher,
   transactionType,
@@ -41,13 +41,14 @@ const handleTransaction = async ({
   onTransactionPending,
   onTransactionCompleted,
   onTransactionRejected,
-  withCallbacks: { onCancelCleanup, onStart, onPending, onCompleted, onRejected }
-}) =>
-  new Promise(async (resolve, reject) => {
-    if (!transactionType) {
-      throw new Error("Transaction type not set!");
-    }
+  withCallbacks: { onCancelCleanup, onStart, onPending, onCompleted, onRejected } = {}
+}) => {
 
+  if (!transactionType) {
+    throw new Error("Transaction type not set!");
+  }
+
+  new Promise(async (resolve, reject) => {
     const txDispatchedTimestamp = getTimestamp();
     onStart && onStart(txDispatchedTimestamp);
     const transactionActionResult = await transactionDispatcher().catch(() => {
@@ -97,6 +98,7 @@ const handleTransaction = async ({
       });
     }
   });
+};
 
 /**
  *
