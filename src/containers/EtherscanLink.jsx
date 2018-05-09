@@ -4,27 +4,40 @@ import { PropTypes } from 'prop-types';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import EtherscanLink from '../components/EtherscanLink';
+import EtherscanLink, {
+  ETHERSCAN_LINK_TYPE_ADDRESS,
+  ETHERSCAN_LINK_TYPE_TRANSACTION,
+} from '../components/EtherscanLink';
+import network from '../store/selectors/network';
 
 const propTypes = PropTypes && {
-  // actions: PropTypes.object.isRequired,
-  address: PropTypes.string.isRequired
+  label: PropTypes.string,
+  networkName: PropTypes.string,
+  txHash: PropTypes.string,
+  address: PropTypes.string,
+  type: PropTypes.oneOf(
+    [
+      ETHERSCAN_LINK_TYPE_ADDRESS,
+      ETHERSCAN_LINK_TYPE_TRANSACTION
+    ]
+  )
 };
 
 export class EthercanLinkWrapper extends PureComponent {
   render() {
     return (
-      <EtherscanLink/>
+      <EtherscanLink {...this.props}/>
     );
   }
 }
 
 export function mapStateToProps(state) {
-  return {};
+  return {
+    networkName: network.getActiveNetworkName(state)
+  };
 }
-export function mapDispatchToProps(dispatch) {
-  const actions = {};
-  return { actions: bindActionCreators(actions, dispatch) };
+export function mapDispatchToProps() {
+  return {};
 }
 
 EthercanLinkWrapper.propTypes = propTypes;

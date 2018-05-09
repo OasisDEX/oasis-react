@@ -63,7 +63,7 @@ const handleTransaction = async ({
     if (transactionActionResult) {
       const txStartTimestamp = getTimestamp();
       const transactionHash = transactionActionResult.value;
-      onTransactionPending && onTransactionPending();
+      onTransactionPending && onTransactionPending({ txHash: transactionHash, txStartTimestamp });
       const transactionConfirmationPromise = dispatch(
         transactions.actions.addTransactionEpic({
           txType: transactionType,
@@ -73,18 +73,18 @@ const handleTransaction = async ({
           txStartTimestamp
         })
       );
-      onPending && onPending(txStartTimestamp);
+      onPending && onPending({ txHash: transactionHash, txStartTimestamp });
       resolve({
         transactionConfirmationPromise: transactionConfirmationPromise.then(
           to => {
             /**
              * First run Epic completion handler
              */
-            onTransactionCompleted && onTransactionCompleted();
+            onTransactionCompleted && onTransactionCompleted(to);
             /**
              * Then continue with component calling the action
              */
-            onCompleted && onCompleted();
+            onCompleted && onCompleted(to);
             return fromJS(to);
           }
         ),

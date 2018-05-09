@@ -46,6 +46,7 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
       <div />
       <Connect(SetTokenAllowanceTrust)
         allowanceSubjectAddress="0x8cf1cab422a0b6b554077a361f8419cdf122a9f9"
+        isToggleEnabled={true}
         onCancelCleanup={[Function]}
         onTransactionCompleted={[Function]}
         onTransactionPending={[Function]}

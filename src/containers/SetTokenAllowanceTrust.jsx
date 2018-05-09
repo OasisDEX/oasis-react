@@ -12,14 +12,21 @@ import { InfoBox } from "../components/InfoBox";
 import { InfoBoxBody } from "../components/InfoBoxBody";
 import OasisAccordion from "../components/OasisAccordion";
 import OasisTransactionStatusWrapper from "./OasisTransactionStatus";
-import { TX_ALLOWANCE_TRUST_TOGGLE } from "../store/reducers/transactions";
+import {
+  TX_ALLOWANCE_TRUST_TOGGLE,
+  TX_STATUS_AWAITING_CONFIRMATION,
+  TX_STATUS_AWAITING_USER_ACCEPTANCE, TX_STATUS_CONFIRMED, TX_STATUS_REJECTED,
+} from '../store/reducers/transactions';
 import network from "../store/selectors/network";
 import FlexBox from "../components/FlexBox";
 import {
   TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED,
   TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED,
-  TOKEN_ALLOWANCE_TRUST_STATUS_LOADING,
-} from '../constants';
+  TOKEN_ALLOWANCE_TRUST_STATUS_LOADING
+} from "../constants";
+
+import OasisIcon from "../components/OasisIcon";
+import OasisYourTransactionFailed from '../components/OasisYourTransactionFailed';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -35,7 +42,9 @@ const propTypes = PropTypes && {
 export class SetTokenAllowanceTrustWrapper extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isToggleAllowanceTxPending: false
+    };
 
     this.toggleTokenAllowanceTrustStatus = this.toggleTokenAllowanceTrustStatus.bind(
       this
@@ -62,6 +71,10 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
     }
   }
 
+  onTransactionAwaitingSign() {
+    this.setState({ txStatus: TX_STATUS_AWAITING_USER_ACCEPTANCE });
+  }
+
   setTokenAllowanceTrustStatus(newAllowanceTrustStatus) {
     const {
       tokenName,
@@ -78,6 +91,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
         allowanceSubjectAddress
       },
       {
+        onStart: this.onTransactionAwaitingSign.bind(this),
         onPending: this.onTransactionPending.bind(this),
         onCompleted: this.onTransactionCompleted.bind(this),
         onCancelCleanup: this.onUserCancel.bind(this)
@@ -85,18 +99,25 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
     );
   }
 
-  onTransactionPending(txStartTimestamp) {
-    this.setState({ txTimestamp: txStartTimestamp });
+  onTransactionPending({ txStartTimestamp }) {
+    console.log('txStartTimestamp',txStartTimestamp)
+    this.setState({
+      txTimestamp: txStartTimestamp,
+      txStatus: TX_STATUS_AWAITING_CONFIRMATION
+    });
     this.props.onTransactionPending();
   }
 
   onTransactionCompleted() {
     this.setState({ disableActionDispatchButton: false });
     this.props.onTransactionCompleted();
+    this.setState({
+      txStatus: TX_STATUS_CONFIRMED
+    });
   }
 
   onUserCancel() {
-    this.setState({ disableActionDispatchButton: false });
+    this.setState({ disableActionDispatchButton: false, txStatus: undefined });
     this.props.onCancelCleanup();
   }
 
@@ -120,10 +141,13 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
   }
 
   renderTransactionInfo() {
-    const { txTimestamp } = this.state;
-    return txTimestamp ? (
+    const { txTimestamp, txStatus } = this.state;
+    return txStatus && txStatus !== TX_STATUS_REJECTED ? (
       <OasisTransactionStatusWrapper
+        inline
+        noBorder
         txTimestamp={txTimestamp}
+        localStatus={txStatus}
         txType={TX_ALLOWANCE_TRUST_TOGGLE}
       />
     ) : null;
@@ -159,56 +183,69 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
   shouldDisableActionDispatch() {
     const { disableActionDispatchButton } = this.state;
     const { isToggleEnabled } = this.props;
-    const disable = disableActionDispatchButton
+    return disableActionDispatchButton
       ? disableActionDispatchButton
       : isToggleEnabled ? false : this.isAllowanceEnabled();
-    return disable;
   }
 
   renderAccordionHeading() {
+    const {txStatus } = this.state;
     const isAllowanceEnabled = this.isAllowanceEnabled();
     const prefix = !this.props.isToggleEnabled
       ? "Enable"
       : isAllowanceEnabled ? "Disable" : "Enable";
     return (
       <FlexBox alignContent="space-between">
-        <span>
+        <div>
           {prefix} <b>{this.props.tokenName}</b> for trading
-        </span>
-        <OasisButton
-          onClick={this.toggleTokenAllowanceTrustStatus}
-          size="md"
-          disabled={this.shouldDisableActionDispatch()}
-          color={
-            isAllowanceEnabled || this.shouldDisableActionDispatch()
-              ? "default"
-              : "success"
-          }
-        >
-          {this.getLabel()}
-        </OasisButton>
+          {this.renderTransactionInfo()}
+        </div>
+        <div hidden={txStatus}>
+          <OasisButton
+            onClick={this.toggleTokenAllowanceTrustStatus}
+            size="md"
+            color={
+              isAllowanceEnabled || this.shouldDisableActionDispatch()
+                ? "default"
+                : "success"
+            }
+          >
+            {this.getLabel()}
+          </OasisButton>
+        </div>
       </FlexBox>
     );
   }
 
-  renderAccordionContent() {
-    return !this.state.txTimestamp ? (
-      <div hidden={this.isAllowanceEnabled()}>
-        You need first grant access to withdraw from your personal account. To
-        disable {this.props.tokenName} trading use Allowance widget on the funds
-        page.
-      </div>
-    ) : (
-      <div>{this.renderTransactionInfo()}</div>
+  yourTransactionFailed() {
+    const {txStatus} = this.state;
+    return (
+      txStatus === TX_STATUS_REJECTED ? (<OasisYourTransactionFailed/>) : null
     );
+  }
+
+  renderAccordionContent() {
+    return !this.state.txStatus ? (
+      <div style={{display: 'flex'}} hidden={this.isAllowanceEnabled()}>
+        <div>
+          <OasisIcon icon="idle"/>
+        </div>
+        <div>
+          You need first grant access to withdraw from your personal account. To
+          disable {this.props.tokenName} trading use Allowance widget on the funds
+          page.
+        </div>
+      </div>
+    ) : null;
   }
 
   render() {
     return (
       <div hidden={!this.shouldDisplay()}>
-        <InfoBox justifyContent="space-between">
+        <InfoBox justifyContent="space-between" fullWidth>
           <InfoBoxBody>{this.mainInfoBoxContent()}</InfoBoxBody>
         </InfoBox>
+        {this.yourTransactionFailed()}
       </div>
     );
   }

@@ -7,6 +7,7 @@ exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
   <InfoBox
     className=""
     color="default"
+    fullWidth={true}
     justifyContent="space-between"
     size="md"
     vertical={false}
@@ -26,33 +27,49 @@ exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
             vertical={false}
             wrap={false}
           >
-            <span>
+            <div>
               Enable
                
               <b>
                 W-ETH
               </b>
                for trading
-            </span>
-            <OasisButton
-              btnType="button"
-              color="success"
-              disabled={false}
-              onClick={[Function]}
-              size="md"
+            </div>
+            <div
+              hidden={undefined}
             >
-              Loading
-            </OasisButton>
+              <OasisButton
+                btnType="button"
+                color="success"
+                onClick={[Function]}
+                size="md"
+              >
+                Loading
+              </OasisButton>
+            </div>
           </FlexBox>
         }
         isOpen={true}
       >
         <div
           hidden={false}
+          style={
+            Object {
+              "display": "flex",
+            }
+          }
         >
-          You need first grant access to withdraw from your personal account. To disable 
-          W-ETH
-           trading use Allowance widget on the funds page.
+          <div>
+            <OasisIcon
+              icon="idle"
+              size="md"
+            />
+          </div>
+          <div>
+            You need first grant access to withdraw from your personal account. To disable 
+            W-ETH
+             trading use Allowance widget on the funds page.
+          </div>
         </div>
       </OasisAccordion>
     </InfoBoxBody>

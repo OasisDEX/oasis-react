@@ -13,7 +13,29 @@ exports[`(Container) OasisNotTheBestOfferPriceWarning should render 1`] = `
     color="default"
     vertical={false}
   >
-    WARNING: You have not chosen the best price available. Review the order book to find a better trade.
+    <div
+      style={
+        Object {
+          "display": "inline-block",
+          "width": "10%",
+        }
+      }
+    >
+      <OasisIcon
+        icon="warning"
+        size="md"
+      />
+    </div>
+    <div
+      style={
+        Object {
+          "display": "inline-block",
+          "width": "90%",
+        }
+      }
+    >
+      WARNING: You have not chosen the best price available. Review the order book to find a better trade.
+    </div>
   </InfoBoxBody>
 </InfoBox>
 `;

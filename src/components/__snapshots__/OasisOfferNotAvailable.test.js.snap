@@ -14,10 +14,16 @@ exports[`(Component) OasisOfferNotAvailable should render 1`] = `
     vertical={false}
   >
     <div>
-      Offer is not available anymore
+      <OasisIcon
+        icon="failed"
+        size="md"
+      />
     </div>
     <div>
-      Will close shortly
+      This order is 
+      <b>
+        not available anymore
+      </b>
     </div>
   </InfoBoxBody>
 </InfoBox>

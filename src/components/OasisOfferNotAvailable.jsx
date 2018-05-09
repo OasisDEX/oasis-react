@@ -4,6 +4,7 @@ import { PropTypes } from 'prop-types';
 import styles from './OasisOfferNotAvailable.scss';
 import InfoBoxBody from './InfoBoxBody';
 import InfoBox from './InfoBox';
+import OasisIcon from './OasisIcon';
 
 
 const propTypes = PropTypes && {};
@@ -15,8 +16,10 @@ class OasisOfferNotAvailable extends PureComponent {
     return (
       <InfoBox color="danger" className={styles.base}>
         <InfoBoxBody>
-          <div>Offer is not available anymore</div>
-          <div>Will close shortly</div>
+          <div>
+            <OasisIcon icon="failed"/>
+          </div>
+          <div>This order is <b>not available anymore</b></div>
         </InfoBoxBody>
       </InfoBox>
     );

@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) OasisTransactionStatus should render 1`] = `
-<div>
+<div
+  className=""
+>
   <FlexBox
     alignConent="stretch"
     alignContent="stretch"
@@ -24,7 +26,6 @@ exports[`(Container) OasisTransactionStatus should render 1`] = `
         color="default"
         vertical={false}
       >
-        <StatusPictogram />
         <TransactionStatus
           transaction={
             Immutable.Map {
@@ -46,6 +47,8 @@ Object {
 
 exports[`(Container) OasisTransactionStatus will receive right props 1`] = `
 Object {
-  "transaction": undefined,
+  "transaction": Immutable.Map {
+    txStatus: undefined,
+},
 }
 `;

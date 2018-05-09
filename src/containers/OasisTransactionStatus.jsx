@@ -1,13 +1,14 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
-// import ImmutablePropTypes from 'react-immutable-proptypes';
+import { fromJS } from 'immutable';
+import ImmutablePropTypes from 'react-immutable-proptypes';
+
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import transactions from '../store/selectors/transactions';
 import TransactionTimer from '../components/TransactionTimer';
 import TransactionStatus from '../components/TransactionStatus';
-import StatusPictogram from '../components/StatusPictogram';
 import {
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
   TX_STATUS_CANCELLED_BY_USER,
@@ -21,6 +22,9 @@ const propTypes = PropTypes && {
   actions: PropTypes.object,
   txTimestamp: PropTypes.number.isRequired,
   txType: PropTypes.string,
+  localStatus: PropTypes.string,
+  noBorder: PropTypes.bool,
+  inline: PropTypes.bool
 };
 
 export class OasisTransactionStatusWrapper extends PureComponent {
@@ -32,13 +36,20 @@ export class OasisTransactionStatusWrapper extends PureComponent {
     ].includes(this.props.transaction.get('txStatus'))
   }
 
-
+  /**
+   *  This method is not used at the mment
+   * @returns {boolean}
+   */
   isAwaitingUserAcceptance () {
     return [
       TX_STATUS_AWAITING_USER_ACCEPTANCE,
     ].includes(this.props.transaction.get('txStatus'))
   }
 
+  /**
+   * Not used
+   * @returns {*}
+   */
   renderTimer() {
     const { transaction } = this.props;
     if (!this.hasTransactionFailed()) {
@@ -49,13 +60,12 @@ export class OasisTransactionStatusWrapper extends PureComponent {
   }
 
   render() {
-    const { transaction } = this.props;
+    const { transaction, noBorder, inline } = this.props;
     return (
-      <div>
+      <div className={`${ inline ? 'inlineBlock' : '' }`}>
         <FlexBox className={"full-width"} alignConent="stretch">
-          <InfoBox fullWidth>
+          <InfoBox noBorder={noBorder} fullWidth>
             <InfoBoxBody className="no-padding">
-              <StatusPictogram status={transaction.get('txStatus')}/>
               <TransactionStatus transaction={transaction}/>
             </InfoBoxBody>
           </InfoBox>
@@ -65,9 +75,10 @@ export class OasisTransactionStatusWrapper extends PureComponent {
   }
 }
 
-export function mapStateToProps(state, { txTimestamp, txType }) {
+export function mapStateToProps(state, { txTimestamp, txType, localStatus }) {
+  const status = fromJS({ txStatus: localStatus });
   return {
-    transaction: transactions.getTransactionByTimestampAndType(state,  { txTimestamp, txType })
+    transaction: transactions.getTransactionByTimestampAndType(state,  { txTimestamp, txType }) || status
   };
 }
 export function mapDispatchToProps(dispatch) {

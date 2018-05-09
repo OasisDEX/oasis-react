@@ -10,11 +10,11 @@ exports[`(Component) OasisAccordion should render 1`] = `
     vertical={false}
     wrap={false}
   >
-    <span
+    <OasisIcon
+      icon="arrowDown"
       onClick={[Function]}
-    >
-      [+]
-    </span>
+      size="md"
+    />
     <div>
       <div>
         This this a heading!
