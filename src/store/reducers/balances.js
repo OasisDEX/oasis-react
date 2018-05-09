@@ -156,8 +156,7 @@ const syncTokenBalances = (tokensContractsList = [], address) => (
   getState
 ) => {
   dispatch(syncTokenBalances$.pending());
-  const addressIsDefaultAccount =
-    address === accounts.defaultAccount(getState());
+  const addressIsDefaultAccount = address === accounts.defaultAccount(getState());
   Object.entries(tokensContractsList).forEach(([tokenName, tokenContract]) => {
     tokenContract.balanceOf(address).then(tokenBalance => {
       if (!tokenBalance.eq(balances.tokenBalance(getState(), {tokenName, balanceUnit: ETH_UNIT_WEI }))) {
@@ -267,7 +266,7 @@ const getDefaultAccountTokenAllowanceForAddress = createAction(
 
 //TODO: what is it for? no side efects?
 const getDefaultAccountTokenAllowanceForMarket = createAction(
-  "BALANCES/GET_DEFAULT_ACCOUNT_TOKEN_ALLOWANCE_FOR_ADDRESS",
+  "BALANCES/TOKEN_ALLOWANCE_TRUST_SUBJECT_TYPE_MARKET",
   tokenName =>
     window.contracts.tokens[tokenName].allowance(
       web3.eth.defaultAccount,
@@ -280,15 +279,20 @@ const getDefaultAccountTokenAllowanceForMarket = createAction(
 const setTokenAllowanceTrustStatus$ = createPromiseActions(
   "BALANCES/SET_TOKEN_ALLOWANCE_TRUST_STATUS"
 );
-const setTokenAllowanceTrustEpic = (
-  { tokenName, newAllowanceTrustStatus, allowanceSubjectAddress },
-  withCallbacks = {}
-) => (dispatch, getState) => {
-  const defaultAccountAddress = accounts.defaultAccount(getState());
-  const previousTokenAllowanceTrustStatus = balances.tokenAllowanceTrustStatus(
+const setTokenAllowanceTrustEpic =
+  ({ tokenName, newAllowanceTrustStatus, allowanceSubjectAddress },
+   withCallbacks = {},
+   { defaultAccount = accounts.defaultAccount,
+     tokenAllowanceTrustStatus = balances.tokenAllowanceTrustStatus,
+     getErc20Tokens = tokens.getErc20Tokens,
+     handleTrans = handleTransaction} = {}) => (dispatch, getState) =>
+{
+  const defaultAccountAddress = defaultAccount(getState());
+  const previousTokenAllowanceTrustStatus = tokenAllowanceTrustStatus(
     getState(),
     tokenName
   );
+
   dispatch(setTokenAllowanceTrustStatus$.pending());
 
   if (newAllowanceTrustStatus === undefined) {
@@ -297,16 +301,17 @@ const setTokenAllowanceTrustEpic = (
     );
     return;
   }
+
   if (newAllowanceTrustStatus === previousTokenAllowanceTrustStatus) {
     dispatch(
       setTokenAllowanceTrustStatus$.rejected("Trust status did not change")
     );
-    console.warn(`[${tokenName}] Trust status did not change`);
+    // console.warn(`[${tokenName}] Trust status did not change`);
     return;
   }
 
-  if (tokens.getErc20Tokens(getState()).includes(tokenName)) {
-    return handleTransaction({
+  if (getErc20Tokens(getState()).includes(tokenName)) {
+    return handleTrans({
       dispatch,
       transactionType: TX_ALLOWANCE_TRUST_TOGGLE,
       transactionDispatcher: () => {

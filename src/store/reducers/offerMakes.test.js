@@ -57,7 +57,6 @@ describe('make offer form', () => {
     });
 });
 
-
 describe("make offer modal", () => {
     test("setOfferMakeModalOpenEpic", () => {
         const store = configureMockStore([thunk2Data(), thunk])({});
@@ -78,7 +77,6 @@ each([[MAKE_BUY_OFFER], [MAKE_SELL_OFFER]]).test("buyMaxEpic", (offerMakeType) =
 
     expect(store.getActions()).toMatchSnapshot();
 });
-
 
 each([[MAKE_BUY_OFFER], [MAKE_SELL_OFFER]]).test("sellMaxEpic", (offerMakeType) => {
 
