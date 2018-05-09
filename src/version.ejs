@@ -1,0 +1,9 @@
+export default {
+name:       '<%= package.name %>',
+buildDate:  new Date(<%= extras.timestamp %>),
+version:    '<%= package.version %>',
+numCommits: <%= extras.gitNumCommits %>,
+hash:       '<%= extras.githash %>',
+branch:     '<%= extras.branch %>',
+dirty:      <%= extras.dirty %>
+}

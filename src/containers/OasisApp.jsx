@@ -16,6 +16,8 @@ import Locked from '../components/Locked';
 import styles from './OasisApp.scss';
 import CSSModules from 'react-css-modules';
 
+import version from '../version'
+
 const propTypes = PropTypes && {};
 
 export class OasisAppWrapper extends PureComponent {
@@ -41,6 +43,13 @@ export class OasisAppWrapper extends PureComponent {
             <OasisFooterWrapper/>
           </div>
         </BrowserRouter>
+        <div style={{'text-align': 'center'}}>
+          version: {version.version},
+          branch: {version.branch},
+          hash: {version.hash},
+          commits: {version.numCommits},
+          build date: {version.buildDate.toUTCString()}
+        </div>
       </div>
     );
   }
