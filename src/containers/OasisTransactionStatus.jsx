@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import { fromJS } from 'immutable';
-import ImmutablePropTypes from 'react-immutable-proptypes';
-
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
