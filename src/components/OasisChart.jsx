@@ -6,11 +6,12 @@ import { bindActionCreators } from 'redux';
 import tokens from './../store/selectors/tokens';
 
 import OasisWidgetFrame from '../containers/OasisWidgetFrame';
+import OasisSelect from "./OasisSelect";
 import OasisChartPrice from './OasisChartPrice';
 import OasisChartVolume from './OasisChartVolume';
 import OasisChartDepth from './OasisChartDepth';
 
-// import styles from './OasisChart.scss';
+import styles from './OasisChart.scss';
 
 const propTypes = PropTypes && {};
 const defaultProps = {};
@@ -28,11 +29,14 @@ export class OasisChart extends PureComponent {
 
   render() {
     const types = ['PRICE', 'VOLUME', 'DEPTH'];
+    const select = (
+      <OasisSelect value={this.state.chart} onChange={this.chartChanged} className={styles.select}>
+        { types.map(t => <option key={t}>{t}</option>) }
+      </OasisSelect>
+    );
+
     return (
-        <OasisWidgetFrame heading="Charts">
-          <select value={this.state.chart} onChange={this.chartChanged}>
-            { types.map(t => <option key={t}>{t}</option>) }
-          </select>
+        <OasisWidgetFrame heading="Charts" headingChildren={select}>
           <div>
             { this.state.chart == "PRICE" && <OasisChartPrice tradingPair={this.props.activeTradingPair}/> }
             { this.state.chart == "VOLUME" && <OasisChartVolume tradingPair={this.props.activeTradingPair}/> }

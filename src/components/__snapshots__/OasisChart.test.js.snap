@@ -4,27 +4,25 @@ exports[`(Component) OasisChart should render 1`] = `
 <OasisWidgetFrame
   className=""
   heading="Charts"
+  headingChildren={
+    <OasisSelect
+      className={undefined}
+      onChange={[Function]}
+      size="md"
+      value="PRICE"
+    >
+      <option>
+        PRICE
+      </option>
+      <option>
+        VOLUME
+      </option>
+      <option>
+        DEPTH
+      </option>
+    </OasisSelect>
+  }
 >
-  <select
-    onChange={[Function]}
-    value="PRICE"
-  >
-    <option
-      key="PRICE"
-    >
-      PRICE
-    </option>
-    <option
-      key="VOLUME"
-    >
-      VOLUME
-    </option>
-    <option
-      key="DEPTH"
-    >
-      DEPTH
-    </option>
-  </select>
   <div>
     <Connect(OasisChartPrice)
       tradingPair={
