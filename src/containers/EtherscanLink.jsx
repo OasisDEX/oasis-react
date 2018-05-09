@@ -3,7 +3,6 @@ import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import EtherscanLink, {
   ETHERSCAN_LINK_TYPE_ADDRESS,
   ETHERSCAN_LINK_TYPE_TRANSACTION,
