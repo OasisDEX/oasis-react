@@ -10,11 +10,12 @@ import getTokenByAddress from '../../utils/tokens/getTokenByAddress';
 import { web3p } from '../../bootstrap/web3';
 import { convertTo18Precision } from '../../utils/conversion';
 import network from '../selectors/network';
-import transactions, { TX_OFFER_CANCELLED, TX_STATUS_CANCELLED_BY_USER } from './transactions';
+import transactions, { TX_OFFER_CANCEL, TX_OFFER_MAKE, TX_STATUS_CANCELLED_BY_USER } from './transactions';
 import offers from '../selectors/offers';
 import findOffer from '../../utils/offers/findOffer';
 import { STATUS_COMPLETED, STATUS_ERROR, STATUS_PRISTINE } from './platform';
 import getOfferTradingPairAndType from '../../utils/offers/getOfferTradingPairAndType';
+import { handleTransaction } from '../../utils/transactions/handleTransaction';
 
 export const TYPE_BUY_OFFER = 'OFFERS/TYPE_BUY';
 export const TYPE_SELL_OFFER = 'OFFERS/TYPE_SELL';
@@ -71,29 +72,14 @@ const cancelOffer = createAction(
   (offerId) =>
     window.contracts.market.cancel(offerId, { gas: CANCEL_GAS }),
 );
-const cancelOfferEpic = (offer) => async (dispatch, getState) => {
-  const cancelOfferAction = dispatch(cancelOffer(offer.id))
-    .then(
-      async () => {
-        dispatch(
-          transactions.actions.addTransactionEpic({
-            type: TX_OFFER_CANCELLED,
-            txSubjectId: offer.id,
-            txHash: (await cancelOfferAction).value,
-          }),
-        );
-      },
-      () => {
-        dispatch(
-          transactions.actions.transactionRejected({
-            txType: TX_OFFER_CANCELLED,
-            txStatus: TX_STATUS_CANCELLED_BY_USER,
-            txSubjectId: offer.id,
-            txCancelBlock: network.latestBlockNumber(getState()),
-          }),
-        );
-      },
-    );
+const cancelOfferEpic = (offer, withCallbacks = {}) => dispatch => {
+  return handleTransaction({
+    dispatch,
+    transactionDispatcher: () => dispatch(cancelOffer(offer.get('id'))),
+    transactionType: TX_OFFER_CANCEL,
+    txMeta: { offerId: offer.id },
+    withCallbacks
+  });
 };
 
 const getWorseOffer = createAction(
@@ -589,6 +575,11 @@ const getBestOfferIdsForActiveTradingPairEpic = () => async (dispatch, getState)
 };
 
 
+const removeOrderCancelledByTheOwner = createAction(
+  'OFFER/REMOVE_OFFER_CANCELLED_BY_THE_OWNER',
+  ({ offerType, offerId, tradingPair }) => ({ offerType, offerId, tradingPair })
+);
+
 const actions = {
   Init,
   initOffersEpic,
@@ -597,7 +588,8 @@ const actions = {
   syncOffersEpic,
   subscribeOffersEventsEpic,
   checkOfferIsActive,
-  getBestOfferIdsForActiveTradingPairEpic
+  getBestOfferIdsForActiveTradingPairEpic,
+  removeOrderCancelledByTheOwner
 };
 
 const reducer = handleActions({
@@ -715,7 +707,22 @@ const reducer = handleActions({
     (state, {payload: { bestBuyOfferId, bestSellOfferId }}) =>
       state
         .setIn(['activeTradingPairBestOfferId', 'bestBuyOfferId'], bestBuyOfferId)
-        .setIn(['activeTradingPairBestOfferId', 'bestSellOfferId'], bestSellOfferId)
+        .setIn(['activeTradingPairBestOfferId', 'bestSellOfferId'], bestSellOfferId),
+  [removeOrderCancelledByTheOwner]: (state, { payload: { tradingPair, offerType, offerId } }) => {
+    switch (offerType) {
+      case TYPE_BUY_OFFER:
+        return state
+          .updateIn(['offers', Map(tradingPair), 'buyOffers'],
+            buyOfferList => buyOfferList.filter(offer => offer.id !== offerId),
+          );
+      case TYPE_SELL_OFFER:
+        return state
+          .updateIn(['offers', Map(tradingPair), 'sellOffers'],
+            sellOfferList => sellOfferList.filter(offer => offer.id !== offerId),
+          );
+
+    }
+  },
 
 
 }, initialState);

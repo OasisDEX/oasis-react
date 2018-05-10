@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisOfferCancelModal should render 1`] = `
+<div>
+  <OasisButton
+    btnType="button"
+    color="default"
+    onClick={[Function]}
+    size="xs"
+  >
+    cancel
+  </OasisButton>
+</div>
+`;
+
+exports[`(Container) OasisOfferCancelModal will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "cancelOffer": [Function],
+    "removeOrderCancelledByTheOwner": [Function],
+  },
+}
+`;
+
+exports[`(Container) OasisOfferCancelModal will receive right props 1`] = `
+Object {
+  "activeTradingPair": Object {
+    "baseToken": "MKR",
+    "quoteToken": "DAI",
+  },
+}
+`;

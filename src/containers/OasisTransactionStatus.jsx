@@ -60,7 +60,7 @@ export class OasisTransactionStatusWrapper extends PureComponent {
     const { transaction, customBlock } = this.props;
     if (transaction.get("txStatus") !== TX_STATUS_REJECTED) {
       return (
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", justifyContent: 'space-between' }}>
           <div style={{ width: "50%" }}>{customBlock}</div>
           <div style={{ width: "50%" }}>
             <TransactionStatus transaction={transaction} noBorder fullWidth />
