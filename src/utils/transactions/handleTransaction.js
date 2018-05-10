@@ -33,22 +33,24 @@ import { getTimestamp } from "../time";
  * @returns {Promise}
  */
 const handleTransaction = ({
-  dispatch,
-  transactionDispatcher,
-  transactionType,
-  txMeta,
-  onTransactionCancelled,
-  onTransactionPending,
-  onTransactionCompleted,
-  onTransactionRejected,
-  withCallbacks: { onCancelCleanup, onStart, onPending, onCompleted, onRejected } = {}
-}) => {
+    dispatch,
+    transactionDispatcher,
+    transactionType,
+    txMeta,
+    onTransactionCancelled,
+    onTransactionPending,
+    onTransactionCompleted,
+    onTransactionRejected,
+    withCallbacks: { onCancelCleanup, onStart, onPending, onCompleted, onRejected } = {}
+  },
+  { addTransactionEpic = transactions.actions.addTransactionEpic} = {}) =>
+{
 
   if (!transactionType) {
     throw new Error("Transaction type not set!");
   }
 
-  new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const txDispatchedTimestamp = getTimestamp();
     onStart && onStart(txDispatchedTimestamp);
     const transactionActionResult = await transactionDispatcher().catch(() => {
@@ -68,7 +70,7 @@ const handleTransaction = ({
       const transactionHash = transactionActionResult.value;
       onTransactionPending && onTransactionPending({ txHash: transactionHash, txStartTimestamp });
       const transactionConfirmationPromise = dispatch(
-        transactions.actions.addTransactionEpic({
+        addTransactionEpic({
           txType: transactionType,
           txHash: transactionHash,
           txMeta,
@@ -76,26 +78,26 @@ const handleTransaction = ({
           txStartTimestamp
         })
       );
+
       onPending && onPending({ txHash: transactionHash, txStartTimestamp });
+
       resolve({
-        transactionConfirmationPromise: transactionConfirmationPromise.then(
-          to => {
-            /**
-             * First run Epic completion handler
-             */
+        transactionConfirmationPromise: transactionConfirmationPromise
+          .then(to => {
+            //First run Epic completion handler
             onTransactionCompleted && onTransactionCompleted(to);
-            /**
-             * Then continue with component calling the action
-             */
+            //Then continue with component calling the action
             onCompleted && onCompleted(to);
             return fromJS(to);
-          }
-        ).catch(to => {
-          onTransactionRejected&& onTransactionRejected(to);
-          onRejected && onRejected(to);
-        }),
+          })
+          .catch(to => {
+            onTransactionRejected&& onTransactionRejected(to);
+            onRejected && onRejected(to);
+          }),
         transactionHash
       });
+    } else {
+      reject('No response from transactionDispatcher!');
     }
   });
 };
@@ -105,6 +107,7 @@ const handleTransaction = ({
  * @param updateState function that handles component state modification ( typically *setState* )
  * @param transactionAction action creator function that dispatches the transaction
  */
+  //TODO: why unused?
 const withHandleTransaction = (updateState, transactionAction) => {
   updateState({
     transaction: fromJS({
@@ -113,6 +116,7 @@ const withHandleTransaction = (updateState, transactionAction) => {
   });
 
   transactionAction().then(
+    //TODO: why async here?
     async ({ transactionConfirmationPromise, transactionHash }) => {
       updateState({
         transaction: fromJS({
