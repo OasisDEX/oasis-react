@@ -7,5 +7,5 @@
 
 ## Auto deployments
 
-1. [oasisdex-dev.surge.sh](oasisdex-dev.surge.sh) - from dev branch
-2. [oasisdex-staging.surge.sh](oasisdex-staging.surge.sh) - from staging branch 
+1. [https://oasisdex-dev.surge.sh/](oasisdex-dev.surge.sh) - from dev branch
+2. [https://oasisdex-staging.surge.sh/](oasisdex-staging.surge.sh) - from staging branch 
