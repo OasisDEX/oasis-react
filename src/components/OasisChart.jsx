@@ -13,7 +13,9 @@ import OasisChartDepth from './OasisChartDepth';
 
 import styles from './OasisChart.scss';
 
-const propTypes = PropTypes && {};
+const propTypes = PropTypes && {
+  activeTradingPair: PropTypes.object.isRequired,
+};
 const defaultProps = {};
 
 export class OasisChart extends PureComponent {

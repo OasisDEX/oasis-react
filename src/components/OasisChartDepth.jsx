@@ -5,10 +5,17 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 // import charts from './../store/selectors/charts';
 
-const propTypes = PropTypes && {};
+const propTypes = PropTypes && {
+  //depthChartData: PropTypes.array.isRequired,
+  //depthChartLabels: PropTypes.array.isRequired,
+  tradingPair: PropTypes.shape({
+    baseToken: PropTypes.string.isRequired,
+    quoteToken: PropTypes.string.isRequired,
+  }).isRequired,
+};
 const defaultProps = {};
 
-class OasisChartDepth extends PureComponent {
+export class OasisChartDepth extends PureComponent {
   render() {
     return (
       <p>TODO</p>

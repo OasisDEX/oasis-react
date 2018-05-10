@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisChartPrice should render 1`] = `
+<Line
+  data={
+    Object {
+      "datasets": Array [
+        Object {
+          "backgroundColor": "#E2F3F9",
+          "borderColor": "#03A9F4",
+          "borderWidth": 3,
+          "data": Array [],
+          "pointBackgroundColor": "#03A9F4",
+          "pointHitRadius": 5,
+          "pointHoverRadius": 4,
+          "pointRadius": 1,
+        },
+      ],
+      "labels": Array [],
+    }
+  }
+  options={
+    Object {
+      "layout": Object {
+        "padding": 5,
+      },
+      "legend": Object {
+        "display": false,
+      },
+      "maintainAspectRatio": true,
+      "scales": Object {
+        "xAxes": Array [
+          Object {
+            "display": false,
+          },
+        ],
+      },
+      "tooltips": Object {
+        "enabled": false,
+      },
+    }
+  }
+/>
+`;

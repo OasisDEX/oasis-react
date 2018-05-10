@@ -5,22 +5,53 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import charts from './../store/selectors/charts';
 
-const propTypes = PropTypes && {};
+import {Line} from 'react-chartjs-2';
+
+const propTypes = PropTypes && {
+  priceChartData: PropTypes.array.isRequired,
+  priceChartLabels: PropTypes.array.isRequired,
+  tradingPair: PropTypes.shape({
+    baseToken: PropTypes.string.isRequired,
+    quoteToken: PropTypes.string.isRequired,
+  }).isRequired,
+};
 const defaultProps = {};
 
-class OasisChartPrice extends PureComponent {
+export class OasisChartPrice extends PureComponent {
   render() {
     return (
-      <table>
-        <tbody>
-          <tr>
-            <th>{this.props.tradingPair.baseToken} &rarr; {this.props.tradingPair.quoteToken}</th>
-          </tr>
-          <tr>
-            <td>{this.props.priceChartLabels.size} &rarr; {this.props.priceChartData.size}</td>
-          </tr>
-        </tbody>
-      </table>
+      <Line
+        data={{
+          labels: this.props.priceChartLabels,
+          datasets: [{
+            data: this.props.priceChartData,
+            borderColor: '#03A9F4',
+            borderWidth: 3,
+            pointBackgroundColor: '#03A9F4',
+            pointRadius: 1,
+            pointHitRadius: 5,
+            pointHoverRadius: 4,
+            backgroundColor: '#E2F3F9',
+          }],
+        }}
+        options={{
+          maintainAspectRatio: true,
+          layout: {
+            padding: 5,
+          },
+          tooltips: {
+            enabled: false,
+          },
+          legend: {
+            display: false,
+          },
+          scales: {
+            xAxes: [{
+              display: false,
+            }],
+          },
+        }}
+      />
     );
   }
 }

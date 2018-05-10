@@ -23,9 +23,10 @@ const priceChartTrades = createSelector(
   tokenTrades,
   (trades) => {
     const since = moment(Date.now()).startOf('day').subtract(6, 'days').unix()
-    return (trades || []).filter(t =>
+    const res = (trades || []).filter(t =>
       t.timestamp >= since
     );
+    return res.length == 0 ? [] : res.toJS();
   }
 )
 
@@ -47,7 +48,7 @@ const priceChartData = createSelector(
       baseAmount = new BigNumber(trade.buyHowMuch);
       quoteAmount = new BigNumber(trade.sellHowMuch);
     }
-    return formatNumber(quoteAmount.dividedBy(baseAmount), 5);
+    return formatNumber(quoteAmount.dividedBy(baseAmount), 5).replace(/,|\s/g, '');
   })
 )
 
@@ -91,7 +92,7 @@ const volumeChartData = createSelector(
         }
       })
       return Object.keys(volumes.quote).map((key) =>
-        formatNumber(web3.fromWei(volumes.quote[key]), 5).replace(/,/g, '')
+        formatNumber(web3.fromWei(volumes.quote[key]), 5).replace(/,|\s/g, '')
       )
   }
 )
