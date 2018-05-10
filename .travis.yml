@@ -27,8 +27,13 @@ before_deploy:
   - yarn build
 
 deploy:
-  on: dev
-  provider: surge
-  project: ./build/
-  domain: oasis-react-staging.surge.sh
-  skip_cleanup: true
+  - on: dev
+    provider: surge
+    project: ./build/
+    domain: oasisdex-dev.surge.sh
+    skip_cleanup: true
+  - on: staging
+    provider: surge
+    project: ./build/
+    domain: oasisdex-staging.surge.sh
+    skip_cleanup: true
