@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisOfferCancelModal should render 1`] = `
+<Modal
+  ariaHideApp={false}
+  bodyOpenClassName="ReactModal__Body--open"
+  closeTimeoutMS={0}
+  isOpen={true}
+  parentSelector={[Function]}
+  portalClassName="ReactModalPortal"
+  shouldCloseOnEsc={true}
+  shouldCloseOnOverlayClick={true}
+  shouldFocusAfterRender={true}
+  shouldReturnFocusAfterClose={true}
+>
+  <div>
+    <div>
+      <h4>
+        Cancel Offer
+      </h4>
+    </div>
+    <div>
+      <InfoBox
+        className=""
+        color="danger"
+        justifyContent="normal"
+        size="md"
+        vertical={false}
+      >
+        <InfoBoxBody
+          className=""
+          color="default"
+          vertical={false}
+        >
+          <div>
+            <OasisIcon
+              icon="warning"
+              size="md"
+            />
+          </div>
+          <div>
+            This action will return
+            <b
+              style={
+                Object {
+                  "display": "inlineBlock",
+                  "marginLeft": "5px",
+                  "marginRight": "5px",
+                }
+              }
+            >
+               
+            </b>
+            to your token balance. If someone (partially) fills this order before you cancel await, your order may not or only be partially cancelled.
+          </div>
+        </InfoBoxBody>
+      </InfoBox>
+    </div>
+    <div />
+    <div />
+    <div>
+      <OasisButton
+        btnType="button"
+        caption="Cancel"
+        color="default"
+        onClick={[Function]}
+        size="md"
+      />
+      <OasisButton
+        btnType="button"
+        caption="Cancel offer"
+        color="default"
+        onClick={[Function]}
+        size="md"
+      />
+    </div>
+  </div>
+</Modal>
+`;

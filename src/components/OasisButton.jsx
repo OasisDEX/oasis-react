@@ -6,6 +6,7 @@ import styles from './OasisButton.scss';
 const propTypes = PropTypes && {
   children: PropTypes.node,
   caption: PropTypes.string,
+  pendingstate: PropTypes.bool
 };
 
 const defaultProps = {

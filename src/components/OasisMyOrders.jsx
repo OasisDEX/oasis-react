@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
+import { fromJS } from 'immutable';
 import BigNumber from "bignumber.js";
 import ImmutablePropTypes from "react-immutable-proptypes";
 import moment from "moment";
@@ -15,7 +16,8 @@ import { ETH_UNIT_ETHER } from "../constants";
 import { isOfferOwner } from "../utils/orders";
 import OasisSelect from "./OasisSelect";
 import styles from "./OasisMyOrders.scss";
-import OasisButton from "./OasisButton";
+import OasisOfferCancelModalWrapper  from '../containers/OasisOfferCancelModal';
+import { TYPE_BUY_OFFER, TYPE_SELL_OFFER } from '../store/reducers/offers';
 
 const myOrdersDisplayFormat = offer => {
   let baseAmount = null,
@@ -32,6 +34,7 @@ const myOrdersDisplayFormat = offer => {
   }
 
   return {
+    offerType: offer.offerType,
     tradeTypeEl: offer.tradeTypeEl,
     price: formatPrice(offer.price),
     baseAmount,
@@ -54,20 +57,10 @@ const myOffersFilter = entry => {
 };
 
 const actionsColumnTemplate = function(offer) {
-  let cancelPending = false;
-  const onCancel = () => {
-    this.cancelOffer(offer);
-    cancelPending = true;
-  };
   return isOfferOwner(offer) ? (
-    <OasisButton
-      disabled={cancelPending}
-      size="xs"
-      onClick={onCancel}
-      className={styles.cancelButton}
-    >
-      {cancelPending ? "..." : "cancel"}
-    </OasisButton>
+    <div>
+      <OasisOfferCancelModalWrapper offer={fromJS(offer)}/>
+    </div>
   ) : null;
 };
 
@@ -116,6 +109,7 @@ class OasisMyOrders extends PureComponent {
       .map(so => ({
         ...so,
         tradeType: ASK,
+        offerType: TYPE_SELL_OFFER,
         tradeTypeEl: <OasisTradeType type={ASK} />,
         price: so.ask_price
       }))
@@ -123,6 +117,7 @@ class OasisMyOrders extends PureComponent {
         buyOffers.map(bo => ({
           ...bo,
           tradeType: BID,
+          offerType: TYPE_BUY_OFFER,
           tradeTypeEl: <OasisTradeType type={BID} />,
           price: bo.bid_price
         }))
@@ -203,7 +198,7 @@ class OasisMyOrders extends PureComponent {
   }
 
   render() {
-    var select = (
+    const select = (
       <OasisSelect
         onChange={this.onViewTypeChange}
         value={this.viewType}
