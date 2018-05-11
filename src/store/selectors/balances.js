@@ -14,27 +14,12 @@ import tokens from './tokens';
 const balances = s => s.get('balances');
 
 const tokenAllowances = createSelector(
-  balances, (s) => s.getIn(['defaultAccount', 'tokenAllowances'])
+  balances, (s) => s.get('tokenAllowances')
 );
 
 const tokenBalances = createSelector(
-  balances, (s) => s.getIn(['defaultAccount', 'tokenBalances'])
+  balances, (s) => s.get('tokenBalances')
 );
-
-
-const tokenAllowance = createSelector(
-  tokenAllowances,
-  reselect.getProps,
-  (s, { tokenName, allowanceUnit = ETH_UNIT_ETHER }) => {
-    const tokenAllowance = s.getIn([tokenName]);
-    if(tokenAllowance) {
-      return web3.fromWei(new BigNumber(s.getIn([tokenName], 10)), allowanceUnit);
-    } else {
-      return null;
-    }
-  }
-);
-
 
 const tokenBalance = createSelector(
   tokenBalances,
@@ -53,8 +38,6 @@ const tokenBalance = createSelector(
   }
 );
 
-
-
 const tokenAllowanceTrustStatus = createSelector(
   balances,
   reselect.getProps,
@@ -72,24 +55,13 @@ const tokenAllowanceTrustStatus = createSelector(
   }
 );
 
-
 const tokenAllowanceStatusForActiveMarket = createSelector(
-  balances,
-  reselect.getProps,
-  (s, { tokenName }) => {
-    const tokenAllowance = s.getIn([ 'tokenAllowances', tokenName, window.contracts.market.address]);
-    if(tokenAllowance) {
-      const tokenAllowanceBN = new BigNumber(tokenAllowance);
-      const tokenTrustEnabledMinBN = new BigNumber(TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN);
-      if(tokenAllowanceBN.gte(tokenTrustEnabledMinBN)) {
-        return TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED;
-      } else {
-        return TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED;
-      }
-    } else { return null; }
-  }
+  (...args) => args,
+  ([state, { tokenName }]) =>
+    tokenAllowanceTrustStatus(
+      state,
+      {tokenName, allowanceSubjectAddress: window.contracts.market.address })
 );
-
 
 const activeBaseTokenBalance = createSelector(
   tokenBalances,
@@ -99,7 +71,7 @@ const activeBaseTokenBalance = createSelector(
 
 const ethBalance = createSelector(
   balances,
-  s => s.getIn(['defaultAccount', 'ethBalance'])
+  s => s.get('ethBalance')
 );
 
 
@@ -113,7 +85,7 @@ export default {
   state: balances,
   tokenAllowances,
   tokenBalances,
-  tokenAllowance,
+  // tokenAllowance,
   tokenBalance,
   ethBalance,
   tokenAllowanceTrustStatus,

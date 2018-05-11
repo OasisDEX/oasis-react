@@ -106,7 +106,6 @@ each([[true], [false]]).test("updateTransactionGasCostEstimateEpic", (canMakeOff
         }
       })
     }));
-
   expect(store.getActions()).toMatchSnapshot();
 });
 

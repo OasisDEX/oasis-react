@@ -131,7 +131,7 @@ const setOfferMakeModalOpen = createAction(
 
 const setOfferMakeModalOpenEpic = (offerMakeType) => (dispatch) => {
   dispatch(setActiveOfferMakeType(offerMakeType));
-  dispatch(updateTransactionGasCostEstimateEpic(offerMakeType));
+  dispatch(updateTransactionGasCostEstimateEpicThrottled(offerMakeType));
   dispatch(setOfferMakeModalOpen(offerMakeType));
 };
 
@@ -143,7 +143,7 @@ const setOfferMakeModalClosed = createAction(
 const setOfferMakeModalClosedEpic = (offerMakeType) => (dispatch) => {
   dispatch(setOfferMakeModalClosed(offerMakeType));
   dispatch(resetActiveOfferMakeType());
-  dispatch(resetActiveOfferMakeGasCostEstimate(offerMakeType));
+  dispatch(resetActiveOfferMakeGasCostEstimate());
 };
 
 const localFormValueSelector = (offerMakeType) => formValueSelector(offerMakeToFormName(offerMakeType));
@@ -161,7 +161,7 @@ const priceFieldChangedEpic =
     } else {
       dispatch(localChange(offerMakeType, 'total', web3.toBigNumber(volume).mul(value).toString()));
     }
-    dispatch(defer(updateTransactionGasCostEstimateEpic, offerMakeType));
+    dispatch(defer(updateTransactionGasCostEstimateEpicThrottled, offerMakeType));
   };
 
 const volumeFieldValueChangedEpic =
@@ -175,7 +175,7 @@ const volumeFieldValueChangedEpic =
       // dispatch(localChange(offerMakeType, 'volume', value));
       dispatch(localChange(offerMakeType, 'total', web3.toBigNumber(value).mul(price).toString()));
     }
-    dispatch(defer(updateTransactionGasCostEstimateEpic, offerMakeType));
+    dispatch(defer(updateTransactionGasCostEstimateEpicThrottled, offerMakeType));
   };
 
 const totalFieldValueChangedEpic =
@@ -184,7 +184,7 @@ const totalFieldValueChangedEpic =
     if ((!isNaN(value) && parseFloat(value) > 0) && (!isNaN(price) && parseFloat(price) > 0)) {
       dispatch(localChange(offerMakeType, 'volume', web3.toBigNumber(value).div(price).toString()));
     }
-    dispatch(defer(updateTransactionGasCostEstimateEpic, offerMakeType));
+    dispatch(defer(updateTransactionGasCostEstimateEpicThrottled, offerMakeType));
   };
 
 /**
@@ -211,27 +211,30 @@ const getTransactionGasEstimate = createAction('OFFER_MAKES/GET_TRANSACTION_GAS_
 );
 
 const updateTransactionGasCostEstimateEpic =
-  throttle((offerMakeType,
-            {
-              canMakeOffer = offerMakes.canMakeOffer,
-              activeOfferMakePure = offerMakes.activeOfferMakePure
-            } = {}) => async (dispatch, getState) => {
-    if (!canMakeOffer(getState(), offerMakeType)) {
-      dispatch(defer(resetActiveOfferMakeGasCostEstimate));
-      return;
-    }
+  (offerMakeType,
+  {
+    canMakeOffer = offerMakes.canMakeOffer,
+    activeOfferMakePure = offerMakes.activeOfferMakePure
+  } = {}) => async (dispatch, getState) =>
+{
+  if (!canMakeOffer(getState(), offerMakeType)) {
+    dispatch(resetActiveOfferMakeGasCostEstimate());
+    return;
+  }
 
-    const offerMake = activeOfferMakePure(getState(), offerMakeToFormName(offerMakeType));
+  const offerMake = activeOfferMakePure(getState(), offerMakeToFormName(offerMakeType));
 
-    const
-      payAmount = offerMake.getIn(['offerData', 'payAmount']),
-      payToken = offerMake.get('sellTokenAddress'),
-      buyAmount = offerMake.getIn(['offerData', 'buyAmount']),
-      buyToken = offerMake.get('buyTokenAddress'),
-      toAddress = window.contracts.market.address;
+  const
+    payAmount = offerMake.getIn(['offerData', 'payAmount']),
+    payToken = offerMake.get('sellTokenAddress'),
+    buyAmount = offerMake.getIn(['offerData', 'buyAmount']),
+    buyToken = offerMake.get('buyTokenAddress'),
+    toAddress = window.contracts.market.address;
 
-    dispatch(defer(getTransactionGasEstimate, payAmount, payToken, buyAmount, buyToken, toAddress));
-  }, 500);
+  dispatch(defer(getTransactionGasEstimate, payAmount, payToken, buyAmount, buyToken, toAddress));
+};
+
+const updateTransactionGasCostEstimateEpicThrottled = throttle(updateTransactionGasCostEstimateEpic, 500);
 
 const actions = {
   makeOfferEpic,

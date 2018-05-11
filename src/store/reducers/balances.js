@@ -23,18 +23,14 @@ import {
   TX_ALLOWANCE_TRUST_TOGGLE,
 } from "./transactions";
 
-
 const initialState = fromJS({
   accounts: [],
-  defaultAccount: {
-    loadingAllowances: null,
-    loadingBalances: null,
-    address: null,
-    ethBalance: null,
-    tokenBalances: {},
-    tokenAllowances: {}
-  },
-  tokenAllowances: {}
+  loadingAllowances: null,
+  loadingBalances: null,
+  address: null,
+  ethBalance: null,
+  tokenBalances: {},
+  tokenAllowances: {},
 });
 
 const Init = createAction("BALANCES/INIT", () => null);
@@ -71,34 +67,6 @@ const getAllTradedTokensBalances = createAction(
   }
 );
 
-const getAllTradedTokensAllowances = createAction(
-  "BALANCES/GET_ALL_TRADED_TOKENS_ALLOWANCES",
-  async (tokensContractsLists, spenderAddress) => {
-    const tokensAllowancesPromises = [];
-
-    Object.entries(tokensContractsLists).forEach(
-      async ([tokenName, tokenContract]) => {
-        if (tokenContract.allowance) {
-          tokensAllowancesPromises.push(
-            tokenContract.allowance(web3.eth.defaultAccount, spenderAddress)
-          );
-        } else {
-          throw new Error(`[${tokenName}] contract does not implement ERC-20`);
-        }
-      }
-    );
-
-    return Promise.all(tokensAllowancesPromises).then(tokenAllowances => {
-      const allowancesByToken = {};
-      Object.keys(tokensContractsLists).forEach(
-        (tokenName, i) => (allowancesByToken[tokenName] = tokenAllowances[i])
-      );
-
-      return allowancesByToken;
-    });
-  }
-);
-
 const subscribeAccountEthBalanceChangeEvent = createPromiseActions(
   "SUBSCRIBE_ACCOUNT_ETH_BALANCE_CHANGE_EVENT"
 );
@@ -115,7 +83,6 @@ const subscribeAccountEthBalanceChangeEventEpic = accountAddress => async (
     web3p.eth.getBalance(accountAddress).then(accEthBalance => {
       const previousBalance = getState().getIn([
         "balances",
-        "defaultAccount",
         "ethBalance"
       ]);
       if (previousBalance !== null) {
@@ -130,21 +97,19 @@ const subscribeAccountEthBalanceChangeEventEpic = accountAddress => async (
 
 const tokenTransferFromEvent = createAction(
   "BALANCES/EVENT___TOKEN_TRANSFER_FROM",
-  (tokenName, userAddress, event, addressIsDefaultAccount) => ({
+  (tokenName, userAddress, event) => ({
     tokenName,
     userAddress,
-    event,
-    addressIsDefaultAccount
+    event
   })
 );
 
 const tokenTransferToEvent = createAction(
   "BALANCES/EVENT___TOKEN_TRANSFER_TO",
-  (tokenName, userAddress, event, addressIsDefaultAccount) => ({
+  (tokenName, userAddress, event) => ({
     tokenName,
     userAddress,
-    event,
-    addressIsDefaultAccount
+    event
   })
 );
 
@@ -156,7 +121,7 @@ const syncTokenBalances = (tokensContractsList = [], address) => (
   getState
 ) => {
   dispatch(syncTokenBalances$.pending());
-  const addressIsDefaultAccount = address === accounts.defaultAccount(getState());
+
   Object.entries(tokensContractsList).forEach(([tokenName, tokenContract]) => {
     tokenContract.balanceOf(address).then(tokenBalance => {
       if (!tokenBalance.eq(balances.tokenBalance(getState(), {tokenName, balanceUnit: ETH_UNIT_WEI }))) {
@@ -164,7 +129,6 @@ const syncTokenBalances = (tokensContractsList = [], address) => (
           updateTokenBalance({
             tokenName,
             tokenBalance,
-            addressIsDefaultAccount,
             address
           })
         );
@@ -176,23 +140,19 @@ const syncTokenBalances = (tokensContractsList = [], address) => (
 
 const updateTokenBalance = createAction(
   "BALANCES/UPDATE_TOKEN_BALANCE",
-  ({ tokenName, tokenBalance, addressIsDefaultAccount }) => ({
+  ({ tokenName, tokenBalance }) => ({
     tokenName,
-    tokenBalance,
-    addressIsDefaultAccount
+    tokenBalance
   })
 );
 
 const subscribeTokenTransfersEvents$ = createPromiseActions(
   "BALANCES/SUBSCRIBE_TOKEN_TRANSFER_EVENT"
 );
-const subscribeTokenTransfersEventsEpic = (
-  tokensContractsList,
-  address
-) => async (dispatch, getState) => {
+const subscribeTokenTransfersEventsEpic = (tokensContractsList, address) => async (dispatch, getState) => {
+
   dispatch(subscribeTokenTransfersEvents$.pending());
-  const addressIsDefaultAccount =
-    address === accounts.defaultAccount(getState());
+
   Object.entries(tokensContractsList).forEach(([tokenName, tokenContract]) => {
     /**
      * Listen to all erc20 transfer events from now.
@@ -208,8 +168,7 @@ const subscribeTokenTransfersEventsEpic = (
             tokenTransferFromEvent(
               tokenName,
               address,
-              transferEvent,
-              addressIsDefaultAccount
+              transferEvent
             )
           );
         } else if (to === address) {
@@ -217,8 +176,7 @@ const subscribeTokenTransfersEventsEpic = (
             tokenTransferToEvent(
               tokenName,
               address,
-              transferEvent,
-              addressIsDefaultAccount
+              transferEvent
             )
           );
         }
@@ -351,7 +309,7 @@ const actions = {
   Init,
   getDefaultAccountEthBalance,
   getAllTradedTokensBalances,
-  getAllTradedTokensAllowances,
+  // getAllTradedTokensAllowances,
   subscribeTokenTransfersEventsEpic,
   tokenTransferToEvent,
   tokenTransferFromEvent,
@@ -367,73 +325,49 @@ const actions = {
 
 const reducer = handleActions(
   {
-    [fulfilled(getDefaultAccountEthBalance)]: (state, { payload }) =>
-      state.setIn(["defaultAccount", "ethBalance"], payload.toString()),
-    [fulfilled(getAllTradedTokensBalances)]: (state, action) =>
-      state.updateIn(["defaultAccount", "tokenBalances"], balances => {
-        const tokenBalances = action.payload;
-        Object.entries(tokenBalances).forEach(([tokenName, tokenBalance]) => {
-          balances = balances.set(
-            tokenName,
-            tokenBalance ? tokenBalance.toString() : null
-          );
-        });
-        return balances;
-      }),
-    [fulfilled(getAllTradedTokensAllowances)]: (state, action) =>
-      state.updateIn(["defaultAccount", "tokenAllowances"], allowances => {
-        const tokenAllowances = action.payload;
-        Object.entries(tokenAllowances).forEach(
-          ([tokenName, tokenAllowance]) => {
-            allowances = allowances.set(
+    [fulfilled(getDefaultAccountEthBalance)]:
+      (state, { payload }) => state.set("ethBalance", payload.toString()),
+    [fulfilled(getAllTradedTokensBalances)]:
+      (state, { payload }) => {
+        console.log("state", state.toJSON(), state.get('tokenBalances'));
+        return state.update("tokenBalances", balances => {
+          console.log("balances", balances);
+          Object.entries(payload).forEach(([tokenName, tokenBalance]) => {
+            balances = balances.set(
               tokenName,
-              tokenAllowance ? tokenAllowance.toString() : null
+              tokenBalance ? tokenBalance.toString() : null
             );
-          }
-        );
-        return allowances;
-      }),
-    [tokenTransferFromEvent]: (
-      state,
-      { payload: { tokenName, event, addressIsDefaultAccount } }
-    ) => {
-      const path = addressIsDefaultAccount
-        ? ["defaultAccount", "tokenBalances", tokenName]
-        : ["accounts", event.args.from.toString(), "tokenBalances", tokenName];
+          });
+          return balances;
+        });
+      },
+    [fulfilled(getDefaultAccountTokenAllowanceForAddress)]:
+      (state, { payload, meta: { tokenName, spenderAddress } }) =>
+        state.setIn(["tokenAllowances", tokenName, spenderAddress], payload),
+    [tokenTransferFromEvent]:
+      (state, { payload: { tokenName, event } }) => {
+        return state.updateIn(['tokenBalances', tokenName], balance => {
+          return new BigNumber(balance).sub(event.args.value).toString();
+        });
+      },
+    [tokenTransferToEvent]:
+      (state, { payload: { tokenName, event} }) => {
+        return state.updateIn(['tokenBalances', tokenName], balance => {
+          return new BigNumber(balance).add(event.args.value).toString();
+        });
+      },
 
-      return state.updateIn(path, balance => {
-        return new BigNumber(balance).sub(event.args.value).toString();
-      });
-    },
-    [tokenTransferToEvent]: (
-      state,
-      { payload: { tokenName, event, addressIsDefaultAccount } }
-    ) => {
-      const path = addressIsDefaultAccount
-        ? ["defaultAccount", "tokenBalances", tokenName]
-        : ["accounts", event.args.to.toString(), "tokenBalances", tokenName];
+    [etherBalanceChanged]:
+      (state, { payload }) =>
+        state.update("ethBalance", () =>
+          payload.toString()
+        ),
 
-      return state.updateIn(path, balance => {
-        return new BigNumber(balance).add(event.args.value).toString();
-      });
-    },
-    [etherBalanceChanged]: (state, { payload }) =>
-      state.updateIn(["defaultAccount", "ethBalance"], () =>
-        payload.toString()
-      ),
-    [fulfilled(getDefaultAccountTokenAllowanceForAddress)]: (
-      state,
-      { payload, meta: { tokenName, spenderAddress } }
-    ) => state.setIn(["tokenAllowances", tokenName, spenderAddress], payload),
-    [updateTokenBalance]: (
-      state,
-      { payload: { tokenName, tokenBalance, addressIsDefaultAccount, address } }
-    ) => {
-      const path = addressIsDefaultAccount
-        ? ["defaultAccount", "tokenBalances", tokenName]
-        : ["accounts", address, "tokenBalances", tokenName];
-      return state.setIn(path, tokenBalance.toString());
-    }
+    [updateTokenBalance]:
+      (state, { payload: { tokenName, tokenBalance } }) =>
+      {
+        return state.setIn(["tokenBalances", tokenName], tokenBalance.toString());
+      }
   },
   initialState
 );

@@ -162,10 +162,8 @@ const canFulfillOffer = createSelector(
   rootState => transactions.canSendTransaction(rootState),
   markets.isBuyEnabled,
   rootState => {
-    return balances.tokenAllowanceTrustStatus(rootState, {
-      tokenName: tokenToBeAllowed(rootState),
-      allowanceSubjectAddress: markets.activeMarketAddress(rootState)
-    });
+    return balances.tokenAllowanceStatusForActiveMarket(rootState, {
+      tokenName: tokenToBeAllowed(rootState)});
   },
   isVolumeEmptyOrZero,
   isVolumeGreaterThanOfferMax,

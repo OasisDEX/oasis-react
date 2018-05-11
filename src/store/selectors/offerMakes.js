@@ -141,13 +141,10 @@ const canMakeOffer = createSelector(
   rootState => transactions.canSendTransaction(rootState),
   markets.isBuyEnabled,
   (rootState, offerType) => {
-      return balances.tokenAllowanceTrustStatus(
-          rootState,
-          {
-            tokenName: activeOfferMakeSellToken(rootState, offerMakeToFormName(offerType)),
-            allowanceSubjectAddress: window.contracts.market.address
-          }
-      )
+    return balances.tokenAllowanceStatusForActiveMarket(
+        rootState,
+        { tokenName: activeOfferMakeSellToken(rootState, offerMakeToFormName(offerType)) }
+    )
   },
   isVolumeOrPriceEmptyOrZero,
   (

@@ -276,7 +276,7 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
         await dispatch(balancesReducer.actions.subscribeAccountEthBalanceChangeEventEpic(web3.eth.defaultAccount)),
         await dispatch(platformReducer.actions.marketInitialized(marketBootstrap.init(dispatch, currentNetworkName))),
         dispatch(balancesReducer.actions.getAllTradedTokensBalances(window.contracts.tokens)),
-        dispatch(balancesReducer.actions.getAllTradedTokensAllowances(window.contracts.tokens, window.contracts.market.address)),
+        // dispatch(balancesReducer.actions.getAllTradedTokensAllowances(window.contracts.tokens, window.contracts.market.address)),
       ]).then(onNetworkCheckCompleted);
     }
     catch (e) {
@@ -307,7 +307,7 @@ const checkNetworkEpic = (providerType, isInitialHealthcheck) => async (dispatch
         await dispatch(balancesReducer.actions.getDefaultAccountEthBalance()),
         await dispatch(platformReducer.actions.marketInitialized(marketBootstrap.init(dispatch, currentNetworkName))),
         dispatch(balancesReducer.actions.getAllTradedTokensBalances(window.contracts.tokens)),
-        dispatch(balancesReducer.actions.getAllTradedTokensAllowances(window.contracts.tokens, window.contracts.market.address)),
+        // dispatch(balancesReducer.actions.getAllTradedTokensAllowances(window.contracts.tokens, window.contracts.market.address)),
       ]).then(onNetworkCheckCompleted);
     }
   }
