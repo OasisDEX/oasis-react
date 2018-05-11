@@ -65,3 +65,32 @@ OasisChart.displayName = 'OasisChart';
 OasisChart.propTypes = propTypes;
 OasisChart.defaultProps = defaultProps;
 export default connect(mapStateToProps, mapDispatchToProps)(OasisChart);
+
+export function tooltipContainer(tooltip, canvas) {
+  if (!canvas)
+    return null;
+  let tooltipEl = document.getElementById('chartjs-tooltip');
+  if (!tooltipEl) {
+    tooltipEl = document.createElement('div');
+    tooltipEl.id = 'chartjs-tooltip';
+    tooltipEl.className = styles.chartjsTooltip;
+    document.body.appendChild(tooltipEl);
+  }
+  // Hide if no tooltip
+  if (tooltip.opacity === 0) {
+    tooltipEl.style.opacity = 0;
+    return false;
+  }
+  // Set caret Position
+  tooltipEl.classList.remove('above', 'below', 'no-transform');
+  if (tooltip.yAlign) {
+    tooltipEl.classList.add(tooltip.yAlign);
+  } else {
+    tooltipEl.classList.add('no-transform');
+  }
+  const position = canvas.getBoundingClientRect();
+  tooltipEl.style.left = `${position.left + tooltip.caretX}px`;
+  tooltipEl.style.top = `${position.top + window.pageYOffset + tooltip.caretY}px`;
+  tooltipEl.style.padding = `${tooltip.yPadding}px${tooltip.xPadding}px`;
+  return tooltipEl;
+}

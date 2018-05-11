@@ -10,13 +10,13 @@ exports[`(Component) OasisChartVolume should render 1`] = `
           "borderColor": "#8D86C9",
           "borderWidth": 3,
           "data": Array [
-            "0.000000",
-            "0.000000",
-            "0.000000",
-            "0.000000",
-            "0.000000",
-            "0.000000",
-            "0.000000",
+            "0.00",
+            "0.00",
+            "0.00",
+            "0.00",
+            "0.00",
+            "0.00",
+            "0.00",
           ],
           "label": "Volume",
           "pointBackgroundColor": "#8D86C9",
@@ -24,13 +24,13 @@ exports[`(Component) OasisChartVolume should render 1`] = `
         },
       ],
       "labels": Array [
-        "2018-05-04",
-        "2018-05-05",
-        "2018-05-06",
-        "2018-05-07",
-        "2018-05-08",
-        "2018-05-09",
-        "2018-05-10",
+        1525384800,
+        1525471200,
+        1525557600,
+        1525644000,
+        1525730400,
+        1525816800,
+        1525903200,
       ],
     }
   }
@@ -57,7 +57,10 @@ exports[`(Component) OasisChartVolume should render 1`] = `
         ],
       },
       "tooltips": Object {
+        "custom": [Function],
         "enabled": false,
+        "mode": "index",
+        "position": "nearest",
       },
     }
   }

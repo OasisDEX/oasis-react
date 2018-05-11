@@ -6,10 +6,12 @@ import { bindActionCreators } from 'redux';
 import charts from './../store/selectors/charts';
 
 import {Line} from 'react-chartjs-2';
+import {tooltipContainer} from './OasisChart';
+import moment from 'moment';
 
 const propTypes = PropTypes && {
-  priceChartData: PropTypes.array.isRequired,
   priceChartLabels: PropTypes.array.isRequired,
+  priceChartValues: PropTypes.array.isRequired,
   tradingPair: PropTypes.shape({
     baseToken: PropTypes.string.isRequired,
     quoteToken: PropTypes.string.isRequired,
@@ -24,7 +26,7 @@ export class OasisChartPrice extends PureComponent {
         data={{
           labels: this.props.priceChartLabels,
           datasets: [{
-            data: this.props.priceChartData,
+            data: this.props.priceChartValues,
             borderColor: '#03A9F4',
             borderWidth: 3,
             pointBackgroundColor: '#03A9F4',
@@ -41,6 +43,24 @@ export class OasisChartPrice extends PureComponent {
           },
           tooltips: {
             enabled: false,
+            mode: 'index',
+            position: 'nearest',
+            custom: (tooltip) => {
+              const tooltipEl = tooltipContainer(tooltip, document.getElementsByClassName("chartjs-render-monitor")[0]);
+              if (tooltipEl && tooltip.body) {
+                const date = moment.unix(tooltip.dataPoints[0].xLabel).format('ll');
+                tooltipEl.innerHTML =
+                  `<div class="row-custom-tooltip">
+                    <span class="left">Date</span>
+                    <span class="right">${date}</span>
+                  </div>
+                  <div class="row-custom-tooltip middle">
+                    <span class="left">Price</span>
+                    <span class="right">${tooltip.dataPoints[0].yLabel}</span>
+                  </div>`;
+                tooltipEl.style.opacity = 1;
+              }
+            },
           },
           legend: {
             display: false,
@@ -58,8 +78,8 @@ export class OasisChartPrice extends PureComponent {
 
 export function mapStateToProps(state, props) {
   return {
-    priceChartData: charts.priceChartData(state, props),
     priceChartLabels: charts.priceChartLabels(state, props),
+    priceChartValues: charts.priceChartValues(state, props),
   };
 }
 

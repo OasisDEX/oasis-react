@@ -1,8 +1,9 @@
 import { createSelector } from 'reselect';
 import reselect from '../../utils/reselect';
-import moment from 'moment'
-import BigNumber from 'bignumber.js'
+import moment from 'moment';
+import BigNumber from 'bignumber.js';
 import web3 from '../../bootstrap/web3';
+import {mapValues} from 'lodash';
 
 const trades = state => state.get('trades').get('marketHistory');
 
@@ -35,7 +36,7 @@ const priceChartLabels = createSelector(
   (priceChartTrades) => priceChartTrades.map((trade) => trade.timestamp)
 )
 
-const priceChartData = createSelector(
+const priceChartValues = createSelector(
   priceChartTrades,
   reselect.getProps,
   (priceChartTrades, props) => priceChartTrades.map((trade) => {
@@ -48,7 +49,7 @@ const priceChartData = createSelector(
       baseAmount = new BigNumber(trade.buyHowMuch);
       quoteAmount = new BigNumber(trade.sellHowMuch);
     }
-    return quoteAmount.dividedBy(baseAmount).toFixed(6);
+    return quoteAmount.dividedBy(baseAmount).toFixed(4);
   })
 )
 
@@ -63,7 +64,7 @@ const volumeChartTrades = createSelector(
   }
 )
 
-const volumeChartLabelsInt = createSelector(
+const volumeChartPoints = createSelector(
   () => {
       return [6, 5, 4, 3, 2, 1, 0].map(i =>
         moment(Date.now()).startOf('day').subtract(i, 'days')
@@ -72,22 +73,22 @@ const volumeChartLabelsInt = createSelector(
 )
 
 const volumeChartLabels = createSelector(
-  volumeChartLabelsInt,
-  (volumeChartLabelsInt) => volumeChartLabelsInt.map(d => d.format('YYYY-MM-DD'))
+  volumeChartPoints,
+  (volumeChartPoints) => volumeChartPoints.map(d => d.unix())
 )
 
 const volumeChartData = createSelector(
   volumeChartTrades,
-  volumeChartLabelsInt,
+  volumeChartPoints,
   reselect.getProps,
-  (volumeChartTrades, volumeChartLabels, props) => {
+  (volumeChartTrades, volumeChartPoints, props) => {
       let volumes = {base: {}, quote: {}}
-      volumeChartLabels.forEach(day => {
-        volumes.base[day.unix() * 1000] = new BigNumber(0);
-        volumes.quote[day.unix() * 1000] = new BigNumber(0);
+      volumeChartPoints.forEach(day => {
+        volumes.base[day.unix()] = new BigNumber(0);
+        volumes.quote[day.unix()] = new BigNumber(0);
       })
       volumeChartTrades.forEach(trade => {
-        const day = moment.unix(trade.timestamp).startOf('day').unix() * 1000;
+        const day = moment.unix(trade.timestamp).startOf('day').unix();
         if (trade.buyWhichToken === props.tradingPair.quoteToken) {
           volumes.quote[day] = volumes.quote[day].add(new BigNumber(trade.buyHowMuch));
           volumes.base[day] = volumes.base[day].add(new BigNumber(trade.sellHowMuch));
@@ -96,15 +97,29 @@ const volumeChartData = createSelector(
           volumes.base[day] = volumes.base[day].add(new BigNumber(trade.buyHowMuch));
         }
       })
-      return Object.keys(volumes.quote).map((key) =>
-        web3.fromWei(volumes.quote[key]).toFixed(6)
-      )
+      return volumes;
   }
+)
+
+const volumeChartValues = createSelector(
+  volumeChartData,
+  (volumeChartData) => Object.keys(volumeChartData.quote).map((key) =>
+    web3.fromWei(volumeChartData.quote[key]).toFixed(2)
+  )
+)
+
+const volumeChartTooltips = createSelector(
+  volumeChartData,
+  (volumeChartData) => ({
+    base: mapValues(volumeChartData.base, (v) => web3.fromWei(v).toFormat(2)),
+    quote: mapValues(volumeChartData.quote, (v) => web3.fromWei(v).toFormat(2)),
+  })
 )
 
 export default {
   priceChartLabels,
-  priceChartData,
+  priceChartValues,
   volumeChartLabels,
-  volumeChartData,
+  volumeChartValues,
+  volumeChartTooltips,
 }

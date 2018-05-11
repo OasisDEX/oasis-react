@@ -36,7 +36,10 @@ exports[`(Component) OasisChartPrice should render 1`] = `
         ],
       },
       "tooltips": Object {
+        "custom": [Function],
         "enabled": false,
+        "mode": "index",
+        "position": "nearest",
       },
     }
   }
