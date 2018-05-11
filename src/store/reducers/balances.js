@@ -329,9 +329,7 @@ const reducer = handleActions(
       (state, { payload }) => state.set("ethBalance", payload.toString()),
     [fulfilled(getAllTradedTokensBalances)]:
       (state, { payload }) => {
-        console.log("state", state.toJSON(), state.get('tokenBalances'));
         return state.update("tokenBalances", balances => {
-          console.log("balances", balances);
           Object.entries(payload).forEach(([tokenName, tokenBalance]) => {
             balances = balances.set(
               tokenName,

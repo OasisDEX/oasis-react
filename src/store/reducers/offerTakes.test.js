@@ -88,7 +88,8 @@ describe('getTransactionGasCostEstimateEpic', () => {
         activeOfferTakeOfferId: () => "offerId",
         takeFormValuesSelector: () => 123,
         activeOfferTakeOfferOwner: () => "owner",
-        activeOfferTakeOfferData: () => {}
+        activeOfferTakeOfferData: () => {},
+        getBuyAmount: () => "123"
       }));
     expect(store.getActions()).toMatchSnapshot();
   });
