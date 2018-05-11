@@ -3,7 +3,6 @@ import reselect from '../../utils/reselect';
 import moment from 'moment'
 import BigNumber from 'bignumber.js'
 import web3 from '../../bootstrap/web3';
-import {formatNumber} from '../../utils/functions'
 
 const trades = state => state.get('trades').get('marketHistory');
 
@@ -13,8 +12,9 @@ const tokenTrades = createSelector(
   (trades, props) => {
     const tokens = props ? [props.tradingPair.baseToken, props.tradingPair.quoteToken] : [];
     return (trades || []).filter(t =>
-      tokens.includes(t.buyWhichToken) || tokens.includes(t.sellWhichToken)
-    );
+      t.buyWhichToken == tokens[0] && t.sellWhichToken == tokens[1] ||
+      t.buyWhichToken == tokens[1] && t.sellWhichToken == tokens[0]
+    )
   },
 )
 
@@ -48,7 +48,7 @@ const priceChartData = createSelector(
       baseAmount = new BigNumber(trade.buyHowMuch);
       quoteAmount = new BigNumber(trade.sellHowMuch);
     }
-    return formatNumber(quoteAmount.dividedBy(baseAmount), 5).replace(/,|\s/g, '');
+    return quoteAmount.dividedBy(baseAmount).toFixed(6);
   })
 )
 
@@ -92,7 +92,7 @@ const volumeChartData = createSelector(
         }
       })
       return Object.keys(volumes.quote).map((key) =>
-        formatNumber(web3.fromWei(volumes.quote[key]), 5).replace(/,|\s/g, '')
+        web3.fromWei(volumes.quote[key]).toFixed(6)
       )
   }
 )
