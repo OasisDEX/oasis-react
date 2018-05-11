@@ -227,6 +227,17 @@ const isActiveOfferTakeBestOffer = createSelector(
   }
 );
 
+const getBuyAmount = (getState) => {
+
+  const offerType = activeOfferTakeType(getState());
+
+  if(offerType === TAKE_BUY_OFFER) {
+    return takeFormValuesSelector(getState(), 'total');
+  } else {
+    return takeFormValuesSelector(getState(), 'volume');
+  }
+};
+
 export default {
   state: offerTakes,
   activeOfferTake,
@@ -249,5 +260,6 @@ export default {
   gasEstimatePending,
   getActiveOfferTakeAllowanceStatus,
   isActiveOfferTakeBestOffer,
-  tokenToBeAllowed
+  tokenToBeAllowed,
+  getBuyAmount
 };

@@ -1,22 +1,22 @@
-import { createAction, handleActions } from 'redux-actions';
-import { fromJS } from 'immutable';
-import { createPromiseActions } from '../../utils/createPromiseActions';
+import {createAction, handleActions} from 'redux-actions';
+import {fromJS} from 'immutable';
+import {createPromiseActions} from '../../utils/createPromiseActions';
 import tokens from '../selectors/tokens';
 import offerTakes from '../selectors/offerTakes';
 import offersReducer from './offers';
-import { initialize } from 'redux-form';
-import { DEFAULT_GAS_LIMIT, TX_OFFER_TAKE } from './transactions';
+import {initialize} from 'redux-form';
+import {DEFAULT_GAS_LIMIT, TX_OFFER_TAKE} from './transactions';
 import * as form from 'redux-form/immutable';
 import web3 from '../../bootstrap/web3';
-import { ETH_UNIT_ETHER } from '../../constants';
+import {ETH_UNIT_ETHER} from '../../constants';
 import balances from '../selectors/balances';
-import { fulfilled, pending, rejected } from '../../utils/store';
-import { handleTransaction } from '../../utils/transactions/handleTransaction';
+import {fulfilled, pending, rejected} from '../../utils/store';
+import {handleTransaction} from '../../utils/transactions/handleTransaction';
+import * as BigNumber from 'bignumber.js';
+import {defer} from '../deferredThunk';
 
 export const TAKE_BUY_OFFER = 'OFFER_TAKES/TAKE_BUY_OFFER';
 export const TAKE_SELL_OFFER = 'OFFER_TAKES/TAKE_SELL_OFFER';
-
-import {defer} from '../deferredThunk';
 
 const initialState = fromJS({
   activeOfferTakeType: null,
@@ -79,14 +79,16 @@ const sendBuyTransaction = createAction(
 const takeOffer = createPromiseActions('OFFER_TAKES/TAKE_OFFER');
 
 const takeOfferEpic = (withCallbacks = {}) => async (dispatch, getState) => {
-  const volume = form.formValueSelector('takeOffer')(getState(), 'volume');
-  const volumeInWei = web3.toWei(volume, ETH_UNIT_ETHER);
+
+  const amountInWei = web3.toWei(offerTakes.getBuyAmount(getState), ETH_UNIT_ETHER);
+
   const activeOfferTakeOfferId = offerTakes.activeOfferTakeOfferId(getState());
+
   dispatch(takeOffer.pending());
 
   return handleTransaction({
     dispatch,
-    transactionDispatcher: () => dispatch(sendBuyTransaction(activeOfferTakeOfferId, volumeInWei)),
+    transactionDispatcher: () => dispatch(sendBuyTransaction(activeOfferTakeOfferId, amountInWei)),
     transactionType: TX_OFFER_TAKE,
     withCallbacks
   });
@@ -196,11 +198,15 @@ const resetActiveOfferTakeGasCostEstimate = createAction(
 const getTransactionGasCostEstimate = createAction(
   'OFFER_TAKES/GET_TRANSACTION_GAS_ESTIMATE',
   ({ offerId, amount, offerOwner, activeOfferData }) => new Promise((resolve, reject) => {
+
+    console.log("trying to estimate: ", offerId, amount, offerOwner, DEFAULT_GAS_LIMIT);
+
     window.contracts.marketNoProxy.buy.estimateGas(
       offerId, amount, { to: offerOwner, gasLimit: DEFAULT_GAS_LIMIT },
       (e, estimation) => {
         if (e) {
-          console.log(`call: window.contracts.marketNoProxy.buy.estimateGas(${offerId}, ${amount}, { to: ${offerOwner}, gasLimit: ${DEFAULT_GAS_LIMIT} }, console.log) failed!`);
+          // console.log(`call: window.contracts.marketNoProxy.buy.estimateGas(${offerId}, ${amount}, { to: ${offerOwner}, gasLimit: ${DEFAULT_GAS_LIMIT} }, console.log) failed!`);
+          console.log("gas estimation failed!");
           reject({
             offerId, amount, to: offerOwner, activeOfferData,
           });
@@ -218,7 +224,8 @@ const getTransactionGasCostEstimateEpic = (
     activeOfferTakeOfferId = offerTakes.activeOfferTakeOfferId,
     takeFormValuesSelector = offerTakes.takeFormValuesSelector,
     activeOfferTakeOfferOwner = offerTakes.activeOfferTakeOfferOwner,
-    activeOfferTakeOfferData = offerTakes.activeOfferTakeOfferData
+    activeOfferTakeOfferData = offerTakes.activeOfferTakeOfferData,
+    getBuyAmount = offerTakes.getBuyAmount
   } = {}) => async (dispatch, getState) =>
 {
   const offerId = activeOfferTakeOfferId(getState());
@@ -227,16 +234,13 @@ const getTransactionGasCostEstimateEpic = (
   if (!canFulfillOffer(getState()) || !volume) {
     return null;
   }
-  const offerOwner = activeOfferTakeOfferOwner(getState());
-
-  console.log("estimating: ", volume, web3.toWei(volume, ETH_UNIT_ETHER).toString());
 
   return await dispatch(defer(
     getTransactionGasCostEstimate,
     {
       offerId,
-      amount: web3.toWei(volume, ETH_UNIT_ETHER).toString(),
-      offerOwner,
+      amount: web3.toWei(getBuyAmount(getState), ETH_UNIT_ETHER).toString(),
+      offerOwner: activeOfferTakeOfferOwner(getState()),
       activeOfferData: activeOfferTakeOfferData(getState()),
     })
   );
