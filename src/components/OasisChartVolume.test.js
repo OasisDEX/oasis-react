@@ -3,6 +3,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { fromJS } from 'immutable';
+import { mockDate } from '../utils/testHelpers'
 
 import {
   OasisChartVolume,
@@ -12,7 +13,7 @@ import {
 
 describe('(Component) OasisChartVolume', () => {
   const state = fromJS(global.storeMock);
-  const initialProps = mapStateToProps(state);
+  const initialProps = mockDate('2018-05-10', () => mapStateToProps(state));
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,

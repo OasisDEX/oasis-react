@@ -63,7 +63,7 @@ const volumeChartTrades = createSelector(
   }
 )
 
-const volumeChartLabels = createSelector(
+const volumeChartLabelsInt = createSelector(
   () => {
       return [6, 5, 4, 3, 2, 1, 0].map(i =>
         moment(Date.now()).startOf('day').subtract(i, 'days')
@@ -71,9 +71,14 @@ const volumeChartLabels = createSelector(
   }
 )
 
+const volumeChartLabels = createSelector(
+  volumeChartLabelsInt,
+  (volumeChartLabelsInt) => volumeChartLabelsInt.map(d => d.format('YYYY-MM-DD'))
+)
+
 const volumeChartData = createSelector(
   volumeChartTrades,
-  volumeChartLabels,
+  volumeChartLabelsInt,
   reselect.getProps,
   (volumeChartTrades, volumeChartLabels, props) => {
       let volumes = {base: {}, quote: {}}
