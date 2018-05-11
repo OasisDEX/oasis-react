@@ -9,10 +9,12 @@ import OasisIcon from "./OasisIcon";
 
 const propTypes = PropTypes && {
   heading: PropTypes.node.isRequired,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   isOpen: PropTypes.bool
 };
-const defaultProps = {};
+const defaultProps = {
+  children: (<div/>)
+};
 
 class OasisAccordion extends PureComponent {
   constructor(props) {

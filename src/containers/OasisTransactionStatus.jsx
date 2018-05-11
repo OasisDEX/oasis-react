@@ -18,7 +18,7 @@ import InfoBoxBody from "../components/InfoBoxBody";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
-  txTimestamp: PropTypes.number.isRequired,
+  txTimestamp: PropTypes.number,
   txType: PropTypes.string,
   localStatus: PropTypes.string,
   noBorder: PropTypes.bool,

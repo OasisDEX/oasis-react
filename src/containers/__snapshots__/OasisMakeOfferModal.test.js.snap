@@ -66,6 +66,7 @@ exports[`(Container) OasisMakeOfferModal should render 1`] = `
 exports[`(Container) OasisMakeOfferModal will receive right actions 1`] = `
 Object {
   "actions": Object {
+    "getTransactionGasCostEstimate": [Function],
     "makeOffer": [Function],
     "setOfferMakeModalClosed": [Function],
   },

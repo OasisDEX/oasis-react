@@ -15,18 +15,20 @@ import OasisTransactionStatusWrapper from "./OasisTransactionStatus";
 import {
   TX_ALLOWANCE_TRUST_TOGGLE,
   TX_STATUS_AWAITING_CONFIRMATION,
-  TX_STATUS_AWAITING_USER_ACCEPTANCE, TX_STATUS_CONFIRMED, TX_STATUS_REJECTED,
-} from '../store/reducers/transactions';
+  TX_STATUS_AWAITING_USER_ACCEPTANCE,
+  TX_STATUS_CONFIRMED,
+  TX_STATUS_REJECTED
+} from "../store/reducers/transactions";
 import network from "../store/selectors/network";
 import FlexBox from "../components/FlexBox";
 import {
   TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED,
-  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED,
-  TOKEN_ALLOWANCE_TRUST_STATUS_LOADING
-} from "../constants";
+  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED, TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN,
+  TOKEN_ALLOWANCE_TRUST_STATUS_LOADING,
+} from '../constants';
 
 import OasisIcon from "../components/OasisIcon";
-import OasisYourTransactionFailed from '../components/OasisYourTransactionFailed';
+import OasisYourTransactionFailed from "../components/OasisYourTransactionFailed";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -53,19 +55,16 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
     this.getAllowanceStatus();
   }
 
-  getAllowanceStatus(nextProps) {
+  async getAllowanceStatus() {
     const {
       actions: { getDefaultAccountTokenAllowanceForAddress },
       tokenName,
       allowanceSubjectAddress
     } = this.props;
-
     if (
-      nextProps &&
-      nextProps.contractsLoaded &&
-      nextProps.subjectTrustStatus == null
+      this.props.contractsLoaded
     ) {
-      getDefaultAccountTokenAllowanceForAddress(
+      return getDefaultAccountTokenAllowanceForAddress(
         tokenName,
         allowanceSubjectAddress
       );
@@ -102,7 +101,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
   }
 
   onTransactionPending({ txStartTimestamp }) {
-    console.log('txStartTimestamp',txStartTimestamp)
+    console.log("txStartTimestamp", txStartTimestamp);
     this.setState({
       txTimestamp: txStartTimestamp,
       txStatus: TX_STATUS_AWAITING_CONFIRMATION
@@ -110,12 +109,13 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
     this.props.onTransactionPending();
   }
 
-  onTransactionCompleted() {
+  async onTransactionCompleted() {
     this.setState({ disableActionDispatchButton: false });
-    this.props.onTransactionCompleted();
     this.setState({
       txStatus: TX_STATUS_CONFIRMED
     });
+    const newAllowanceStatus = (await this.getAllowanceStatus()).value.gt(TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN);
+    this.props.onTransactionCompleted(newAllowanceStatus);
   }
 
   onTransactionRejected() {
@@ -199,7 +199,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
   }
 
   renderAccordionHeading() {
-    const {txStatus } = this.state;
+    const { txStatus } = this.state;
     const isAllowanceEnabled = this.isAllowanceEnabled();
     const prefix = !this.props.isToggleEnabled
       ? "Enable"
@@ -228,22 +228,22 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
   }
 
   yourTransactionFailed() {
-    const {txStatus} = this.state;
-    return (
-      txStatus === TX_STATUS_REJECTED ? (<OasisYourTransactionFailed/>) : null
-    );
+    const { txStatus } = this.state;
+    return txStatus === TX_STATUS_REJECTED ? (
+      <OasisYourTransactionFailed />
+    ) : null;
   }
 
   renderAccordionContent() {
     return !this.state.txStatus ? (
-      <div style={{display: 'flex'}} hidden={this.isAllowanceEnabled()}>
+      <div style={{ display: "flex" }} hidden={this.isAllowanceEnabled()}>
         <div>
-          <OasisIcon icon="idle"/>
+          <OasisIcon icon="idle" />
         </div>
         <div>
           You need first grant access to withdraw from your personal account. To
-          disable {this.props.tokenName} trading use Allowance widget on the funds
-          page.
+          disable {this.props.tokenName} trading use Allowance widget on the
+          funds page.
         </div>
       </div>
     ) : null;

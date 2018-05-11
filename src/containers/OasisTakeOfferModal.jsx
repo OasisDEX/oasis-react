@@ -78,20 +78,21 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     const { actions } = this.props;
     actions.checkIfOfferIsActive().then(isActive => {
       if (isActive) {
-        this.setState({
-          disableOfferTakeButton: true,
-          txStatus: undefined,
-          txStartTimestamp: undefined
-        }, () =>
-          actions.takeOffer({
-            onStart: this.onTransactionStart.bind(this),
-            onCancelCleanup: this.onTransactionCancelledByUser.bind(this),
-            onPending: this.onTransactionPending.bind(this),
-            onCompleted: this.onTransactionCompleted.bind(this),
-            onRejected: this.onTransactionRejected.bind(this)
-          })
+        this.setState(
+          {
+            disableOfferTakeButton: true,
+            txStatus: undefined,
+            txStartTimestamp: undefined
+          },
+          () =>
+            actions.takeOffer({
+              onStart: this.onTransactionStart.bind(this),
+              onCancelCleanup: this.onTransactionCancelledByUser.bind(this),
+              onPending: this.onTransactionPending.bind(this),
+              onCompleted: this.onTransactionCompleted.bind(this),
+              onRejected: this.onTransactionRejected.bind(this)
+            })
         );
-
       }
     });
   }
@@ -192,9 +193,10 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
               onTransactionPending={() =>
                 this.setState({ lockCancelButton: true })
               }
-              onTransactionCompleted={() =>
-                this.setState({ lockCancelButton: false })
-              }
+              onTransactionCompleted={newAllowanceStatus => {
+                newAllowanceStatus && getTransactionGasCostEstimate();
+                this.setState({ lockCancelButton: false });
+              }}
               onTransactionRejected={() =>
                 this.setState({ lockCancelButton: false })
               }
