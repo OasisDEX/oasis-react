@@ -68,19 +68,20 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
   }
 
   async onBuyOffer() {
-    this.setState({
+    this.setState(
+      {
         disableOfferMakeButton: true,
         txStatus: false,
         txStartTimestamp: undefined
       },
       () =>
-      this.props.actions.makeOffer(this.props.offerMakeType, {
-        onStart: this.onTransactionStart.bind(this),
-        onCancelCleanup: this.onTransactionCancelledByUser.bind(this),
-        onPending: this.onTransactionPending.bind(this),
-        onCompleted: this.onTransactionCompleted.bind(this),
-        onRejected: this.onTransactionRejected.bind(this)
-      })
+        this.props.actions.makeOffer(this.props.offerMakeType, {
+          onStart: this.onTransactionStart.bind(this),
+          onCancelCleanup: this.onTransactionCancelledByUser.bind(this),
+          onPending: this.onTransactionPending.bind(this),
+          onCompleted: this.onTransactionCompleted.bind(this),
+          onRejected: this.onTransactionRejected.bind(this)
+        })
     );
   }
 
@@ -147,7 +148,8 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
       canMakeOffer,
       marketAddress,
       sellToken,
-      form
+      form,
+      actions: { getTransactionGasCostEstimate }
     } = this.props;
 
     return (
@@ -176,11 +178,12 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
             onTransactionPending={() =>
               this.setState({ lockCancelButton: true })
             }
-            onTransactionCompleted={() =>
+            onTransactionCompleted={newAllowanceStatus => {
+              newAllowanceStatus && getTransactionGasCostEstimate(offerMakeType);
               this.setState({
                 lockCancelButton: false
-              })
-            }
+              });
+            }}
             onCancelCleanup={() =>
               this.setState({
                 lockCancelButton: false
@@ -222,7 +225,8 @@ export function mapDispatchToProps(dispatch) {
   const actions = {
     setOfferMakeModalClosed:
       offerMakesReducer.actions.setOfferMakeModalClosedEpic,
-    makeOffer: offerMakesReducer.actions.makeOfferEpic
+    makeOffer: offerMakesReducer.actions.makeOfferEpic,
+    getTransactionGasCostEstimate: offerMakesReducer.actions.updateTransactionGasCostEstimateEpic
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }
