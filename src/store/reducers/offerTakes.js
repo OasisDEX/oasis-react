@@ -12,7 +12,6 @@ import {ETH_UNIT_ETHER} from '../../constants';
 import balances from '../selectors/balances';
 import {fulfilled, pending, rejected} from '../../utils/store';
 import {handleTransaction} from '../../utils/transactions/handleTransaction';
-import * as BigNumber from 'bignumber.js';
 import {defer} from '../deferredThunk';
 
 export const TAKE_BUY_OFFER = 'OFFER_TAKES/TAKE_BUY_OFFER';
@@ -64,8 +63,9 @@ const sellMaxEpic = ({activeBaseTokenBalance = balances.activeBaseTokenBalance,
     web3.fromWei(priceBN.mul(volume), ETH_UNIT_ETHER) :
     web3.fromWei(usersBaseTokenBalanceBN.mul(priceBN), ETH_UNIT_ETHER);
 
-  dispatch(form.change('takeOffer', 'total', total));
-  dispatch(defer(totalFieldValueChangedEpic, total));
+  const totalSerialized = web3.toBigNumber(total).toFixed().toString();
+  dispatch(form.change('takeOffer', 'total', totalSerialized));
+  dispatch(defer(totalFieldValueChangedEpic, totalSerialized));
 };
 
 const resetCompletedOfferCheck = createAction('OFFER_TAKES/RESET_COMPLETED_OFFER_CHECK');
@@ -171,7 +171,7 @@ const volumeFieldValueChangedEpic = (value, {formValueSelector = form.formValueS
   if (isNaN(value)) {
     dispatch(form.change('takeOffer', 'total', '0'));
   } else {
-    dispatch(form.change('takeOffer', 'total', web3.toBigNumber(value).mul(price).toString()));
+    dispatch(form.change('takeOffer', 'total', web3.toBigNumber(value).mul(price).toFixed().toString()));
   }
 
   dispatch(defer(getTransactionGasCostEstimateEpic));
@@ -180,12 +180,12 @@ const volumeFieldValueChangedEpic = (value, {formValueSelector = form.formValueS
 const totalFieldValueChangedEpic = (value, {formValueSelector = form.formValueSelector} = {}) => (dispatch, getState) => {
   const { price } = formValueSelector('takeOffer')(getState(), 'volume', 'total', 'price');
 
-  dispatch(form.change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toString()));
+  dispatch(form.change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toFixed().toString()));
 
   if (isNaN(value)) {
     dispatch(form.change('takeOffer', 'volume', '0'));
   } else {
-    dispatch(form.change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toString()));
+    dispatch(form.change('takeOffer', 'volume', web3.toBigNumber(value).div(price).toFixed().toString()));
   }
 
   dispatch(defer(getTransactionGasCostEstimateEpic));

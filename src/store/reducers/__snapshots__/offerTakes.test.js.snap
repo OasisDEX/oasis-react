@@ -81,13 +81,13 @@ Array [
       "persistentSubmitErrors": undefined,
       "touch": undefined,
     },
-    "payload": "3.6e-17",
+    "payload": "0.000000000000000036",
     "type": "@@redux-form/CHANGE",
   },
   Object {
     "payload": Object {
       "args": Array [
-        "3.6e-17",
+        "0.000000000000000036",
       ],
       "thunk": [Function],
       "thunkName": "totalFieldValueChangedEpic",
@@ -106,13 +106,13 @@ Array [
       "persistentSubmitErrors": undefined,
       "touch": undefined,
     },
-    "payload": "1.2e-17",
+    "payload": "0.000000000000000012",
     "type": "@@redux-form/CHANGE",
   },
   Object {
     "payload": Object {
       "args": Array [
-        "1.2e-17",
+        "0.000000000000000012",
       ],
       "thunk": [Function],
       "thunkName": "totalFieldValueChangedEpic",
