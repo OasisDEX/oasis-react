@@ -12,7 +12,10 @@ import moment from 'moment';
 const propTypes = PropTypes && {
   volumeChartLabels: PropTypes.array.isRequired,
   volumeChartValues: PropTypes.array.isRequired,
-  volumeChartTooltips: PropTypes.object.isRequired,
+  volumeChartTooltips: PropTypes.shape({
+    base: PropTypes.array.isRequired,
+    quote: PropTypes.array.isRequired,
+  }).isRequired,
   tradingPair: PropTypes.shape({
     baseToken: PropTypes.string.isRequired,
     quoteToken: PropTypes.string.isRequired,

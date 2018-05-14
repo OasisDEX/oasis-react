@@ -1,7 +1,76 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Component) OasisChartDepth should render 1`] = `
-<p>
-  TODO
-</p>
+<Line
+  data={
+    Object {
+      "datasets": Array [
+        Object {
+          "backgroundColor": "rgba(38, 166, 154, 0.2)",
+          "borderColor": "rgba(38, 166, 154, 1)",
+          "borderWidth": 3,
+          "data": Array [],
+          "hoverBackgroundColor": "#1ABC9C",
+          "hoverBorderColor": "#1ABC9C",
+          "hoverBorderWidth": 5,
+          "invertedStep": true,
+          "label": "Buy",
+          "pointBackgroundColor": "#1ABC9C",
+          "pointBorderColor": "#1ABC9C",
+          "pointBorderWidth": 1,
+          "pointRadius": 3,
+          "pointStyle": "circle",
+          "steppedLine": true,
+        },
+        Object {
+          "backgroundColor": "rgba(239, 83, 80, 0.2)",
+          "borderColor": "#EF5350",
+          "borderWidth": 3,
+          "data": Array [],
+          "hoverBackgroundColor": "#EF5350",
+          "hoverBorderColor": "#EF5350",
+          "hoverBorderWidth": 5,
+          "label": "Sell",
+          "pointBackgroundColor": "#EF5350",
+          "pointBorderColor": "#EF5350",
+          "pointBorderWidth": 1,
+          "pointRadius": 3,
+          "pointStyle": "circle",
+          "steppedLine": true,
+        },
+      ],
+      "labels": Array [],
+    }
+  }
+  options={
+    Object {
+      "layout": Object {
+        "padding": 5,
+      },
+      "legend": Object {
+        "display": false,
+      },
+      "scales": Object {
+        "xAxes": Array [
+          Object {
+            "display": false,
+          },
+        ],
+        "yAxes": Array [
+          Object {
+            "ticks": Object {
+              "beginAtZero": true,
+            },
+          },
+        ],
+      },
+      "tooltips": Object {
+        "custom": [Function],
+        "enabled": false,
+        "mode": "index",
+        "position": "nearest",
+      },
+    }
+  }
+/>
 `;
