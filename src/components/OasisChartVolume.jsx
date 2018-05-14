@@ -13,8 +13,8 @@ const propTypes = PropTypes && {
   volumeChartLabels: PropTypes.array.isRequired,
   volumeChartValues: PropTypes.array.isRequired,
   volumeChartTooltips: PropTypes.shape({
-    base: PropTypes.array.isRequired,
-    quote: PropTypes.array.isRequired,
+    base: PropTypes.object.isRequired,
+    quote: PropTypes.object.isRequired,
   }).isRequired,
   tradingPair: PropTypes.shape({
     baseToken: PropTypes.string.isRequired,

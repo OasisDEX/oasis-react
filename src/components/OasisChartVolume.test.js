@@ -13,7 +13,11 @@ import {
 
 describe('(Component) OasisChartVolume', () => {
   const state = fromJS(global.storeMock);
-  const initialProps = mockDate('2018-05-10', () => mapStateToProps(state));
+  console.log('original', new Date(), new Date().getTimezoneOffset())
+  const initialProps = mockDate('2018-05-10', () => {
+    console.log('mock', new Date(), new Date().getTimezoneOffset())
+    return mapStateToProps(state)
+  });
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,
@@ -28,6 +32,6 @@ describe('(Component) OasisChartVolume', () => {
     const wrapper = shallow(
       <OasisChartVolume {...props}/>,
     );
-    // expect(wrapper).toMatchSnapshot();
+    expect(wrapper).toMatchSnapshot();
   });
 });

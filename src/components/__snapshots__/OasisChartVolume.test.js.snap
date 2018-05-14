@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisChartVolume should render 1`] = `
+<Line
+  data={
+    Object {
+      "datasets": Array [
+        Object {
+          "backgroundColor": "rgba(140, 133, 200, 0.1)",
+          "borderColor": "#8D86C9",
+          "borderWidth": 3,
+          "data": Array [
+            "0.00",
+            "0.00",
+            "0.00",
+            "0.00",
+            "0.00",
+            "0.00",
+            "0.00",
+          ],
+          "label": "Volume",
+          "pointBackgroundColor": "#8D86C9",
+          "pointRadius": 3,
+        },
+      ],
+      "labels": Array [
+        1525384800,
+        1525471200,
+        1525557600,
+        1525644000,
+        1525730400,
+        1525816800,
+        1525903200,
+      ],
+    }
+  }
+  options={
+    Object {
+      "layout": Object {
+        "padding": 5,
+      },
+      "legend": Object {
+        "display": false,
+      },
+      "scales": Object {
+        "xAxes": Array [
+          Object {
+            "display": false,
+          },
+        ],
+        "yAxes": Array [
+          Object {
+            "ticks": Object {
+              "beginAtZero": true,
+            },
+          },
+        ],
+      },
+      "tooltips": Object {
+        "custom": [Function],
+        "enabled": false,
+        "mode": "index",
+        "position": "nearest",
+      },
+    }
+  }
+/>
+`;
