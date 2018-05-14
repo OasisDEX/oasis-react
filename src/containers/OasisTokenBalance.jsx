@@ -9,6 +9,7 @@ import balances from '../store/selectors/balances';
 import { ETH_UNIT_ETHER } from '../constants';
 import styles from './OasisTokenBalance.scss';
 import CSSModules from 'react-css-modules';
+import OasisIcon from '../components/OasisIcon';
 
 const propTypes = PropTypes && {
   tokenName: PropTypes.string,
@@ -22,7 +23,7 @@ export class OasisTokenBalanceWrapper extends PureComponent {
     const { balance, tokenName, fromWei, balanceUnit } = this.props;
     if(!balance) {
       return (
-        <div className={styles.loading}>[LOADING]</div>
+        <div className={styles.loading}><OasisIcon icon="loading"/></div>
       );
     } else {
       return (

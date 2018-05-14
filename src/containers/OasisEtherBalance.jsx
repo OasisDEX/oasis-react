@@ -9,6 +9,7 @@ import balances from '../store/selectors/balances';
 import { ETH_UNIT_ETHER, TOKEN_ETHER } from '../constants';
 import styles from './OasisEtherBalance.scss';
 import CSSModules from 'react-css-modules';
+import OasisIcon from '../components/OasisIcon';
 
 const propTypes = PropTypes && {
   decimalPlaces: PropTypes.number,
@@ -21,7 +22,7 @@ export class OasisEtherBalanceWrapper extends PureComponent {
     const { balance, fromWei, balanceUnit } = this.props;
     if(!balance) {
       return (
-        <div className={styles.loading}>[LOADING]</div>
+        <div className={styles.loading}><OasisIcon icon="loading"/></div>
       );
     } else {
       return (

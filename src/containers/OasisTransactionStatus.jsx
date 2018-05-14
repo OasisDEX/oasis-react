@@ -27,6 +27,7 @@ const propTypes = PropTypes && {
 };
 
 export class OasisTransactionStatusWrapper extends PureComponent {
+
   hasTransactionFailed() {
     return [TX_STATUS_CANCELLED_BY_USER, TX_STATUS_REJECTED].includes(
       this.props.transaction.get("txStatus")

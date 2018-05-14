@@ -550,7 +550,13 @@ const setActiveTradingPairBestOfferIds = createAction('OFFERS/SET_ACTIVE_TRADING
   ({ bestBuyOfferId, bestSellOfferId }) => ({ bestBuyOfferId, bestSellOfferId })
 );
 const getBestOfferIdsForActiveTradingPairEpic = () => async (dispatch, getState) => {
-  const { baseToken, quoteToken } = tokens.activeTradingPair(getState());
+  const tradingPair = tokens.activeTradingPair(getState()) !== null
+    ? fromJS(tokens.activeTradingPair(getState()))
+    : tokens.defaultTradingPair(getState());
+  const [baseToken, quoteToken] = [
+    tradingPair.get("baseToken"),
+    tradingPair.get("quoteToken")
+  ];
   const bestBuyOfferId = (
     await
       dispatch(

@@ -8,6 +8,9 @@ exports[`(Component) OasisLoadingIndicator should render 1`] = `
     }
   }
 >
-  [L]
+  <OasisIcon
+    icon="loading"
+    size="md"
+  />
 </span>
 `;
