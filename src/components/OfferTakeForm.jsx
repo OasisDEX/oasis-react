@@ -80,16 +80,17 @@ export class OfferTakeForm extends PureComponent {
   onVolumeFieldChange(event, newValue, previousValue) {
     const { volumeFieldValueChanged } = this.props.actions;
     if (newValue.toString() !== previousValue.toString()) {
-      volumeFieldValueChanged(newValue);
+      setTimeout(()=> volumeFieldValueChanged(newValue), 0);
       // if(parseFloat(newValue)) {
       //   this.estimateGas();
       // }
     }
   }
+
   onTotalFieldChange(event, newValue, previousValue) {
     const { totalFieldValueChanged } = this.props.actions;
     if (newValue.toString() !== previousValue.toString()) {
-      totalFieldValueChanged(newValue);
+      setTimeout(()=> totalFieldValueChanged(newValue), 0);
       // if(parseFloat(newValue)) {
       //   this.estimateGas();
       // }

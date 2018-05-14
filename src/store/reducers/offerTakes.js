@@ -205,7 +205,6 @@ const getTransactionGasCostEstimate = createAction(
       offerId, amount, { to: offerOwner, gasLimit: DEFAULT_GAS_LIMIT },
       (e, estimation) => {
         if (e) {
-          // console.log(`call: window.contracts.marketNoProxy.buy.estimateGas(${offerId}, ${amount}, { to: ${offerOwner}, gasLimit: ${DEFAULT_GAS_LIMIT} }, console.log) failed!`);
           console.log("gas estimation failed!");
           reject({
             offerId, amount, to: offerOwner, activeOfferData,

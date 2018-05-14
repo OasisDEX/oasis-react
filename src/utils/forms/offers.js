@@ -1,7 +1,7 @@
 import web3 from "../../bootstrap/web3";
 
 const normalize = (value, previousValue) => {
-  console.log('normalize', value, previousValue);
+  // console.log('normalize', value, previousValue);
   return  ['0',0, ''].includes(value)
     ? value
     : !isFinite(value)
