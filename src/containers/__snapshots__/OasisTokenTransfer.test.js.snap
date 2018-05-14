@@ -8,6 +8,7 @@ exports[`(Container) OasisTokenTransfer should render 1`] = `
     <Connect(OasisTokenSelect)
       disabled={undefined}
       name="tokenTransfer"
+      onChange={[Function]}
     />
   }
   spaceForContent={true}
@@ -21,7 +22,13 @@ exports[`(Container) OasisTokenTransfer should render 1`] = `
   <Connect(ReduxForm)
     onSubmit={[Function]}
   />
-  <Connect(TokenTransferStatus) />
+  <div
+    style={
+      Object {
+        "width": "100%",
+      }
+    }
+  />
 </OasisWidgetFrame>
 `;
 
@@ -29,6 +36,7 @@ exports[`(Container) OasisTokenTransfer will receive right actions 1`] = `
 Object {
   "actions": Object {
     "makeTransfer": [Function],
+    "resetTransferForm": [Function],
   },
 }
 `;
@@ -36,6 +44,10 @@ Object {
 exports[`(Container) OasisTokenTransfer will receive right props 1`] = `
 Object {
   "selectedToken": "MKR",
-  "transactionReceipt": undefined,
+  "transferFormValues": Object {
+    "recipient": "0x0000000000000000000000000000000000000001",
+    "token": "W-ETH",
+    "tokenAmount": "1",
+  },
 }
 `;

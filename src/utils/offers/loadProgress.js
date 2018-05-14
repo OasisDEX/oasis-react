@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import OasisIcon from '../../components/OasisIcon';
 
 const loadProgress = (loadedOffersList, offersTotalCount) =>
   loadedOffersList && offersTotalCount ? parseInt((loadedOffersList.count() / offersTotalCount  ) * 100): null;
@@ -17,7 +18,7 @@ const LoadProgressSection = ({ loadedOffersList, offersTotalCount }) => {
   const loaded = loadProgress(loadedOffersList, offersTotalCount);
   return (
     <span style={style}  className={'loadProgress'}>
-      <span hidden={offersTotalCount!=null}>loading</span>
+      <span hidden={offersTotalCount!=null}><OasisIcon icon="loading"/></span>
       <span hidden={loaded==null}>{loaded}% / {offersTotalCount}</span>
       <span hidden={loaded!=null && offersTotalCount != null}>{offersTotalCount}</span>
     </span>

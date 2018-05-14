@@ -53,6 +53,7 @@ exports[`(Container) TokenTransferForm should render 1`] = `
       color="default"
       disabled={true}
       size="md"
+      type="submit"
     >
       Transfer
     </OasisButton>

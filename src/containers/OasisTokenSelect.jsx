@@ -12,7 +12,8 @@ import widgetFrameStyles from "./OasisWidgetFrame.scss"
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  onChange: PropTypes.func
 };
 
 export class OasisTokenSelectWrapper extends PureComponent {
@@ -25,7 +26,10 @@ export class OasisTokenSelectWrapper extends PureComponent {
   }
 
   onOptionSelected(e) {
-    this.props.actions.tokenSelected(this.props.name, e.target.value);
+    const selectedValue = e.target.value;
+    const { actions, name, onChange } = this.props;
+    actions.tokenSelected(name, selectedValue);
+    onChange && onChange(selectedValue);
   }
 
   getOptions() {
