@@ -28,7 +28,6 @@ const proxiedWeb3Handler = {
   },
 };
 
-
 const init = () => {
   if (web3 && window.web3) {
     web3.setProvider(window.web3.currentProvider);

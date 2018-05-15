@@ -309,7 +309,6 @@ const actions = {
   Init,
   getDefaultAccountEthBalance,
   getAllTradedTokensBalances,
-  // getAllTradedTokensAllowances,
   subscribeTokenTransfersEventsEpic,
   tokenTransferToEvent,
   tokenTransferFromEvent,

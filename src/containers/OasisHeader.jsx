@@ -75,7 +75,7 @@ export function mapStateToProps(state) {
   return {
     accounts: accounts.accounts(state),
     networkStatus: network.status(state),
-    networkName: network.getActiveNetworkName(state),
+    networkName: network.activeNetworkName(state),
     marketCloseTime: markets.marketCloseTime(state),
     defaultAccount: accounts.defaultAccount(state),
     marketAddress: markets.activeMarketAddress(state)

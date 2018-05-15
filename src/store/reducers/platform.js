@@ -9,18 +9,16 @@ import web3 from '../../bootstrap/web3';
 
 const initialState = fromJS(
   {
-    sids: [], // currently running setIntevals cancel ids
+    // sids: [], // currently running setIntevals cancel ids
     errors: [],
     web3Initialized: null,
     contractsLoaded: false,
     metamaskLocked: false,
     lastNetworkSwitchAt: null,
-    providerType: null,
     defaultTradingPair: {baseToken: 'MKR', quoteToken: 'W-ETH'},
     defaultPeriod: WEEK,
     activePeriod: WEEK,
     defaultUnit: ETH_UNIT_WEI,
-    activeOfferType: null
   });
 
 export const STATUS_PRISTINE = 'STATUS_PRISTINE';
@@ -28,30 +26,8 @@ export const STATUS_PENDING = 'STATUS_PENDING';
 export const STATUS_COMPLETED = 'STATUS_COMPLETED';
 export const STATUS_ERROR = 'STATUS_ERROR';
 
-export const PROVIDER_TYPE_METAMASK = 'PLATFORM/PROVIDER_TYPE_METAMASK';
-export const PROVIDER_TYPE_PARITY = 'PLATFORM/PROVIDER_TYPE_PARITY';
-export const PROVIDER_TYPE_MIST = 'PLATFORM/PROVIDER_TYPE_MIST';
-
-
-const SET_PROVIDER_TYPE = 'PLATFORM/SET_PROVIDER_TYPE';
-const SET_PLATFORM_ERRORS = 'PLATFORM/SET_PLATFORM_ERRORS';
-const RESET_PLATFORM_ERRORS = 'PLATFORM/RESET_PLATFORM_ERRORS';
-const WEB3_INITIALIZED = 'PLATFORM/WEB3_INITIALIZED';
-const WEB3_RESET = 'PLATFORM/WEB3_RESET';
-const WEB3_RESET_KEEP_SYNC = 'PLATFORM/WEB3_RESET_KEEP_SYNC';
-const CONTRACTS_LOADED = 'PLATFORM/CONTRACTS_LOADED';
-const CONTRACTS_RELOADED = 'PLATFORM/CONTRACTS_RELOADED';
-const MARKET_INITIALIZED = 'PLATFORM/MARKET_INITIALIZED';
-const MARKET_REINITIALIZED = 'PLATFORM/MARKET_REINITIALIZED';
-const METAMASK_LOCKED = 'PLATFORM/METAMASK_LOCKED';
-const METAMASK_UNLOCKED = 'PLATFORM/METAMASK_UNLOCKED';
-const ACTIVE_NETWORK_CHANGED = 'PLATFORM/ACTIVE_NETWORK_CHANGED';
-
-const DISMISS_MESSAGE = 'PLATFORM/DISMISS_MESSAGE';
-
-const INIT = 'PLATFORM/INIT';
 const Init = createAction(
-  INIT,
+  'PLATFORM/INIT',
   async () => null,
 );
 
@@ -59,92 +35,51 @@ const platformInitEpic = () => async (dispatch) => {
   dispatch(Init());
 };
 
+const setPlatformErrors = createAction('PLATFORM/SET_PLATFORM_ERRORS');
 
-const setProviderType = createAction(
-  SET_PROVIDER_TYPE,
-  providerType => providerType
-);
+const resetPlatformErrors = createAction('PLATFORM/RESET_PLATFORM_ERRORS');
 
-const setPlatformErrors = createAction(
-  SET_PLATFORM_ERRORS
-);
+const web3Initialized = createAction('PLATFORM/WEB3_INITIALIZED', p => p);
 
-const resetPlatformErrors = createAction(
-  RESET_PLATFORM_ERRORS,
-);
+const web3Reset = createAction('PLATFORM/WEB3_RESET', () => web3.reset());
 
-const web3Initialized = createAction(
-  WEB3_INITIALIZED,
-  p => p,
-);
+const web3ResetKeepSync = createAction('PLATFORM/WEB3_RESET_KEEP_SYNC',
+  () => web3.reset(true));
 
-const web3Reset = createAction(
-  WEB3_RESET,
-  () => web3.reset()
-);
-const web3ResetKeepSync = createAction(
-  WEB3_RESET_KEEP_SYNC,
-  () => web3.reset(true)
-);
+const contractsLoaded = createAction('PLATFORM/CONTRACTS_LOADED', p => p);
 
-const contractsLoaded = createAction(
-  CONTRACTS_LOADED,
-  p => p,
-);
+const contractsReloaded = createAction('PLATFORM/CONTRACTS_RELOADED');
 
-const contractsReloaded = createAction(
-  CONTRACTS_RELOADED,
-);
+const marketInitialized = createAction('PLATFORM/MARKET_INITIALIZED');
 
-const marketInitialized = createAction(
-  MARKET_INITIALIZED,
-);
+const marketReinitialized = createAction('PLATFORM/MARKET_REINITIALIZED');
 
-const marketReinitialized = createAction(
-  MARKET_REINITIALIZED,
-);
+const metamaskLocked = createAction('PLATFORM/METAMASK_LOCKED');
 
-const metamaskLocked = createAction(
-  METAMASK_LOCKED,
-);
-const metamaskUnlocked = createAction(
-  METAMASK_UNLOCKED,
-);
+const metamaskUnlocked = createAction('PLATFORM/METAMASK_UNLOCKED');
 
-const networkChanged = createAction(
-  ACTIVE_NETWORK_CHANGED
-);
+const networkChanged = createAction('PLATFORM/ACTIVE_NETWORK_CHANGED');
 
 const changeRoute = createAction('PLATFORM/CHANGE_ROUTE', route => route);
+
 const changeRouteEpic = (route) => (dispatch) => {
   dispatch(changeRoute(route));
   dispatch(push(route));
 };
 
-
-
 const dismissMessage = (
   msgType,
-  dismissMessageAction = createAction(DISMISS_MESSAGE, msgType => msgType)
+  dismissMessageAction = createAction('PLATFORM/DISMISS_MESSAGE', msgType => msgType)
 ) => (dispatch) => {
   Session.dismissMessage(dispatch, msgType);
   dispatch(dismissMessageAction(msgType));
 };
-
-
-const setActiveOfferType = createAction(
-  'PLATFORM/SET_ACTIVE_OFFER_TYPE',
-  offerType => offerType
-);
-
-const resetActiveOfferType = createAction('PLATFORM/RESET_ACTIVE_OFFER_TYPE');
 
 const actions = {
   platformInitEpic,
   web3Initialized,
   web3Reset,
   web3ResetKeepSync,
-
   contractsLoaded,
   contractsReloaded,
   marketInitialized,
@@ -154,11 +89,8 @@ const actions = {
   metamaskLocked,
   metamaskUnlocked,
   networkChanged,
-  setProviderType,
   dismissMessage,
   changeRouteEpic,
-  setActiveOfferType,
-  resetActiveOfferType,
 };
 
 const reducer = handleActions({
@@ -168,10 +100,6 @@ const reducer = handleActions({
   [metamaskLocked]: (state) => state.set('metamaskLocked', true),
   [metamaskUnlocked]: (state) => state.set('metamaskLocked', false),
   [networkChanged]: (state) => state.set('lastNetworkSwitchAt', Date.now()),
-  [setProviderType]: (state, { payload }) => state.update('providerType', () => payload),
-  [setProviderType]: (state, { payload }) => state.set('activeOfferType', payload),
-  [resetActiveOfferType]: state => state.set('activeOfferType', null),
-
 }, initialState);
 
 export default {

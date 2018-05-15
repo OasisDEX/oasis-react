@@ -58,7 +58,9 @@ const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
             console.error('SESSION:INIT', e);
           }
           await dispatch(
-            networkReducer.actions.checkNetworkEpic(providerType.join(), isInitialHealthcheck),
+            isInitialHealthcheck ?
+              networkReducer.actions.checkNetworkInitialEpic() :
+              networkReducer.actions.checkNetworkEpic()
           );
         }
         /**
