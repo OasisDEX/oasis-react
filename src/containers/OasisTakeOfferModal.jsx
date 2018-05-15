@@ -146,7 +146,10 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     return (
       <div>
         {isCurrentOfferActive ? (
-          <OasisOfferSummaryWrapper offerType={offerTakeType} />
+          <OasisOfferSummaryWrapper
+            disableBalanceWarning={this.isTakeInProgressOrOfferTaken()}
+            offerType={offerTakeType}
+          />
         ) : (
           <OasisOfferNotAvailable />
         )}
@@ -160,6 +163,10 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     return !isCurrentOfferActive || !canFulfillOffer || disableOfferTakeButton;
   }
 
+  isTakeInProgressOrOfferTaken() {
+    const { isCurrentOfferActive } = this.props;
+    return Boolean(!isCurrentOfferActive || this.state.txStatus && this.state.txStatus !== TX_STATUS_REJECTED);
+  }
   render() {
     const {
       offerTakeType,

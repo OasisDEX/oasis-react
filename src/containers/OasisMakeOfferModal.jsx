@@ -140,6 +140,10 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
     ) : null;
   }
 
+  isOfferMakeCompleted() {
+    return this.state.txStatus;
+  }
+
   render() {
     const {
       baseToken,
@@ -172,7 +176,9 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
             disableForm={this.state.disableForm}
           />
 
-          <OasisOfferSummary offerType={offerMakeType} />
+          <OasisOfferSummary
+            disableBalanceWarning={this.isOfferMakeCompleted()}
+            offerType={offerMakeType} />
           {this.renderTransactionStatus()}
           <SetTokenAllowanceTrustWrapper
             onTransactionPending={() =>
