@@ -8,7 +8,6 @@ import CSSModules from "react-css-modules/dist/index";
 import OasisSoldReceivedAmounts from "./OasisSoldReceivedAmounts";
 import OasisIsTokenTradingEnabledByUserWrapper from "../containers/OasisIsTokenTradingEnabledByUser";
 import InfoBox from "./InfoBox";
-import InfoBoxBody from "./InfoBoxBody";
 import FlexBox from "./FlexBox";
 // import tokenToBeAllowedForOffer from "../utils/offers/tokenToBeAllowedForOffer";
 // import { isVolumeOrPriceEmptyOrZero } from '../store/selectors';
@@ -65,16 +64,15 @@ export class OasisOfferSummary extends PureComponent {
 
     return (
       <div className={styles.base}>
-        <InfoBox vertical>
-          <InfoBoxBody>
-            <FlexBox>
+        <InfoBox>
               <OasisSoldReceivedAmounts
                 sellToken={sellToken}
                 buyToken={buyToken}
                 amountSold={amountSold}
                 amountReceived={amountReceived}
+                className={styles.detailsAmountCol}
               />
-              <div>
+              <div className={styles.detailsTradingCol}>
                 <OasisIsTokenTradingEnabledByUserWrapper
                   tokenName={sellToken}
                 />
@@ -82,8 +80,6 @@ export class OasisOfferSummary extends PureComponent {
                   ? this.renderGasEstimate()
                   : OasisOfferSummary.renderGasEstimateNotEnabledInfo()}
               </div>
-            </FlexBox>
-          </InfoBoxBody>
         </InfoBox>
       </div>
     );

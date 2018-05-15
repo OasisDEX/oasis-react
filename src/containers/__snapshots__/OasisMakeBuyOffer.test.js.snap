@@ -29,18 +29,10 @@ exports[`(Container) OasisMakeBuyOffer should render 1`] = `
       className=""
       color="default"
       hidden={true}
-      justifyContent="normal"
       noBorder={true}
       size="md"
-      vertical={false}
     >
-      <InfoBoxBody
-        className=""
-        color="default"
-        vertical={false}
-      >
-        Enter a price to unlock amount and total.
-      </InfoBoxBody>
+      Enter a price to unlock amount and total.
     </InfoBox>
     <OasisButton
       btnType="button"

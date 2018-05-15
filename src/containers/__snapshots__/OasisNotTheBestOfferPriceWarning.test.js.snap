@@ -1,43 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) OasisNotTheBestOfferPriceWarning should render 1`] = `
-<InfoBox
-  className=""
+<InfoBoxWithIco
+  alignItems="center"
   color="danger"
-  justifyContent="normal"
-  size="md"
-  vertical={false}
+  icon="warning"
 >
-  <InfoBoxBody
-    className=""
-    color="default"
-    vertical={false}
-  >
-    <div
-      style={
-        Object {
-          "display": "inline-block",
-          "width": "10%",
-        }
-      }
-    >
-      <OasisIcon
-        icon="warning"
-        size="md"
-      />
-    </div>
-    <div
-      style={
-        Object {
-          "display": "inline-block",
-          "width": "90%",
-        }
-      }
-    >
-      WARNING: You have not chosen the best price available. Review the order book to find a better trade.
-    </div>
-  </InfoBoxBody>
-</InfoBox>
+  WARNING: You have not chosen the best price available. Review the order book to find a better trade.
+</InfoBoxWithIco>
 `;
 
 exports[`(Container) OasisNotTheBestOfferPriceWarning will receive right actions 1`] = `

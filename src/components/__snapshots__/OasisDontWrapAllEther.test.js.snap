@@ -4,16 +4,8 @@ exports[`(Component) OasisDontWrapAllEther should render 1`] = `
 <InfoBox
   className=""
   color="danger"
-  justifyContent="normal"
   size="md"
-  vertical={false}
 >
-  <InfoBoxBody
-    className=""
-    color="default"
-    vertical={false}
-  >
-    Do not wrap all of your ETH! Otherwise you cannot pay for transactions.
-  </InfoBoxBody>
+  Do not wrap all of your ETH! Otherwise you cannot pay for transactions.
 </InfoBox>
 `;

@@ -16,8 +16,10 @@ const style = {
 
 const LoadProgressSection = ({ loadedOffersList, offersTotalCount }) => {
   const loaded = loadProgress(loadedOffersList, offersTotalCount);
-  return (
-    <span style={style}  className={'loadProgress'}>
+  return offersTotalCount == null
+    ? ( <span style={{float: 'right'}}><OasisIcon icon="loading"/></span>)
+    : (
+    <span style={style} className={'loadProgress'}>
       <span hidden={offersTotalCount!=null}><OasisIcon icon="loading"/></span>
       <span hidden={loaded==null}>{loaded}% / {offersTotalCount}</span>
       <span hidden={loaded!=null && offersTotalCount != null}>{offersTotalCount}</span>

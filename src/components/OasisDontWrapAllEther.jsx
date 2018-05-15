@@ -4,7 +4,6 @@ import { PropTypes } from 'prop-types';
 
 import styles from './OasisDontWrapAllEther.scss';
 import {InfoBox} from "./InfoBox";
-import {InfoBoxBody} from "./InfoBoxBody";
 
 
 const propTypes = PropTypes && {
@@ -16,9 +15,7 @@ class OasisDontWrapAllEther extends PureComponent {
   render() {
     return (
       <InfoBox color='danger' className={styles.base}>
-        <InfoBoxBody>
         Do not wrap all of your ETH! Otherwise you cannot pay for transactions.
-        </InfoBoxBody>
       </InfoBox>
     );
   }

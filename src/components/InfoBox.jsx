@@ -3,6 +3,7 @@ import { PropTypes } from "prop-types";
 
 import styles from "./InfoBox.scss";
 import CSSModules from "react-css-modules/dist/index";
+import FlexBox from "./FlexBox";
 
 const propTypes = PropTypes && {
   children: PropTypes.node,
@@ -18,9 +19,7 @@ const propTypes = PropTypes && {
 const defaultProps = {
   color: "default",
   size: "md",
-  vertical: false,
-  className: "",
-  justifyContent: "normal"
+  className: ""
 };
 
 export class InfoBox extends PureComponent {
@@ -28,29 +27,27 @@ export class InfoBox extends PureComponent {
     const {
       color,
       size,
-      vertical,
-      justifyContent,
       className,
       fullWidth,
-      noBorder
+      noBorder,
+      ...props
     } = this.props;
     return (
-      <div
+      <FlexBox
         hidden={this.props.hidden}
-        style={{ justifyContent: justifyContent }}
         className={
-         `${!noBorder ? styles.box: ''}
+         `${styles.box}
           ${styles[color]}
           ${!noBorder? styles[size]: styles['sm']}
-          ${vertical ? styles.vertical : ""}
           ${className}
           ${fullWidth ? styles.fullWidth : ""}
           ${noBorder ? styles.noBorder: ''}
           `
         }
+        {...props}
       >
         {this.props.children}
-      </div>
+      </FlexBox>
     );
   }
 }

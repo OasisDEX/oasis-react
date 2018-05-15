@@ -4,8 +4,8 @@ import { PropTypes } from 'prop-types';
 
 import styles from './OasisOfferTakeWarningBox.scss';
 import InfoBox from './InfoBox';
-import InfoBoxBody from './InfoBoxBody';
 import OasisIcon from './OasisIcon';
+import InfoBoxWithIco from "./InfoBoxWithIco";
 
 const propTypes = PropTypes && {
 };
@@ -15,17 +15,10 @@ const defaultProps = {};
 class OasisOfferTakeWarningBox extends PureComponent {
   render() {
     return (
-      <InfoBox className={styles.base}>
-        <InfoBoxBody>
-          <div>
-            <OasisIcon icon="info"/>
-          </div>
-          <div>
-            If someone (partially) fills this order before you do, your offer may only be partially filled or even denied,
-            in which case unused funds will be refunded to your balance and allowance.
-          </div>
-        </InfoBoxBody>
-      </InfoBox>
+      <InfoBoxWithIco icon="info">
+          If someone (partially) fills this order before you do, your offer may only be partially filled or even denied,
+          in which case unused funds will be refunded to your balance and allowance.
+      </InfoBoxWithIco>
     );
   }
 }

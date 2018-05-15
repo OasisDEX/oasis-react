@@ -31,6 +31,7 @@ import {
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
 import OasisProcessingOrder from "../components/OasisProcessingOrder";
+import {MAKE_BUY_OFFER, MAKE_SELL_OFFER} from "../constants";
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -50,6 +51,15 @@ const getOfferTitle = offerTakeType => {
       return "Buy offer";
     case TAKE_SELL_OFFER:
       return "Sell offer";
+  }
+};
+
+const getBtnColor = offerMakeType => {
+  switch (offerMakeType) {
+    case TAKE_BUY_OFFER:
+      return "success";
+    case TAKE_SELL_OFFER:
+      return "danger";
   }
 };
 
@@ -229,6 +239,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
                 txTimestamp={this.state.txStartTimestamp}
                 localStatus={this.state.txStatus}
                 txType={TX_OFFER_TAKE}
+                title="Process order"
               />
             ) : (
               <div>
@@ -245,6 +256,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
             <OasisButton
               disabled={this.shouldDisableTakeOfferButton()}
               onClick={this.onBuyOffer}
+              color={getBtnColor(offerTakeType)}
             >
               {OasisTakeOfferModalWrapper.takeOfferBtnLabel(offerTakeType, {
                 buyToken,

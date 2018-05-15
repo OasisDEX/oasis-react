@@ -8,10 +8,10 @@ import balances from "../store/selectors/balances";
 import balancesReducer from "../store/reducers/balances";
 import platform from "../store/selectors/platform";
 import OasisButton from "../components/OasisButton";
-import { InfoBox } from "../components/InfoBox";
-import { InfoBoxBody } from "../components/InfoBoxBody";
 import OasisAccordion from "../components/OasisAccordion";
 import OasisTransactionStatusWrapper from "./OasisTransactionStatus";
+import styles from "./SetTokenAllowanceTrust.scss";
+import CSSModules from "react-css-modules";
 import {
   TX_ALLOWANCE_TRUST_TOGGLE,
   TX_STATUS_AWAITING_CONFIRMATION,
@@ -154,8 +154,6 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
     const { txTimestamp, txStatus } = this.state;
     return txStatus && txStatus !== TX_STATUS_REJECTED ? (
       <OasisTransactionStatusWrapper
-        inline
-        noBorder
         txTimestamp={txTimestamp}
         localStatus={txStatus}
         txType={TX_ALLOWANCE_TRUST_TOGGLE}
@@ -205,11 +203,11 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
       ? "Enable"
       : isAllowanceEnabled ? "Disable" : "Enable";
     return (
-      <FlexBox alignContent="space-between">
+      <FlexBox justifyContent="space-between" alignItems="baseline" className={styles.accordionHeading}>
         <div>
           {prefix} <b>{this.props.tokenName}</b> for trading
-          {this.renderTransactionInfo()}
         </div>
+        <div>{this.renderTransactionInfo()}</div>
         <div hidden={txStatus}>
           <OasisButton
             onClick={this.toggleTokenAllowanceTrustStatus}
@@ -236,25 +234,21 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
 
   renderAccordionContent() {
     return !this.state.txStatus ? (
-      <div style={{ display: "flex" }} hidden={this.isAllowanceEnabled()}>
-        <div>
-          <OasisIcon icon="idle" />
-        </div>
-        <div>
+      <FlexBox alignItems="center" hidden={this.isAllowanceEnabled()}>
+        <OasisIcon icon="idle" />
+        <div className={styles.accordingText}>
           You need first grant access to withdraw from your personal account. To
           disable {this.props.tokenName} trading use Allowance widget on the
           funds page.
         </div>
-      </div>
+      </FlexBox>
     ) : null;
   }
 
   render() {
     return (
       <div hidden={!this.shouldDisplay()}>
-        <InfoBox justifyContent="space-between" fullWidth>
-          <InfoBoxBody>{this.mainInfoBoxContent()}</InfoBoxBody>
-        </InfoBox>
+        {this.mainInfoBoxContent()}
         {this.yourTransactionFailed()}
       </div>
     );
@@ -285,5 +279,5 @@ export function mapDispatchToProps(dispatch) {
 SetTokenAllowanceTrustWrapper.propTypes = propTypes;
 SetTokenAllowanceTrustWrapper.displayName = "SetTokenAllowanceTrust";
 export default connect(mapStateToProps, mapDispatchToProps)(
-  SetTokenAllowanceTrustWrapper
+  CSSModules(SetTokenAllowanceTrustWrapper, styles)
 );

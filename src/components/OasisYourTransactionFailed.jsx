@@ -3,12 +3,13 @@ import { PropTypes } from "prop-types";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import styles from "./OasisYourTransactionFailed.scss";
+import textStyles from '../styles/modules/_typography.scss';
 import InfoBox from "./InfoBox";
-import InfoBoxBody from "./InfoBoxBody";
 import { EthercanLinkWrapper } from "../containers/EtherscanLink";
 import { ETHERSCAN_LINK_TYPE_TRANSACTION } from "./EtherscanLink";
 import StatusPictogram from './StatusPictogram';
 import { TX_STATUS_REJECTED } from '../store/reducers/transactions';
+import CSSModules from "react-css-modules/dist/index";
 
 const propTypes = PropTypes && {
   txHash: PropTypes.string.isRequired
@@ -19,18 +20,17 @@ class OasisYourTransactionFailed extends PureComponent {
   render() {
     const { txHash } = this.props;
     return (
-      <div className={styles.base}>
         <InfoBox color="danger">
-          <InfoBoxBody>
             <StatusPictogram status={TX_STATUS_REJECTED}/>
-            Your transaction
+            <span className={styles.infoText}>
+              Your transaction
+            </span>
             <EthercanLinkWrapper
               txHash={txHash}
               type={ETHERSCAN_LINK_TYPE_TRANSACTION}
+              className={textStyles.spaceBoth}
             /> has failed
-          </InfoBoxBody>
         </InfoBox>
-      </div>
     );
   }
 }
@@ -38,4 +38,8 @@ class OasisYourTransactionFailed extends PureComponent {
 OasisYourTransactionFailed.displayName = "OasisYourTransactionFailed";
 OasisYourTransactionFailed.propTypes = propTypes;
 OasisYourTransactionFailed.defaultProps = defaultProps;
-export default OasisYourTransactionFailed;
+export default CSSModules(
+  OasisYourTransactionFailed,
+  { styles, textStyles },
+  { allowMultiple: true }
+);

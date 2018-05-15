@@ -1,24 +1,4 @@
-@import "../styles/modules/labels";
-
-.modal {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 15px;
-
-  background: #FCFBFB;
-  overflow: auto;
-  margin: 30px auto;
-  position: relative;
-
-  outline: 0;
-  border: 1px solid #E5E9EB;
-  border-radius: 4px;
-  box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.13);
-
-  max-width: 549px;
-  padding: 30px 30px 20px 30px;
-  width: 490px;
-}
+@import "../styles/modules/typography";
 
 .heading {
   @include heading;
@@ -29,7 +9,4 @@
 .actions {
   display: flex;
   justify-content: space-between;
-}
-.closeModalBtn {
-
 }

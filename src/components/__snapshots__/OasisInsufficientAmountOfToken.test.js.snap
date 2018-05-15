@@ -1,25 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Component) OasisInsufficientAmountOfToken should render 1`] = `
-<div>
-  <InfoBox
-    className=""
-    color="danger"
-    justifyContent="normal"
-    size="md"
-    vertical={false}
-  >
-    <InfoBoxBody
-      className=""
-      color="default"
-      vertical={false}
-    >
-      You do not have enough 
-      <b>
-        W-ETH
-      </b>
-       tokens.
-    </InfoBoxBody>
-  </InfoBox>
-</div>
+<InfoBox
+  className=""
+  color="danger"
+  size="md"
+>
+  You do not have enough 
+  <strong>
+    W-ETH
+  </strong>
+   tokens.
+</InfoBox>
 `;

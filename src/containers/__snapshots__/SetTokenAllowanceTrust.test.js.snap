@@ -4,76 +4,62 @@ exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
 <div
   hidden={true}
 >
-  <InfoBox
-    className=""
-    color="default"
-    fullWidth={true}
-    justifyContent="space-between"
-    size="md"
-    vertical={false}
-  >
-    <InfoBoxBody
-      className=""
-      color="default"
-      vertical={false}
-    >
-      <OasisAccordion
-        heading={
-          <FlexBox
-            alignContent="space-between"
-            alignItems="stretch"
-            className=""
-            justifyContent="normal"
-            vertical={false}
-            wrap={false}
-          >
-            <div>
-              Enable
-               
-              <b>
-                W-ETH
-              </b>
-               for trading
-            </div>
-            <div
-              hidden={undefined}
-            >
-              <OasisButton
-                btnType="button"
-                color="success"
-                onClick={[Function]}
-                size="md"
-              >
-                Loading
-              </OasisButton>
-            </div>
-          </FlexBox>
-        }
-        isOpen={true}
+  <OasisAccordion
+    heading={
+      <FlexBox
+        alignContent="stretch"
+        alignItems="baseline"
+        className=""
+        justifyContent="space-between"
+        vertical={false}
+        wrap={false}
       >
-        <div
-          hidden={false}
-          style={
-            Object {
-              "display": "flex",
-            }
-          }
-        >
-          <div>
-            <OasisIcon
-              icon="idle"
-              size="md"
-            />
-          </div>
-          <div>
-            You need first grant access to withdraw from your personal account. To disable 
+        <div>
+          Enable
+           
+          <b>
             W-ETH
-             trading use Allowance widget on the funds page.
-          </div>
+          </b>
+           for trading
         </div>
-      </OasisAccordion>
-    </InfoBoxBody>
-  </InfoBox>
+        <div />
+        <div
+          hidden={undefined}
+        >
+          <OasisButton
+            btnType="button"
+            color="success"
+            onClick={[Function]}
+            size="md"
+          >
+            Loading
+          </OasisButton>
+        </div>
+      </FlexBox>
+    }
+    infoBoxSize="md"
+    isOpen={true}
+  >
+    <FlexBox
+      alignContent="stretch"
+      alignItems="center"
+      className=""
+      hidden={false}
+      justifyContent="normal"
+      vertical={false}
+      wrap={false}
+    >
+      <OasisIcon
+        icon="idle"
+        size="md"
+      />
+      <div>
+        You need first grant access to withdraw from your personal account. To disable 
+        W-ETH
+         trading use Allowance widget on the funds page.
+      </div>
+    </FlexBox>
+  </OasisAccordion>
 </div>
 `;
 

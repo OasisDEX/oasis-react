@@ -31,7 +31,7 @@ const linkStyle = {
 
 class EtherscanLink extends PureComponent {
   render() {
-    const { txHash, label, networkName, address } = this.props;
+    const { txHash, label, networkName, address, ...props } = this.props;
     const url =  createEtherscanTransactionLink({
       activeNetworkName: networkName,
       transactionHash: txHash
@@ -39,7 +39,7 @@ class EtherscanLink extends PureComponent {
     switch (this.props.type) {
       case ETHERSCAN_LINK_TYPE_TRANSACTION: {
         return (
-          <a target="_blank" style={linkStyle} href={url}>
+          <a target="_blank" style={linkStyle} href={url} {...props}>
             <span>{label||txHash}</span>
           </a>
         );

@@ -5,37 +5,20 @@ exports[`(Component) OasisOfferSummary should render 1`] = `
   <InfoBox
     className=""
     color="default"
-    justifyContent="normal"
     size="md"
-    vertical={true}
   >
-    <InfoBoxBody
-      className=""
-      color="default"
-      vertical={false}
-    >
-      <FlexBox
-        alignContent="stretch"
-        alignItems="stretch"
-        className=""
-        justifyContent="normal"
-        vertical={false}
-        wrap={false}
-      >
-        <OasisSoldReceivedAmounts
-          amountReceived="1"
-          amountSold="1"
-          buyToken="W-ETH"
-          sellToken="MKR"
-        />
-        <div>
-          <Connect(OasisIsTokenTradingEnabledByUser)
-            tokenName="MKR"
-          />
-          <Connect(OasisGasPrice) />
-        </div>
-      </FlexBox>
-    </InfoBoxBody>
+    <OasisSoldReceivedAmounts
+      amountReceived="1"
+      amountSold="1"
+      buyToken="W-ETH"
+      sellToken="MKR"
+    />
+    <div>
+      <Connect(OasisIsTokenTradingEnabledByUser)
+        tokenName="MKR"
+      />
+      <Connect(OasisGasPrice) />
+    </div>
   </InfoBox>
 </div>
 `;

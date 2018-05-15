@@ -51,7 +51,7 @@ exports[`(Container) OasisMakeOfferModal should render 1`] = `
       </OasisButton>
       <OasisButton
         btnType="button"
-        color="default"
+        color="success"
         disabled={true}
         onClick={[Function]}
         size="md"

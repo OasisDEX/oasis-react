@@ -1,12 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Component) OasisAccordion should render 1`] = `
-<div>
+<InfoBox
+  className=""
+  color="default"
+  size="md"
+  vertical={true}
+>
   <FlexBox
     alignContent="stretch"
-    alignItems="stretch"
+    alignItems="baseline"
     className=""
-    justifyContent="space-between"
+    justifyContent="normal"
     vertical={false}
     wrap={false}
   >
@@ -16,11 +21,8 @@ exports[`(Component) OasisAccordion should render 1`] = `
       size="md"
     />
     <div>
-      <div>
-        This this a heading!
-      </div>
+      This this a heading!
     </div>
   </FlexBox>
-  <div />
-</div>
+</InfoBox>
 `;

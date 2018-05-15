@@ -6,6 +6,7 @@ import styles from "./OasisAccordion.scss";
 import CSSModules from "react-css-modules";
 import FlexBox from "./FlexBox";
 import OasisIcon from "./OasisIcon";
+import InfoBox from "./InfoBox";
 
 const propTypes = PropTypes && {
   heading: PropTypes.node.isRequired,
@@ -13,6 +14,7 @@ const propTypes = PropTypes && {
   isOpen: PropTypes.bool
 };
 const defaultProps = {
+  infoBoxSize: 'md',
   children: (<div/>)
 };
 
@@ -35,15 +37,20 @@ class OasisAccordion extends PureComponent {
     );
   }
 
+
   render() {
+    const { infoBoxSize } = this.props;
+    let childrenDiv = <div
+        className={`${styles.content} ${styles[infoBoxSize]}`}>
+      {this.props.children}</div>;
     return (
-      <div>
-        <FlexBox justifyContent="space-between">
+      <InfoBox className={styles.accordion} vertical={true} size={infoBoxSize}>
+        <FlexBox justifyContent="normal" alignItems="baseline">
           {this.toggleSection()}
-          <div>{this.props.heading}</div>
+          {this.props.heading}
         </FlexBox>
-        <div>{this.state.isOpen && this.props.children}</div>
-      </div>
+        {this.state.isOpen && this.props.children && childrenDiv}
+      </InfoBox>
     );
   }
 

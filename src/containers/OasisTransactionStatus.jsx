@@ -12,17 +12,14 @@ import {
   TX_STATUS_CANCELLED_BY_USER,
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
-import FlexBox from "../components/FlexBox";
-import InfoBox from "../components/InfoBox";
-import InfoBoxBody from "../components/InfoBoxBody";
+import textStyles from "../styles/modules/_typography.scss";
+import CSSModules from "react-css-modules";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
   txTimestamp: PropTypes.number,
   txType: PropTypes.string,
   localStatus: PropTypes.string,
-  noBorder: PropTypes.bool,
-  inline: PropTypes.bool,
   customBlock: PropTypes.node
 };
 
@@ -74,25 +71,17 @@ export class OasisTransactionStatusWrapper extends PureComponent {
   }
 
   render() {
-    const { transaction, noBorder, inline, customBlock } = this.props;
+    const { transaction, customBlock } = this.props;
     return (
-      <div className={`${inline ? "inlineBlock" : ""}`}>
-        <FlexBox className={"full-width"} alignConent="stretch">
-          <InfoBox
-            noBorder={noBorder}
-            color={this.hasTransactionFailed() ? "danger" : ""}
-            fullWidth
+          <div
+            className={this.hasTransactionFailed() ? textStyles.textDanger : ''}
           >
-            <InfoBoxBody className="no-padding">
-              {customBlock ? (
-                this.withCustomBlock()
-              ) : (
-                <TransactionStatus transaction={transaction} noBorder />
-              )}
-            </InfoBoxBody>
-          </InfoBox>
-        </FlexBox>
-      </div>
+            {customBlock ? (
+              this.withCustomBlock()
+            ) : (
+              <TransactionStatus transaction={transaction} noBorder />
+            )}
+          </div>
     );
   }
 }
@@ -115,5 +104,5 @@ export function mapDispatchToProps(dispatch) {
 OasisTransactionStatusWrapper.propTypes = propTypes;
 OasisTransactionStatusWrapper.displayName = "OasisTransactionStatus";
 export default connect(mapStateToProps, mapDispatchToProps)(
-  OasisTransactionStatusWrapper
+  CSSModules(OasisTransactionStatusWrapper, textStyles)
 );

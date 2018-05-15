@@ -12,9 +12,8 @@ import { formatAmount } from "../utils/tokens/pair";
 import { FlexBox } from "../components/FlexBox";
 
 import styles from "./OasisGasPrice.scss";
+import textStyles from "../styles/modules/_typography.scss";
 import CSSModules from "react-css-modules";
-import InfoBox from "../components/InfoBox";
-import InfoBoxBody from "../components/InfoBoxBody";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -35,16 +34,16 @@ export class OasisGasPriceWrapper extends PureComponent {
         ETH_UNIT_ETHER
       );
       return (
-        <FlexBox className={styles.base}>
-          <div className={styles.gasLabel}>Gas</div>
-          <div>
-            <span className={styles.detailsTradingFirstCol}>
+        <FlexBox alignItems='baseline'>
+          <div className={`${styles.detailsTradingFirstCol}`}>
+            <span>gas </span>
+            <span className={styles.bolderText}>
               {formatAmount(cost, false, null, 5)} ETH
             </span>
-            <span className={styles.detailsTradingSecCol}>
-              <span className={styles.estimateUSD}>
-                {formatAmount(cost.mul(latestEthereumPrice.price_usd))} USD
-              </span>
+          </div>
+          <div className={styles.detailsTradingSecCol}>
+            <span className={styles.estimateUSD}>
+              {formatAmount(cost.mul(latestEthereumPrice.price_usd))} USD
             </span>
           </div>
         </FlexBox>
@@ -56,19 +55,11 @@ export class OasisGasPriceWrapper extends PureComponent {
     const { gasEstimatePending, gasEstimateError } = this.props;
     if (gasEstimateError) {
       return (
-        <InfoBox color="danger" noBorder>
-          <InfoBoxBody>
-            <b>estimate error</b>
-          </InfoBoxBody>
-        </InfoBox>
+        <strong className={textStyles.textDanger}>estimate error</strong>
       );
     } else if (gasEstimatePending) {
       return (
-        <InfoBox noBorder>
-          <InfoBoxBody>
-            <b>estimate pending...</b>
-          </InfoBoxBody>
-        </InfoBox>
+        <span>estimate pending...</span>
       );
     } else {
       return this.getGasCostEstimate();

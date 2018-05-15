@@ -61,9 +61,9 @@ TokenSoldAmount.propTypes = {
 
 export class OasisSoldReceivedAmounts extends PureComponent {
   render() {
-    const { amountReceived, amountSold, sellToken, buyToken } = this.props;
+    const { amountReceived, amountSold, sellToken, buyToken, ...props } = this.props;
     return (
-      <div className={styles.base}>
+      <div {...props}>
         <FlexBox className={styles.buying}>
           <TokenReceivedAmount
             tokenAmount={amountReceived}

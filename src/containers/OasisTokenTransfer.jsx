@@ -130,7 +130,6 @@ export class OasisTokenTransferWrapper extends PureComponent {
     const { txStatus, txStartTimestamp } = this.state;
     return txStatus ? (
       <OasisTransactionStatusWrapper
-        fullWidth
         customBlock={OasisTokenTransferWrapper.transferInfo({ selectedToken, transferFormValues })}
         localStatus={txStatus}
         txTimestamp={txStartTimestamp}

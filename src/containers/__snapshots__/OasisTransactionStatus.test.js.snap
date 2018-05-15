@@ -4,39 +4,14 @@ exports[`(Container) OasisTransactionStatus should render 1`] = `
 <div
   className=""
 >
-  <FlexBox
-    alignConent="stretch"
-    alignContent="stretch"
-    alignItems="stretch"
-    className="full-width"
-    justifyContent="normal"
-    vertical={false}
-    wrap={false}
-  >
-    <InfoBox
-      className=""
-      color=""
-      fullWidth={true}
-      justifyContent="normal"
-      size="md"
-      vertical={false}
-    >
-      <InfoBoxBody
-        className="no-padding"
-        color="default"
-        vertical={false}
-      >
-        <TransactionStatus
-          noBorder={true}
-          transaction={
-            Immutable.Map {
-              txType: "OFFER_TAKES/TAKE_BUY_OFFER",
-            }
-          }
-        />
-      </InfoBoxBody>
-    </InfoBox>
-  </FlexBox>
+  <TransactionStatus
+    noBorder={true}
+    transaction={
+      Immutable.Map {
+        txType: "OFFER_TAKES/TAKE_BUY_OFFER",
+      }
+    }
+  />
 </div>
 `;
 

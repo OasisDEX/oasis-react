@@ -17,7 +17,9 @@ import OasisIcon from "./OasisIcon";
 const propTypes = PropTypes && {
   status: PropTypes.string
 };
-const defaultProps = {};
+const defaultProps = {
+  className: ''
+};
 
 export class StatusPictogram extends PureComponent {
   renderStatus() {
@@ -39,7 +41,8 @@ export class StatusPictogram extends PureComponent {
   }
 
   render() {
-    return <div className={styles.base}>{this.renderStatus()}</div>;
+    const { className } = this.props;
+    return <div className={`${styles.base} ${className}`}>{this.renderStatus()}</div>;
   }
 }
 

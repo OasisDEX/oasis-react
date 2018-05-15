@@ -46,6 +46,15 @@ const getOfferTitle = offerMakeType => {
   }
 };
 
+const getBtnColor = offerMakeType => {
+  switch (offerMakeType) {
+    case MAKE_BUY_OFFER:
+      return "success";
+    case MAKE_SELL_OFFER:
+      return "danger";
+  }
+};
+
 export class OasisMakeOfferModalWrapper extends PureComponent {
   static makeOfferBtnLabel(offerMakeType, tokenName) {
     switch (offerMakeType) {
@@ -136,6 +145,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
         txTimestamp={txStartTimestamp}
         localStatus={txStatus}
         txType={TX_OFFER_MAKE}
+        title="Process order"
       />
     ) : null;
   }
@@ -205,6 +215,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
             <OasisButton
               disabled={!canMakeOffer || this.state.disableOfferMakeButton}
               onClick={this.onBuyOffer}
+              color={getBtnColor(offerMakeType)}
             >
               {OasisMakeOfferModalWrapper.makeOfferBtnLabel(
                 offerMakeType,

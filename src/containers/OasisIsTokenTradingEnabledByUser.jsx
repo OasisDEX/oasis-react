@@ -25,7 +25,7 @@ export class OasisIsTokenTradingEnabledByUserWrapper extends PureComponent {
     const { isTokenTradingEnabledByUser, tokenName } = this.props;
     return (
       <FlexBox className={`${styles.baseText} ${styles.detailsTradingCol}`}>
-        <div className={styles.detailsTradingFirstCol}>
+        <div className={`${styles.detailsTradingFirstCol} ${styles.buying}`}>
           trading of <span className={styles.bolderText}>{tokenName}</span>
         </div>
         <div className={styles.detailsTradingSecCol}>

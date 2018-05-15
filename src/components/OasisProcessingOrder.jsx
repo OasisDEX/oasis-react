@@ -4,6 +4,7 @@ import { PropTypes } from "prop-types";
 
 import styles from "./OasisProcessingOrder.scss";
 import OasisTransactionStatusWrapper from "../containers/OasisTransactionStatus";
+import {InfoBox} from "./InfoBox";
 
 const propTypes = PropTypes && {
   localStatus: PropTypes.string,
@@ -15,16 +16,11 @@ const defaultProps = {};
 
 
 export class OasisProcessingOrder extends PureComponent {
-  static customBlock() {
-    return (
-      <div>Process order</div>
-    );
-  }
+
   transactionInfo() {
     const { localStatus, txType, txTimestamp } = this.props;
     return (
       <OasisTransactionStatusWrapper
-        customBlock={OasisProcessingOrder.customBlock()}
         txType={txType}
         localStatus={localStatus}
         txTimestamp={txTimestamp}
@@ -32,7 +28,11 @@ export class OasisProcessingOrder extends PureComponent {
     );
   }
   render() {
-    return <div className={styles.base}>{this.transactionInfo()}</div>;
+    const {title} = this.props;
+    return <InfoBox justifyContent="space-between" alignItems="baseline">
+      <strong>{title}</strong>
+      {this.transactionInfo()}
+    </InfoBox>;
   }
 }
 

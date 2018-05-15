@@ -1,16 +1,18 @@
 .base {
-  margin-top: 20px;
+  align-items: baseline;
 }
 
 .detailsTradingFirstCol {
   flex-basis: 55%;
-  margin-right: 10px;
+  flex-grow: 1;
 }
 
 .detailsTradingSecCol {
-  flex-basis: 45%;
 }
 
+.bolderText {
+  font-weight: 500;
+}
 
 .estimateUSD {
   background-color: #F9F8F8;
@@ -27,6 +29,3 @@
   width: 92px;
 }
 
-.gasLabel, .gasPriceETH {
-  margin-right: 10px;
-}

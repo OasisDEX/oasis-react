@@ -18,43 +18,34 @@ exports[`(Component) OasisOfferCancelModal should render 1`] = `
       <h4>
         Cancel Offer
       </h4>
+      <button
+        onClick={[Function]}
+      >
+        ×
+      </button>
     </div>
     <div>
-      <InfoBox
-        className=""
+      <InfoBoxWithIco
+        alignItems="center"
         color="danger"
-        justifyContent="normal"
-        size="md"
-        vertical={false}
+        icon="warning"
       >
-        <InfoBoxBody
-          className=""
-          color="default"
-          vertical={false}
-        >
-          <div>
-            <OasisIcon
-              icon="warning"
-              size="md"
-            />
-          </div>
-          <div>
-            This action will return
-            <b
-              style={
-                Object {
-                  "display": "inlineBlock",
-                  "marginLeft": "5px",
-                  "marginRight": "5px",
-                }
+        <div>
+          This action will return
+          <b
+            style={
+              Object {
+                "display": "inlineBlock",
+                "marginLeft": "5px",
+                "marginRight": "5px",
               }
-            >
-               
-            </b>
-            to your token balance. If someone (partially) fills this order before you cancel await, your order may not or only be partially cancelled.
-          </div>
-        </InfoBoxBody>
-      </InfoBox>
+            }
+          >
+             
+          </b>
+          to your token balance. If someone (partially) fills this order before you cancel await, your order may not or only be partially cancelled.
+        </div>
+      </InfoBoxWithIco>
     </div>
     <div />
     <div />
@@ -69,7 +60,7 @@ exports[`(Component) OasisOfferCancelModal should render 1`] = `
       <OasisButton
         btnType="button"
         caption="Cancel offer"
-        color="default"
+        color="danger"
         onClick={[Function]}
         size="md"
       />

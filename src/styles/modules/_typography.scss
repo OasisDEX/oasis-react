@@ -48,3 +48,21 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+
+.textDanger {
+  color: $danger-text;
+}
+
+.spaceLeft {
+  margin-left: 0.35em;
+}
+
+.spaceRight {
+  margin-right: 0.35em;
+}
+
+.spaceBoth {
+  @extend .spaceLeft;
+  @extend .spaceRight;
+}

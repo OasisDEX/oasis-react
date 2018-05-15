@@ -18,7 +18,6 @@ import platform from "../store/selectors/platform";
 import styles from "./OasisMakeOffer.scss";
 import CSSModules from "react-css-modules";
 import InfoBox from "../components/InfoBox";
-import InfoBoxBody from "../components/InfoBoxBody";
 import isVolumeOrPriceEmptyOrZero from "../store/selectors/isVolumeOrPriceEmptyOrZero";
 
 const propTypes = PropTypes && {
@@ -74,7 +73,7 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
             )}
           </div>
           <InfoBox hidden={this.props.isPriceSet} noBorder>
-            <InfoBoxBody>Enter a price to unlock amount and total.</InfoBoxBody>
+            Enter a price to unlock amount and total.
           </InfoBox>
           <OasisButton
             className={styles.callToAction}
