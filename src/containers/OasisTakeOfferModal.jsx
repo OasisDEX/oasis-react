@@ -141,18 +141,28 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     });
   }
 
+  renderOfferNotAvailableWarning() {
+    const { isCurrentOfferActive } = this.props;
+    const pendingOrConfirmed = [TX_STATUS_CONFIRMED, TX_STATUS_AWAITING_CONFIRMATION].includes(this.state.txStatus);
+    if (
+      !(pendingOrConfirmed || isCurrentOfferActive)
+    ) {
+      return <OasisOfferNotAvailable />;
+    } else return null;
+  }
   renderOfferSummary() {
-    const { offerTakeType, isCurrentOfferActive } = this.props;
+    const { offerTakeType } = this.props;
     return (
       <div>
-        {isCurrentOfferActive ? (
-          <OasisOfferSummaryWrapper
-            disableBalanceWarning={this.isTakeInProgressOrOfferTaken()}
-            offerType={offerTakeType}
-          />
-        ) : (
-          <OasisOfferNotAvailable />
-        )}
+        <div>
+          {
+            <OasisOfferSummaryWrapper
+              disableBalanceWarning={this.isTakeInProgressOrOfferTaken()}
+              offerType={offerTakeType}
+            />
+          }
+        </div>
+        <div>{this.renderOfferNotAvailableWarning()}</div>
       </div>
     );
   }
@@ -165,7 +175,10 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
 
   isTakeInProgressOrOfferTaken() {
     const { isCurrentOfferActive } = this.props;
-    return Boolean(!isCurrentOfferActive || this.state.txStatus && this.state.txStatus !== TX_STATUS_REJECTED);
+    return Boolean(
+      !isCurrentOfferActive ||
+        (this.state.txStatus && this.state.txStatus !== TX_STATUS_REJECTED)
+    );
   }
   render() {
     const {
