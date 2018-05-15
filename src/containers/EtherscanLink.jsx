@@ -32,7 +32,7 @@ export class EthercanLinkWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
-    networkName: network.getActiveNetworkName(state)
+    networkName: network.activeNetworkName(state)
   };
 }
 export function mapDispatchToProps() {

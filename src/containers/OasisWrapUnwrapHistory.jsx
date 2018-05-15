@@ -36,7 +36,7 @@ export class OasisWrapUnwrapHistoryWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
-    activeNetworkName: network.getActiveNetworkName(state),
+    activeNetworkName: network.activeNetworkName(state),
     contractsLoaded: platform.contractsLoaded(state),
     latestBlockNumber: network.latestBlockNumber(state),
     wrapUnwrapHistoryList: wrapUnwrapHistory.tokenWrapUnwrapHistory(state),

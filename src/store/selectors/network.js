@@ -1,28 +1,45 @@
 import { createSelector } from 'reselect';
 import reselect from '../../utils/reselect';
+import {fromJS} from "immutable";
+import config from  '../../configs';
 
 const network = state => state.get('network');
+
+const activeNetworkId = createSelector(
+  network,
+  state => state.get('activeNetworkId')
+);
+
+const activeNetworkMeta = createSelector(
+  activeNetworkId,
+  id => {
+    console.log("activeNetworkId", id)
+    if (id) {
+      return fromJS(config.networks).find(n => n.get('id') == id);
+    } else {
+      return null;
+    }
+  }
+);
+
+const activeNetworkName = createSelector(
+  activeNetworkMeta,
+  network => network ? network.get('name') : '-'
+);
+
+const activeNetworkProviderType = createSelector(
+  activeNetworkMeta,
+  network => network ? network.get('providerType') : undefined
+);
 
 const status = createSelector(
   network,
   state => state.get('status')
 );
 
-const getActiveNetworkName = createSelector(
-  network,
-  state => state.get('activeNetworkName') || '-'
-);
-
 const latestBlockNumber = createSelector(
   network,
   state =>  state.get('latestBlockNumber')
-);
-
-const getActiveNetworkMeta = createSelector(
-  network,
-  getActiveNetworkName,
-  (state, activeNetworkName) =>
-    activeNetworkName ? state.get('networks').find(n => n.get('name') === activeNetworkName): null
 );
 
 const latestEthereumPrice = createSelector(
@@ -31,22 +48,23 @@ const latestEthereumPrice = createSelector(
 );
 
 const tokenAddresses = createSelector(
-  network,
-    state => state.get('tokenAddresses')
+  activeNetworkName,
+  activeNetworkName => fromJS(config.tokens[activeNetworkName])
 );
 
-
 const getTokenAddress = createSelector(
-  network,
+  tokenAddresses,
   reselect.getProps,
-  (state, tokenName) => state.getIn(['tokenAddresses', tokenName])
+  (tokens, tokenName) => tokens.get(tokenName)
 );
 
 export default {
   state: network,
   status,
-  getActiveNetworkName,
-  getActiveNetworkMeta,
+  activeNetworkId,
+  activeNetworkName,
+  activeNetworkProviderType,
+  activeNetworkMeta,
   latestBlockNumber,
   latestEthereumPrice,
   getTokenAddress,

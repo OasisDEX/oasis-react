@@ -84,7 +84,7 @@ export function mapStateToProps(state) {
   const selectedToken = transfers.selectedToken(state);
   return {
     selectedToken,
-    activeNetworkName: network.getActiveNetworkName(state),
+    activeNetworkName: network.activeNetworkName(state),
     contractsLoaded: platform.contractsLoaded(state),
     latestBlockNumber: network.latestBlockNumber(state),
     transferHistoryList: transferHistory.tokenTransferHistory(state, selectedToken),

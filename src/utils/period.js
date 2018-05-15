@@ -7,7 +7,7 @@ const init = (getStateFunction) => {
   getState = getStateFunction;
 };
 
-const getNetworkMeta = () => network.getActiveNetworkMeta(getState());
+const getNetworkMeta = () => network.activeNetworkMeta(getState());
 const getActiveNetworkAvgBlocksPerDay = () => parseInt(getNetworkMeta().get('avgBlocksPerDay'));
 
 export const isLeapYear = (year) => year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0);

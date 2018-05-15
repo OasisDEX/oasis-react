@@ -1,7 +1,17 @@
 {
   "networks": [
-    "kovan",
-    "mainnet"
+    {
+      "id": 1,
+      "name": "mainnet",
+      "startingBlock": null,
+      "avgBlocksPerDay": 5760
+    },
+    {
+      "id": 42,
+      "name": "kovan",
+      "startingBlock": null,
+      "avgBlocksPerDay": 21600
+    }
   ],
   "market": {
     "kovan": {

@@ -125,7 +125,7 @@ export function mapStateToProps(state) {
     activeOfferTakeType: offerTakes.activeOfferTakeType(state),
     isOfferTakeModalOpen: offerTakes.isOfferTakeModalOpen(state),
     activeOfferTake: offerTakes.activeOfferTake(state),
-    activeNetworkName: network.getActiveNetworkName(state),
+    activeNetworkName: network.activeNetworkName(state),
 
   };
 }
