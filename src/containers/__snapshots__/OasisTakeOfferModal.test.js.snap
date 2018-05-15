@@ -39,6 +39,7 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
       <div>
         <div>
           <Connect(OasisOfferSummary)
+            disableBalanceWarning={false}
             offerType="OFFER_TAKES/TAKE_BUY_OFFER"
           />
         </div>

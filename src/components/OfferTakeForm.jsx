@@ -199,7 +199,7 @@ export class OfferTakeForm extends PureComponent {
                   disabled={disableForm}
                 />
                 <div className={styles.errorMessage}>
-                  {isVolumeGreaterThanOfferMax && (
+                  {(isVolumeGreaterThanOfferMax && !disableForm) && (
                     <VolumeIsOverTheOfferMax
                       offerMax={isVolumeGreaterThanOfferMax}
                     />

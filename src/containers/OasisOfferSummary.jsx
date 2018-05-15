@@ -31,7 +31,8 @@ const propTypes = PropTypes && {
   isTokenTradingEnabled: PropTypes.bool.isRequired,
   actions: PropTypes.object,
   buyToken: PropTypes.string,
-  sellToken: PropTypes.string
+  sellToken: PropTypes.string,
+  disableBalanceWarning: PropTypes.bool
 };
 
 export class OasisOfferSummaryWrapper extends PureComponent {
@@ -43,9 +44,10 @@ export class OasisOfferSummaryWrapper extends PureComponent {
       gasEstimateInfo,
       hasSufficientTokenAmount,
       isTokenTradingEnabled,
-      isVolumeOrPriceEmptyOrZero
+      isVolumeOrPriceEmptyOrZero,
+      disableBalanceWarning
     } = this.props;
-    return hasSufficientTokenAmount ? (
+    return (hasSufficientTokenAmount || disableBalanceWarning) ? (
       <OasisOfferSummary
         isVolumeOrPriceEmptyOrZero={isVolumeOrPriceEmptyOrZero}
         gasEstimateInfo={gasEstimateInfo}
