@@ -13,7 +13,6 @@ const activeNetworkId = createSelector(
 const activeNetworkMeta = createSelector(
   activeNetworkId,
   id => {
-    console.log("activeNetworkId", id)
     if (id) {
       return fromJS(config.networks).find(n => n.get('id') == id);
     } else {

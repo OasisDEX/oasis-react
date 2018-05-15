@@ -9,10 +9,7 @@ const state = Map({
         }
     }),
     network: Map({
-        tokenAddresses: Map({
-            "MKR": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
-            "W-ETH": "0xd0a1e359811322d97991e03f863a0c30c2cf029c"
-        })
+      activeNetworkId: 42
     }),
     form: {
         makeBuyOffer: {
