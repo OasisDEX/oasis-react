@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import web3 from '../../bootstrap/web3';
 import _ from 'lodash';
 import {Map, List} from 'immutable';
-import {removeOutliersFromArray} from '../../utils/functions'
+import {removeOutliersFromArray} from '../../utils/functions';
 
 const trades = state => state.get('trades').get('marketHistory');
 

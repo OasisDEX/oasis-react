@@ -53,11 +53,18 @@ exports[`(Component) OasisChartDepth should render 1`] = `
       "scales": Object {
         "xAxes": Array [
           Object {
-            "display": false,
+            "display": true,
+            "ticks": Object {
+              "callback": [Function],
+            },
           },
         ],
         "yAxes": Array [
           Object {
+            "scaleLabel": Object {
+              "display": true,
+              "labelString": "SUM(empty2)",
+            },
             "ticks": Object {
               "beginAtZero": true,
             },

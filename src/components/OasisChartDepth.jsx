@@ -79,7 +79,7 @@ export class OasisChartDepth extends PureComponent {
             custom: (tooltip) => {
               const tooltipEl = tooltipContainer(tooltip, document.getElementsByClassName("chartjs-render-monitor")[0]);
               if (tooltipEl && tooltip.body) {
-                const price = tooltip.dataPoints[0].xLabel;
+                const price = this.props.depthChartLabels[tooltip.dataPoints[0].index];
                 let type = null;
                 let quoteAmount = null;
                 let baseAmount = null;
@@ -101,7 +101,7 @@ export class OasisChartDepth extends PureComponent {
                 tooltipEl.innerHTML =
                   `<div class="row-custom-tooltip">
                     <span class="left">Price</span>
-                    <span class="right">${new BigNumber(price).toFormat(4)}</span>
+                    <span class="right">${new BigNumber(price.toString()).toFormat(4)}</span>
                   </div>
                   <div class="row-custom-tooltip middle">
                     <span class="left">SUM(${this.props.tradingPair.quoteToken})</span>
@@ -121,12 +121,19 @@ export class OasisChartDepth extends PureComponent {
           },
           scales: {
             yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: `SUM(${this.props.tradingPair.quoteToken})`,
+              },
               ticks: {
                 beginAtZero: true,
               },
             }],
             xAxes: [{
-              display: false,
+              display: true,
+              ticks: {
+                callback: v => v.toFixed(2),
+              },
             }],
           },
         }}

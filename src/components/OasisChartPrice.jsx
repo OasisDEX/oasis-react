@@ -26,6 +26,7 @@ export class OasisChartPrice extends PureComponent {
         data={{
           labels: this.props.priceChartLabels,
           datasets: [{
+            label: `${this.props.tradingPair.quoteToken} / ${this.props.tradingPair.baseToken}`,
             data: this.props.priceChartValues,
             borderColor: '#03A9F4',
             borderWidth: 3,
@@ -48,11 +49,17 @@ export class OasisChartPrice extends PureComponent {
             custom: (tooltip) => {
               const tooltipEl = tooltipContainer(tooltip, document.getElementsByClassName("chartjs-render-monitor")[0]);
               if (tooltipEl && tooltip.body) {
-                const date = moment.unix(tooltip.dataPoints[0].xLabel).format('ll');
+                const ts = this.props.priceChartLabels[tooltip.dataPoints[0].index];
+                const date = moment.unix(ts).format('ll');
+                const time = moment.unix(ts).format('LT');
                 tooltipEl.innerHTML =
                   `<div class="row-custom-tooltip">
                     <span class="left">Date</span>
                     <span class="right">${date}</span>
+                  </div>
+                  <div class="row-custom-tooltip middle">
+                    <span class="left">Time</span>
+                    <span class="right">${time}</span>
                   </div>
                   <div class="row-custom-tooltip middle">
                     <span class="left">Price</span>
@@ -66,8 +73,18 @@ export class OasisChartPrice extends PureComponent {
             display: false,
           },
           scales: {
+            yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'PRICE',
+              },
+            }],
             xAxes: [{
-              display: false,
+              display: true,
+              ticks: {
+                maxTicksLimit: 6,
+                callback: ts => moment.unix(ts).format('MMM Do'),
+              },
             }],
           },
         }}

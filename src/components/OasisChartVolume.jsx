@@ -30,7 +30,7 @@ export class OasisChartVolume extends PureComponent {
         data={{
           labels: this.props.volumeChartLabels,
           datasets: [{
-            label: 'Volume',
+            label: `SUM(${this.props.tradingPair.quoteToken})`,
             data: this.props.volumeChartValues,
             backgroundColor: 'rgba(140, 133, 200, 0.1)',
             borderColor: '#8D86C9',
@@ -51,7 +51,7 @@ export class OasisChartVolume extends PureComponent {
             custom: (tooltip) => {
               const tooltipEl = tooltipContainer(tooltip, document.getElementsByClassName("chartjs-render-monitor")[0]);
               if (tooltipEl && tooltip.body) {
-                const ts = tooltip.dataPoints[0].xLabel;
+                const ts = this.props.volumeChartLabels[tooltip.dataPoints[0].index];
                 const date = moment.unix(ts).format('ll');
                 let quoteAmount = this.props.volumeChartTooltips.quote[ts];
                 let baseAmount = this.props.volumeChartTooltips.base[ts];
@@ -77,12 +77,19 @@ export class OasisChartVolume extends PureComponent {
           },
           scales: {
             yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'VOLUME',
+              },
               ticks: {
                 beginAtZero: true,
               },
             }],
             xAxes: [{
-              display: false,
+              display: true,
+              ticks: {
+                callback: ts => moment.unix(ts).format('MMM Do'),
+              },
             }],
           },
         }}

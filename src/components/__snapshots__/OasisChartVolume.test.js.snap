@@ -18,7 +18,7 @@ exports[`(Component) OasisChartVolume should render 1`] = `
             "0.00",
             "0.00",
           ],
-          "label": "Volume",
+          "label": "SUM(empty2)",
           "pointBackgroundColor": "#8D86C9",
           "pointRadius": 3,
         },
@@ -45,11 +45,18 @@ exports[`(Component) OasisChartVolume should render 1`] = `
       "scales": Object {
         "xAxes": Array [
           Object {
-            "display": false,
+            "display": true,
+            "ticks": Object {
+              "callback": [Function],
+            },
           },
         ],
         "yAxes": Array [
           Object {
+            "scaleLabel": Object {
+              "display": true,
+              "labelString": "VOLUME",
+            },
             "ticks": Object {
               "beginAtZero": true,
             },
