@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import reselect from '../../utils/reselect';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import BigNumber from 'bignumber.js';
 import web3 from '../../bootstrap/web3';
 import _ from 'lodash';
@@ -67,11 +67,11 @@ const volumeChartTrades = createSelector(
 )
 
 const volumeChartPoints = createSelector(
-  () => {
-      return [6, 5, 4, 3, 2, 1, 0].map(i =>
-        moment(Date.now()).startOf('day').subtract(i, 'days')
-      )
-  }
+  () => (
+    [6, 5, 4, 3, 2, 1, 0].map(i =>
+      moment(Date.now()).startOf('day').subtract(i, 'days')
+    )
+  )
 )
 
 const volumeChartLabels = createSelector(
