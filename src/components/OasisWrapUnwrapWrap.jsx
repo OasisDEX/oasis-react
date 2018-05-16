@@ -16,7 +16,8 @@ import CSSModules from 'react-css-modules';
 const propTypes = PropTypes && {
   activeUnwrappedToken: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
-  activeUnwrappedTokenBalance: PropTypes.object
+  activeUnwrappedTokenBalance: PropTypes.object,
+  transactionState: PropTypes.object
 };
 const defaultProps = {};
 
@@ -45,7 +46,7 @@ class OasisWrapUnwrapWrap extends PureComponent {
     } else { return null; }
   }
   render() {
-    const { activeUnwrappedToken } = this.props;
+    const { activeUnwrappedToken, transactionState } = this.props;
     return (
       <OasisWidgetFrame heading={'Wrap'} spaceForContent={true} className={styles.heading}>
         {this.renderDontWrapAllEtherWarning()}
@@ -53,6 +54,7 @@ class OasisWrapUnwrapWrap extends PureComponent {
           {this.getBalance()}
         </OasisTokenBalanceSummary>
         <OasisTokenWrapFormWrapper
+          transactionState={transactionState}
           activeUnwrappedToken={activeUnwrappedToken}
           onSubmit={this.props.onSubmit}
         />

@@ -42,11 +42,28 @@ exports[`(Container) OasisTokenWrapForm should render 1`] = `
     </tbody>
   </table>
   <div>
+    <Connect(OasisTransactionStatus)
+      customBlock={
+        <div>
+          Wrap
+           
+          <b>
+             
+          </b>
+        </div>
+      }
+      localStatus="TX/STATUS_AWAITING_CONFIRMATION"
+      txTimestamp={1}
+      txType="TX/GROUP__WRAP_UNWRAP/WRAP"
+    />
+  </div>
+  <div>
     <OasisButton
       btnType="button"
       color="default"
       disabled={true}
       size="md"
+      type="submit"
     >
       Wrap
     </OasisButton>
@@ -65,5 +82,6 @@ Object {
 exports[`(Container) OasisTokenWrapForm will receive right props 1`] = `
 Object {
   "activeUnwrappedTokenBalance": "0",
+  "wrapTokenAmount": undefined,
 }
 `;
