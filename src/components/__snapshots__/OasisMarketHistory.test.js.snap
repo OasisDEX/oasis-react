@@ -30,6 +30,9 @@ exports[`(Component) OasisMarketHistory should render 1`] = `
         },
       ]
     }
+    collapseEnabled={false}
+    collapseInitial={false}
+    collapseRowNumber={4}
     metadata={
       Object {
         "activeNetworkName": undefined,

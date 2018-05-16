@@ -22,6 +22,9 @@ exports[`(Component) OasisWrapUnwrapBalances should render 1`] = `
         },
       ]
     }
+    collapseEnabled={false}
+    collapseInitial={false}
+    collapseRowNumber={4}
     onRowClick={[Function]}
     rows={Array []}
   />
