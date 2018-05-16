@@ -262,11 +262,6 @@ const depthChartData = createSelector(
       bidAmountsTooltip[vals[i]] = { ...amountTool };
     }
 
-    // console.log('askAmountsGraph', askAmountsGraph)
-    // console.log('askAmountsTooltip', askAmountsTooltip)
-    // console.log('bidAmountsGraph', bidAmountsGraph)
-    // console.log('bidAmountsTooltip', bidAmountsTooltip)
-
     return {vals, bidAmountsGraph, askAmountsGraph, bidAmountsTooltip, askAmountsTooltip}
   }
 )

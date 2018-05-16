@@ -3,7 +3,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { fromJS } from 'immutable';
-import { mockDate } from '../utils/testHelpers'
+import { mockDate } from '../utils/testHelpers';
 
 import {
   OasisChartVolume,
