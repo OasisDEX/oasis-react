@@ -16,7 +16,6 @@ import balances from './balances'
 
 import each from 'jest-each';
 
-
 const testCases = [
   ['MKR', TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED, TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED, 0, false],
   ['MKR', TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED, TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED, 1, false],
