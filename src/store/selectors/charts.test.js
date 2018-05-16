@@ -1,13 +1,15 @@
 /* global test expect */
 import charts from './charts';
 import { Map, List } from 'immutable';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { mockDate } from '../../utils/testHelpers';
 import BigNumber from 'bignumber.js';
 
-const wei = x => new BigNumber(1000000000000000000).mul(x).toString()
+const refDate = (f) => mockDate('2018-05-16', f);
 
-const state = Map({
+const wei = x => new BigNumber(1000000000000000000).mul(x).toString();
+
+const state = refDate(() => Map({
   trades: Map({
     marketHistory: List([
       {
@@ -94,43 +96,41 @@ const state = Map({
         ]),
       })),
   }),
-});
+}));
 
 const props = {tradingPair: {baseToken: 'MKR', quoteToken: 'W-ETH'}};
 
-const refDate = '2018-05-16';
-
 
 test('priceChartLabels', () => {
-  expect(mockDate(refDate, () => charts.priceChartLabels(state, props))).toMatchSnapshot();
+  expect(refDate(() => charts.priceChartLabels(state, props))).toMatchSnapshot();
 });
 
 test('priceChartValues', () => {
-  expect(mockDate(refDate, () => charts.priceChartValues(state, props))).toMatchSnapshot();
+  expect(refDate(() => charts.priceChartValues(state, props))).toMatchSnapshot();
 });
 
 
 test('volumeChartLabels', () => {
-  expect(mockDate(refDate, () => charts.volumeChartLabels(state, props))).toMatchSnapshot();
+  expect(refDate(() => charts.volumeChartLabels(state, props))).toMatchSnapshot();
 });
 
 test('volumeChartValues', () => {
-  expect(mockDate(refDate, () => charts.volumeChartValues(state, props))).toMatchSnapshot();
+  expect(refDate(() => charts.volumeChartValues(state, props))).toMatchSnapshot();
 });
 
 test('volumeChartTooltips', () => {
-  expect(mockDate(refDate, () => charts.volumeChartTooltips(state, props))).toMatchSnapshot();
+  expect(refDate(() => charts.volumeChartTooltips(state, props))).toMatchSnapshot();
 });
 
 
 test('depthChartLabels', () => {
-  expect(mockDate(refDate, () => charts.depthChartLabels(state, props))).toMatchSnapshot();
+  expect(refDate(() => charts.depthChartLabels(state, props))).toMatchSnapshot();
 });
 
 test('depthChartValues', () => {
-  expect(mockDate(refDate, () => charts.depthChartValues(state, props))).toMatchSnapshot();
+  expect(refDate(() => charts.depthChartValues(state, props))).toMatchSnapshot();
 });
 
 test('depthChartTooltips', () => {
-  expect(mockDate(refDate, () => charts.depthChartTooltips(state, props))).toMatchSnapshot();
+  expect(refDate(() => charts.depthChartTooltips(state, props))).toMatchSnapshot();
 });
