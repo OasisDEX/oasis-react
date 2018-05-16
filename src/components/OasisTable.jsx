@@ -12,7 +12,12 @@ const propTypes = PropTypes && {
   col: PropTypes.arrayOf(PropTypes.object).isRequired,
   onRowClick: PropTypes.func
 };
-const defaultProps = {};
+
+const defaultProps = {
+  collapseRowNumber: 4,
+  collapseInitial: false,
+  collapseEnabled: false
+};
 
 
 const getColTemplate = (rowDef, row) => {
@@ -27,7 +32,14 @@ export class OasisTable extends PureComponent {
 
   constructor(props) {
     super(props);
+    this.state = {
+      isCollapsed: this.props.collapseInitial
+    };
     this.rowClickHandler = this.rowClickHandler.bind(this);
+  }
+
+  toggleCollapse() {
+    this.setState({isCollapsed: !this.state.isCollapsed})
   }
 
   rowClickHandler(rowData) {
@@ -57,10 +69,16 @@ export class OasisTable extends PureComponent {
     )
   }
 
+  hideRow(i) {
+    return this.props.collapseEnabled
+      && this.state.isCollapsed
+      && this.props.collapseRowNumber < i + 1;
+  }
+
   renderRows() {
     const { rows, onRowClick } = this.props;
     return rows.map( (row, i) => {
-      return (
+      return this.hideRow(i) ? null : (
         <tr
           className={`${row.isActive ? styles.active: ''} ${onRowClick ? styles.clickable : ''}`}
           key={i}
@@ -74,6 +92,24 @@ export class OasisTable extends PureComponent {
     );
   }
 
+  renderCollapseRow() {
+    const {collapseEnabled, col, rows, collapseRowNumber} = this.props;
+    if (!collapseEnabled || rows.size <= collapseRowNumber) {
+      return null;
+    }
+    return (
+      <tr
+        className={`${styles.clickable} ${styles.collapseRow}`}
+        onClick={this.toggleCollapse.bind(this)}
+      >
+        <td colSpan={col.length} className={styles.collapseCell}>
+          {this.state.isCollapsed ? "Show more" : "Show less"}
+        </td>
+      </tr>
+    )
+  }
+
+
   render() {
     return (
       <div>
@@ -83,6 +119,7 @@ export class OasisTable extends PureComponent {
           </thead>
           <tbody>
             {this.renderRows()}
+            {this.renderCollapseRow()}
           </tbody>
         </table>
       </div>

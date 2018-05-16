@@ -1,5 +1,7 @@
 @import "../styles/modules/typography";
 
+$hover-border-color: #DCDDE0;
+
 thead {
   @include text(10px, 700);
 
@@ -23,8 +25,8 @@ tr.clickable {
 }
 
 tr.clickable:hover {
-  border-bottom: 1px #DCDDE0 solid;
-  border-top: 1px #DCDDE0 solid;
+  border-bottom: 1px $hover-border-color solid;
+  border-top: 1px $hover-border-color solid;
   background: rgba(248, 247, 245, 0.15);
 }
 
@@ -54,12 +56,28 @@ table.scrolling {
   }
 
   tbody {
-    width: 98%;
     overflow-x: hidden;
     overflow-y: auto;
     display: block;
     margin-top: 10px;
     height: 155px;
 
+  }
+}
+
+tr.collapseRow {
+  border-bottom: 1px $hover-border-color solid;
+  border-top: 1px $hover-border-color solid;
+  margin-bottom: 1px;
+
+  & > .collapseCell:first-child:last-child {
+    flex-grow: 1;
+    flex-basis: 100%;
+    text-align: center;
+    font-weight: 500;
+    font-size: 12px;
+    color: #666669;
+    text-transform: uppercase;
+    padding: 5px 15px;
   }
 }

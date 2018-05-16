@@ -81,6 +81,8 @@ class OasisMarketWidget extends PureComponent {
           className={styles.marketTable}
           col={colDefinition(defaultPeriod)}
           rows={tradedTokens.map(this.transformRow, this.props.activeTradingPair)}
+          collapseEnabled={true}
+          collapseInitial={true}
         />
       </OasisWidgetFrame>
     );
