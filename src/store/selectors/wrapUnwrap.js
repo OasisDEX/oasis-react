@@ -5,6 +5,7 @@ import { TOKEN_ETHER } from '../../constants';
 import reselect from '../../utils/reselect';
 import web3 from '../../bootstrap/web3';
 import { ADDRESS_HAS_NO_BROKER } from '../reducers/wrapUnwrap';
+import { formValueSelector } from 'redux-form/immutable';
 
 const wrapUnwrap = state => state.get('wrapUnwrap');
 
@@ -119,6 +120,14 @@ const isBrokerContractLoaded = createSelector(
 );
 
 
+const wrapTokenformSelector = formValueSelector("wrapToken");
+// const unwrapTokenformSelector = formValueSelector("unwrapToken");
+
+const wrapTokenAmount = createSelector(
+  rootState => wrapTokenformSelector(rootState, "amount"),
+  wrapAmount => wrapAmount
+);
+
 const activeTokenWrapStatus = createSelector(
   wrapUnwrap, s => s.get('activeTokenWrapStatus')
 );
@@ -142,5 +151,6 @@ export default {
   hasTokenBroker,
   isTokenBrokerInitiallyLoaded,
   activeTokenWrapStatus,
-  activeTokenUnwrapStatus
+  activeTokenUnwrapStatus,
+  wrapTokenAmount
 };
