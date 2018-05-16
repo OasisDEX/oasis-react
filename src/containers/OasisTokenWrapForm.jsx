@@ -13,7 +13,7 @@ import OasisButton from "../components/OasisButton";
 import tableStyles from "../styles/modules/_table.scss";
 import styles from "./OasisTokenWrapForm.scss";
 import CSSModules from "react-css-modules";
-import OasisTransactionStatusWrapper from "./OasisTransactionStatus";
+import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBox";
 import { formatAmount } from "../utils/tokens/pair";
 import { TX_WRAP } from "../store/reducers/transactions";
 
@@ -57,16 +57,13 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
   }
   renderTransactionStatus() {
     const { transactionState: { txStatus, txStartTimestamp } } = this.props;
-    if (txStatus) {
-      return (
-        <OasisTransactionStatusWrapper
-          customBlock={this.transactionInfoBlock()}
-          localStatus={txStatus}
-          txTimestamp={txStartTimestamp}
-          txType={TX_WRAP}
-        />
-      );
-    } else return null;
+    return <OasisTransactionStatusWrapperInfoBox
+      txStatus={txStatus}
+      infoText={this.transactionInfoBlock()}
+      localStatus={txStatus}
+      txTimestamp={txStartTimestamp}
+      txType={TX_WRAP}
+    />;
   }
   render() {
     const { valid, handleSubmit, activeUnwrappedToken } = this.props;

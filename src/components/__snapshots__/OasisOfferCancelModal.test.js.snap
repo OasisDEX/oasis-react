@@ -47,7 +47,16 @@ exports[`(Component) OasisOfferCancelModal should render 1`] = `
         </div>
       </InfoBoxWithIco>
     </div>
-    <div />
+    <div>
+      <OasisTransactionStatusWrapperInfoBox
+        infoText={
+          <strong>
+            Cancel offer
+          </strong>
+        }
+        txType="TRANSACTIONS/GROUP__OFFERS/OFFER_CANCEL"
+      />
+    </div>
     <div />
     <div>
       <OasisButton

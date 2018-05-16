@@ -21,7 +21,26 @@ exports[`(Container) OasisTokenTransfer should render 1`] = `
   />
   <Connect(ReduxForm)
     onSubmit={[Function]}
-    transferState={null}
+    transferState={
+      <OasisTransactionStatusWrapperInfoBox
+        infoText={
+          <div>
+            Transfer
+            <strong
+              className={undefined}
+            >
+              1.00000
+               
+              MKR
+            </strong>
+          </div>
+        }
+        localStatus={undefined}
+        txStatus={undefined}
+        txTimestamp={undefined}
+        txType="TX/GROUP__TRANSFERS/"
+      />
+    }
   />
 </OasisWidgetFrame>
 `;

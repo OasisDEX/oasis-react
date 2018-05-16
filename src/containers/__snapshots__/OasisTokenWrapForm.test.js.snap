@@ -42,8 +42,8 @@ exports[`(Container) OasisTokenWrapForm should render 1`] = `
     </tbody>
   </table>
   <div>
-    <Connect(OasisTransactionStatus)
-      customBlock={
+    <OasisTransactionStatusWrapperInfoBox
+      infoText={
         <div>
           Wrap
            
@@ -53,6 +53,7 @@ exports[`(Container) OasisTokenWrapForm should render 1`] = `
         </div>
       }
       localStatus="TX/STATUS_AWAITING_CONFIRMATION"
+      txStatus="TX/STATUS_AWAITING_CONFIRMATION"
       txTimestamp={1}
       txType="TX/GROUP__WRAP_UNWRAP/WRAP"
     />

@@ -12,7 +12,7 @@ import {
   TX_OFFER_CANCEL,
   TX_STATUS_CONFIRMED
 } from "../store/reducers/transactions";
-import OasisProcessingOrder from "./OasisProcessingOrder";
+import OasisTransactionStatusWrapperInfoBox from "../containers/OasisTransactionStatusInfoBox";
 
 const propTypes = PropTypes && {
   onCloseModal: PropTypes.func,
@@ -48,14 +48,13 @@ class OasisOfferCancelModal extends PureComponent {
 
   transactionStatusSection() {
     const { localStatus, txStartTimestamp } = this.props;
-    return localStatus ? (
-      <OasisProcessingOrder
-        txType={TX_OFFER_CANCEL}
-        localStatus={localStatus}
-        txTimestamp={txStartTimestamp}
-        title="Cancel offer"
-      />
-    ) : null;
+    return <OasisTransactionStatusWrapperInfoBox
+              txStatus={localStatus}
+              infoText={<strong>Cancel offer</strong>}
+              txType={TX_OFFER_CANCEL}
+              localStatus={localStatus}
+              txTimestamp={txStartTimestamp}
+    /> ;
   }
 
   cancelTransactionConfirmed() {

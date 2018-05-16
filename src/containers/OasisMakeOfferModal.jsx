@@ -25,7 +25,7 @@ import {
   TX_STATUS_CONFIRMED,
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
-import OasisProcessingOrder from "../components/OasisProcessingOrder";
+import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBox";
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -140,14 +140,13 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
 
   renderTransactionStatus() {
     const { txStartTimestamp, txStatus } = this.state;
-    return this.state.txStatus ? (
-      <OasisProcessingOrder
-        txTimestamp={txStartTimestamp}
-        localStatus={txStatus}
-        txType={TX_OFFER_MAKE}
-        title="Process order"
-      />
-    ) : null;
+    return <OasisTransactionStatusWrapperInfoBox
+      txStatus={txStatus}
+      infoText={<strong>Process order</strong>}
+      txTimestamp={txStartTimestamp}
+      localStatus={txStatus}
+      txType={TX_OFFER_MAKE}
+    />;
   }
 
   isOfferMakeCompleted() {

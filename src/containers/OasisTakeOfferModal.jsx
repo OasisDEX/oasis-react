@@ -30,7 +30,7 @@ import {
   TX_STATUS_CONFIRMED,
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
-import OasisProcessingOrder from "../components/OasisProcessingOrder";
+import {OasisTransactionStatusWrapperInfoBox} from "./OasisTransactionStatusInfoBox";
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -233,12 +233,14 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
               allowanceSubjectAddress={activeMarketAddress}
               tokenName={sellToken}
             />
+
             {this.state.txStatus ? (
-              <OasisProcessingOrder
+              <OasisTransactionStatusWrapperInfoBox
+                txStatus={this.state.txStatus}
+                infoText={<strong>Process order</strong>}
                 txTimestamp={this.state.txStartTimestamp}
                 localStatus={this.state.txStatus}
                 txType={TX_OFFER_TAKE}
-                title="Process order"
               />
             ) : (
               <div>

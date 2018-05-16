@@ -18,11 +18,10 @@ import {
   TX_STATUS_CONFIRMED,
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
-import OasisTransactionStatusWrapper  from "./OasisTransactionStatus";
 import { formatAmount } from '../utils/tokens/pair';
-import InfoBox from "../components/InfoBox";
 import textStyles from '../styles/modules/_typography.scss';
 import CSSModules from "react-css-modules/dist/index";
+import {OasisTransactionStatusWrapperInfoBox} from "./OasisTransactionStatusInfoBox";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -131,18 +130,13 @@ export class OasisTokenTransferWrapper extends PureComponent {
   renderTransactionStatus() {
     const { selectedToken, transferFormValues } = this.props;
     const { txStatus, txStartTimestamp } = this.state;
-    return txStatus ? (
-      <InfoBox justifyContent="space-between" alignItems="baseline" size="sm">
-        <div>
-          {OasisTokenTransferWrapper.transferInfo({ selectedToken, transferFormValues })}
-        </div>
-        <OasisTransactionStatusWrapper
-          localStatus={txStatus}
-          txTimestamp={txStartTimestamp}
-          txType={TX__GROUP__TRANSFERS}
-        />
-      </InfoBox>
-    ) : null;
+    return <OasisTransactionStatusWrapperInfoBox
+              txStatus={txStatus}
+              infoText={OasisTokenTransferWrapper.transferInfo({ selectedToken, transferFormValues })}
+              localStatus={txStatus}
+              txTimestamp={txStartTimestamp}
+              txType={TX__GROUP__TRANSFERS}
+          />;
   }
 
   render() {

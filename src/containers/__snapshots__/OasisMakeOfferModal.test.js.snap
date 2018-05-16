@@ -33,6 +33,14 @@ exports[`(Container) OasisMakeOfferModal should render 1`] = `
     <Connect(OasisOfferSummary)
       offerType="OFFER_MAKES/MAKE_BUY_OFFER"
     />
+    <OasisTransactionStatusWrapperInfoBox
+      infoText={
+        <strong>
+          Process order
+        </strong>
+      }
+      txType="TRANSACTIONS/GROUP__OFFERS/OFFER_MAKE"
+    />
     <Connect(SetTokenAllowanceTrust)
       allowanceSubjectAddress="0x8cf1cab422a0b6b554077a361f8419cdf122a9f9"
       onCancelCleanup={[Function]}
