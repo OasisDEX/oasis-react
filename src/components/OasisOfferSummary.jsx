@@ -8,7 +8,6 @@ import CSSModules from "react-css-modules/dist/index";
 import OasisSoldReceivedAmounts from "./OasisSoldReceivedAmounts";
 import OasisIsTokenTradingEnabledByUserWrapper from "../containers/OasisIsTokenTradingEnabledByUser";
 import InfoBox from "./InfoBox";
-import FlexBox from "./FlexBox";
 // import tokenToBeAllowedForOffer from "../utils/offers/tokenToBeAllowedForOffer";
 // import { isVolumeOrPriceEmptyOrZero } from '../store/selectors';
 

@@ -8,7 +8,6 @@ import styles from "./OasisOfferCancelModal.scss";
 import InfoBoxWithIco from "./InfoBoxWithIco";
 import modalStyles from "../styles/modules/_modal.scss";
 import OasisButton from "./OasisButton";
-import OasisTransactionStatusWrapper from "../containers/OasisTransactionStatus";
 import {
   TX_OFFER_CANCEL,
   TX_STATUS_CONFIRMED

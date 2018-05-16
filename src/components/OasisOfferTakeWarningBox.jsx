@@ -2,9 +2,6 @@ import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import styles from './OasisOfferTakeWarningBox.scss';
-import InfoBox from './InfoBox';
-import OasisIcon from './OasisIcon';
 import InfoBoxWithIco from "./InfoBoxWithIco";
 
 const propTypes = PropTypes && {

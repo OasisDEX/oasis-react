@@ -2,7 +2,6 @@ import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import styles from "./OasisProcessingOrder.scss";
 import OasisTransactionStatusWrapper from "../containers/OasisTransactionStatus";
 import {InfoBox} from "./InfoBox";
 

@@ -31,7 +31,6 @@ import {
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
 import OasisProcessingOrder from "../components/OasisProcessingOrder";
-import {MAKE_BUY_OFFER, MAKE_SELL_OFFER} from "../constants";
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
