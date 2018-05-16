@@ -23,15 +23,6 @@ const initialState = fromJS({
   transactionCheckIntervalMs: 1000
 });
 
-const INIT = 'TX/INIT';
-const ADD_TRANSACTION = 'TX/ADD_TRANSACTION';
-const SYNC_TRANSACTION = 'TX/SYNC_TRANSACTION';
-const TX_GET_CURRENT_GAS_PRICE = 'TX/GET_CURRENT_GAS_PRICE';
-const TX_GET_CURRENT_TX_NONCE = 'TX/GET_CURRENT_TX_NONCE';
-
-
-const TX_TRANSACTION_REJECTED = 'TX/TRANSACTION_REJECTED';
-
 export const TX__GROUP__OFFERS = 'TRANSACTIONS/GROUP__OFFERS/';
 export const TX__GROUP__TOKENS = 'TX/GROUP__TOKENS/';
 export const TX__GROUP__LIMITS = 'TX/GROUP__LIMITS/';
@@ -41,9 +32,6 @@ export const TX__GROUP__WRAP_UNWRAP = 'TX/GROUP__WRAP_UNWRAP/';
 
 export const TX_OFFER_MAKE = TX__GROUP__OFFERS + 'OFFER_MAKE';
 export const TX_OFFER_TAKE = TX__GROUP__OFFERS + 'OFFER_TAKE';
-
-export const TX_TRANSFER_FROM = TX__GROUP__TRANSFERS + 'TRANSFER_FROM';
-export const TX_TRANSFER_TO = TX__GROUP__TRANSFERS + 'TRANSFER_TO';
 
 export const TX_OFFER_CANCEL = TX__GROUP__OFFERS + 'OFFER_CANCEL';
 
@@ -59,8 +47,6 @@ export const TX_STATUS_CONFIRMED = 'TX/STATUS_CONFIRMED';
 export const TX_STATUS_CANCELLED_BY_USER = 'TX/STATUS_CANCELLED_BY_USER';
 export const TX_STATUS_REJECTED = 'TX/STATUS_REJECTED';
 
-export const TX_ALLOWANCE_TRUST_ENABLE = TX__GROUP__LIMITS + 'TX/ALLOWANCE_TRUST_ENABLE';
-export const TX_ALLOWANCE_TRUST_DISABLE = TX__GROUP__LIMITS + 'TX/ALLOWANCE_TRUST_DISABLE';
 export const TX_ALLOWANCE_TRUST_TOGGLE = TX__GROUP__LIMITS + 'TX/ALLOWANCE_TRUST_TOGGLE';
 
 export const TRANSACTION_IS_CONFIRMED = '0x1';
@@ -79,106 +65,97 @@ export const getTransactionGroup = (transactionType) => {
 };
 
 const init = createAction(
-  INIT,
+  'TX/INIT',
   () => null,
 );
-
 
 const transactionCancelledByUser = createAction(
   'TX/TRANSACTION_CANCELLED_BY_USER',
   ({ txType, txStatus, txStats }) => ({ txType, txStatus, txStats })
 );
 
-const addTransaction = createPromiseActions(ADD_TRANSACTION);
-const addTransactionEpic = ({ txType, txHash, txMeta, txDispatchedTimestamp, txStartTimestamp }) => async (dispatch, getState) => {
-  let previousBlockNumber = network.latestBlockNumber(getState());
+const addTransaction = createPromiseActions('TX/ADD_TRANSACTION');
+const addTransactionEpic = (
+  { txType, txHash, txMeta, txDispatchedTimestamp, txStartTimestamp },
+  { latestBlockNumber = network.latestBlockNumber,
+    syncTransaction = syncTransaction,
+    transactionCheckInterval = transactions.transactionCheckInterval} = {}
+  ) => (dispatch, getState) => {
+
+  let previousBlockNumber = latestBlockNumber(getState());
+
   dispatch(
     addTransaction.pending({
-      txHash,
-      txType,
-      txMeta,
+      txHash, txType, txMeta,
       txStatus: TX_STATUS_AWAITING_CONFIRMATION,
       txStats: {
-        txDispatchedTimestamp,
-        txStartBlockNumber: previousBlockNumber,
-        txStartTimestamp
-      }
+        txDispatchedTimestamp, txStartTimestamp,
+        txStartBlockNumber: previousBlockNumber}
     }),
   );
+
   return new Promise((resolve, reject) => {
     const complete = setInterval(async () => {
-      const currentBlockNumber = network.latestBlockNumber(getState());
+      const currentBlockNumber = latestBlockNumber(getState());
+
       if (currentBlockNumber !== previousBlockNumber) {
-        const txReceipt = (await dispatch(syncTransaction(txHash))).value;
-        if (txReceipt !== null) {
-          switch (txReceipt.status) {
-            case TRANSACTION_IS_CONFIRMED: {
-              const payload = {
-                txHash,
-                txReceipt,
-                txType,
-                txConfirmedBlockNumber: txReceipt.blockNumber,
-                txStatus: TX_STATUS_CONFIRMED,
-                txGasCost: txReceipt.gasCost,
-                txStats: {
-                  txEndBlockNumber: previousBlockNumber,
-                  txEndTimestamp: getTimestamp()
-                }
-              };
-              dispatch(
-                addTransaction.fulfilled(payload)
-              );
-              clearInterval(complete);
-              resolve(payload);
 
-            } break;
-            case TRANSACTION_IS_REJECTED: {
-              const payload = {
-                txHash,
-                txReceipt,
-                txType,
-                txRejectedBlockNumber: txReceipt.blockNumber,
-                txStatus: TX_STATUS_REJECTED,
-                txGasCost: txReceipt.gasCost,
-                txStats: {
-                  txEndBlockNumber: previousBlockNumber,
-                  txEndTimestamp: getTimestamp()
-                }
-              };
-              dispatch(
-                addTransaction.rejected(payload)
-              );
-              clearInterval(complete);
-              reject(payload);
-            } break;
-          }
+        let txReceipt;
+
+        try {
+          txReceipt = (await dispatch(syncTransaction(txHash))).value;
+        } catch (e) {
+          //unlimited retries?
+          return;
         }
+
+        if (txReceipt == null) return;
+
+        const confirmed = txReceipt.status === TRANSACTION_IS_CONFIRMED;
+
+        const payload = {
+          txHash, txReceipt, txType,
+          txConfirmedBlockNumber: txReceipt.blockNumber,
+          txStatus: confirmed ? TX_STATUS_CONFIRMED : TX_STATUS_REJECTED,
+          txGasCost: txReceipt.gasCost,
+          txStats: {
+            txEndBlockNumber: currentBlockNumber,
+            txEndTimestamp: getTimestamp()
+          }
+        };
+
+        if(confirmed) {
+          resolve(payload);
+          dispatch(addTransaction.fulfilled(payload));
+        } else {
+          reject(payload);
+          dispatch(addTransaction.rejected(payload));
+        }
+        clearInterval(complete)
       }
-      previousBlockNumber = network.latestBlockNumber(getState());
-    }, transactions.transactionCheckInterval(getState()));
-
+      previousBlockNumber = currentBlockNumber;
+    }, transactionCheckInterval(getState()));
   });
-
 };
 
 const syncTransaction = createAction(
-  SYNC_TRANSACTION,
+  'TX/SYNC_TRANSACTION',
   txHash => web3p.eth.getTransactionReceipt(txHash),
 );
 
 
 const transactionRejected = createAction(
-  TX_TRANSACTION_REJECTED,
+  'TX/TRANSACTION_REJECTED',
   err => err,
 );
 
 const getCurrentGasPrice = createAction(
-  TX_GET_CURRENT_GAS_PRICE,
+  'TX/GET_CURRENT_GAS_PRICE',
   async () => web3p.eth.getGasPrice(),
 );
 
 const getCurrentTxNonce = createAction(
-  TX_GET_CURRENT_TX_NONCE,
+  'TX/GET_CURRENT_TX_NONCE',
   async (accountAddress) => web3p.eth.getTransactionCount(accountAddress || web3.eth.defaultAccount)
 );
 
@@ -202,7 +179,6 @@ const reducer = handleActions({
     (
       state, { payload: { txHash, txType, txStats, txMeta } },
     ) => {
-
       const txPayload = fromJS({
         txHash,
         txReceipt: null,
@@ -227,7 +203,7 @@ const reducer = handleActions({
           .set('txStatus', txStatus)
           .setIn(['txStats','txEndTimestamp'], txStats.txEndTimestamp)
           .setIn(['txStats','txEndBlockNumber'], txStats.txEndBlockNumber)
-          .setIn(['txStats','txTotalTimeSec'], txStats.txEndBlockNumber - transaction.getIn('txStartTimestamp'))
+          .setIn(['txStats','txTotalTimeSec'], txStats.txEndTimestamp - transaction.getIn('txStartTimestamp'))
         ,
       );
     },
@@ -244,7 +220,7 @@ const reducer = handleActions({
           .set('txStatus', txStatus)
           .setIn(['txStats','txEndTimestamp'], txStats.txEndTimestamp)
           .setIn(['txStats','txEndBlockNumber'], txStats.txEndBlockNumber)
-          .setIn(['txStats','txTotalTimeSec'], txStats.txEndBlockNumber - transaction.getIn('txStartTimestamp'))
+          .setIn(['txStats','txTotalTimeSec'], txStats.txEndTimestamp - transaction.getIn('txStartTimestamp'))
       );
   },
   [fulfilled(getCurrentTxNonce)]: (state, { payload }) => state.set('txNonce', parseInt(payload) + 1 ),

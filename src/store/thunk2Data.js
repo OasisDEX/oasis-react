@@ -4,8 +4,7 @@ export default () =>  {
 
     if(first) {
       first = false;
-      next(action);
-      return;
+      return next(action);
     }
 
     if (action instanceof Array) {

@@ -1,0 +1,166 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`addTransactionEpic intermediate error 1`] = `
+Object {
+  "txConfirmedBlockNumber": undefined,
+  "txGasCost": undefined,
+  "txHash": "fakeHash",
+  "txReceipt": Object {
+    "status": "0x1",
+  },
+  "txStats": Object {
+    "txEndBlockNumber": undefined,
+    "txEndTimestamp": 123456,
+  },
+  "txStatus": "TX/STATUS_CONFIRMED",
+  "txType": "fakeType",
+}
+`;
+
+exports[`addTransactionEpic intermediate error 2`] = `
+Array [
+  Object {
+    "payload": Object {
+      "txHash": "fakeHash",
+      "txMeta": Object {},
+      "txStats": Object {
+        "txDispatchedTimestamp": 12345,
+        "txStartBlockNumber": "a",
+        "txStartTimestamp": 23456,
+      },
+      "txStatus": "TX/STATUS_AWAITING_CONFIRMATION",
+      "txType": "fakeType",
+    },
+    "type": "TX/ADD_TRANSACTION_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "txConfirmedBlockNumber": undefined,
+      "txGasCost": undefined,
+      "txHash": "fakeHash",
+      "txReceipt": Object {
+        "status": "0x1",
+      },
+      "txStats": Object {
+        "txEndBlockNumber": undefined,
+        "txEndTimestamp": 123456,
+      },
+      "txStatus": "TX/STATUS_CONFIRMED",
+      "txType": "fakeType",
+    },
+    "type": Array [
+      "TX/ADD_TRANSACTION_FULFILLED",
+    ],
+  },
+]
+`;
+
+exports[`addTransactionEpic transaction confirmed 1`] = `
+Object {
+  "txConfirmedBlockNumber": undefined,
+  "txGasCost": undefined,
+  "txHash": "fakeHash",
+  "txReceipt": Object {
+    "status": "0x1",
+  },
+  "txStats": Object {
+    "txEndBlockNumber": "b",
+    "txEndTimestamp": 123456,
+  },
+  "txStatus": "TX/STATUS_CONFIRMED",
+  "txType": "fakeType",
+}
+`;
+
+exports[`addTransactionEpic transaction confirmed 2`] = `
+Array [
+  Object {
+    "payload": Object {
+      "txHash": "fakeHash",
+      "txMeta": Object {},
+      "txStats": Object {
+        "txDispatchedTimestamp": 12345,
+        "txStartBlockNumber": "a",
+        "txStartTimestamp": 23456,
+      },
+      "txStatus": "TX/STATUS_AWAITING_CONFIRMATION",
+      "txType": "fakeType",
+    },
+    "type": "TX/ADD_TRANSACTION_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "txConfirmedBlockNumber": undefined,
+      "txGasCost": undefined,
+      "txHash": "fakeHash",
+      "txReceipt": Object {
+        "status": "0x1",
+      },
+      "txStats": Object {
+        "txEndBlockNumber": "b",
+        "txEndTimestamp": 123456,
+      },
+      "txStatus": "TX/STATUS_CONFIRMED",
+      "txType": "fakeType",
+    },
+    "type": Array [
+      "TX/ADD_TRANSACTION_FULFILLED",
+    ],
+  },
+]
+`;
+
+exports[`addTransactionEpic transaction rejected 1`] = `
+Object {
+  "txConfirmedBlockNumber": undefined,
+  "txGasCost": undefined,
+  "txHash": "fakeHash",
+  "txReceipt": Object {
+    "status": "0x0",
+  },
+  "txStats": Object {
+    "txEndBlockNumber": "b",
+    "txEndTimestamp": 123456,
+  },
+  "txStatus": "TX/STATUS_REJECTED",
+  "txType": "fakeType",
+}
+`;
+
+exports[`addTransactionEpic transaction rejected 2`] = `
+Array [
+  Object {
+    "payload": Object {
+      "txHash": "fakeHash",
+      "txMeta": Object {},
+      "txStats": Object {
+        "txDispatchedTimestamp": 12345,
+        "txStartBlockNumber": "a",
+        "txStartTimestamp": 23456,
+      },
+      "txStatus": "TX/STATUS_AWAITING_CONFIRMATION",
+      "txType": "fakeType",
+    },
+    "type": "TX/ADD_TRANSACTION_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "txConfirmedBlockNumber": undefined,
+      "txGasCost": undefined,
+      "txHash": "fakeHash",
+      "txReceipt": Object {
+        "status": "0x0",
+      },
+      "txStats": Object {
+        "txEndBlockNumber": "b",
+        "txEndTimestamp": 123456,
+      },
+      "txStatus": "TX/STATUS_REJECTED",
+      "txType": "fakeType",
+    },
+    "type": Array [
+      "TX/ADD_TRANSACTION_REJECTED",
+    ],
+  },
+]
+`;
