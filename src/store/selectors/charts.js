@@ -229,7 +229,7 @@ const depthChartData = createSelector(
         amountTool.quote = amountTool.base = null;
       } else {
         // If there is not an ask amount for this price, we need to add the previous amount
-        amount = askAmountsGraph[askAmountsGraph.length - 1];
+        amount = askAmountsGraph[askAmountsGraph.length - 1].y;
         amountTool = { ...askAmountsTooltip[vals[i - 1]] };
       }
       askAmountsGraph.push({ x: vals[i], y: amount });
