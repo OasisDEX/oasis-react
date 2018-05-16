@@ -2,6 +2,7 @@
 
 .table {
   @include verticalFormTable;
+  margin-bottom: 2em;
 }
 
 .withInput {
@@ -17,6 +18,5 @@
 }
 
 .footer {
-  margin-top: 2em;
   float: right;
 }

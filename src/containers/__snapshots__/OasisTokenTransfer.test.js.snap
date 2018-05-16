@@ -21,13 +21,7 @@ exports[`(Container) OasisTokenTransfer should render 1`] = `
   />
   <Connect(ReduxForm)
     onSubmit={[Function]}
-  />
-  <div
-    style={
-      Object {
-        "width": "100%",
-      }
-    }
+    transferState={null}
   />
 </OasisWidgetFrame>
 `;

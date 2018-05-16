@@ -21,7 +21,7 @@ const propTypes = PropTypes && {
 
 export class TokenTransferFormWrapper extends PureComponent {
   render() {
-    const { handleSubmit, valid, makeTransfer, disabled, actions } = this.props;
+    const { handleSubmit, valid, makeTransfer, disabled, actions, transferState } = this.props;
     return (
       <form method="POST" onSubmit={handleSubmit}>
         <table className={styles.table}>
@@ -62,6 +62,7 @@ export class TokenTransferFormWrapper extends PureComponent {
             </tr>
           </tbody>
         </table>
+        {transferState}
         <div className={styles.footer}>
           <OasisButton
             type="submit"

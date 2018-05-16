@@ -20,6 +20,9 @@ import {
 } from "../store/reducers/transactions";
 import OasisTransactionStatusWrapper  from "./OasisTransactionStatus";
 import { formatAmount } from '../utils/tokens/pair';
+import InfoBox from "../components/InfoBox";
+import textStyles from '../styles/modules/_typography.scss';
+import CSSModules from "react-css-modules/dist/index";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -118,9 +121,9 @@ export class OasisTokenTransferWrapper extends PureComponent {
     return (
       <div>
         Transfer
-        <b>
+        <strong className={textStyles.spaceBoth}>
           {formatAmount(tokenAmount, false, null, 5)} {selectedToken}
-        </b>
+        </strong>
       </div>
     );
   }
@@ -129,12 +132,16 @@ export class OasisTokenTransferWrapper extends PureComponent {
     const { selectedToken, transferFormValues } = this.props;
     const { txStatus, txStartTimestamp } = this.state;
     return txStatus ? (
-      <OasisTransactionStatusWrapper
-        customBlock={OasisTokenTransferWrapper.transferInfo({ selectedToken, transferFormValues })}
-        localStatus={txStatus}
-        txTimestamp={txStartTimestamp}
-        txType={TX__GROUP__TRANSFERS}
-      />
+      <InfoBox justifyContent="space-between" alignItems="baseline" size="sm">
+        <div>
+          {OasisTokenTransferWrapper.transferInfo({ selectedToken, transferFormValues })}
+        </div>
+        <OasisTransactionStatusWrapper
+          localStatus={txStatus}
+          txTimestamp={txStartTimestamp}
+          txType={TX__GROUP__TRANSFERS}
+        />
+      </InfoBox>
     ) : null;
   }
 
@@ -154,8 +161,9 @@ export class OasisTokenTransferWrapper extends PureComponent {
         <TokenTransferFormWrapper
           disabled={this.shouldDisable()}
           onSubmit={this.makeTransfer}
+          transferState={this.renderTransactionStatus()}
         />
-        <div style={{width: '100%'}}>{this.renderTransactionStatus()}</div>
+
       </OasisWidgetFrame>
     );
   }
@@ -179,5 +187,5 @@ export function mapDispatchToProps(dispatch) {
 OasisTokenTransferWrapper.propTypes = propTypes;
 OasisTokenTransferWrapper.displayName = "OasisTokenTransfer";
 export default connect(mapStateToProps, mapDispatchToProps)(
-  OasisTokenTransferWrapper
+  CSSModules(OasisTokenTransferWrapper, textStyles)
 );
