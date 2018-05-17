@@ -9,6 +9,7 @@ import {
   mapDispatchToProps
 } from './OasisTokenUnwrapForm';
 import { shallow } from 'enzyme';
+import { TX_STATUS_AWAITING_CONFIRMATION } from '../store/reducers/transactions';
 
 describe('(Container) OasisTokenUnwrapForm', () => {
   const state = fromJS(global.storeMock);
@@ -16,7 +17,11 @@ describe('(Container) OasisTokenUnwrapForm', () => {
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,
-    ...initialProps
+    ...initialProps,
+    transactionState: {
+      txStatus: TX_STATUS_AWAITING_CONFIRMATION,
+      txStartTimestamp: 1
+    }
   };
 
   it('will receive right props', () => {

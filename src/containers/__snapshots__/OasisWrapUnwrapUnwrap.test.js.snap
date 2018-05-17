@@ -5,12 +5,19 @@ exports[`(Container) OasisWrapUnwrapUnwrap should render 1`] = `
   activeWrappedToken="W-GNT"
   activeWrappedTokenBalance={"0"}
   onSubmit={[Function]}
+  transactionState={
+    Object {
+      "txStartTimestamp": undefined,
+      "txStatus": undefined,
+    }
+  }
 />
 `;
 
 exports[`(Container) OasisWrapUnwrapUnwrap will receive right actions 1`] = `
 Object {
   "actions": Object {
+    "resetActiveUnwrapForm": [Function],
     "unwrapToken": [Function],
   },
 }

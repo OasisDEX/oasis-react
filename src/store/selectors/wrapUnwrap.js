@@ -121,10 +121,15 @@ const isBrokerContractLoaded = createSelector(
 
 
 const wrapTokenformSelector = formValueSelector("wrapToken");
-// const unwrapTokenformSelector = formValueSelector("unwrapToken");
+const unwrapTokenformSelector = formValueSelector("unwrapToken");
 
 const wrapTokenAmount = createSelector(
   rootState => wrapTokenformSelector(rootState, "amount"),
+  wrapAmount => wrapAmount
+);
+
+const unwrapTokenAmount = createSelector(
+  rootState => unwrapTokenformSelector(rootState, "amount"),
   wrapAmount => wrapAmount
 );
 
@@ -152,5 +157,6 @@ export default {
   isTokenBrokerInitiallyLoaded,
   activeTokenWrapStatus,
   activeTokenUnwrapStatus,
-  wrapTokenAmount
+  wrapTokenAmount,
+  unwrapTokenAmount
 };
