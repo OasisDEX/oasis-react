@@ -14,7 +14,7 @@ import accounts from '../selectors/accounts';
 import { fulfilled } from '../../utils/store';
 import getTokenContractInstance from '../../utils/contracts/getContractInstance';
 import web3 from '../../bootstrap/web3';
-import { DEFAULT_GAS_PRICE, TX_WRAP } from './transactions';
+import { DEFAULT_GAS_PRICE, TX_UNWRAP, TX_WRAP } from './transactions';
 import { createPromiseActions } from '../../utils/createPromiseActions';
 import balances from '../selectors/balances';
 import { handleTransaction } from '../../utils/transactions/handleTransaction';
@@ -124,8 +124,6 @@ const wrapETHTokenEpic = (withCallbacks) => (dispatch, getState) => {
     transactionType: TX_WRAP,
     withCallbacks
   });
-  // dispatch(wrapEther$.fulfilled());
-  // dispatch(resetActiveWrapForm());
 };
 
 
@@ -136,13 +134,14 @@ const unwrapEther = createAction(
 );
 
 const unwrapEther$ = createPromiseActions('WRAP_UNWRAP/UNWRAP_ETHER');
-const unwrapEtherEpic = () => (dispatch, getState) => {
+const unwrapEtherEpic = (withCallbacks) => (dispatch, getState) => {
   dispatch(unwrapEther$.pending());
-  dispatch(
-    unwrapEther(getUnwrapAmount(getState()))
-  );
-  dispatch(unwrapEther$.fulfilled());
-  dispatch(resetActiveUnwrapForm());
+  return handleTransaction({
+    dispatch,
+    transactionDispatcher: () => dispatch(unwrapEther(getUnwrapAmount(getState()))),
+    transactionType: TX_UNWRAP,
+    withCallbacks
+  });
 };
 
 
@@ -222,13 +221,14 @@ const unwrapGNTToken = createAction(
 );
 
 const unwrapGNTToken$ = createPromiseActions('WRAP_UNWRAP/UNWRAP_GNT_TOKEN');
-const unwrapGNTTokenEpic = () => (dispatch, getState) => {
+const unwrapGNTTokenEpic = (withCallbacks) => (dispatch, getState) => {
   dispatch(unwrapGNTToken$.pending());
-  dispatch(
-    unwrapGNTToken({ amountInWei: getUnwrapAmount(getState()) })
-  );
-  dispatch(unwrapGNTToken$.fulfilled());
-  dispatch(resetActiveUnwrapForm());
+  return handleTransaction({
+    dispatch,
+    transactionDispatcher: () => dispatch(unwrapGNTToken({ amountInWei: getUnwrapAmount(getState()) })),
+    transactionType: TX_UNWRAP,
+    withCallbacks
+  });
 };
 
 
@@ -245,13 +245,13 @@ const wrapTokenEpic = (withCallbacks = {}) => (dispatch, getState) => {
 };
 
 
-const unwrapTokenEpic = () => (dispatch, getState) => {
+const unwrapTokenEpic = (withCallbacks = {}) => (dispatch, getState) => {
   switch (wrapUnwrap.activeUnwrappedToken(getState())) {
     case TOKEN_ETHER : {
-      dispatch(unwrapEtherEpic());
+      dispatch(unwrapEtherEpic(withCallbacks));
     } break;
     case TOKEN_GOLEM : {
-      dispatch(unwrapGNTTokenEpic());
+      dispatch(unwrapGNTTokenEpic(withCallbacks));
     } break;
   }
 };

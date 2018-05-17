@@ -13,6 +13,9 @@ import OasisButton from "../components/OasisButton";
 import tableStyles from "../styles/modules/_table.scss";
 import styles from "./OasisTokenWrapForm.scss";
 import CSSModules from 'react-css-modules';
+import OasisTransactionStatusWrapperInfoBox  from './OasisTransactionStatusInfoBox';
+import { TX_UNWRAP } from '../store/reducers/transactions';
+import { formatAmount } from '../utils/tokens/pair';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -45,6 +48,29 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
     this.props.actions.setUnwrapMax();
   }
 
+  transactionInfoBlock() {
+    const { unwrapTokenAmount, activeWrappedToken } = this.props;
+    return (
+      <div>
+        Unwrap{" "}
+        <b>
+          {formatAmount(unwrapTokenAmount, false, null, 5)} {activeWrappedToken}
+        </b>
+      </div>
+    );
+  }
+
+  renderTransactionStatus() {
+    const { transactionState: { txStatus, txStartTimestamp } } = this.props;
+    return <OasisTransactionStatusWrapperInfoBox
+      txStatus={txStatus}
+      infoText={this.transactionInfoBlock()}
+      localStatus={txStatus}
+      txTimestamp={txStartTimestamp}
+      txType={TX_UNWRAP}
+    />;
+  }
+
   render() {
     const { valid, handleSubmit, activeWrappedToken } = this.props;
     return (
@@ -75,8 +101,9 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
               </tr>
             </tbody>
           </table>
+        <div>{this.renderTransactionStatus()}</div>
           <div className={styles.footer}>
-            <OasisButton disabled={!valid}>Unwrap</OasisButton>
+            <OasisButton type="submit" disabled={!valid}>Unwrap</OasisButton>
           </div>
       </form>
     );
@@ -85,7 +112,8 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
-    activeWrappedTokenBalance: wrapUnwrap.activeWrappedTokenBalance(state, true)
+    activeWrappedTokenBalance: wrapUnwrap.activeWrappedTokenBalance(state, true),
+    unwrapTokenAmount: wrapUnwrap.unwrapTokenAmount(state)
   };
 }
 export function mapDispatchToProps(dispatch) {
