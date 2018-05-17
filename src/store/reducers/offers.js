@@ -16,6 +16,7 @@ import findOffer from '../../utils/offers/findOffer';
 import { STATUS_COMPLETED, STATUS_ERROR, STATUS_PRISTINE } from './platform';
 import getOfferTradingPairAndType from '../../utils/offers/getOfferTradingPairAndType';
 import { handleTransaction } from '../../utils/transactions/handleTransaction';
+import offerTakes from '../selectors/offerTakes';
 
 export const TYPE_BUY_OFFER = 'OFFERS/TYPE_BUY';
 export const TYPE_SELL_OFFER = 'OFFERS/TYPE_SELL';
@@ -47,6 +48,8 @@ const STATUS_PENDING = 'OFFER_STATUS_PENDING';
 const OFFER_SYNC_TYPE_INITIAL = 'OFFERS/OFFER_SYNC_TYPE_INITIAL';
 const OFFER_SYNC_TYPE_UPDATE = 'OFFERS/OFFER_SYNC_TYPE_UPDATE';
 const OFFER_SYNC_TYPE_NEW_OFFER = 'OFFERS/OFFER_SYNC_NEW_OFFER';
+
+export const OFFER_STATUS_INACTIVE = 'OFFERS/OFFER_STATUS_INACTIVE';
 
 const Init = createAction(
   INIT,
@@ -329,7 +332,19 @@ const setOfferEpic = ({
       break;
 
     case OFFER_SYNC_TYPE_UPDATE:
-      if (sellHowMuchValue.toNumber() === 0) {
+      if (sellHowMuchValue.eq(0) || buyHowMuchValue.eq(0)) {
+        alert('filled in completely')
+        console.log('COMPLETE FILLED_IN',{
+          sellHowMuch,
+          sellWhichTokenAddress,
+          buyHowMuch,
+          buyWhichTokenAddress,
+          owner,
+          status,
+          offerType,
+          tradingPair: { baseToken, quoteToken },
+          previousOfferState,
+        })
         dispatch(
           offerCompletelyFilledIn(
             { baseToken, quoteToken, offerType, offerId: id, updatedOffer: offer, previousOfferState },
@@ -454,6 +469,17 @@ const checkOfferIsActive = createAction(
 );
 
 
+const removeOfferFromTheOrderBook = createAction(
+  'OFFERS/REMOVE_OFFER_FROM_THE_ORDER_BOOK',
+  ({ offerId, tradingPair, offerType }) =>  ({ offerId, tradingPair, offerType })
+);
+
+
+const markOfferAsInactive = createAction(
+  'OFFERS/MARK_OFFER_AS_INACTIVE',
+  ({ offerId, tradingPair, offerType }) =>  ({ offerId, tradingPair, offerType })
+);
+
 const subscribeFilledOrdersEpic = (fromBlock, filter = {}) => async (dispatch, getState) => {
   dispatch(subscribeFilledOrders.pending());
   window.contracts.market.LogItemUpdate(filter, { fromBlock, toBlock: 'latest' }).then(
@@ -476,8 +502,17 @@ const subscribeFilledOrdersEpic = (fromBlock, filter = {}) => async (dispatch, g
           dispatch(syncOffer(offerId, OFFER_SYNC_TYPE_NEW_OFFER));
         }
       } // else offer is being cancelled ( handled in LogKill )
-
-      // const { baseToken, quoteToken } = getOfferTradingPairAndType(offer,  getState());
+      else {
+        console.log('supposed to be taken completely', (await dispatch(loadOffer(offerId)).value));
+        const offerInOrderBook = findOffer(offerId, getState());
+        if (offerInOrderBook) {
+          if (offerTakes.activeOfferTakeOfferId(getState()) === offerId.toString()) {
+            dispatch(markOfferAsInactive(offerInOrderBook));
+          } else {
+            dispatch(removeOfferFromTheOrderBook(offerInOrderBook));
+          }
+        }
+      }
       // dispatch(
       //   getTradingPairOfferCount(baseToken, quoteToken)
       // )
@@ -595,6 +630,7 @@ const actions = {
   subscribeOffersEventsEpic,
   checkOfferIsActive,
   getBestOfferIdsForActiveTradingPairEpic,
+  markOfferAsInactive,
   removeOrderCancelledByTheOwner
 };
 
@@ -729,6 +765,45 @@ const reducer = handleActions({
 
     }
   },
+  [removeOfferFromTheOrderBook]: (state, { payload: { tradingPair, offerType, offerId } }) => {
+    switch (offerType) {
+      case TYPE_BUY_OFFER:
+        return state
+          .updateIn(['offers', Map(tradingPair), 'buyOffers'],
+            buyOfferList => buyOfferList.filter(offer => offer.id !== offerId),
+          );
+      case TYPE_SELL_OFFER:
+        return state
+          .updateIn(['offers', Map(tradingPair), 'sellOffers'],
+            sellOfferList => sellOfferList.filter(offer => offer.id !== offerId),
+          );
+
+    }
+  },
+  [markOfferAsInactive]: (state, { payload: { offerId, offer, tradingPair, offerType } }) =>
+    state.updateIn(
+      ['offers', Map(tradingPair)], tradingPairOffers => {
+        switch (offerType) {
+          case TYPE_BUY_OFFER :
+            return tradingPairOffers.updateIn(['buyOffers'], buyOffers =>
+              buyOffers.update(buyOffers.findIndex(
+                buyOffer => buyOffer.id === offerId), (offerToUpdate) => {
+                  return { ...offerToUpdate, status: OFFER_STATUS_INACTIVE };
+                },
+              ),
+            );
+          case TYPE_SELL_OFFER:
+            return tradingPairOffers.updateIn(['sellOffers'], sellOffers =>
+              sellOffers.update(sellOffers.findIndex(
+                sellOffer => sellOffer.id === offerId), (offerToUpdate) =>  {
+                  return { ...offerToUpdate, status: OFFER_STATUS_INACTIVE };
+                },
+              ),
+            );
+        }
+      },
+    ),
+
 
 
 }, initialState);
