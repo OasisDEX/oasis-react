@@ -45,7 +45,6 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
   }
 
   onTransactionStart() {
-    alert('start')
     this.setState({
       txStatus: TX_STATUS_AWAITING_USER_ACCEPTANCE,
       disableForm: true,

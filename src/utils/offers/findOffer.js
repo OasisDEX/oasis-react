@@ -6,8 +6,7 @@ const findOffer = (offerId, state) => {
   let searchedOffer, offerTradingPair = null, offerType = null;
   offers.allOffers(state).entrySeq().find(
     ([pair, offers]) => {
-      if(offers.get('initialSyncStatus') === STATUS_PRISTINE) { return; }
-       else {
+       if ((offers.get('initialSyncStatus') !== STATUS_PRISTINE)) {
         const buyOffer = offers.get('buyOfferCount') ?
           offers.get('buyOffers').find(bo => parseInt(bo.id) === parseInt(offerId)) : null;
         const sellOffer = offers.get('sellOfferCount') ?
@@ -33,6 +32,7 @@ const findOffer = (offerId, state) => {
   if(searchedOffer) {
     return ({
       offer: searchedOffer,
+      offerId: searchedOffer.id,
       offerType,
       tradingPair: offerTradingPair.toJSON()
     });

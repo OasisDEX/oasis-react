@@ -1,15 +1,15 @@
-import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
-import OasisWidgetFrame from '../containers/OasisWidgetFrame';
-import OasisTable from './OasisTable';
-import { toDisplayFormat } from '../utils/orders';
-import { LoadProgressSection } from '../utils/offers/loadProgress';
-import { TAKE_SELL_OFFER } from '../store/reducers/offerTakes';
+import React, { PureComponent } from "react";
+import { PropTypes } from "prop-types";
+import OasisWidgetFrame from "../containers/OasisWidgetFrame";
+import OasisTable from "./OasisTable";
+import { toDisplayFormat } from "../utils/orders";
+import { LoadProgressSection } from "../utils/offers/loadProgress";
+import { TAKE_SELL_OFFER } from "../store/reducers/offerTakes";
 
-import styles from './OasisSellOrders.scss';
-import CSSModules from 'react-css-modules';
+import styles from "./OasisSellOrders.scss";
+import CSSModules from "react-css-modules";
+import { OFFER_STATUS_INACTIVE } from "../store/reducers/offers";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
-
 
 const propTypes = PropTypes && {
   onSetOfferTakeModalOpen: PropTypes.func.isRequired,
@@ -25,54 +25,72 @@ const actionsColumnTemplate = function() {
   return null;
 };
 
-
 const colsDefinition = (baseToken, quoteToken, orderActions) => {
   return [
-    { heading: `price`, key: 'ask_price' },
-    { heading: `${quoteToken}`, key: 'buy_how_much' }, // how much will pay
-    { heading: `${baseToken}`, key: 'sell_how_much' },// how much  will get
-    { heading: ``, template: actionsColumnTemplate.bind(orderActions)},
+    { heading: `price`, key: "ask_price" },
+    { heading: `${quoteToken}`, key: "buy_how_much" }, // how much will pay
+    { heading: `${baseToken}`, key: "sell_how_much" }, // how much  will get
+    { heading: ``, template: actionsColumnTemplate.bind(orderActions) }
   ];
 };
 
-
 class OasisSellOrders extends PureComponent {
-
   constructor(props) {
     super(props);
     this.onTableRowClick = this.onTableRowClick.bind(this);
   }
 
   onTableRowClick(rowData) {
-    const { onSetOfferTakeModalOpen, onCheckOfferIsActive, onResetCompletedOfferCheck } = this.props;
-    onCheckOfferIsActive(rowData.id)
-      .then(
-        isActive =>
-          isActive === true ?
-            onSetOfferTakeModalOpen({ offerTakeType: TAKE_SELL_OFFER, offerId: rowData.id }):
-            onResetCompletedOfferCheck()
-      );
+    const {
+      onSetOfferTakeModalOpen,
+      onCheckOfferIsActive,
+      onResetCompletedOfferCheck
+    } = this.props;
+    onCheckOfferIsActive(rowData.id).then(
+      isActive =>
+        isActive === true
+          ? onSetOfferTakeModalOpen({
+              offerTakeType: TAKE_SELL_OFFER,
+              offerId: rowData.id
+            })
+          : onResetCompletedOfferCheck()
+    );
   }
 
   render() {
-    const { activeTradingPair: { baseToken, quoteToken }, sellOffers, sellOfferCount, cancelOffer } = this.props;
+    const {
+      activeTradingPair: { baseToken, quoteToken },
+      sellOffers,
+      sellOfferCount,
+      cancelOffer
+    } = this.props;
     const orderActions = { cancelOffer };
+    const rows = sellOffers
+      .filter(offer => offer.status !== OFFER_STATUS_INACTIVE)
+      .sort((p, c) => (p.ask_price_sort > c.ask_price_sort ? 1 : -1))
+      .map(toDisplayFormat);
     return (
       <OasisWidgetFrame
         heading={`SELL ORDERS`}
-        loadProgressSection={<LoadProgressSection loadedOffersList={sellOffers} offersTotalCount={sellOfferCount}/>}
+        loadProgressSection={
+          <LoadProgressSection
+            loadedOffersList={sellOffers}
+            offersTotalCount={sellOfferCount}
+          />
+        }
       >
         <OasisTable
           className={styles.table}
           onRowClick={this.onTableRowClick}
-          rows={sellOffers.sort((p, c) => p.ask_price_sort > c.ask_price_sort? 1 : -1).map(toDisplayFormat)}
-          col={colsDefinition(baseToken, quoteToken, orderActions)}/>
+          rows={rows}
+          col={colsDefinition(baseToken, quoteToken, orderActions)}
+        />
       </OasisWidgetFrame>
     );
   }
 }
 
-OasisSellOrders.displayName = 'OasisSellOrders';
+OasisSellOrders.displayName = "OasisSellOrders";
 OasisSellOrders.propTypes = propTypes;
 OasisSellOrders.defaultProps = defaultProps;
 export default CSSModules(OasisSellOrders, styles, { allowMultiple: true });

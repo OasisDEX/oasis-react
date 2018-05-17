@@ -13,6 +13,7 @@ import balances from '../selectors/balances';
 import {fulfilled, pending, rejected} from '../../utils/store';
 import {handleTransaction} from '../../utils/transactions/handleTransaction';
 import {defer} from '../deferredThunk';
+import findOffer from '../../utils/offers/findOffer';
 
 export const TAKE_BUY_OFFER = 'OFFER_TAKES/TAKE_BUY_OFFER';
 export const TAKE_SELL_OFFER = 'OFFER_TAKES/TAKE_SELL_OFFER';
@@ -161,6 +162,11 @@ const checkIfOfferTakeSubjectStillActiveEpic = (offerId) => async (dispatch, get
   dispatch(
     checkIfOfferTakeSubjectIsActive.fulfilled(isActive),
   );
+  if (false === isActive) {
+    dispatch(offersReducer.actions.markOfferAsInactive(
+      findOffer(activeOfferTakeOfferId, getState())
+    ));
+  }
   return isActive;
 };
 

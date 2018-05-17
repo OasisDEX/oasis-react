@@ -143,13 +143,11 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock }) => (dispatch) => {
 };
 
 const subscribeLogTakeEventsAction = createPromiseActions(SUBSCRIBE_LOG_TAKE_EVENTS);
-const subscribeLogTakeEventsEpic = (fromBlock) => async (dispatch) => {
+const subscribeLogTakeEventsEpic = (fromBlock) => dispatch => {
   dispatch(subscribeLogTakeEventsAction.pending());
   window.contracts.market.LogTake(
     {}, { fromBlock: fromBlock, toBlock: 'latest' },
-  ).then((err, logTake) => {
-    dispatch(addTradeHistoryEntry(logTake));
-  });
+  ).then((err, logTake) => dispatch(addTradeHistoryEntry(logTake)) );
   dispatch(subscribeLogTakeEventsAction.fulfilled());
 };
 
