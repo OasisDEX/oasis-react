@@ -26,6 +26,8 @@ import {
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
 import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBox";
+import { isPriceSet } from '../store/selectors';
+import InfoBox from '../components/InfoBox';
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -184,7 +186,9 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
             form={form}
             disableForm={this.state.disableForm}
           />
-
+          <InfoBox hidden={this.props.isPriceSet} noBorder>
+            Enter a price to unlock amount and total.
+          </InfoBox>
           <OasisOfferSummary
             disableBalanceWarning={this.isOfferMakeCompleted()}
             offerType={offerMakeType} />
@@ -233,7 +237,8 @@ export function mapStateToProps(state, props) {
     marketAddress: markets.activeMarketAddress(state),
     canMakeOffer: offerMakes.canMakeOffer(state, props.offerMakeType),
     buyToken: offerMakes.activeOfferMakeBuyToken(state, props.form),
-    sellToken: offerMakes.activeOfferMakeSellToken(state, props.form)
+    sellToken: offerMakes.activeOfferMakeSellToken(state, props.form),
+    isPriceSet: isPriceSet(state, props.offerMakeType)
   };
 }
 
