@@ -31,7 +31,7 @@ export class FlexBox extends PureComponent {
       ${className}
     `;
     return (
-      <div
+      <div hidden={this.props.hidden}
           style={{justifyContent: justifyContent,
             alignItems: alignItems,
             alignContent: alignContent}}

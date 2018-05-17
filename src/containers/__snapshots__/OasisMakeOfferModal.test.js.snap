@@ -30,6 +30,15 @@ exports[`(Container) OasisMakeOfferModal should render 1`] = `
     <Connect(ReduxForm)
       offerMakeType="OFFER_MAKES/MAKE_BUY_OFFER"
     />
+    <InfoBox
+      className=""
+      color="default"
+      hidden={true}
+      noBorder={true}
+      size="md"
+    >
+      Enter a price to unlock amount and total.
+    </InfoBox>
     <Connect(OasisOfferSummary)
       offerType="OFFER_MAKES/MAKE_BUY_OFFER"
     />
@@ -85,6 +94,7 @@ exports[`(Container) OasisMakeOfferModal will receive right props 1`] = `
 Object {
   "buyToken": "MKR",
   "canMakeOffer": false,
+  "isPriceSet": true,
   "marketAddress": "0x8cf1cab422a0b6b554077a361f8419cdf122a9f9",
   "sellToken": "DAI",
 }

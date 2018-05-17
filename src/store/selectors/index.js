@@ -184,21 +184,33 @@ const hasSufficientTokenAmountByOfferType = createSelector(
 );
 
 const getActiveOfferAllowanceStatus = createSelector(
-
-  (
-    rootState, offerType
-  ) => {
+  (rootState, offerType) => {
     switch (offerType) {
       case TAKE_SELL_OFFER:
       case TAKE_BUY_OFFER:
-        return offerTakes.getActiveOfferTakeAllowanceStatus(rootState, offerType);
+        return offerTakes.getActiveOfferTakeAllowanceStatus(
+          rootState,
+          offerType
+        );
       case MAKE_SELL_OFFER:
       case MAKE_BUY_OFFER:
-        return offerMakes.getActiveOfferMakeAllowanceStatus(rootState, offerType);
+        return offerMakes.getActiveOfferMakeAllowanceStatus(
+          rootState,
+          offerType
+        );
     }
-  }, allowanceStatus => Boolean(allowanceStatus)
+  },
+  allowanceStatus => Boolean(allowanceStatus)
 );
 
+const isPriceSet = createSelector((rootState, offerType) => {
+  switch (offerType) {
+    case MAKE_SELL_OFFER:
+      return offerMakes.isMakeSellOfferPriceSet(rootState);
+    case MAKE_BUY_OFFER:
+      return offerMakes.isMakeBuyOfferPriceSet(rootState);
+  }
+}, isPriceSet => isPriceSet);
 
 export {
   isGasEstimatePending,
@@ -209,4 +221,5 @@ export {
   getOfferBuyAndSellTokenByOfferType,
   hasSufficientTokenAmountByOfferType,
   getActiveOfferAllowanceStatus,
+  isPriceSet
 };
