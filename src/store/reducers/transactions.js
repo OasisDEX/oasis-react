@@ -78,7 +78,7 @@ const addTransaction = createPromiseActions('TX/ADD_TRANSACTION');
 const addTransactionEpic = (
   { txType, txHash, txMeta, txDispatchedTimestamp, txStartTimestamp },
   { latestBlockNumber = network.latestBlockNumber,
-    sync = syncTransaction,
+    syncTransaction = syncTransaction,
     transactionCheckInterval = transactions.transactionCheckInterval} = {}
   ) => (dispatch, getState) => {
 
@@ -98,16 +98,21 @@ const addTransactionEpic = (
     const complete = setInterval(async () => {
       const currentBlockNumber = latestBlockNumber(getState());
 
+      // console.log(currentBlockNumber, previousBlockNumber);
+
       if (currentBlockNumber !== previousBlockNumber) {
 
         let txReceipt;
 
         try {
-          txReceipt = (await dispatch(sync(txHash))).value;
+          txReceipt = (await dispatch(syncTransaction(txHash))).value;
         } catch (e) {
           //unlimited retries?
+          // console.log(e);
           return;
         }
+
+        // console.log(txReceipt);
 
         if (txReceipt == null) return;
 
