@@ -957,67 +957,67 @@ global.storeMock = {
     marketType: 'MARKET_TYPE_MATCHING_MARKET'
   },
   limits: {
-    limitsLoaded: false,
+    limitsLoaded: true,
     tokens: {
       DGD: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       GUP: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       'W-ETH': {
-        minSell: 0
+        minSell: "1000000000000"
       },
       RHOC: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       DAI: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       GNT: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       TIME: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       VSL: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       MLN: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       '1ST': {
-        minSell: 0
+        minSell: "1000000000000"
       },
       NMR: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       SNGLS: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       'OW-ETH': {
-        minSell: null
+        minSell: "1000000000000"
       },
       ICN: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       MKR: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       BAT: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       'W-GNT': {
-        minSell: 0
+        minSell: "1000000000000"
       },
       PLU: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       SAI: {
-        minSell: 0
+        minSell: "1000000000000"
       },
       REP: {
-        minSell: 0
+        minSell: "1000000000000"
       }
     }
   },

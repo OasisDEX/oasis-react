@@ -28,28 +28,25 @@ const initialState = fromJS({
   }
 });
 
-const INIT = 'LIMITS/INIT';
-const GET_MIN_SELL = 'LIMITS/GET_MIN_SELL';
-const GET_ALL_TRADED_TOKENS_MIN_SELL = 'LIMITS/GET_ALL_TRADED_TOKENS_MIN_SELL';
 
-const Init = createAction(
-  INIT,
+const init = createAction(
+  'LIMITS/INIT',
   () => null,
 );
 
 /**
  *
  */
-const GetTokenMinSell = createAction(
-  GET_MIN_SELL,
+const getTokenMinSell = createAction(
+  'LIMITS/GET_MIN_SELL',
   () => async () => {},
 );
 
 /**
  * Get min sell limits for all tokens traded.
  */
-const GetAllTradedTokenMinSellLimits = createAction(
-  GET_ALL_TRADED_TOKENS_MIN_SELL,
+const getAllTradedTokenMinSellLimits = createAction(
+  'LIMITS/GET_ALL_TRADED_TOKENS_MIN_SELL',
   async (marketContract, tokensContractsLists) =>
    Promise.all(
       Object.entries(tokensContractsLists).map(
@@ -63,13 +60,13 @@ const GetAllTradedTokenMinSellLimits = createAction(
 );
 
 const actions = {
-  Init,
-  GetTokenMinSell,
-  GetAllTradedTokenMinSellLimits
+  init,
+  getTokenMinSell,
+  getAllTradedTokenMinSellLimits
 };
 
 const reducer = handleActions({
-  [fulfilled(GetAllTradedTokenMinSellLimits)]: (state, {payload}) =>
+  [fulfilled(getAllTradedTokenMinSellLimits)]: (state, {payload}) =>
     state.update('tokens',
       tokens => {
       Object.entries(payload).forEach(
@@ -77,7 +74,7 @@ const reducer = handleActions({
       );
         return tokens;
       }
-    )
+    ).set('limitsLoaded', true)
 }, initialState);
 
 export default {

@@ -39,6 +39,12 @@ exports[`(Container) OasisMakeOfferModal should render 1`] = `
     >
       Enter a price to unlock amount and total.
     </InfoBox>
+    <div>
+      wdwdqw
+      <Connect(OasisOfferBelowDustLimit)
+        offerType="OFFER_MAKES/MAKE_BUY_OFFER"
+      />
+    </div>
     <Connect(OasisOfferSummary)
       offerType="OFFER_MAKES/MAKE_BUY_OFFER"
     />
