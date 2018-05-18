@@ -1,22 +1,24 @@
 /* global shallow describe it expect */
 /* eslint-disable import/first */
 import React from 'react';
-import Immutable from 'immutable';
+import { fromJS }  from 'immutable';
 
 import {
-  OfferTakeAmountBelowLimitWrapper,
+  OasisOfferBelowDustLimitWrapper,
   mapStateToProps,
   mapDispatchToProps
-} from './OfferTakeAmountBelowLimit';
+} from './OasisOfferBelowDustLimit';
 import { shallow } from 'enzyme';
+import { MAKE_BUY_OFFER } from '../constants';
 
-describe('(Container) OfferTakeAmountBelowLimit', () => {
-  const state = Immutable.fromJS(global.storeMock);
-  const initialProps = mapStateToProps(state);
+describe('(Container) OasisOfferBelowDustLimit', () => {
+  const state = fromJS(global.storeMock);
+  const initialProps = mapStateToProps(state, { offerType: MAKE_BUY_OFFER });
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,
-    ...initialProps
+    ...initialProps,
+    offerType: MAKE_BUY_OFFER
   };
 
   it('will receive right props', () => {
@@ -30,7 +32,7 @@ describe('(Container) OfferTakeAmountBelowLimit', () => {
 
   it('should render', () => {
     const wrapper = shallow(
-      <OfferTakeAmountBelowLimitWrapper {...props}/>
+      <OasisOfferBelowDustLimitWrapper {...props}/>
     );
     expect(wrapper).toMatchSnapshot();
   });

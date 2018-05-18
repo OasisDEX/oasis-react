@@ -28,6 +28,7 @@ import {
 import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBox";
 import { isPriceSet } from '../store/selectors';
 import InfoBox from '../components/InfoBox';
+import OasisOfferBelowDustLimitWrapper  from './OasisOfferBelowDustLimit';
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -189,6 +190,10 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
           <InfoBox hidden={this.props.isPriceSet} noBorder>
             Enter a price to unlock amount and total.
           </InfoBox>
+          <div>
+            wdwdqw
+            <OasisOfferBelowDustLimitWrapper offerType={offerMakeType}/>
+          </div>
           <OasisOfferSummary
             disableBalanceWarning={this.isOfferMakeCompleted()}
             offerType={offerMakeType} />

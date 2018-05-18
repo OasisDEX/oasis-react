@@ -9,7 +9,10 @@ import OasisWidgetFrame from "../containers/OasisWidgetFrame";
 import OasisTokenBalanceSummary from "./OasisTokenBalanceSummary";
 import OfferMakeForm from "./OasisOfferMakeForm";
 import offerMakesReducer from "../store/reducers/offerMakes";
-import { MAKE_SELL_OFFER, MAKE_SELL_OFFER_FORM_NAME } from "../constants";
+import {
+  MAKE_SELL_OFFER,
+  MAKE_SELL_OFFER_FORM_NAME
+} from "../constants";
 import OasisMakeOfferModalWrapper from "./OasisMakeOfferModal";
 import offerMakes from "../store/selectors/offerMakes";
 import OasisInsufficientAmountOfToken from "../components/OasisInsufficientAmountOfToken";
@@ -19,6 +22,7 @@ import styles from "./OasisMakeOffer.scss";
 import CSSModules from "react-css-modules";
 import InfoBox from "../components/InfoBox";
 import isVolumeOrPriceEmptyOrZero from "../store/selectors/isVolumeOrPriceEmptyOrZero";
+import OasisOfferBelowDustLimitWrapper from "./OasisOfferBelowDustLimit";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -46,8 +50,7 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
       baseToken,
       quoteToken,
       hasSufficientTokenAmount,
-      isPriceSet,
-      isVolumeEmptyOrZero
+      canMakeOffer
     } = this.props;
     const formProps = {
       baseToken,
@@ -62,6 +65,9 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
         <div>
           {this.getModal(formProps)}
           <OfferMakeForm {...formProps} />
+        </div>
+        <div>
+          <OasisOfferBelowDustLimitWrapper offerType={MAKE_SELL_OFFER} />
         </div>
         <div className={styles.footer}>
           <div className={styles.helpBlock}>
@@ -79,9 +85,7 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
             className={styles.callToAction}
             color="danger"
             size="md"
-            disabled={
-              !isPriceSet || isVolumeEmptyOrZero || !hasSufficientTokenAmount
-            }
+            disabled={!canMakeOffer}
             onClick={this.onModalOpen}
           >
             Sell
@@ -108,6 +112,10 @@ export function mapStateToProps(state) {
       state,
       MAKE_SELL_OFFER
     ),
+    canMakeOffer:
+      tokens.activeTradingPair(state) && platform.contractsLoaded(state)
+        ? offerMakes.canMakeOffer(state, MAKE_SELL_OFFER, true)
+        : false,
     isModalOpen: offerMakes.isOfferMakeModalOpen(state, MAKE_SELL_OFFER),
     baseToken: tokens.activeTradingPairBaseToken(state),
     quoteToken: tokens.activeTradingPairQuoteToken(state),

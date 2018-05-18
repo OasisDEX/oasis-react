@@ -19,6 +19,11 @@ exports[`(Container) OasisMakeBuyOffer should render 1`] = `
     />
   </div>
   <div>
+    <Connect(OasisOfferBelowDustLimit)
+      offerType="OFFER_MAKES/MAKE_BUY_OFFER"
+    />
+  </div>
+  <div>
     <div>
       <OasisInsufficientAmountOfToken
         noBorder={true}
@@ -63,6 +68,7 @@ Object {
     "quoteToken": "DAI",
   },
   "baseToken": undefined,
+  "canMakeOffer": false,
   "contractsLoaded": true,
   "hasSufficientTokenAmount": false,
   "isModalOpen": false,

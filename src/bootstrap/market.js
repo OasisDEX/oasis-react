@@ -14,7 +14,7 @@ const init = async (dispatch, activeNetwork) =>
     dispatch(marketsReducer.actions.checkMarketCloseTime()),
     dispatch(marketsReducer.actions.checkIfOrderMatchingIsEnabled()),
     dispatch(marketsReducer.actions.checkIfBuyEnabled()),
-    dispatch(limitsReducer.actions.GetAllTradedTokenMinSellLimits(window.contracts.market, window.contracts.tokens)),
+    dispatch(limitsReducer.actions.getAllTradedTokenMinSellLimits(window.contracts.market, window.contracts.tokens)),
     dispatch(tradesReducer.actions.initializeVolumes()),
     dispatch(tradesReducer.actions.initMarketHistory()),
     dispatch(tradesReducer.actions.initTradesHistory()),

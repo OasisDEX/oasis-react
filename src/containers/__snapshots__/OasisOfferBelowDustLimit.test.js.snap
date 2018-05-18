@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisOfferBelowDustLimit should render 1`] = `
+<div
+  hidden={true}
+>
+  <InfoBoxWithIco
+    alignItems="center"
+    color="danger"
+    fullWidth={true}
+    icon="warning"
+  >
+    You are trying to create a 
+    <b>
+      sell
+    </b>
+    order below the minimum 
+    <b>
+      market limit
+    </b>
+    , which is 
+    <b>
+      0.00000
+       
+    </b>
+    .
+  </InfoBoxWithIco>
+</div>
+`;
+
+exports[`(Container) OasisOfferBelowDustLimit will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisOfferBelowDustLimit will receive right props 1`] = `
+Object {
+  "isOfferBelowLimit": undefined,
+  "tokenMinLimit": "0",
+  "tokenName": undefined,
+}
+`;
