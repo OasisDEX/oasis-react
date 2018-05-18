@@ -71,6 +71,7 @@ const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
       }
     })
     .catch((error) => {
+      console.log("Error in healthCheck!", error);
       dispatch(networkReducer.actions.disconnected());
       errorHandler.handle(error);
     });

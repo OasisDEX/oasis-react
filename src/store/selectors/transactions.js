@@ -123,7 +123,7 @@ const currentTxNonce = createSelector(
 
 const transactionCheckInterval = createSelector(
   transactions,
-  s => s.get('transactionCheckInterval')
+  s => s.get('transactionCheckIntervalMs')
 );
 
 

@@ -78,7 +78,7 @@ const addTransaction = createPromiseActions('TX/ADD_TRANSACTION');
 const addTransactionEpic = (
   { txType, txHash, txMeta, txDispatchedTimestamp, txStartTimestamp },
   { latestBlockNumber = network.latestBlockNumber,
-    syncTransaction = syncTransaction,
+    sync = syncTransaction,
     transactionCheckInterval = transactions.transactionCheckInterval} = {}
   ) => (dispatch, getState) => {
 
@@ -103,7 +103,7 @@ const addTransactionEpic = (
         let txReceipt;
 
         try {
-          txReceipt = (await dispatch(syncTransaction(txHash))).value;
+          txReceipt = (await dispatch(sync(txHash))).value;
         } catch (e) {
           //unlimited retries?
           return;

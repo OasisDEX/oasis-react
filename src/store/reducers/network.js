@@ -178,7 +178,7 @@ const checkNetworkInitialEpic = () => async (dispatch, getState) => {
       dispatch(balancesReducer.actions.getAllTradedTokensBalances(window.contracts.tokens)),
     ]).then(onNetworkCheckCompleted(dispatch, getState));
   } catch (e) {
-    console.error(e);
+    console.warn("Can't fetch network data!", e);
   }
 };
 
