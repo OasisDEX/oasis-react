@@ -30,7 +30,7 @@ export class OasisIsTokenTradingEnabledByUserWrapper extends PureComponent {
         </div>
         <div className={styles.detailsTradingSecCol}>
           <span className={`${styles.tradingStatus} ${isTokenTradingEnabledByUser ? styles.active: styles.disabled}`}>
-            {isTokenTradingEnabledByUser ? 'active' : 'disabled' }
+            {isTokenTradingEnabledByUser ? 'enabled' : 'disabled' }
           </span>
         </div>
       </FlexBox>
