@@ -5,17 +5,18 @@ import PropTypes from 'prop-types';
 import styles from './OasisWidgetFrame.scss';
 import CSSModules from 'react-css-modules';
 
-const OasisWidgetFrame = (props) => {
+const OasisWidgetFrame = (properties) => {
+  const { heading, headingClassName, loadProgressSection, spaceForContent, children, headingChildren, ...props } = properties;
   return (
-    <section styleName="OasisWidgetFrame">
+    <section styleName="OasisWidgetFrame" {...props}>
       <div className="row">
         <div className="col-md-12">
-          <h4 styleName="Heading" className={props.className}>{props.heading} {props.loadProgressSection}{props.headingChildren}</h4>
+          <h4 styleName="Heading" className={headingClassName}>{heading} {loadProgressSection}{headingChildren}</h4>
         </div>
       </div>
 
-      <div styleName={props.spaceForContent ? "OasisWidgetContent" : ""}>
-        {props.children}
+      <div styleName={spaceForContent ? "OasisWidgetContent" : ""}>
+        {children}
       </div>
     </section>
   );

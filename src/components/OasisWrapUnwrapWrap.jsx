@@ -42,13 +42,13 @@ class OasisWrapUnwrapWrap extends PureComponent {
   renderDontWrapAllEtherWarning() {
     const { activeUnwrappedToken, activeUnwrappedTokenBalance } = this.props;
     if(activeUnwrappedToken === TOKEN_ETHER && activeUnwrappedTokenBalance && activeUnwrappedTokenBalance.gt(0)) {
-      return (<OasisDontWrapAllEther/>);
+      return (<OasisDontWrapAllEther className={styles.dontWrapAllEther}/>);
     } else { return null; }
   }
   render() {
     const { activeUnwrappedToken, transactionState } = this.props;
     return (
-      <OasisWidgetFrame heading={'Wrap'} spaceForContent={true} className={styles.heading}>
+      <OasisWidgetFrame heading={'Wrap'} spaceForContent={true}>
         {this.renderDontWrapAllEtherWarning()}
         <OasisTokenBalanceSummary summary="Wallet">
           {this.getBalance()}

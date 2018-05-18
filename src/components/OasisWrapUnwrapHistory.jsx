@@ -7,6 +7,7 @@ import moment from 'moment';
 
 import OasisWidgetFrame from '../containers/OasisWidgetFrame';
 import OasisTable from '../components/OasisTable';
+import styles from './OasisWrapUnwrapHistory.scss';
 
 import { formatAmount } from '../utils/tokens/pair';
 
@@ -40,6 +41,7 @@ export class OasisWrapUnwrapHistory extends PureComponent {
         <div>
           {<OasisTable metadata={{activeNetworkName}}
                        onRowClick={this.onRowClick}
+                       className={styles.table}
                        rows={wrapUnwrapHistoryList.toJSON()}
                        col={wrapUnwrapHistoryColsDefinition()}
           />}

@@ -24,7 +24,7 @@ class OasisWrapUnwrapUnwrap extends PureComponent {
   render() {
     const { activeWrappedToken, onSubmit, transactionState } = this.props;
     return (
-      <OasisWidgetFrame heading={"Unwrap"} spaceForContent={true}>
+      <OasisWidgetFrame heading={"Unwrap"} spaceForContent={true} className={styles.widgetFrame}>
         <OasisTokenBalanceSummary summary="Wrapped" className={styles.balance}>
           {
             <OasisTokenBalanceWrapper
