@@ -9,7 +9,8 @@ import OasisTable from "./OasisTable";
 import { toDisplayFormat } from "../utils/orders";
 import { LoadProgressSection } from "../utils/offers/loadProgress";
 import { TAKE_BUY_OFFER } from "../store/reducers/offerTakes";
-import { OFFER_STATUS_INACTIVE } from '../store/reducers/offers';
+import { OFFER_STATUS_INACTIVE } from "../store/reducers/offers";
+import { OasisSignificantDigitsWrapper } from "../containers/OasisSignificantDigits";
 
 const propTypes = PropTypes && {
   onSetOfferTakeModalOpen: PropTypes.func.isRequired,
@@ -23,12 +24,21 @@ const defaultProps = {};
 const actionsColumnTemplate = function() {
   return null;
 };
+const priceTemplate = row => (
+  <OasisSignificantDigitsWrapper amount={row.bid_price} />
+);
+const baseTokenTemplate = row => (
+  <OasisSignificantDigitsWrapper amount={row.buy_how_much} />
+);
+const quoteTokenTemplate = row => (
+  <OasisSignificantDigitsWrapper amount={row.sell_how_much} />
+);
 
 const colsDefinition = (baseToken, quoteToken, orderActions) => {
   return [
-    { heading: `price`, key: "bid_price" },
-    { heading: `${quoteToken}`, key: "sell_how_much" },
-    { heading: `${baseToken}`, key: "buy_how_much" },
+    { heading: `price`, template: priceTemplate },
+    { heading: `${quoteToken}`, template: quoteTokenTemplate },
+    { heading: `${baseToken}`, template: baseTokenTemplate },
     { heading: ``, template: actionsColumnTemplate.bind(orderActions) }
   ];
 };

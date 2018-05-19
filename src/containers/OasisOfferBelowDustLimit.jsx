@@ -31,8 +31,7 @@ export class OasisOfferBelowDustLimitWrapper extends PureComponent {
     return (
       <div hidden={!isOfferBelowLimit}>
         <InfoBoxWithIco fullWidth icon="warning" color="danger">
-          You are trying to create a <b>{offerTypeLabel(offerType)}</b>
-          order
+          You are trying to create a <b>{offerTypeLabel(offerType)}</b> order
           below the minimum <b>market limit</b>, which is <b>{formatAmount(tokenMinLimit, false, null, 5)} {tokenName}</b>.
         </InfoBoxWithIco>
       </div>

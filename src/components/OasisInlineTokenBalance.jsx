@@ -4,6 +4,7 @@ import { PropTypes } from 'prop-types';
 
 import { formatAmount } from '../utils/tokens/pair';
 import OasisLoadingIndicator from './OasisLoadingIndicator';
+import OasisSignificantDigitsWrapper  from '../containers/OasisSignificantDigits';
 
 
 const propTypes = PropTypes && {
@@ -20,7 +21,7 @@ class OasisInlineTokenBalance extends PureComponent {
     if ((!!balance) && token) {
       return (
         <span>
-          {formatAmount(balance, inWei)} <b>{token}</b>
+          <OasisSignificantDigitsWrapper amount={formatAmount(balance, inWei)}/> <b>{token}</b>
         </span>
       );
     } else {

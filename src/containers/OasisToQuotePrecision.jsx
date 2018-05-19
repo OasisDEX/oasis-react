@@ -4,20 +4,15 @@ import { PropTypes } from 'prop-types';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import OasisBuyMaker from '../components/OasisBuyMaker';
-import OasisSellMaker from '../components/OasisSellMaker';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object,
+  actions: PropTypes.object.isRequired
 };
 
-export class OasisTradeBuySellWrapper extends PureComponent {
+export class OasisToQuotePrecisionWrapper extends PureComponent {
   render() {
     return (
-      <div>
-        <OasisBuyMaker/>
-        <OasisSellMaker/>
-      </div>
+      <div></div>
     );
   }
 }
@@ -25,12 +20,11 @@ export class OasisTradeBuySellWrapper extends PureComponent {
 export function mapStateToProps(state) {
   return {};
 }
-
 export function mapDispatchToProps(dispatch) {
   const actions = {};
   return { actions: bindActionCreators(actions, dispatch) };
 }
 
-OasisTradeBuySellWrapper.propTypes = propTypes;
-OasisTradeBuySellWrapper.displayName = 'OasisTradeBuySell';
-export default connect(mapStateToProps, mapDispatchToProps)(OasisTradeBuySellWrapper);
+OasisToQuotePrecisionWrapper.propTypes = propTypes;
+OasisToQuotePrecisionWrapper.displayName = 'OasisToQuotePrecision';
+export default connect(mapStateToProps, mapDispatchToProps)(OasisToQuotePrecisionWrapper);

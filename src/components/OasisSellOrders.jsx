@@ -9,6 +9,7 @@ import { TAKE_SELL_OFFER } from "../store/reducers/offerTakes";
 import styles from "./OasisSellOrders.scss";
 import CSSModules from "react-css-modules";
 import { OFFER_STATUS_INACTIVE } from "../store/reducers/offers";
+import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 const propTypes = PropTypes && {
@@ -25,11 +26,21 @@ const actionsColumnTemplate = function() {
   return null;
 };
 
+const priceTemplate = row => (
+  <OasisSignificantDigitsWrapper amount={row.ask_price} />
+);
+const baseTokenTemplate = row => (
+  <OasisSignificantDigitsWrapper amount={row.sell_how_much} />
+);
+const quoteTokenTemplate = row => (
+  <OasisSignificantDigitsWrapper amount={row.buy_how_much} />
+);
+
 const colsDefinition = (baseToken, quoteToken, orderActions) => {
   return [
-    { heading: `price`, key: "ask_price" },
-    { heading: `${quoteToken}`, key: "buy_how_much" }, // how much will pay
-    { heading: `${baseToken}`, key: "sell_how_much" }, // how much  will get
+    { heading: `price`, template: priceTemplate },
+    { heading: `${quoteToken}`, template: quoteTokenTemplate }, // how much will pay
+    { heading: `${baseToken}`, template: baseTokenTemplate }, // how much  will get
     { heading: ``, template: actionsColumnTemplate.bind(orderActions) }
   ];
 };

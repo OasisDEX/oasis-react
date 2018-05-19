@@ -7,6 +7,8 @@ import OasisInlineTokenBalance from "./OasisInlineTokenBalance";
 import { fromJS } from 'immutable';
 
 /* eslint-disable react/prop-types */
+
+
 const colDefinition = [
   { heading: "coin", key: "unwrappedToken" },
   {

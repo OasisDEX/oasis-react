@@ -27,13 +27,13 @@ const tokenMinSellLimitInEther = createSelector(
 
 const quoteTokenMinSellLimitInWei = createSelector(
   tokenLimitsList,
-  tokens.activeTradingPairBaseToken,
+  tokens.activeTradingPairQuoteToken,
   (s, quoteToken) => s.getIn([quoteToken, 'minSell'])
 );
 
 const quoteTokenMinSellLimitInEther = createSelector(
   tokenLimitsList,
-  tokens.activeTradingPairBaseToken,
+  tokens.activeTradingPairQuoteToken,
   (s, quoteToken) => web3.fromWei(s.getIn([quoteToken, 'minSell']))
 );
 

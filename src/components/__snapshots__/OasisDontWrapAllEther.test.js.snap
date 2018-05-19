@@ -6,6 +6,31 @@ exports[`(Component) OasisDontWrapAllEther should render 1`] = `
   color="danger"
   size="md"
 >
-  Do not wrap all of your ETH! Otherwise you cannot pay for transactions.
+  <div
+    style={
+      Object {
+        "width": "100%",
+      }
+    }
+  >
+    <span
+      style={
+        Object {
+          "textDecoration": "underline",
+        }
+      }
+    >
+      Do not wrap all
+    </span>
+     of your 
+    <b>
+      ETH
+    </b>
+    ! 
+    <br />
+    <div>
+      Otherwise you will not be able to pay for transactions.
+    </div>
+  </div>
 </InfoBox>
 `;

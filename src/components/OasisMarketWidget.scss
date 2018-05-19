@@ -6,6 +6,11 @@
     text-align: center;
   }
 
+  td {
+    padding-left:  8px;
+    padding-right: 8px;
+  }
+
   th:nth-child(2),
   td:nth-child(2) {
     flex-basis: 100px;
