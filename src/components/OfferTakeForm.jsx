@@ -191,7 +191,6 @@ export class OfferTakeForm extends PureComponent {
                   onChange={this.onVolumeFieldChange}
                   normalize={normalize}
                   name="volume"
-                  format={formatValue}
                   component="input"
                   type="text"
                   validate={validateVolume}
@@ -219,7 +218,6 @@ export class OfferTakeForm extends PureComponent {
                     autoComplete="off"
                     style={fieldStyle}
                     min={0}
-                    format={formatValue}
                     onChange={this.onTotalFieldChange}
                     normalize={normalize}
                     name="total"
