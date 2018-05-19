@@ -5,6 +5,7 @@ import { PropTypes } from "prop-types";
 import styles from "./OasisSoldReceivedAmounts.scss";
 import FlexBox from "./FlexBox";
 import CSSModules from "react-css-modules/dist/index";
+import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
 
 const propTypes = PropTypes && {
   sellToken: PropTypes.string.isRequired,
@@ -17,7 +18,13 @@ const defaultProps = {};
 const TokenAmount = ({ tokenName, tokenAmount, sign, color, ...props }) => (
   <FlexBox alignItems="center" {...props}>
     <span className={`${styles.circleIco} ${styles[color]}`}>{sign}</span>
-    <span className={styles.baseText}>{tokenAmount.toString()}&nbsp;</span>
+    <span className={styles.baseText}>
+      { tokenAmount !== 'N/A' ? (
+        <OasisSignificantDigitsWrapper amount={tokenAmount.toString()} />
+      ) : (
+        "N/A"
+      )}&nbsp;
+    </span>
     <span className={styles.bolderText}>{tokenName}</span>
   </FlexBox>
 );
@@ -61,7 +68,13 @@ TokenSoldAmount.propTypes = {
 
 export class OasisSoldReceivedAmounts extends PureComponent {
   render() {
-    const { amountReceived, amountSold, sellToken, buyToken, ...props } = this.props;
+    const {
+      amountReceived,
+      amountSold,
+      sellToken,
+      buyToken,
+      ...props
+    } = this.props;
     return (
       <div {...props}>
         <FlexBox className={styles.buying}>

@@ -18,15 +18,15 @@ exports[`(Component) OasisMarketHistory should render 1`] = `
         },
         Object {
           "heading": "price",
-          "key": "price",
+          "template": [Function],
         },
         Object {
           "heading": "W-ETH",
-          "key": "quoteAmount",
+          "template": [Function],
         },
         Object {
           "heading": "MKR",
-          "key": "baseAmount",
+          "template": [Function],
         },
       ]
     }

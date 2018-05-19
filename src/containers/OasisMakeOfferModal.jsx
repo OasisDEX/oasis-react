@@ -191,7 +191,6 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
             Enter a price to unlock amount and total.
           </InfoBox>
           <div>
-            wdwdqw
             <OasisOfferBelowDustLimitWrapper offerType={offerMakeType}/>
           </div>
           <OasisOfferSummary

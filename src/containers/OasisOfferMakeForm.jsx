@@ -22,6 +22,8 @@ import OasisButton from "../components/OasisButton";
 import styles from "./OasisOfferMakeForm.scss";
 import CSSModules from "react-css-modules";
 import OasisVolumeIsGreaterThanUserBalance from "../components/OasisVolumeIsGreaterThanUserBalance";
+import { formatAmount, PRICE_DECIMAL } from '../utils/tokens/pair';
+import isNumeric from '../utils/numbers/isNumeric';
 
 const propTypes = PropTypes && {
   // activeOfferMakeOfferData: ImmutablePropTypes.map.isRequired,
@@ -125,6 +127,13 @@ export class OfferMakeForm extends PureComponent {
 
   onTotalFieldSectionBlur() {
     this.setState({ showMaxButton: false });
+  }
+
+  formatField(value, fieldName){
+    console.log({value, fieldName});
+    if (isNumeric(value)) {
+      return formatAmount(value, false, null, PRICE_DECIMAL);
+    }
   }
 
   render() {

@@ -4,13 +4,13 @@ import React from 'react';
 import Immutable from 'immutable';
 
 import {
-  OasisTradeBuySellWrapper,
+  OasisToQuotePrecisionWrapper,
   mapStateToProps,
-  mapDispatchToProps,
-} from './OasisTradeBuySell';
+  mapDispatchToProps
+} from './OasisToQuotePrecision';
 import { shallow } from 'enzyme';
 
-describe('(Container) OasisTradeBuySell', () => {
+describe('(Container) OasisToQuotePrecision', () => {
   const state = Immutable.fromJS({});
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
@@ -23,13 +23,14 @@ describe('(Container) OasisTradeBuySell', () => {
     expect(initialProps).toMatchSnapshot();
   });
 
+
   it('will receive right actions', () => {
     expect(initialActions).toMatchSnapshot();
   });
 
   it('should render', () => {
     const wrapper = shallow(
-      <OasisTradeBuySellWrapper {...props}/>,
+      <OasisToQuotePrecisionWrapper {...props}/>
     );
     expect(wrapper).toMatchSnapshot();
   });

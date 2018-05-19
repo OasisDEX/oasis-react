@@ -19,15 +19,15 @@ exports[`(Component) OasisBuyOrders should render 1`] = `
       Array [
         Object {
           "heading": "price",
-          "key": "bid_price",
+          "template": [Function],
         },
         Object {
           "heading": "W-ETH",
-          "key": "sell_how_much",
+          "template": [Function],
         },
         Object {
           "heading": "MKR",
-          "key": "buy_how_much",
+          "template": [Function],
         },
         Object {
           "heading": "",

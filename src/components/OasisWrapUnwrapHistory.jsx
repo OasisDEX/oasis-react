@@ -10,6 +10,7 @@ import OasisTable from '../components/OasisTable';
 import styles from './OasisWrapUnwrapHistory.scss';
 
 import { formatAmount } from '../utils/tokens/pair';
+import OasisSignificantDigitsWrapper  from '../containers/OasisSignificantDigits';
 
 
 const propTypes = PropTypes && {
@@ -17,13 +18,14 @@ const propTypes = PropTypes && {
 
 
 
+const amountTemplate = row => <OasisSignificantDigitsWrapper amount={formatAmount(row.tokenAmount, true)}/>;
 /* eslint-disable react/prop-types */
 const wrapUnwrapHistoryColsDefinition = () => [
   { heading: 'date', template: ({ timestamp }) => moment.unix(timestamp).format('DD-MM-HH:mm') },
   { heading: 'action', key: 'action' },
 // eslint-disable-next-line react/display-name
   { heading: 'coin', key: 'tokenName' },
-  { heading: `amount`, template: ({tokenAmount}) => formatAmount(tokenAmount, true) },
+  { heading: `amount`, template: amountTemplate },
 ];
 
 

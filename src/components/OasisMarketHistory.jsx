@@ -12,6 +12,7 @@ import CSSModules from 'react-css-modules';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import createEtherscanTransactionLink from '../utils/createEtherscanTransactionLink';
+import { OasisSignificantDigitsWrapper } from '../containers/OasisSignificantDigits';
 
 const propTypes = PropTypes && {
   activeTradingPair: PropTypes.object.isRequired,
@@ -20,13 +21,18 @@ const propTypes = PropTypes && {
 };
 const defaultProps = {};
 
+
+const baseTokenTemplate = row => (<OasisSignificantDigitsWrapper amount={row.baseAmount}/>);
+const quoteTokenTemplate = row => (<OasisSignificantDigitsWrapper amount={row.quoteAmount}/>);
+const priceTemplate = row => (<OasisSignificantDigitsWrapper amount={row.price}/>);
+
 const colsDefinition = (baseToken, quoteToken) => {
   return [
     { heading: 'date', key: 'date' },
     { heading: 'action', key: 'tradeType' },
-    { heading: `price`, key: 'price' },
-    { heading: `${quoteToken}`, key: 'quoteAmount' },
-    { heading: `${baseToken}`, key: 'baseAmount' },
+    { heading: `price`, template: priceTemplate },
+    { heading: `${quoteToken}`, template: quoteTokenTemplate },
+    { heading: `${baseToken}`, template: baseTokenTemplate },
   ];
 };
 

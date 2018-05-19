@@ -14,7 +14,7 @@ exports[`(Container) OasisOfferBelowDustLimit should render 1`] = `
     <b>
       sell
     </b>
-    order below the minimum 
+     order below the minimum 
     <b>
       market limit
     </b>

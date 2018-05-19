@@ -80,7 +80,7 @@ export class OfferTakeForm extends PureComponent {
   onVolumeFieldChange(event, newValue, previousValue) {
     const { volumeFieldValueChanged } = this.props.actions;
     if (newValue.toString() !== previousValue.toString()) {
-      setTimeout(()=> volumeFieldValueChanged(newValue), 0);
+      setTimeout(() => volumeFieldValueChanged(newValue), 0);
       // if(parseFloat(newValue)) {
       //   this.estimateGas();
       // }
@@ -90,12 +90,13 @@ export class OfferTakeForm extends PureComponent {
   onTotalFieldChange(event, newValue, previousValue) {
     const { totalFieldValueChanged } = this.props.actions;
     if (newValue.toString() !== previousValue.toString()) {
-      setTimeout(()=> totalFieldValueChanged(newValue), 0);
+      setTimeout(() => totalFieldValueChanged(newValue), 0);
       // if(parseFloat(newValue)) {
       //   this.estimateGas();
       // }
     }
   }
+
 
   setMaxButton() {
     if (web3.toBigNumber(this.props.activeBaseTokenBalance).gt(0)) {
@@ -189,8 +190,8 @@ export class OfferTakeForm extends PureComponent {
                   style={fieldStyle}
                   onChange={this.onVolumeFieldChange}
                   normalize={normalize}
-                  onBlur={formatValue}
                   name="volume"
+                  format={formatValue}
                   component="input"
                   type="text"
                   validate={validateVolume}
@@ -199,11 +200,12 @@ export class OfferTakeForm extends PureComponent {
                   disabled={disableForm}
                 />
                 <div className={styles.errorMessage}>
-                  {(isVolumeGreaterThanOfferMax && !disableForm) && (
-                    <VolumeIsOverTheOfferMax
-                      offerMax={isVolumeGreaterThanOfferMax}
-                    />
-                  )}
+                  {isVolumeGreaterThanOfferMax &&
+                    !disableForm && (
+                      <VolumeIsOverTheOfferMax
+                        offerMax={isVolumeGreaterThanOfferMax}
+                      />
+                    )}
                 </div>
               </td>
               <td className={tableStyles.currency}>{volumeToken}</td>
@@ -217,9 +219,9 @@ export class OfferTakeForm extends PureComponent {
                     autoComplete="off"
                     style={fieldStyle}
                     min={0}
+                    format={formatValue}
                     onChange={this.onTotalFieldChange}
                     normalize={normalize}
-                    onBlur={formatValue}
                     name="total"
                     component="input"
                     type="text"
@@ -236,7 +238,6 @@ export class OfferTakeForm extends PureComponent {
       </form>
     );
   }
-
   // componentDidMount() {
   //    setTimeout(()=> this.props.estimateGas(), 500)
   // }

@@ -3,9 +3,9 @@ import { ETH_UNIT_ETHER } from '../../constants';
 import web3 from '../../bootstrap/web3';
 import { ASK, BID } from '../../store/reducers/trades';
 
-export const PRICE_DECIMAL = 4;
-export const VOLUME_DECIMAL = 2;
-export const AMOUNT_DECIMAL = 3;
+export const PRICE_DECIMAL = 5;
+export const VOLUME_DECIMAL = 5;
+export const AMOUNT_DECIMAL = 5;
 
 const format = (baseToken, quoteToken) => `${baseToken}/${quoteToken}`;
 const trades = (marketData, baseToken, quoteToken) =>

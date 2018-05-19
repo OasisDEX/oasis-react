@@ -15,7 +15,12 @@ class OasisDontWrapAllEther extends PureComponent {
   render() {
     return (
       <InfoBox color='danger' {...this.props}>
-        Do not wrap all of your ETH! Otherwise you cannot pay for transactions.
+        <div style={{width: '100%'}}>
+          <span style={{ textDecoration:'underline' }}>Do not wrap all</span> of your <b>ETH</b>! <br/>
+          <div>
+            Otherwise you will not be able to pay for transactions.
+          </div>
+        </div>
       </InfoBox>
     );
   }
