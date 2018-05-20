@@ -7,10 +7,9 @@ import { fulfilled, pending } from '../../utils/store';
 import { createPromiseActions } from '../../utils/createPromiseActions';
 import tokens from '../selectors/tokens';
 import getTokenByAddress from '../../utils/tokens/getTokenByAddress';
-import { web3p } from '../../bootstrap/web3';
 import { convertTo18Precision } from '../../utils/conversion';
 import network from '../selectors/network';
-import transactions, { TX_OFFER_CANCEL, TX_OFFER_MAKE, TX_STATUS_CANCELLED_BY_USER } from './transactions';
+import { TX_OFFER_CANCEL } from './transactions';
 import offers from '../selectors/offers';
 import findOffer from '../../utils/offers/findOffer';
 import { STATUS_COMPLETED, STATUS_ERROR, STATUS_PRISTINE } from './platform';
@@ -107,6 +106,9 @@ const syncOffer = (offerId, syncType = OFFER_SYNC_TYPE_INITIAL, previousOfferSta
   );
 
   const id = offerId.toString();
+  await dispatch(
+    getTradingPairOfferCount(baseToken, quoteToken),
+  );
 
   switch (syncType) {
 
@@ -142,9 +144,6 @@ const syncOffer = (offerId, syncType = OFFER_SYNC_TYPE_INITIAL, previousOfferSta
           syncType: OFFER_SYNC_TYPE_NEW_OFFER,
         }),
       );
-      dispatch(
-        getTradingPairOfferCount(baseToken, quoteToken),
-      );
       break;
 
     case OFFER_SYNC_TYPE_UPDATE: {
@@ -163,9 +162,6 @@ const syncOffer = (offerId, syncType = OFFER_SYNC_TYPE_INITIAL, previousOfferSta
           previousOfferState,
         }),
       );
-      dispatch(
-        getTradingPairOfferCount(baseToken, quoteToken),
-      );
       break;
     }
   }
@@ -181,7 +177,8 @@ const loadBuyOffersEpic = (offerCount, sellToken, buyToken) => async (dispatch) 
   let currentBuyOfferId = (await dispatch(getBestOffer(buyToken, sellToken))).value.toNumber();
   const buyOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
   dispatch(loadBuyOffers.pending(buyOffersTradingPair));
-  while (offerCount.buyOfferCount) {
+  while (currentBuyOfferId !== 0) {
+    console.log({currentBuyOfferId})
     dispatch(syncOffer(currentBuyOfferId));
     currentBuyOfferId = (await dispatch(getWorseOffer(currentBuyOfferId))).value.toNumber();
     --offerCount.buyOfferCount;
@@ -197,7 +194,7 @@ const loadSellOffersEpic = (offerCount, sellToken, buyToken) => async (dispatch)
   let currentSellOfferId = (await dispatch(getBestOffer(sellToken, buyToken))).value.toNumber();
   const sellOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
   dispatch(loadSellOffers.pending(sellOffersTradingPair));
-  while (offerCount.sellOfferCount) {
+  while (currentSellOfferId !== 0) {
     dispatch(syncOffer(currentSellOfferId));
     currentSellOfferId = (await dispatch(getWorseOffer(currentSellOfferId))).value.toNumber()
     --offerCount.sellOfferCount;
@@ -382,16 +379,14 @@ const getTradingPairOfferCount = createAction(
  *
  */
 const newOfferFilledIn = createAction('OFFERS/NEW_OFFER_FILLED_IN', offerId => offerId);
-const subscribeNewOffersFilledInEpic = (fromBlock, filter = {}) => async (dispatch, getState) => {
+const subscribeNewOffersFilledInEpic = (fromBlock, filter = {}) => async dispatch => {
   window.contracts.market.LogMake(filter, { fromBlock, toBlock: 'latest' })
     .then((err, LogMakeEvent) => {
       const newOfferId = parseInt(LogMakeEvent.args.id, 16);
       dispatch(
         newOfferFilledIn(newOfferId),
       );
-      // dispatch(
-      //   getTradingPairOfferCount(baseToken, quoteToken)
-      // )
+      console.log({ LogMakeEvent })
     });
 };
 
@@ -424,7 +419,6 @@ const subscribeCancelledOrdersEpic = (fromBlock, filter = {}) => async (dispatch
           syncType: UPDATE_OFFER,
         }, getState(), true);
         console.log('LogKillEvent', id, LogKillEvent);
-
         dispatch(
           offerCancelledEvent(
             {
@@ -503,7 +497,6 @@ const subscribeFilledOrdersEpic = (fromBlock, filter = {}) => async (dispatch, g
         }
       } // else offer is being cancelled ( handled in LogKill )
       else {
-        console.log('supposed to be taken completely', (await dispatch(loadOffer(offerId)).value));
         const offerInOrderBook = findOffer(offerId, getState());
         if (offerInOrderBook) {
           if (offerTakes.activeOfferTakeOfferId(getState()) === offerId.toString()) {
@@ -513,9 +506,6 @@ const subscribeFilledOrdersEpic = (fromBlock, filter = {}) => async (dispatch, g
           }
         }
       }
-      // dispatch(
-      //   getTradingPairOfferCount(baseToken, quoteToken)
-      // )
     },
     err => subscribeFilledOrders.rejected(err),
   );
