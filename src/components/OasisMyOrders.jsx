@@ -1,6 +1,7 @@
+/* eslint-disable react/display-name */
 import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
-import { fromJS } from 'immutable';
+import { fromJS } from "immutable";
 import BigNumber from "bignumber.js";
 import ImmutablePropTypes from "react-immutable-proptypes";
 import moment from "moment";
@@ -16,8 +17,9 @@ import { ETH_UNIT_ETHER } from "../constants";
 import { isOfferOwner } from "../utils/orders";
 import OasisSelect from "./OasisSelect";
 import styles from "./OasisMyOrders.scss";
-import OasisOfferCancelModalWrapper  from '../containers/OasisOfferCancelModal';
-import { TYPE_BUY_OFFER, TYPE_SELL_OFFER } from '../store/reducers/offers';
+import OasisOfferCancelModalWrapper from "../containers/OasisOfferCancelModal";
+import { TYPE_BUY_OFFER, TYPE_SELL_OFFER } from "../store/reducers/offers";
+import { OasisSignificantDigitsWrapper } from "../containers/OasisSignificantDigits";
 
 const myOrdersDisplayFormat = offer => {
   let baseAmount = null,
@@ -59,7 +61,7 @@ const myOffersFilter = entry => {
 const actionsColumnTemplate = function(offer) {
   return isOfferOwner(offer) ? (
     <div>
-      <OasisOfferCancelModalWrapper offer={fromJS(offer)}/>
+      <OasisOfferCancelModalWrapper offer={fromJS(offer)} />
     </div>
   ) : null;
 };
@@ -67,16 +69,34 @@ const actionsColumnTemplate = function(offer) {
 const tradesHistoryColsDefinition = (baseToken, quoteToken) => [
   { heading: "date", key: "date" },
   { heading: "action", key: "tradeType" },
-  { heading: `price`, key: "price" },
-  { heading: `${quoteToken}`, key: "quoteAmount" },
-  { heading: `${baseToken}`, key: "baseAmount" }
+  {
+    heading: `price`,
+    template: row => <OasisSignificantDigitsWrapper amount={row.price} />
+  },
+  {
+    heading: `${quoteToken}`,
+    template: row => <OasisSignificantDigitsWrapper amount={row.quoteAmount} />
+  },
+  {
+    heading: `${baseToken}`,
+    template: row => <OasisSignificantDigitsWrapper amount={row.baseAmount} />
+  }
 ];
 
 const openOrdersColsDefinition = (baseToken, quoteToken, orderActions) => [
   { heading: "action", key: "tradeTypeEl" },
-  { heading: `price`, key: "price" },
-  { heading: `${quoteToken}`, key: "quoteAmount" },
-  { heading: `${baseToken}`, key: "baseAmount" },
+  {
+    heading: `price`,
+    template: row => <OasisSignificantDigitsWrapper amount={row.price} />
+  },
+  {
+    heading: `${quoteToken}`,
+    template: row => <OasisSignificantDigitsWrapper amount={row.quoteAmount} />
+  },
+  {
+    heading: `${baseToken}`,
+    template: row => <OasisSignificantDigitsWrapper amount={row.baseAmount} />
+  },
   { heading: ``, template: actionsColumnTemplate.bind(orderActions) }
 ];
 

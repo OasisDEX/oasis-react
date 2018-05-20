@@ -3,10 +3,12 @@ import PropTypes from "prop-types";
 import ImmutablePropTypes from "react-immutable-proptypes";
 import OasisIcon from "../../components/OasisIcon";
 
-const loadProgress = (loadedOffersList, offersTotalCount) =>
-  loadedOffersList && offersTotalCount
+const loadProgress = (loadedOffersList, offersTotalCount) => {
+  const progress = loadedOffersList && offersTotalCount
     ? parseInt(loadedOffersList.count() / offersTotalCount * 100)
     : null;
+  return progress <= 100 ?  progress: 100;
+};
 
 const style = (loadedOffersList, offersTotalCount) => {
   const progress = loadProgress(loadedOffersList, offersTotalCount);
@@ -18,12 +20,14 @@ const style = (loadedOffersList, offersTotalCount) => {
     border: "1px solid #b1b1b3",
     color: "#68686C",
     fontSize: "11px",
-    padding: "6px 6px",
+    padding: "5px 0",
     float: "right",
     fontWeight: "bold",
     borderRadius: "7%",
     width: "130px",
-    textAlign: "center"
+    textAlign: "center",
+    position: "relative",
+    top: '1px'
   };
 };
 
@@ -45,7 +49,7 @@ const LoadProgressSection = ({ loadedOffersList, offersTotalCount }) => {
         {loaded}% / {offersTotalCount}
       </span>
       <span hidden={loaded != null && offersTotalCount != null}>
-        {offersTotalCount}
+        {offersTotalCount === 0 ? 'no orders' : offersTotalCount }
       </span>
     </span>
   );
