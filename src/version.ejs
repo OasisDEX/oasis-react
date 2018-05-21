@@ -1,5 +1,6 @@
 export default {
 name:       '<%= package.name %>',
+env:       '<%= extras.env %>',
 buildDate:  new Date(<%= extras.timestamp %>),
 version:    '<%= package.version %>',
 numCommits: <%= extras.gitNumCommits %>,

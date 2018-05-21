@@ -19,6 +19,21 @@ import period from './utils/period';
 import conversion from './utils/conversion';
 import { errorHandler } from './utils/errorHandlers';
 import sak from './utils/sak';
+import Raven from 'raven-js';
+import version from './version';
+import network from "./store/selectors/network";
+
+//sentry.io configuration
+if(version.env === 'production') {
+  console.log('sentry.io configured!');
+  Raven.config(
+    'https://8ca5cb1ed0e04a57bb36c7720e235754@sentry.io/1208618',
+    {
+      release: version.hash,
+      environment: version.env
+    }
+  ).install();
+}
 
 const { store, history } = configureStore();
 
@@ -34,6 +49,14 @@ const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
   Promise.all([Network.checkConnectivity()])
     .then(async (providerType) => {
       const connectedNetworkId = await dispatch(networkReducer.actions.getConnectedNetworkId());
+
+      if(isInitialHealthcheck) {
+        // console.log("connectedTo:", network.activeNetworkMeta(getState()).get('name'));
+        Raven.setTagsContext({
+          network: network.activeNetworkMeta(getState()).get('name')
+        });
+      }
+
       dispatch(networkReducer.actions.connected());
       if(isInitialHealthcheck) {
         /**
@@ -86,13 +109,15 @@ const bootstrap = async () => {
   setInterval(await healthCheck.bind(null, dispatch, getState), HEALTHCHECK_INTERVAL_MS);
 };
 
-(async () => {
-  await bootstrap();
-  ReactDOM.render(
-    <Provider store={store}>
-      <ConnectedRouter history={history}>
-        <OasisAppWrapper/>
-      </ConnectedRouter>
-    </Provider>
-    , document.getElementById('root'));
-})();
+Raven.context(function () {
+  (async () => {
+    await bootstrap();
+    ReactDOM.render(
+      <Provider store={store}>
+        <ConnectedRouter history={history}>
+          <OasisAppWrapper/>
+        </ConnectedRouter>
+      </Provider>
+      , document.getElementById('root'));
+  })()
+});
