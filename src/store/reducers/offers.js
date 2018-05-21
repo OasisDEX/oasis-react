@@ -178,7 +178,7 @@ const loadBuyOffersEpic = (offerCount, sellToken, buyToken) => async (dispatch) 
   const buyOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
   dispatch(loadBuyOffers.pending(buyOffersTradingPair));
   while (currentBuyOfferId !== 0) {
-    console.log({currentBuyOfferId})
+    // console.log({currentBuyOfferId})
     dispatch(syncOffer(currentBuyOfferId));
     currentBuyOfferId = (await dispatch(getWorseOffer(currentBuyOfferId))).value.toNumber();
     --offerCount.buyOfferCount;

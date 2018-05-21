@@ -78,9 +78,11 @@ const addTransaction = createPromiseActions('TX/ADD_TRANSACTION');
 const addTransactionEpic = (
   { txType, txHash, txMeta, txDispatchedTimestamp, txStartTimestamp },
   { latestBlockNumber = network.latestBlockNumber,
-    syncTransaction = syncTransaction,
+    sync = syncTransaction,
     transactionCheckInterval = transactions.transactionCheckInterval} = {}
   ) => (dispatch, getState) => {
+
+  // console.log('addTransactionEpic');
 
   let previousBlockNumber = latestBlockNumber(getState());
 
@@ -104,19 +106,23 @@ const addTransactionEpic = (
 
         let txReceipt;
 
+        // console.log('before syncTransaction', txHash);
+
         try {
-          txReceipt = (await dispatch(syncTransaction(txHash))).value;
+          txReceipt = (await dispatch(sync(txHash))).value;
         } catch (e) {
           //unlimited retries?
-          // console.log(e);
+          console.warn('syncTransaction result', e);
           return;
         }
 
-        // console.log(txReceipt);
+        // console.log('txReceipt', txReceipt);
 
         if (txReceipt == null) return;
 
         const confirmed = txReceipt.status === TRANSACTION_IS_CONFIRMED;
+
+        // console.log('confirmed', confirmed);
 
         const payload = {
           txHash, txReceipt, txType,
@@ -128,6 +134,8 @@ const addTransactionEpic = (
             txEndTimestamp: getTimestamp()
           }
         };
+
+        // console.log('payload', payload);
 
         if(confirmed) {
           resolve(payload);
@@ -147,7 +155,6 @@ const syncTransaction = createAction(
   'TX/SYNC_TRANSACTION',
   txHash => web3p.eth.getTransactionReceipt(txHash),
 );
-
 
 const transactionRejected = createAction(
   'TX/TRANSACTION_REJECTED',

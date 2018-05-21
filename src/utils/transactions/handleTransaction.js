@@ -46,6 +46,8 @@ const handleTransaction = ({
   { addTransactionEpic = transactions.actions.addTransactionEpic} = {}) =>
 {
 
+  // console.log('handleTransaction');
+
   if (!transactionType) {
     throw new Error("Transaction type not set!");
   }
@@ -53,6 +55,7 @@ const handleTransaction = ({
   return new Promise(async (resolve, reject) => {
     const txDispatchedTimestamp = getTimestamp();
     onStart && onStart(txDispatchedTimestamp);
+
     const transactionActionResult = await transactionDispatcher().catch(() => {
       /**
        *  First call Epic clean up.
@@ -64,6 +67,8 @@ const handleTransaction = ({
       onCancelCleanup && onCancelCleanup();
       reject(TX_STATUS_CANCELLED_BY_USER);
     });
+
+    // console.log('transactionActionResult', transactionActionResult);
 
     if (transactionActionResult) {
       const txStartTimestamp = getTimestamp();
