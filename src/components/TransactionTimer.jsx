@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
 import ImmutablePropTypes from "react-immutable-proptypes";
 import moment from "moment";
-import withTimer from "../containers/WithTimer";
+// import withTimer from "../containers/WithTimer";
 
 export const TIMER_TIME_UNIT_SECOND = "second";
 export const TIMER_TIME_UNIT_MINUTE = "minute";
@@ -16,18 +16,18 @@ const propTypes = PropTypes && {
 const defaultProps = {};
 export class TransactionTimer extends PureComponent {
   render() {
-    const { timer } = this.props;
+    // const { timer } = this.props;
     const { transaction } = this.props;
     let timeDiff = null;
     const startTimestamp = transaction.getIn(["txStats", "txStartTimestamp"]);
 
-    if (!transaction.hasIn(["txStats", "txEndTimestamp"])) {
-      timeDiff = moment(timer).diff(moment(startTimestamp));
-    } else {
+    // if (!transaction.hasIn(["txStats", "txEndTimestamp"])) {
+    //   timeDiff = moment(timer).diff(moment(startTimestamp));
+    // } else {
       timeDiff = moment(
         transaction.getIn(["txStats", "txEndTimestamp"])
       ).diff(moment(startTimestamp));
-    }
+    // }
 
     const momentDuration = moment.duration(timeDiff);
     const [minutes, seconds] = [
@@ -49,4 +49,5 @@ export class TransactionTimer extends PureComponent {
 TransactionTimer.displayName = "TransactionTimer";
 TransactionTimer.propTypes = propTypes;
 TransactionTimer.defaultProps = defaultProps;
-export default withTimer(TransactionTimer);
+// export default withTimer(TransactionTimer);
+export default TransactionTimer;

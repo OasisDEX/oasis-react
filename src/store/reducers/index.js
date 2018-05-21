@@ -11,13 +11,11 @@ import offers from './offers';
 import tokens from './tokens';
 import transactions from './transactions';
 import session from './session';
-import contracts from './contracts';
 import accounts from './accounts';
 import trades from './trades';
 import offerTakes from './offerTakes';
 import { reducer as formReducer } from 'redux-form/immutable'
 import transactionWatchers from './transactionWatchers';
-import timers from './timers';
 import offerMakes from './offerMakes';
 import transferHistory from './transferHistory';
 import transfers from './transfers';
@@ -37,14 +35,12 @@ export default combineReducers({
     tokens: tokens.reducer,
     transactions: transactions.reducer,
     session: session.reducer,
-    contracts: contracts.reducer,
     accounts: accounts.reducer,
     trades: trades.reducer,
     offerTakes: offerTakes.reducer,
     offerMakes: offerMakes.reducer,
     form: formReducer,
     transactionWatchers: transactionWatchers.reducer,
-    timers: timers.reducer,
     transferHistory: transferHistory.reducer,
     transfers: transfers.reducer,
     tokenSelectors: tokenSelectors.reducer,

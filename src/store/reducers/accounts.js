@@ -11,35 +11,28 @@ const initialState = Immutable.fromJS({
   lastAccountSwitchAt: null
 });
 
-const INIT = 'ACCOUNTS/INIT';
-const CHECK_ACCOUNTS = 'ACCOUNTS/CHECK_ACCOUNTS';
-const SET_DEFAULT_ACCOUNT = 'ACCOUNTS/SET_DEFAULT_ACCOUNT';
-const SET_ACCOUNTS = 'ACCOUNTS/SET_ACCOUNTS';
-const DEFAULT_ACCOUNT_CHANGED = 'ACCOUNTS/DEFAULT_ACCOUNT_CHANGED';
-
 const Init = createAction(
-  INIT,
+  'ACCOUNTS/INIT',
   () => null,
 );
 
-
 const checkAccounts = createAction(
-  CHECK_ACCOUNTS,
+  'ACCOUNTS/CHECK_ACCOUNTS',
   () => web3p.eth.getAccounts()
 );
 
 const setDefaultAccount = createAction(
-  SET_DEFAULT_ACCOUNT,
+  'ACCOUNTS/SET_DEFAULT_ACCOUNT',
   (address) => address
 );
 
 const setAccounts = createAction(
-  SET_ACCOUNTS,
+  'ACCOUNTS/SET_ACCOUNTS',
   (accounts) => accounts
 );
 
 const defaultAccountChanged = createAction(
-  DEFAULT_ACCOUNT_CHANGED,
+  'ACCOUNTS/DEFAULT_ACCOUNT_CHANGED',
   () => Date.now() / 1000
 );
 
@@ -67,12 +60,11 @@ const checkAccountsEpic = () => async (dispatch, getState) => {
   return true;
 };
 
-
 const actions = {
   Init,
   checkAccountsEpic,
-  setDefaultAccount,
-  defaultAccountChanged
+  // setDefaultAccount,
+  // defaultAccountChanged
 };
 
 const reducer = handleActions({
