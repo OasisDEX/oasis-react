@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect';
-import widgets from './widgets';
 import reselect from '../../utils/reselect';
 
 const tokens = state => state.get('tokens');
@@ -71,18 +70,6 @@ const activeTradingPairQuoteToken = createSelector(
   tokens, s => s.getIn(['activeTradingPair']).quoteToken
 );
 
-const getVisibleTradingPairs = createSelector(
-  tokens,
-  widgets.marketWidget,
-  (state, marketWidget) => {
-    if(marketWidget.get('isOpen')) {
-      return state.get('tradingPairs');
-    } else {
-      return state.get('tradingPairs').filter(tp => tp.get('isDefault'));
-    }
-  }
-);
-
 const getErc20Tokens = createSelector(
   tokens, s => s.get('erc20Tokens'),
 );
@@ -92,7 +79,6 @@ export default {
   getTokenSpecs,
   defaultBaseToken,
   defaultQuoteToken,
-  getVisibleTradingPairs,
   defaultTradingPair,
   activeTradingPair,
   validBaseTokensList,
