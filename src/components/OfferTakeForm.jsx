@@ -15,7 +15,7 @@ import balances from "../store/selectors/balances";
 import {
   formatValue,
   greaterThanZeroValidator,
-  normalize,
+  // normalize,
   numericFormatValidator
 } from "../utils/forms/offers";
 
@@ -24,7 +24,7 @@ import OasisButton from "../components/OasisButton";
 import styles from "./OfferTakeForm.scss";
 import tableStyles from "../styles/modules/_table.scss";
 import CSSModules from "react-css-modules";
-
+import { amountMask } from '../inputMasks';
 /**
  * Remove this styling TODO
  */
@@ -175,9 +175,10 @@ export class OfferTakeForm extends PureComponent {
                   component="input"
                   format={formatValue}
                   placeholder={0}
-                  normalize={normalize}
+                  // normalize={normalize}
                   type="text"
                   disabled={true}
+                  {...amountMask}
                 />
               </td>
               <td className={tableStyles.currency}>{priceToken}</td>
@@ -189,7 +190,7 @@ export class OfferTakeForm extends PureComponent {
                   autoComplete="off"
                   style={fieldStyle}
                   onChange={this.onVolumeFieldChange}
-                  normalize={normalize}
+                  // normalize={normalize}
                   name="volume"
                   component="input"
                   type="text"
@@ -197,6 +198,7 @@ export class OfferTakeForm extends PureComponent {
                   min={0}
                   placeholder={0}
                   disabled={disableForm}
+                  {...amountMask}
                 />
                 <div className={styles.errorMessage}>
                   {isVolumeGreaterThanOfferMax &&
@@ -219,13 +221,14 @@ export class OfferTakeForm extends PureComponent {
                     style={fieldStyle}
                     min={0}
                     onChange={this.onTotalFieldChange}
-                    normalize={normalize}
+                    // normalize={normalize}
                     name="total"
                     component="input"
                     type="text"
                     validate={validateTotal}
                     placeholder={0}
                     disabled={disableForm}
+                    {...amountMask}
                   />
                 </div>
               </td>

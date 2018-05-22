@@ -125,8 +125,6 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock }) => (dispatch) => {
       {}, { fromBlock, toBlock })
       .get((err, logTakesList) => {
 
-        console.log('logTakesList',  fromBlock, toBlock, logTakesList);
-
         if (err) {
           dispatch(fetchLogTakeEventsAction.rejected(err));
           reject(err);

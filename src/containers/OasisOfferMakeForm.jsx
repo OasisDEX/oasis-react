@@ -13,7 +13,7 @@ import balances from "../store/selectors/balances";
 import {
   formatValue,
   greaterThanZeroValidator,
-  normalize,
+  // normalize,
   numericFormatValidator
 } from "../utils/forms/offers";
 
@@ -24,6 +24,7 @@ import CSSModules from "react-css-modules";
 import OasisVolumeIsGreaterThanUserBalance from "../components/OasisVolumeIsGreaterThanUserBalance";
 import { formatAmount, PRICE_DECIMAL } from '../utils/tokens/pair';
 import isNumeric from '../utils/numbers/isNumeric';
+import { amountMask } from '../inputMasks';
 
 const propTypes = PropTypes && {
   // activeOfferMakeOfferData: ImmutablePropTypes.map.isRequired,
@@ -163,8 +164,9 @@ export class OfferMakeForm extends PureComponent {
                   onChange={this.onPriceFieldChange}
                   placeholder={0}
                   disabled={disableForm}
-                  normalize={normalize}
+                  // normalize={normalize}
                   type="text"
+                  {...amountMask}
                 />
               </td>
               <td className={styles.currency}> {priceToken}</td>
@@ -175,7 +177,7 @@ export class OfferMakeForm extends PureComponent {
                 <Field
                   autoComplete="off"
                   onChange={this.onVolumeFieldChange}
-                  normalize={normalize}
+                  // normalize={normalize}
                   onBlur={formatValue}
                   name="volume"
                   component="input"
@@ -187,6 +189,7 @@ export class OfferMakeForm extends PureComponent {
                     greaterThanZeroValidator(currentFormValues.price) ||
                     disableForm
                   }
+                  {...amountMask}
                 />
               </td>
               <td className={styles.currency}>
@@ -213,7 +216,7 @@ export class OfferMakeForm extends PureComponent {
                     autoComplete="off"
                     min={0}
                     onChange={this.onTotalFieldChange}
-                    normalize={normalize}
+                    // normalize={normalize}
                     onBlur={formatValue}
                     name="total"
                     component="input"
@@ -225,6 +228,7 @@ export class OfferMakeForm extends PureComponent {
                       greaterThanZeroValidator(currentFormValues.volume) ||
                       disableForm
                     }
+                    {...amountMask}
                   />
                 </div>
               </td>
