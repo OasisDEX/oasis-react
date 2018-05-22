@@ -40,5 +40,11 @@
     @include text(13px, 500);
     color: rgba(79, 83, 98, 0.8);
   }
+
 }
 
+.OffersLoadProgress {
+  position: relative;
+  top: 4px;
+  font-size: 11px;
+}

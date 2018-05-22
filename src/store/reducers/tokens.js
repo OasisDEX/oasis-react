@@ -3,7 +3,7 @@ import { fromJS } from "immutable";
 
 import {
   BASE_TOKENS,
-  QUOTE_TOKENS,
+  QUOTE_TOKENS, SYNC_STATUS_PRISTINE,
   TOKEN_1ST,
   TOKEN_AUGUR,
   TOKEN_BAT,
@@ -22,13 +22,12 @@ import {
   TOKEN_TIME,
   TOKEN_VSL,
   TOKEN_WRAPPED_ETH,
-  TOKEN_WRAPPED_GNT
-} from "../../constants";
+  TOKEN_WRAPPED_GNT,
+} from '../../constants';
 import { generateTradingPairs } from "../../utils/generateTradingPairs";
 import tokens from "../selectors/tokens";
 import offersReducer from "./offers";
 import offers from "../selectors/offers";
-import { STATUS_PRISTINE } from "./platform";
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import balancesReducer from "./balances";
 
@@ -138,7 +137,7 @@ const setActiveTradingPairEpic = (args, sync = true) => (
     if (
       sync &&
       offers.activeTradingPairOffersInitialLoadStatus(getState()) ===
-        STATUS_PRISTINE
+        SYNC_STATUS_PRISTINE
     ) {
       dispatch(offersReducer.actions.syncOffersEpic(currentActiveTradingPair));
     }
@@ -183,6 +182,7 @@ const getActiveTradingPairAllowanceStatus = () => async (
     tradingPair.get("baseToken"),
     tradingPair.get("quoteToken")
   ];
+
   await dispatch(
     balancesReducer.actions.getDefaultAccountTokenAllowanceForMarket(baseToken)
   );

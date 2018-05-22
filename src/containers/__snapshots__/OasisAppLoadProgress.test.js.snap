@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisAppLoadProgress should render 1`] = `
+<OasisStatus
+  name="kovan"
+  offersLoadProgress="NaN"
+  status="NETWORK/ONLINE"
+/>
+`;
+
+exports[`(Container) OasisAppLoadProgress will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisAppLoadProgress will receive right props 1`] = `
+Object {
+  "loadProgress": NaN,
+  "networkName": "kovan",
+  "networkStatus": "NETWORK/ONLINE",
+  "offersLoadProgress": "NaN",
+}
+`;

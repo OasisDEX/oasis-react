@@ -4,13 +4,15 @@ exports[`(Component) OasisLoadingIndicator should render 1`] = `
 <span
   style={
     Object {
-      "fontSize": 10,
+      "display": "inline-block",
+      "marginLeft": 0,
+      "marginRight": 0,
     }
   }
 >
   <OasisIcon
     icon="loading"
-    size="md"
+    size="sm"
   />
 </span>
 `;

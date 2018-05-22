@@ -13,7 +13,7 @@ import balancesReducer from './balances';
 
 import marketBootstrap from '../../bootstrap/market';
 
-import { CLOSED, LIVE_NET_ID, ONLINE } from '../../constants';
+import { CLOSED, CONNECTING, LIVE_NET_ID, ONLINE, OUT_OF_SYNC } from '../../constants';
 import tradesReducer from './trades';
 import period from '../../utils/period';
 import network from '../selectors/network';
@@ -175,7 +175,9 @@ const checkNetworkInitialEpic = () => async (dispatch, getState) => {
       await dispatch(balancesReducer.actions.getDefaultAccountEthBalance()),
       await dispatch(balancesReducer.actions.subscribeAccountEthBalanceChangeEventEpic(web3.eth.defaultAccount)),
       await dispatch(platformReducer.actions.marketInitialized(marketBootstrap.init(dispatch, currentNetworkName))),
-      dispatch(balancesReducer.actions.getAllTradedTokensBalances(window.contracts.tokens)),
+      dispatch(balancesReducer.actions.getAllTradedTokensBalances(
+        window.contracts.tokens, accounts.defaultAccount(getState()))
+      ),
     ]).then(onNetworkCheckCompleted(dispatch, getState));
   } catch (e) {
     console.warn("Can't fetch network data!", e);
@@ -204,7 +206,11 @@ const checkNetworkEpic = () => async (dispatch, getState) => {
       dispatch(platformReducer.actions.contractsLoaded(contractsBootstrap.init(currentNetworkName))),
       await dispatch(balancesReducer.actions.getDefaultAccountEthBalance()),
       await dispatch(platformReducer.actions.marketInitialized(marketBootstrap.init(dispatch, currentNetworkName))),
-      dispatch(balancesReducer.actions.getAllTradedTokensBalances(window.contracts.tokens)),
+      dispatch(
+        balancesReducer.actions.getAllTradedTokensBalances(
+          window.contracts.tokens, accounts.defaultAccount(getState())
+        )
+      ),
     ]).then(onNetworkCheckCompleted(dispatch, getState));
   }
 };
@@ -246,10 +252,10 @@ const actions = {
 
 const reducer = handleActions({
   [connected]: state => state.set('status', ONLINE).set('isConnecting', false),
-  [connecting]: state => state.set('isConnecting', true),
+  [connecting]: state => state.set('isConnecting', true).set('status', CONNECTING),
   [disconnected]: state => state.set('status', CLOSED).set('isConnecting', false),
-  [syncNetwork.pending]: (state) => state.setIn(['sync', 'isPending'], true),
-  [syncNetwork.fulfilled]: (state) => state.setIn(['sync', 'isPending'], false),
+  [syncNetwork.pending]: (state) => state.setIn(['sync', 'isPending'], true).set('status', OUT_OF_SYNC),
+  [syncNetwork.fulfilled]: (state) => state.setIn(['sync', 'isPending'], ONLINE),
   [fulfilled(getConnectedNetworkId)]: (state, { payload }) =>
     state.update('activeNetworkId', (nid) => !!payload && nid === payload ? nid : payload),
   [fulfilled(getLatestBlockNumber)]: (state, { payload }) =>

@@ -13,6 +13,10 @@ const initialState = fromJS(
     errors: [],
     web3Initialized: null,
     contractsLoaded: false,
+    ordersLoadStatus: false,
+    tradeHistoryLoadStatus: false,
+    marketVolumeLoadStatus: false,
+
     metamaskLocked: false,
     lastNetworkSwitchAt: null,
     defaultTradingPair: {baseToken: 'MKR', quoteToken: 'W-ETH'},
@@ -21,10 +25,6 @@ const initialState = fromJS(
     defaultUnit: ETH_UNIT_WEI,
   });
 
-export const STATUS_PRISTINE = 'STATUS_PRISTINE';
-export const STATUS_PENDING = 'STATUS_PENDING';
-export const STATUS_COMPLETED = 'STATUS_COMPLETED';
-export const STATUS_ERROR = 'STATUS_ERROR';
 
 const Init = createAction(
   'PLATFORM/INIT',

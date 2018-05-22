@@ -1,8 +1,9 @@
 import { createSelector } from 'reselect';
 import { Map, List } from 'immutable';
 import tokens from './tokens';
-import { STATUS_COMPLETED, STATUS_PENDING } from '../reducers/platform';
 import reselect from '../../utils/reselect';
+import { SYNC_STATUS_COMPLETED, SYNC_STATUS_PENDING } from '../../constants';
+import web3 from '../../bootstrap/web3';
 
 const offers = state => state.get('offers');
 
@@ -60,13 +61,13 @@ const activeTradingPairOffersInitialLoadStatus = createSelector(
 const activeTradingPairOffersInitialLoadPending = createSelector(
   offers,
   tokens.activeTradingPair,
-  (state, activeTradingPair) => state.getIn(['offers', Map(activeTradingPair), 'initialSyncStatus']) === STATUS_PENDING
+  (state, activeTradingPair) => state.getIn(['offers', Map(activeTradingPair), 'initialSyncStatus']) === SYNC_STATUS_PENDING
 );
 
 const activeTradingPairOffersInitiallyLoaded = createSelector(
   offers,
   tokens.activeTradingPair,
-  (state, activeTradingPair) => state.getIn(['offers', Map(activeTradingPair), 'initialSyncStatus']) === STATUS_COMPLETED
+  (state, activeTradingPair) => state.getIn(['offers', Map(activeTradingPair), 'initialSyncStatus']) === SYNC_STATUS_COMPLETED
 );
 
 const offersInitialized = createSelector(
@@ -90,6 +91,22 @@ const activeTradingPairBestSellOfferId = createSelector(
   state => state.getIn(['activeTradingPairBestOfferId', 'bestSellOfferId'])
 );
 
+const activeTradingPairOffersLoadProgress = createSelector(
+  activeTradingPairBuyOfferCount,
+  activeTradingPairSellOfferCount,
+  activeTradingPairBuyOffers,
+  activeTradingPairSellOffers,
+  (buyOffersCount, sellOffersCount, buyOffers, sellOffers) => {
+    if (buyOffersCount=== null || sellOffersCount === null) {
+      return null
+    } else {
+      const loadedOffersCount = buyOffers.count() + sellOffers.count();
+      const totalOffersCount =  buyOffersCount + sellOffersCount;
+      return web3.toBigNumber(loadedOffersCount).div(totalOffersCount).mul(100).toFixed(0);
+    }
+  }
+);
+
 
 export default {
   state: offers,
@@ -106,5 +123,6 @@ export default {
   tradingPairOffersInitialLoadStatus,
   allOffers,
   activeTradingPairBestBuyOfferId,
-  activeTradingPairBestSellOfferId
+  activeTradingPairBestSellOfferId,
+  activeTradingPairOffersLoadProgress
 }

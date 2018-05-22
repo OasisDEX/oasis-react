@@ -9,9 +9,13 @@ import {
   MAKE_BUY_OFFER,
   MAKE_BUY_OFFER_FORM_NAME,
   MAKE_SELL_OFFER,
-  MAKE_SELL_OFFER_FORM_NAME
-} from "../../constants";
+  MAKE_SELL_OFFER_FORM_NAME, SYNC_STATUS_COMPLETED,
+} from '../../constants';
 import offerMakeToFormName from "../../utils/offers/offerMakeToFormName";
+import trades from './trades';
+import platform from './platform';
+import offers from './offers';
+import tokens from './tokens';
 
 const isGasEstimatePending = createSelector(
   s => s,
@@ -212,6 +216,27 @@ const isPriceSet = createSelector((rootState, offerType) => {
   }
 }, isPriceSet => isPriceSet);
 
+const appLoadProgress = createSelector(
+  trades.initialMarketHistoryLoaded,
+  platform.contractsLoaded,
+  rootState => tokens.activeTradingPair(rootState) ?
+    offers.tradingPairOffersInitialLoadStatus(
+      rootState,
+      tokens.activeTradingPair(rootState)
+  ) : null,
+  (marketHistoryLoaded, contractsLoaded, offersLoaded) => {
+    const statuses = [
+      marketHistoryLoaded,
+      contractsLoaded,
+      offersLoaded
+    ];
+    return (
+      statuses.filter(status => [SYNC_STATUS_COMPLETED, true].includes(status) ) / statuses.length
+    ) * 100;
+
+  }
+);
+
 export {
   isGasEstimatePending,
   gasEstimateError,
@@ -221,5 +246,6 @@ export {
   getOfferBuyAndSellTokenByOfferType,
   hasSufficientTokenAmountByOfferType,
   getActiveOfferAllowanceStatus,
-  isPriceSet
+  isPriceSet,
+  appLoadProgress
 };
