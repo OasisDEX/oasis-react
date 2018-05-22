@@ -47,11 +47,19 @@ const watch = (txHash) => {
   });
 };
 
+const logTake = (fromBlock, toBlock ) => {
+  window.contracts.market.LogTake({}, {fromBlock, toBlock})
+    .get((err, logTakesList) => {
+      console.log('logTakesList', fromBlock, toBlock, logTakesList);
+    });
+};
+
 export default (store) => {
   window.sak = {
     getTokenAllowance: getTokenAllowance(store),
     disableTokenTrust: disableTokenTrust(store),
     enableTokenTrust: enableTokenTrust(store),
     state: () => store.getState().toJS(),
+    logTake
   };
 }
