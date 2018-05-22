@@ -484,10 +484,10 @@ const subscribeFilledOrdersEpic = (fromBlock, filter = {}) => async (dispatch, g
          */
         const offerSearchResult = findOffer(offerId, getState());
         if (offerSearchResult) {
-          console.log('LogItemUpdate', offerId, LogItemUpdateEvent, OFFER_SYNC_TYPE_UPDATE);
+          // console.log('LogItemUpdate', offerId, LogItemUpdateEvent, OFFER_SYNC_TYPE_UPDATE);
           dispatch(syncOffer(offerId, OFFER_SYNC_TYPE_UPDATE, offerSearchResult.offer));
         } else {
-          console.log('LogItemUpdate', offerId, LogItemUpdateEvent, OFFER_SYNC_TYPE_NEW_OFFER);
+          // console.log('LogItemUpdate', offerId, LogItemUpdateEvent, OFFER_SYNC_TYPE_NEW_OFFER);
           dispatch(syncOffer(offerId, OFFER_SYNC_TYPE_NEW_OFFER));
         }
       } // else offer is being cancelled ( handled in LogKill )

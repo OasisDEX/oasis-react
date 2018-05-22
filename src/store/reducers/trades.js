@@ -124,6 +124,9 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock }) => (dispatch) => {
     window.contracts.market.LogTake(
       {}, { fromBlock, toBlock })
       .get((err, logTakesList) => {
+
+        console.log('logTakesList',  fromBlock, toBlock, logTakesList);
+
         if (err) {
           dispatch(fetchLogTakeEventsAction.rejected(err));
           reject(err);
