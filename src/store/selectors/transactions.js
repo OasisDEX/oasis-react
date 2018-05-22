@@ -98,7 +98,7 @@ const canSendTransaction = createSelector(
   balances.ethBalance,
   reselect.getProps,
   (ethBalance, gasCost) =>
-    web3.toBigNumber(web3.toWei(ethBalance, ETH_UNIT_ETHER)).gte(gasCost || DEFAULT_GAS_LIMIT),
+    web3.toBigNumber(ethBalance).gte(gasCost || DEFAULT_GAS_LIMIT),
 );
 
 const getTransactionByTxHash = createSelector(

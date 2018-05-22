@@ -38,7 +38,7 @@ const getDefaultAccountEthBalance = createAction(
   async () =>
     web3p.eth
       .getBalance(web3.eth.defaultAccount)
-      .then(ethBalanceInWei => web3.fromWei(ethBalanceInWei, ETH_UNIT_ETHER))
+      .then(ethBalanceInWei => ethBalanceInWei)
 );
 
 const getAllTradedTokensBalances = createAction(
