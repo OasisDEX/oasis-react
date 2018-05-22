@@ -45,13 +45,13 @@ const getDefaultAccountEthBalance = createAction(
 
 const getAllTradedTokensBalances = createAction(
   "BALANCES/GET_ALL_TRADED_TOKENS_BALANCES",
-  async tokensContractsLists => {
+  async (tokensContractsLists, accountAddress) => {
     const tokensBalancesPromises = [];
 
     Object.entries(tokensContractsLists).forEach(async ([, tokenContract]) => {
       if (tokenContract.balanceOf) {
         tokensBalancesPromises.push(
-          tokenContract.balanceOf(web3.eth.defaultAccount)
+          tokenContract.balanceOf(accountAddress)
         );
       }
     });
@@ -212,26 +212,49 @@ const getAccountTokenAllowanceForAddress = createAction(
     window.contracts.tokens[tokenName].allowance(account, spenderAddress)
 );
 
-const getDefaultAccountTokenAllowanceForAddress = createAction(
+const getDefaultAccountTokenAllowanceForAddressAction = createAction(
   "BALANCES/GET_DEFAULT_ACCOUNT_TOKEN_ALLOWANCE_FOR_ADDRESS",
-  (tokenName, spenderAddress) =>
+  (tokenName, spenderAddress, defaultAccountAddress,) =>
     window.contracts.tokens[tokenName].allowance(
-      web3.eth.defaultAccount,
+      defaultAccountAddress,
       spenderAddress
     ),
   (tokenName, spenderAddress) => ({ tokenName, spenderAddress })
 );
 
+
+const getDefaultAccountTokenAllowanceForAddress = (tokenName, spenderAddress) => (dispatch, getState) => {
+   dispatch(
+    getDefaultAccountTokenAllowanceForAddressAction(
+      tokenName,
+      spenderAddress,
+      accounts.defaultAccount(getState())
+    )
+  )
+};
+
+
 //TODO: what is it for? no side efects?
-const getDefaultAccountTokenAllowanceForMarket = createAction(
+const getDefaultAccountTokenAllowanceForMarketAction = createAction(
   "BALANCES/GET_DEFAULT_ACCOUNT_TOKEN_ALLOWANCE_FOR_ADDRESS",
-  tokenName =>
+  (tokenName, defaultAccountAddress) =>
     window.contracts.tokens[tokenName].allowance(
-      web3.eth.defaultAccount,
+      defaultAccountAddress,
       window.contracts.market.address
     ),
   (tokenName) => ({ tokenName, spenderAddress: window.contracts.market.address })
 );
+
+const getDefaultAccountTokenAllowanceForMarket = (tokenName) => (dispatch, getState) => {
+  dispatch(
+    getDefaultAccountTokenAllowanceForMarketAction(
+      tokenName,
+      accounts.defaultAccount(getState())
+    )
+  );
+};
+
+
 
 
 const setTokenAllowanceTrustStatus$ = createPromiseActions(
@@ -338,7 +361,10 @@ const reducer = handleActions(
           return balances;
         });
       },
-    [fulfilled(getDefaultAccountTokenAllowanceForAddress)]:
+    [fulfilled(getDefaultAccountTokenAllowanceForAddressAction)]:
+      (state, { payload, meta: { tokenName, spenderAddress } }) =>
+        state.setIn(["tokenAllowances", tokenName, spenderAddress], payload),
+    [fulfilled(getDefaultAccountTokenAllowanceForMarketAction)]:
       (state, { payload, meta: { tokenName, spenderAddress } }) =>
         state.setIn(["tokenAllowances", tokenName, spenderAddress], payload),
     [tokenTransferFromEvent]:

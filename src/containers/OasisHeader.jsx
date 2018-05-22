@@ -7,29 +7,24 @@ import { bindActionCreators } from 'redux';
 import CSSModules from 'react-css-modules';
 
 import OasisLogo from '../components/OasisLogo';
-import OasisStatus from '../components/OasisStatus';
 import OasisMarket from '../components/OasisMarket';
 import OasisAccount from '../components/OasisAccount';
 import OasisExpirationDate from '../components/OasisExpirationDate';
 
 import markets from './../store/selectors/markets'
-import network from '../store/selectors/network';
 import accounts from '../store/selectors/accounts';
 
 import styles from './OasisHeader.scss';
+import OasisAppLoadProgressWrapper  from './OasisAppLoadProgress';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
-  networkStatus: PropTypes.string.isRequired,
-  networkName: PropTypes.string.isRequired,
 };
 
 export class OasisHeaderWrapper extends PureComponent {
   render() {
 
     const {
-      networkStatus,
-      networkName,
       marketCloseTime,
       marketAddress,
       accounts
@@ -45,7 +40,7 @@ export class OasisHeaderWrapper extends PureComponent {
             <div className="col-md-9">
               <div className="row">
                 <div className="col-md-6">
-                  <OasisStatus status={networkStatus} name={networkName}/>
+                  <OasisAppLoadProgressWrapper/>
                 </div>
                 <div className="col-md-6">
                   <OasisExpirationDate timestamp={marketCloseTime}/>
@@ -74,8 +69,6 @@ export class OasisHeaderWrapper extends PureComponent {
 export function mapStateToProps(state) {
   return {
     accounts: accounts.accounts(state),
-    networkStatus: network.status(state),
-    networkName: network.activeNetworkName(state),
     marketCloseTime: markets.marketCloseTime(state),
     defaultAccount: accounts.defaultAccount(state),
     marketAddress: markets.activeMarketAddress(state)

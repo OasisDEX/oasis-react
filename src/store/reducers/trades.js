@@ -5,7 +5,7 @@ import { createPromiseActions } from '../../utils/createPromiseActions';
 import * as BigNumber from 'bignumber.js';
 import tokens from '../selectors/tokens';
 import logTakeToTrade from '../../utils/trades/logTakeToTrade';
-import { first } from 'lodash';
+import first  from 'lodash/first';
 import { fulfilled } from '../../utils/store';
 import { web3p } from '../../bootstrap/web3';
 

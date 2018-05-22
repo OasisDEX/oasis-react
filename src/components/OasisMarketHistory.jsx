@@ -13,6 +13,7 @@ import CSSModules from 'react-css-modules';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import createEtherscanTransactionLink from '../utils/createEtherscanTransactionLink';
 import { OasisSignificantDigitsWrapper } from '../containers/OasisSignificantDigits';
+import OasisLoadingIndicator from './OasisLoadingIndicator';
 
 const propTypes = PropTypes && {
   activeTradingPair: PropTypes.object.isRequired,
@@ -46,7 +47,12 @@ class OasisMarketHistory extends PureComponent {
   }
 
   render() {
-    const { activeNetworkName, trades, activeTradingPair: { baseToken, quoteToken } } = this.props;
+    const {
+      activeNetworkName,
+      trades,
+      activeTradingPair: { baseToken, quoteToken },
+      loadingTradeHistory
+    } = this.props;
     const sortedTrades = orderByTimestamp(trades.toJSON(), DESCENDING);
 
     const toHistoricalTrades = (tradeHistoryEntry) => {
@@ -75,7 +81,8 @@ class OasisMarketHistory extends PureComponent {
     const marketHistory = sortedTrades.map(toHistoricalTrades);
 
     return (
-      <OasisWidgetFrame heading={`MARKET HISTORY (${sortedTrades.length})`}>
+      <OasisWidgetFrame loadProgressSection={loadingTradeHistory ? <OasisLoadingIndicator/>: null}
+                        heading={`MARKET HISTORY (${sortedTrades.length})`}>
         <OasisTable
           onRowClick={OasisMarketHistory.onRowClick}
           className={styles.table}

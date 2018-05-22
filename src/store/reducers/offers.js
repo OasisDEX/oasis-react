@@ -12,17 +12,13 @@ import network from '../selectors/network';
 import { TX_OFFER_CANCEL } from './transactions';
 import offers from '../selectors/offers';
 import findOffer from '../../utils/offers/findOffer';
-import { STATUS_COMPLETED, STATUS_ERROR, STATUS_PRISTINE } from './platform';
 import getOfferTradingPairAndType from '../../utils/offers/getOfferTradingPairAndType';
 import { handleTransaction } from '../../utils/transactions/handleTransaction';
 import offerTakes from '../selectors/offerTakes';
+import { SYNC_STATUS_COMPLETED, SYNC_STATUS_ERROR, SYNC_STATUS_PENDING, SYNC_STATUS_PRISTINE } from '../../constants';
 
 export const TYPE_BUY_OFFER = 'OFFERS/TYPE_BUY';
 export const TYPE_SELL_OFFER = 'OFFERS/TYPE_SELL';
-
-const SYNC_STATUS_PENDING = 'OFFERS/SYNC_STATUS_PENDING';
-const SYNC_STATUS_COMPLETED = 'OFFERS/SYNC_STATUS_COMPLETED';
-const SYNC_STATUS_ERROR = 'OFFERS/SYNC_STATUS_ERROR';
 
 const initialState = fromJS({
   offers: {},
@@ -42,7 +38,6 @@ const UPDATE_OFFER = 'OFFERS/UPDATE_OFFER';
 const BUY_GAS = 1000000;
 const CANCEL_GAS = 1000000;
 
-const STATUS_PENDING = 'OFFER_STATUS_PENDING';
 
 const OFFER_SYNC_TYPE_INITIAL = 'OFFERS/OFFER_SYNC_TYPE_INITIAL';
 const OFFER_SYNC_TYPE_UPDATE = 'OFFERS/OFFER_SYNC_TYPE_UPDATE';
@@ -209,7 +204,7 @@ const tradingPairOffersAlreadyLoaded = createAction('OFFERS/TRADING_PAIR_ALREADY
 const syncOffers = createPromiseActions('OFFERS/SYNC_OFFERS');
 const syncOffersEpic = ({ baseToken, quoteToken }) => async (dispatch, getState) => {
 
-  if (offers.activeTradingPairOffersInitialLoadStatus(getState()) !== STATUS_PRISTINE) {
+  if (offers.activeTradingPairOffersInitialLoadStatus(getState()) !== SYNC_STATUS_PRISTINE) {
     return dispatch(tradingPairOffersAlreadyLoaded({ baseToken, quoteToken }));
   }
 
@@ -557,7 +552,7 @@ const initOffersEpic = () => (dispatch, getState) => {
     sellOfferCount: null,
     buyOffers: List(),
     sellOffers: List(),
-    initialSyncStatus: STATUS_PRISTINE,
+    initialSyncStatus: SYNC_STATUS_PRISTINE,
   });
   tokens.tradingPairs(getState())
     .forEach(tp =>
@@ -629,11 +624,11 @@ const reducer = handleActions({
     return state.updateIn(['offers'], () => payload).set('offersInitialized', () => true);
   },
   [syncOffers.pending]: (state, { payload }) =>
-    state.updateIn(['offers', Map(payload), 'initialSyncStatus'], () => STATUS_PENDING),
+    state.updateIn(['offers', Map(payload), 'initialSyncStatus'], () => SYNC_STATUS_PENDING),
   [syncOffers.fulfilled]: (state, { payload }) =>
-    state.updateIn(['offers', Map(payload), 'initialSyncStatus'], () => STATUS_COMPLETED),
+    state.updateIn(['offers', Map(payload), 'initialSyncStatus'], () => SYNC_STATUS_COMPLETED),
   [syncOffers.rejected]: (state, { payload }) =>
-    state.updateIn(['offers', Map(payload), 'initialSyncStatus'], () => STATUS_ERROR),
+    state.updateIn(['offers', Map(payload), 'initialSyncStatus'], () => SYNC_STATUS_ERROR),
   [fulfilled(getTradingPairOfferCount)]:
     (state, { payload: { baseToken, quoteToken, buyOfferCount, sellOfferCount } }) => {
       // console.log('getTradingPairOfferCount', baseToken, quoteToken);
