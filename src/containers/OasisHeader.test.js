@@ -24,7 +24,7 @@ describe('(Container) OasisHeader', () => {
         isPending: false,
         ts: null
       },
-      activeNetworkName: 'mainnet',
+      activeNetworkName: 'main',
       activeNetworkId: '1',
       latestBlockNumber: null,
       outOfSync: true,
@@ -37,7 +37,7 @@ describe('(Container) OasisHeader', () => {
         },
         {
           id: 1,
-          name: 'mainnet',
+          name: 'main',
           startingBlock: null,
           avgBlocksPerDay: 5760
         },

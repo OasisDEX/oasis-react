@@ -10,7 +10,7 @@ const propTypes = PropTypes && {
   actions: PropTypes.object,
   txTimestamp: PropTypes.number,
   txType: PropTypes.string,
-  localStatus: PropTypes.string,
+  localStatus: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   customBlock: PropTypes.node
 };
 
