@@ -45,6 +45,7 @@ exports[`(Container) OasisMakeOfferModal should render 1`] = `
       />
     </div>
     <Connect(OasisOfferSummary)
+      disableBalanceWarning={false}
       offerType="OFFER_MAKES/MAKE_BUY_OFFER"
     />
     <OasisTransactionStatusWrapperInfoBox

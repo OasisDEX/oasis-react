@@ -2,7 +2,7 @@
   "networks": [
     {
       "id": 1,
-      "name": "mainnet",
+      "name": "main",
       "startingBlock": null,
       "avgBlocksPerDay": 5760
     },
@@ -18,7 +18,7 @@
       "address": "0x8cf1cab422a0b6b554077a361f8419cdf122a9f9",
       "blockNumber": 5216718
     },
-    "mainnet": {
+    "main": {
       "address": "0x14fbca95be7e99c15cc2996c6c9d841e54b79425",
       "blockNumber": 4751582
     }
@@ -46,7 +46,7 @@
       "BAT": "0x485bd6f93f3cd63d5da117c8205173b542da8e7e",
       "NMR": "0x13ec2f6ab4be5a55800193e7b22e83042405bb64"
     },
-    "mainnet": {
+    "main": {
       "OW-ETH": "0xecf8f87f810ecf450940c9f60066b4a7a501d6a7",
       "W-ETH": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
       "DAI": "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359",

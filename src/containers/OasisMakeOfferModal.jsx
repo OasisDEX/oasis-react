@@ -153,7 +153,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
   }
 
   isOfferMakeCompleted() {
-    return this.state.txStatus;
+    return this.state.txStatus === TX_STATUS_CONFIRMED;
   }
 
   render() {

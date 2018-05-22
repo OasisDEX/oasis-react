@@ -17,7 +17,6 @@ const normalize = (value, previousValue) => {
 };
 
 const formatValue = (value) => {
-  console.log(this);
   return isNumeric(value)
     ? web3.toBigNumber(value.replace(/\.$/, "")).toFormat(PRICE_DECIMAL)
     : "0";
