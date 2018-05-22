@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Field, reduxForm } from 'redux-form/immutable'
-import { normalize } from '../utils/forms/offers';
+// import { normalize } from '../utils/forms/offers';
 import wrapUnwrap from '../store/selectors/wrapUnwrap';
 import web3 from '../bootstrap/web3';
 import wrapUnwrapReducer from '../store/reducers/wrapUnwrap';
@@ -16,6 +16,7 @@ import CSSModules from 'react-css-modules';
 import OasisTransactionStatusWrapperInfoBox  from './OasisTransactionStatusInfoBox';
 import { TX_UNWRAP } from '../store/reducers/transactions';
 import { formatAmount } from '../utils/tokens/pair';
+import { amountMask } from '../inputMasks';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -92,7 +93,10 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
                       name="amount"
                       component="input"
                       placeholder={0}
-                      normalize={normalize} type="text"/>
+                      // normalize={normalize}
+                      type="text"
+                      {...amountMask}
+                    />
                   </div>
                 </td>
                 <td className={tableStyles.currency}>

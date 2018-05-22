@@ -22,8 +22,13 @@ exports[`(Container) OasisTokenWrapForm should render 1`] = `
             <Field
               autoComplete="off"
               component="input"
+              format={[Function]}
               name="amount"
               normalize={[Function]}
+              onChange={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onMouseDown={[Function]}
               placeholder={0}
               required={true}
               style={

@@ -9,6 +9,7 @@ import balances from '../store/selectors/balances';
 import { Field } from 'redux-form/immutable';
 import TokenAmountInput from '../components/TokenAmountInput';
 import web3 from '../bootstrap/web3';
+import { amountMask } from '../inputMasks';
 
 const propTypes = PropTypes && {
   fieldName: PropTypes.string.isRequired,
@@ -25,7 +26,6 @@ const validateIsNumber = value => {
     return [VALIDATION_ERROR__NON_NUMERIC_VALUE]
   }
 };
-
 
 export class TokenAmountInputFieldWrapper extends PureComponent {
 
@@ -44,6 +44,7 @@ export class TokenAmountInputFieldWrapper extends PureComponent {
     const { selectedToken, maxAmountLimit, fieldName, disabled } = this.props;
     return (
       <Field
+        autoComplete="off"
         disabled={!maxAmountLimit || disabled}
         maxAmountLimit={maxAmountLimit}
         required
@@ -51,6 +52,7 @@ export class TokenAmountInputFieldWrapper extends PureComponent {
         component={TokenAmountInput}
         selectedToken={selectedToken}
         name={fieldName}
+        {...amountMask}
       />
     );
   }
