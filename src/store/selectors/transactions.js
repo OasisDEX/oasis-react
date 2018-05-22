@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
 import reselect from '../../utils/reselect';
-import { ETH_UNIT_ETHER } from '../../constants';
 import web3 from '../../bootstrap/web3';
 import {
   DEFAULT_GAS_LIMIT,
