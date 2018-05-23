@@ -25,7 +25,6 @@ import OasisVolumeIsGreaterThanUserBalance from "../components/OasisVolumeIsGrea
 import { formatAmount, PRICE_DECIMAL } from '../utils/tokens/pair';
 import isNumeric from '../utils/numbers/isNumeric';
 import { amountMask } from '../inputMasks';
-import {createNumberMask} from "redux-form-input-masks";
 
 const propTypes = PropTypes && {
   // activeOfferMakeOfferData: ImmutablePropTypes.map.isRequired,
@@ -67,31 +66,21 @@ export class OfferMakeForm extends PureComponent {
 
   onVolumeFieldChange(newValue) {
     const { volumeFieldValueChanged } = this.props.actions;
-    // if (!previousValue || newValue.toString() !== previousValue.toString()) {
-      volumeFieldValueChanged(this.props.offerMakeType, newValue);
-    // }
+    volumeFieldValueChanged(this.props.offerMakeType, newValue);
   }
 
   onPriceFieldChange(newValue) {
-    // if (parseFloat(newValue) >= 0) {
       const { priceFieldValueChanged } = this.props.actions;
-    //   if (!previousValue || newValue.toString() !== previousValue.toString()) {
-        priceFieldValueChanged(this.props.offerMakeType, newValue);
-      // }
-    // }
+      priceFieldValueChanged(this.props.offerMakeType, newValue);
   }
 
   onTotalFieldChange(newValue) {
     const { totalFieldValueChanged } = this.props.actions;
-    // if (!previousValue || newValue.toString() !== previousValue.toString()) {
-      totalFieldValueChanged(this.props.offerMakeType, newValue);
-    // }
+    totalFieldValueChanged(this.props.offerMakeType, newValue);
   }
 
   setMaxButton() {
     const { currentFormValues = {}, disableForm } = this.props;
-    // if (!this.state.showMaxButton) { return null; }
-    // else {
     switch (this.props.offerMakeType) {
       case MAKE_BUY_OFFER:
         return (
