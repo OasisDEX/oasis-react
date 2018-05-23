@@ -221,7 +221,7 @@ class OasisMyOrders extends PureComponent {
       }
 
       return {
-        date: moment.unix(tradeHistoryEntry.timestamp).format("DD-MM-HH:mm"),
+        date: moment.unix(tradeHistoryEntry.timestamp).format("DD-MM HH:mm"),
         tradeType: (
           <OasisTradeType order={tradeHistoryEntry} baseCurrency={baseToken} />
         ),

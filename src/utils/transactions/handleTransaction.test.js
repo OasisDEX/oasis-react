@@ -105,9 +105,7 @@ describe("handleTransaction", () => {
         addTransactionEpic
       });
 
-
     expect(result.transactionHash).toBe(transaction.value);
-
 
     expect(result.transactionConfirmationPromise).resolves.toEqual(undefined);
 

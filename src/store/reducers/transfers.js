@@ -14,13 +14,10 @@ import { handleTransaction } from "../../utils/transactions/handleTransaction";
 
 const initialState = Immutable.fromJS({});
 
-const INIT = "TRANSFERS/INIT";
-const TRANSFER_TRANSACTION = "TRANSFERS/TRANSFER_TRANSACTION";
-
-const Init = createAction(INIT, () => null);
+const Init = createAction('TRANSFERS/INIT', () => null);
 
 const transferTransaction = createAction(
-  TRANSFER_TRANSACTION,
+  'TRANSFERS/TRANSFER_TRANSACTION',
   (tokenName, recipientAddress, tokenAmountInEther) => {
     const contractInstance = getTokenContractInstance(tokenName);
     const tokenAmountWei = web3.toWei(tokenAmountInEther, ETH_UNIT_ETHER);

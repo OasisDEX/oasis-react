@@ -25,7 +25,7 @@ const amountTemplate = row => (
 const wrapUnwrapHistoryColsDefinition = () => [
   {
     heading: "date",
-    template: ({ timestamp }) => moment.unix(timestamp).format("DD-MM-HH:mm")
+    template: ({ timestamp }) => moment.unix(timestamp).format("DD-MM HH:mm")
   },
   { heading: "action", key: "action" },
   // eslint-disable-next-line react/display-name

@@ -92,7 +92,7 @@ class OasisMarketHistory extends PureComponent {
 
       return {
         transactionHash: tradeHistoryEntry.transactionHash,
-        date: moment.unix(tradeHistoryEntry.timestamp).format("DD-MM-HH:mm"),
+        date: moment.unix(tradeHistoryEntry.timestamp).format("DD-MM HH:mm"),
         tradeType: (
           <OasisTradeType order={tradeHistoryEntry} baseCurrency={baseToken} />
         ),

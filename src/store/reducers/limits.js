@@ -28,7 +28,6 @@ const initialState = fromJS({
   }
 });
 
-
 const init = createAction(
   'LIMITS/INIT',
   () => null,
