@@ -7,112 +7,106 @@ exports[`(Container) OasisTokenSelect should render 1`] = `
   value="MKR"
 >
   <option
-    key="0"
-    value="MKR"
-  >
-    MKR
-  </option>
-  <option
-    key="1"
-    value="W-ETH"
-  >
-    W-ETH
-  </option>
-  <option
-    key="2"
-    value="MKR"
-  >
-    MKR
-  </option>
-  <option
-    key="3"
-    value="SAI"
-  >
-    SAI
-  </option>
-  <option
-    key="4"
-    value="W-GNT"
-  >
-    W-GNT
-  </option>
-  <option
-    key="5"
-    value="DGD"
-  >
-    DGD
-  </option>
-  <option
-    key="6"
-    value="REP"
-  >
-    REP
-  </option>
-  <option
-    key="7"
-    value="ICN"
-  >
-    ICN
-  </option>
-  <option
-    key="8"
+    key="1ST"
     value="1ST"
   >
     1ST
   </option>
   <option
-    key="9"
-    value="SNGLS"
-  >
-    SNGLS
-  </option>
-  <option
-    key="10"
-    value="VSL"
-  >
-    VSL
-  </option>
-  <option
-    key="11"
-    value="PLU"
-  >
-    PLU
-  </option>
-  <option
-    key="12"
-    value="MLN"
-  >
-    MLN
-  </option>
-  <option
-    key="13"
-    value="RHOC"
-  >
-    RHOC
-  </option>
-  <option
-    key="14"
-    value="TIME"
-  >
-    TIME
-  </option>
-  <option
-    key="15"
-    value="GUP"
-  >
-    GUP
-  </option>
-  <option
-    key="16"
+    key="BAT"
     value="BAT"
   >
     BAT
   </option>
   <option
-    key="17"
+    key="DGD"
+    value="DGD"
+  >
+    DGD
+  </option>
+  <option
+    key="GUP"
+    value="GUP"
+  >
+    GUP
+  </option>
+  <option
+    key="ICN"
+    value="ICN"
+  >
+    ICN
+  </option>
+  <option
+    key="MKR"
+    value="MKR"
+  >
+    MKR
+  </option>
+  <option
+    key="MLN"
+    value="MLN"
+  >
+    MLN
+  </option>
+  <option
+    key="NMR"
     value="NMR"
   >
     NMR
+  </option>
+  <option
+    key="PLU"
+    value="PLU"
+  >
+    PLU
+  </option>
+  <option
+    key="REP"
+    value="REP"
+  >
+    REP
+  </option>
+  <option
+    key="RHOC"
+    value="RHOC"
+  >
+    RHOC
+  </option>
+  <option
+    key="SAI"
+    value="SAI"
+  >
+    SAI
+  </option>
+  <option
+    key="SNGLS"
+    value="SNGLS"
+  >
+    SNGLS
+  </option>
+  <option
+    key="TIME"
+    value="TIME"
+  >
+    TIME
+  </option>
+  <option
+    key="VSL"
+    value="VSL"
+  >
+    VSL
+  </option>
+  <option
+    key="W-ETH"
+    value="W-ETH"
+  >
+    W-ETH
+  </option>
+  <option
+    key="W-GNT"
+    value="W-GNT"
+  >
+    W-GNT
   </option>
 </OasisSelect>
 `;
@@ -131,25 +125,24 @@ exports[`(Container) OasisTokenSelect will receive right props 1`] = `
 Object {
   "defaultToken": "MKR",
   "selected": undefined,
-  "tokens": Immutable.List [
-    "MKR",
-    "W-ETH",
-    "MKR",
-    "SAI",
-    "W-GNT",
-    "DGD",
-    "REP",
-    "ICN",
+  "tokens": Immutable.OrderedSet [
     "1ST",
-    "SNGLS",
-    "VSL",
-    "PLU",
-    "MLN",
-    "RHOC",
-    "TIME",
-    "GUP",
     "BAT",
+    "DGD",
+    "GUP",
+    "ICN",
+    "MKR",
+    "MLN",
     "NMR",
+    "PLU",
+    "REP",
+    "RHOC",
+    "SAI",
+    "SNGLS",
+    "TIME",
+    "VSL",
+    "W-ETH",
+    "W-GNT",
 ],
 }
 `;

@@ -43,7 +43,7 @@ const defaultQuoteToken = createSelector(
 
 const baseTokens = createSelector(
   tokens,
-  state => state.get('tradingPairs').map(tp => tp.get('base')),
+  state => state.get('tradingPairs').map(tp => tp.get('base')).toSet().sort(),
 );
 
 const getTokenSpecs = createSelector(
