@@ -32,7 +32,6 @@ const initialState = fromJS({
 });
 
 
-const INIT = 'OFFERS/INIT';
 const UPDATE_OFFER = 'OFFERS/UPDATE_OFFER';
 
 const BUY_GAS = 1000000;
@@ -44,11 +43,6 @@ const OFFER_SYNC_TYPE_UPDATE = 'OFFERS/OFFER_SYNC_TYPE_UPDATE';
 const OFFER_SYNC_TYPE_NEW_OFFER = 'OFFERS/OFFER_SYNC_NEW_OFFER';
 
 export const OFFER_STATUS_INACTIVE = 'OFFERS/OFFER_STATUS_INACTIVE';
-
-const Init = createAction(
-  INIT,
-  () => null,
-);
 
 const resetOffers = createAction(
   'OFFERS/RESET_OFFERS',
@@ -607,9 +601,7 @@ const removeOrderCancelledByTheOwner = createAction(
 );
 
 const actions = {
-  Init,
   initOffersEpic,
-  getTradingPairOfferCount,
   cancelOfferEpic,
   syncOffersEpic,
   subscribeOffersEventsEpic,
