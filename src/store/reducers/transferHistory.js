@@ -16,25 +16,10 @@ const transferHistoryItemInitialValue = fromJS({
   status: null
 });
 
-const INIT = 'TRANSFER_HISTORY/INIT';
-
 const Init = createAction(
-  INIT,
+  'TRANSFER_HISTORY/INIT',
   () => null,
 );
-
-const createHistoryEntry = ({ transactionHash, tokenName, fromAddress, toAddress, tokenAmount, timestamp, blockNumber, transferType }) =>
-  fromJS({
-    tokenName,
-    fromAddress,
-    toAddress,
-    tokenAmount,
-    timestamp,
-    blockNumber,
-    transferType,
-    transactionHash,
-    action: transferType === TRANSFER_HISTORY_TYPE_TRANSFER_FROM ? 'out': 'in'
-  });
 
 export const TRANSFER_HISTORY_LOAD_STATUS_PENDING =   'TRANSFER_HISTORY/LOAD_STATUS_PENDING';
 export const TRANSFER_HISTORY_LOAD_STATUS_COMPLETED = 'TRANSFER_HISTORY/LOAD_STATUS_COMPLETED';
@@ -42,17 +27,10 @@ export const TRANSFER_HISTORY_LOAD_STATUS_PAUSED =    'TRANSFER_HISTORY/LOAD_STA
 export const TRANSFER_HISTORY_TYPE_TRANSFER_FROM =    'TRANSFER_HISTORY/TYPE_TRANSFER_FROM';
 export const TRANSFER_HISTORY_TYPE_TRANSFER_TO =      'TRANSFER_HISTORY/TYPE_TRANSFER_TO';
 
-
-const tokenTransferFromEvent = createAction(
-  'TRANSFER_HISTORY/EVENT___TOKEN_TRANSFER_FROM',
-  (tokenName, transactionHash, userAddress, event, blockInfo) =>
-    ({ tokenName, userAddress, event, blockInfo }),
-);
-
-const tokenTransferToEvent = createAction(
-  'TRANSFER_HISTORY/EVENT___TOKEN_TRANSFER_TO',
-  (tokenName, transactionHash, userAddress, event, blockInfo) =>
-    ({ tokenName, userAddress, event, blockInfo }),
+const tokenTransferEvent = createAction(
+  'TRANSFER_HISTORY/EVENT___TOKEN_TRANSFER',
+  (tokenName, transactionHash, userAddress, event, blockInfo, transferType) =>
+    ({ tokenName, userAddress, event, blockInfo, transferType }),
 );
 
 const loadTokenTransfersHistory = createPromiseActions(
@@ -81,25 +59,19 @@ const loadTokenTransfersHistoryEpic = (tokenName, address, config) => async (dis
   const toBlock = 'latest';
 
   const filterConfig = config ? config : { fromBlock, toBlock };
+
+  const handleTransferEvent = (transferType) =>  async (err, transferEvent) => {
+    const blockInfo = (
+      await dispatch(networkReducer.actions.getBlock(transferEvent.blockNumber))
+    ).value;
+    dispatch(tokenTransferEvent(tokenName, transferEvent.transactionHash, filterAddress, transferEvent, blockInfo, transferType));
+  };
+
   tokenContract.Transfer({ from: filterAddress }, filterConfig)
-    .then(
-      async (err, transferEvent) => {
-        const blockInfo = (
-          await dispatch(networkReducer.actions.getBlock(transferEvent.blockNumber))
-        ).value;
-        dispatch(tokenTransferFromEvent(tokenName,transferEvent.transactionHash, filterAddress, transferEvent, blockInfo));
-      },
-    );
+    .then(handleTransferEvent(TRANSFER_HISTORY_TYPE_TRANSFER_FROM));
 
   tokenContract.Transfer({ to: filterAddress }, filterConfig)
-    .then(
-      async (err, transferEvent) => {
-        const blockInfo = (
-          await dispatch(networkReducer.actions.getBlock(transferEvent.blockNumber))
-        ).value;
-        dispatch(tokenTransferToEvent(tokenName, transferEvent.transactionHash, filterAddress, transferEvent, blockInfo));
-      },
-    );
+    .then(handleTransferEvent(TRANSFER_HISTORY_TYPE_TRANSFER_TO));
 
   dispatch(loadingTokenTransferHistorySetPending(tokenName));
 };
@@ -111,31 +83,18 @@ const actions = {
 };
 
 const reducer = handleActions({
-  [tokenTransferFromEvent]: (state, { payload: { tokenName, event, blockInfo } }) =>  {
+  [tokenTransferEvent]: (state, { payload: { tokenName, event, blockInfo, transferType} }) =>  {
     const { from, to, value } = event.args;
     return state.update('transferHistory', thList => thList.push(
-      createHistoryEntry({
+      fromJS({
         tokenName,
-        transferType: TRANSFER_HISTORY_TYPE_TRANSFER_FROM,
+        transferType,
         fromAddress: from,
         toAddress: to,
         timestamp: blockInfo.timestamp,
         tokenAmount: value.toString(),
         transactionHash: event.transactionHash,
-      }))
-    );
-  },
-  [tokenTransferToEvent]: (state, { payload: { tokenName, event, blockInfo } }) => {
-    const { from, to, value } = event.args;
-    return state.update('transferHistory', thList => thList.push(
-      createHistoryEntry({
-        tokenName,
-        transferType: TRANSFER_HISTORY_TYPE_TRANSFER_TO,
-        fromAddress: from,
-        toAddress: to,
-        timestamp: blockInfo.timestamp,
-        tokenAmount: value.toString(),
-        transactionHash: event.transactionHash,
+        action: transferType === TRANSFER_HISTORY_TYPE_TRANSFER_FROM ? 'out': 'in'
       }))
     );
   },
@@ -154,6 +113,7 @@ const reducer = handleActions({
       ['tokensLoadingStatus', payload],
       transferHistoryItemInitialValue.set('status', TRANSFER_HISTORY_LOAD_STATUS_COMPLETED)
     ),
+
 }, initialState);
 
 export default {
