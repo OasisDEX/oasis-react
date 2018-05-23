@@ -95,7 +95,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
                       placeholder={0}
                       // normalize={normalize}
                       type="text"
-                      {...amountMask}
+                      {...amountMask()}
                     />
                   </div>
                 </td>

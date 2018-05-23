@@ -77,26 +77,26 @@ export class OfferTakeForm extends PureComponent {
     // this.estimateGas();
   }
 
-  onVolumeFieldChange(event, newValue, previousValue) {
+  onVolumeFieldChange(newValue) {
     const { volumeFieldValueChanged } = this.props.actions;
-    if (newValue.toString() !== previousValue.toString()) {
+    // if (newValue.toString() !== previousValue.toString()) {
       setTimeout(() => volumeFieldValueChanged(newValue), 0);
       // if(parseFloat(newValue)) {
       //   this.estimateGas();
       // }
-    }
+    // }
   }
 
-  onTotalFieldChange(event, newValue, previousValue) {
+  onTotalFieldChange(newValue) {
+    // console.log("onTotalFieldChange", newValue, previousValue);
     const { totalFieldValueChanged } = this.props.actions;
-    if (newValue.toString() !== previousValue.toString()) {
+    // if (newValue.toString() !== previousValue.toString()) {
       setTimeout(() => totalFieldValueChanged(newValue), 0);
       // if(parseFloat(newValue)) {
       //   this.estimateGas();
       // }
-    }
+    // }
   }
-
 
   setMaxButton() {
     if (web3.toBigNumber(this.props.activeBaseTokenBalance).gt(0)) {
@@ -178,7 +178,7 @@ export class OfferTakeForm extends PureComponent {
                   // normalize={normalize}
                   type="text"
                   disabled={true}
-                  {...amountMask}
+                  {...amountMask()}
                 />
               </td>
               <td className={tableStyles.currency}>{priceToken}</td>
@@ -189,8 +189,6 @@ export class OfferTakeForm extends PureComponent {
                 <Field
                   autoComplete="off"
                   style={fieldStyle}
-                  onChange={this.onVolumeFieldChange}
-                  // normalize={normalize}
                   name="volume"
                   component="input"
                   type="text"
@@ -198,7 +196,8 @@ export class OfferTakeForm extends PureComponent {
                   min={0}
                   placeholder={0}
                   disabled={disableForm}
-                  {...amountMask}
+                  {...amountMask({onChange: this.onVolumeFieldChange})}
+
                 />
                 <div className={styles.errorMessage}>
                   {isVolumeGreaterThanOfferMax &&
@@ -220,15 +219,13 @@ export class OfferTakeForm extends PureComponent {
                     autoComplete="off"
                     style={fieldStyle}
                     min={0}
-                    onChange={this.onTotalFieldChange}
-                    // normalize={normalize}
                     name="total"
                     component="input"
                     type="text"
                     validate={validateTotal}
                     placeholder={0}
                     disabled={disableForm}
-                    {...amountMask}
+                    {...amountMask({onChange: this.onTotalFieldChange})}
                   />
                 </div>
               </td>

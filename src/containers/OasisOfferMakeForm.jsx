@@ -25,6 +25,7 @@ import OasisVolumeIsGreaterThanUserBalance from "../components/OasisVolumeIsGrea
 import { formatAmount, PRICE_DECIMAL } from '../utils/tokens/pair';
 import isNumeric from '../utils/numbers/isNumeric';
 import { amountMask } from '../inputMasks';
+import {createNumberMask} from "redux-form-input-masks";
 
 const propTypes = PropTypes && {
   // activeOfferMakeOfferData: ImmutablePropTypes.map.isRequired,
@@ -64,27 +65,27 @@ export class OfferMakeForm extends PureComponent {
     this.props.actions.sellMax(this.props.offerMakeType);
   }
 
-  onVolumeFieldChange(event, newValue, previousValue) {
+  onVolumeFieldChange(newValue) {
     const { volumeFieldValueChanged } = this.props.actions;
-    if (!previousValue || newValue.toString() !== previousValue.toString()) {
+    // if (!previousValue || newValue.toString() !== previousValue.toString()) {
       volumeFieldValueChanged(this.props.offerMakeType, newValue);
-    }
+    // }
   }
 
-  onPriceFieldChange(event, newValue, previousValue) {
-    if (parseFloat(newValue) >= 0) {
+  onPriceFieldChange(newValue) {
+    // if (parseFloat(newValue) >= 0) {
       const { priceFieldValueChanged } = this.props.actions;
-      if (!previousValue || newValue.toString() !== previousValue.toString()) {
+    //   if (!previousValue || newValue.toString() !== previousValue.toString()) {
         priceFieldValueChanged(this.props.offerMakeType, newValue);
-      }
-    }
+      // }
+    // }
   }
 
-  onTotalFieldChange(event, newValue, previousValue) {
+  onTotalFieldChange(newValue) {
     const { totalFieldValueChanged } = this.props.actions;
-    if (!previousValue || newValue.toString() !== previousValue.toString()) {
+    // if (!previousValue || newValue.toString() !== previousValue.toString()) {
       totalFieldValueChanged(this.props.offerMakeType, newValue);
-    }
+    // }
   }
 
   setMaxButton() {
@@ -161,12 +162,10 @@ export class OfferMakeForm extends PureComponent {
                   autoComplete="off"
                   name="price"
                   component="input"
-                  onChange={this.onPriceFieldChange}
                   placeholder={0}
                   disabled={disableForm}
-                  // normalize={normalize}
                   type="text"
-                  {...amountMask}
+                  {...amountMask({onChange: this.onPriceFieldChange})}
                 />
               </td>
               <td className={styles.currency}> {priceToken}</td>
@@ -176,8 +175,6 @@ export class OfferMakeForm extends PureComponent {
               <td className={styles.amount}>
                 <Field
                   autoComplete="off"
-                  onChange={this.onVolumeFieldChange}
-                  // normalize={normalize}
                   onBlur={formatValue}
                   name="volume"
                   component="input"
@@ -189,7 +186,7 @@ export class OfferMakeForm extends PureComponent {
                     greaterThanZeroValidator(currentFormValues.price) ||
                     disableForm
                   }
-                  {...amountMask}
+                  {...amountMask({onChange: this.onVolumeFieldChange})}
                 />
               </td>
               <td className={styles.currency}>
@@ -228,7 +225,7 @@ export class OfferMakeForm extends PureComponent {
                       greaterThanZeroValidator(currentFormValues.volume) ||
                       disableForm
                     }
-                    {...amountMask}
+                    {...amountMask({onChange: this.onTotalFieldChange})}
                   />
                 </div>
               </td>

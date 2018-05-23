@@ -52,7 +52,7 @@ export class TokenAmountInputFieldWrapper extends PureComponent {
         component={TokenAmountInput}
         selectedToken={selectedToken}
         name={fieldName}
-        {...amountMask}
+        {...amountMask()}
       />
     );
   }
