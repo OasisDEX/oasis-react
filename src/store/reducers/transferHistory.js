@@ -71,8 +71,6 @@ const loadingTokenTransferHistorySetCompleted = createAction(
   'TRANSFER_HISTORY/LOADING_TOKEN_TRANSFER_HISTORY_SET_COMPLETED'
 );
 
-
-
 const loadTokenTransfersHistoryEpic = (tokenName, address, config) => async (dispatch, getState) => {
   dispatch(loadTokenTransfersHistory.pending());
 
@@ -93,7 +91,7 @@ const loadTokenTransfersHistoryEpic = (tokenName, address, config) => async (dis
       },
     );
 
-  tokenContract.Transfer({ from: filterAddress }, filterConfig)
+  tokenContract.Transfer({ to: filterAddress }, filterConfig)
     .then(
       async (err, transferEvent) => {
         const blockInfo = (
