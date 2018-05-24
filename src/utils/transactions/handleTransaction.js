@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-vars */
 import transactions, {
-  TX_STATUS_AWAITING_CONFIRMATION, TX_STATUS_AWAITING_USER_ACCEPTANCE,
-  TX_STATUS_CANCELLED_BY_USER, TX_STATUS_CONFIRMED,
-} from '../../store/reducers/transactions';
+  TX_STATUS_AWAITING_CONFIRMATION,
+  TX_STATUS_AWAITING_USER_ACCEPTANCE,
+  TX_STATUS_CANCELLED_BY_USER,
+  TX_STATUS_CONFIRMED
+} from "../../store/reducers/transactions";
 import { fromJS } from "immutable";
 import { getTimestamp } from "../time";
 
@@ -22,6 +24,9 @@ import { getTimestamp } from "../time";
  * @param onTransactionCompleted  [optional]    Function passed from within the Epic -> handles transaction complete (with success !).
 
  * @param onTransactionRejected   [optional]    Function passed from within the Epic -> handles transaction complete (with failure !).
+ * @param callsNext               [optional]    Needs to be set to true if we call next transaction from *onCallNextTransaction*
+ * @param onCallNextTransaction   [optional]    Called when callsNext is set to true.
+ * @param nextTransactionDelay    [optional]    Delay *onCallNextTransaction* by n ms.
  * @param onStart                 [optional]    Function passed from the component dispatching the action
  *                                              called on before start (just after users calls action creator ).
  * @param onPending               [optional]    Function passed from the component dispatching the action
@@ -30,9 +35,12 @@ import { getTimestamp } from "../time";
  *                                              called on transaction completion ).
  * @param onCancelCleanup         [optional]    Function passed from the component dispatching the action.
 
+ * @param onRejected
+ * @param addTransactionEpic
  * @returns {Promise}
  */
-const handleTransaction = ({
+const handleTransaction = (
+  {
     dispatch,
     transactionDispatcher,
     transactionType,
@@ -41,11 +49,19 @@ const handleTransaction = ({
     onTransactionPending,
     onTransactionCompleted,
     onTransactionRejected,
-    withCallbacks: { onCancelCleanup, onStart, onPending, onCompleted, onRejected } = {}
+    callsNext,
+    onCallNextTransaction,
+    nextTransactionDelay,
+    withCallbacks: {
+      onCancelCleanup,
+      onStart,
+      onPending,
+      onCompleted,
+      onRejected
+    } = {}
   },
-  { addTransactionEpic = transactions.actions.addTransactionEpic} = {}) =>
-{
-
+  { addTransactionEpic = transactions.actions.addTransactionEpic } = {}
+) => {
   // console.log('handleTransaction');
 
   if (!transactionType) {
@@ -54,7 +70,7 @@ const handleTransaction = ({
 
   return new Promise(async (resolve, reject) => {
     const txDispatchedTimestamp = getTimestamp();
-    onStart && onStart(txDispatchedTimestamp);
+    onStart && onStart(txDispatchedTimestamp, txMeta);
 
     const transactionActionResult = await transactionDispatcher().catch(() => {
       /**
@@ -73,7 +89,12 @@ const handleTransaction = ({
     if (transactionActionResult) {
       const txStartTimestamp = getTimestamp();
       const transactionHash = transactionActionResult.value;
-      onTransactionPending && onTransactionPending({ txHash: transactionHash, txStartTimestamp });
+      onTransactionPending &&
+        onTransactionPending({
+          txHash: transactionHash,
+          txStartTimestamp,
+          txMeta
+        });
       const transactionConfirmationPromise = dispatch(
         addTransactionEpic({
           txType: transactionType,
@@ -92,17 +113,27 @@ const handleTransaction = ({
             //First run Epic completion handler
             onTransactionCompleted && onTransactionCompleted(to);
             //Then continue with component calling the action
-            onCompleted && onCompleted(to);
+            onCompleted && onCompleted(to, callsNext);
+            if (callsNext) {
+              if (nextTransactionDelay) {
+                setTimeout(
+                  () => onCallNextTransaction(to, txMeta),
+                  nextTransactionDelay
+                );
+              } else {
+                onCallNextTransaction(to, txMeta);
+              }
+            }
             return fromJS(to);
           })
           .catch(to => {
-            onTransactionRejected&& onTransactionRejected(to);
+            onTransactionRejected && onTransactionRejected(to);
             onRejected && onRejected(to);
           }),
         transactionHash
       });
     } else {
-      reject('No response from transactionDispatcher!');
+      reject("No response from transactionDispatcher!");
     }
   });
 };

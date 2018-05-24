@@ -1,18 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) OasisTransactionStatus should render 1`] = `
-<div
+<InfoBox
+  alignItems="baseline"
   className=""
+  color="default"
+  fullWidth={true}
+  justifyContent="space-between"
+  size="sm"
 >
-  <TransactionStatus
-    noBorder={true}
-    transaction={
-      Immutable.Map {
-        txType: "OFFER_TAKES/TAKE_BUY_OFFER",
+  <div
+    className=""
+    style={
+      Object {
+        "alignContent": "space-between",
+        "display": "flex",
       }
     }
-  />
-</div>
+  >
+    <div />
+    <TransactionStatus
+      noBorder={true}
+      transaction={
+        Immutable.Map {
+          txType: "OFFER_TAKES/TAKE_BUY_OFFER",
+        }
+      }
+    />
+  </div>
+</InfoBox>
 `;
 
 exports[`(Container) OasisTransactionStatus will receive right actions 1`] = `

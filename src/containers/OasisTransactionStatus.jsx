@@ -14,17 +14,17 @@ import {
 } from "../store/reducers/transactions";
 import textStyles from "../styles/modules/_typography.scss";
 import CSSModules from "react-css-modules";
+import InfoBox from '../components/InfoBox';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
   txTimestamp: PropTypes.number,
   txType: PropTypes.string,
   localStatus: PropTypes.string,
-  customBlock: PropTypes.node
+  customBlock: PropTypes.oneOfType([PropTypes.node, PropTypes.func])
 };
 
 export class OasisTransactionStatusWrapper extends PureComponent {
-
   hasTransactionFailed() {
     return [TX_STATUS_CANCELLED_BY_USER, TX_STATUS_REJECTED].includes(
       this.props.transaction.get("txStatus")
@@ -55,13 +55,17 @@ export class OasisTransactionStatusWrapper extends PureComponent {
   }
 
   render() {
-    const { transaction } = this.props;
+    const { transaction, infoText } = this.props;
+    console.log({ transaction, infoText });
     return (
-          <div
-            className={this.hasTransactionFailed() ? textStyles.textDanger : ''}
-          >
-            <TransactionStatus transaction={transaction} noBorder />
+      <InfoBox justifyContent="space-between" alignItems="baseline" size="sm" fullWidth>
+        <div className={this.hasTransactionFailed() ? textStyles.textDanger : ""} style={{display: 'flex', alignContent: 'space-between'}}>
+          <div>
+            { typeof infoText === 'function' ? infoText(transaction.get('txMeta')) : infoText }
           </div>
+          <TransactionStatus transaction={transaction} noBorder />
+        </div>
+      </InfoBox>
     );
   }
 }
