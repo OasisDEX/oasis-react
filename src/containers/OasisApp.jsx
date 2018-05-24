@@ -22,7 +22,7 @@ const propTypes = PropTypes && {};
 
 export class OasisAppWrapper extends PureComponent {
 
-  componentWillMount() {
+  UNSAFE_componentWillUpdate() {
     this.props.actions.platformInitEpic();
   }
 

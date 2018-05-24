@@ -22,16 +22,19 @@ import { TYPE_BUY_OFFER, TYPE_SELL_OFFER } from "../store/reducers/offers";
 import { OasisSignificantDigitsWrapper } from "../containers/OasisSignificantDigits";
 
 const myOrdersDisplayFormat = offer => {
-  let baseAmount = null,
-    quoteAmount = null;
+  let baseAmount = null, baseAmountFullPrecision = null, quoteAmount = null, quoteAmountFullPrecision = null;
   switch (offer.tradeType) {
     case BID:
       baseAmount = formatAmount(offer.buyHowMuch, true, ETH_UNIT_ETHER);
+      baseAmountFullPrecision = offer.buyHowMuch;
       quoteAmount = formatAmount(offer.sellHowMuch, true, ETH_UNIT_ETHER);
+      quoteAmountFullPrecision = offer.sellHowMuch;
       break;
     case ASK:
       baseAmount = formatAmount(offer.sellHowMuch, true, ETH_UNIT_ETHER);
+      baseAmountFullPrecision = offer.sellHowMuch;
       quoteAmount = formatAmount(offer.buyHowMuch, true, ETH_UNIT_ETHER);
+      quoteAmountFullPrecision = offer.buyHowMuch;
       break;
   }
 
@@ -39,8 +42,11 @@ const myOrdersDisplayFormat = offer => {
     offerType: offer.offerType,
     tradeTypeEl: offer.tradeTypeEl,
     price: formatPrice(offer.price),
+    priceFullPrecision: offer.price,
     baseAmount,
+    baseAmountFullPrecision,
     quoteAmount,
+    quoteAmountFullPrecision,
     owner: offer.owner,
     id: offer.id
   };
@@ -71,15 +77,32 @@ const tradesHistoryColsDefinition = (baseToken, quoteToken) => [
   { heading: "action", key: "tradeType" },
   {
     heading: `price`,
-    template: row => <OasisSignificantDigitsWrapper amount={row.price} />
+    template: row => (
+      <OasisSignificantDigitsWrapper
+        fullPrecisionAmount={row.priceFullPrecision}
+        amount={row.price}
+      />
+    )
   },
   {
     heading: `${quoteToken}`,
-    template: row => <OasisSignificantDigitsWrapper amount={row.quoteAmount} />
+    template: row => (
+      <OasisSignificantDigitsWrapper
+        fullPrecisionUnit={ETH_UNIT_ETHER}
+        fullPrecisionAmount={row.quoteAmountFullPrecision}
+        amount={row.quoteAmount}
+      />
+    )
   },
   {
     heading: `${baseToken}`,
-    template: row => <OasisSignificantDigitsWrapper amount={row.baseAmount} />
+    template: row => (
+      <OasisSignificantDigitsWrapper
+        fullPrecisionUnit={ETH_UNIT_ETHER}
+        fullPrecisionAmount={row.baseAmountFullPrecision}
+        amount={row.baseAmount}
+      />
+    )
   }
 ];
 
@@ -87,15 +110,32 @@ const openOrdersColsDefinition = (baseToken, quoteToken, orderActions) => [
   { heading: "action", key: "tradeTypeEl" },
   {
     heading: `price`,
-    template: row => <OasisSignificantDigitsWrapper amount={row.price} />
+    template: row => (
+      <OasisSignificantDigitsWrapper
+        fullPrecisionAmount={row.priceFullPrecision}
+        amount={row.price}
+      />
+    )
   },
   {
     heading: `${quoteToken}`,
-    template: row => <OasisSignificantDigitsWrapper amount={row.quoteAmount} />
+    template: row => (
+      <OasisSignificantDigitsWrapper
+        fullPrecisionUnit={ETH_UNIT_ETHER}
+        fullPrecisionAmount={row.quoteAmountFullPrecision}
+        amount={row.quoteAmount}
+      />
+    )
   },
   {
     heading: `${baseToken}`,
-    template: row => <OasisSignificantDigitsWrapper amount={row.baseAmount} />
+    template: row => (
+      <OasisSignificantDigitsWrapper
+        fullPrecisionUnit={ETH_UNIT_ETHER}
+        fullPrecisionAmount={row.baseAmountFullPrecision}
+        amount={row.baseAmount}
+      />
+    )
   },
   { heading: ``, template: actionsColumnTemplate.bind(orderActions) }
 ];
@@ -186,8 +226,11 @@ class OasisMyOrders extends PureComponent {
           <OasisTradeType order={tradeHistoryEntry} baseCurrency={baseToken} />
         ),
         baseAmount: formatAmount(baseAmount, true),
+        baseAmountFullPrecision: baseAmount,
         quoteAmount: formatAmount(quoteAmount, true),
-        price: formatPrice(price(tradeHistoryEntry, baseToken, quoteToken))
+        quoteAmountFullPrecision: quoteAmount,
+        price: formatPrice(price(tradeHistoryEntry, baseToken, quoteToken)),
+        priceFullPrecision: price(tradeHistoryEntry, baseToken, quoteToken)
       };
     };
     const { trades, activeTradingPair: { baseToken, quoteToken } } = this.props;

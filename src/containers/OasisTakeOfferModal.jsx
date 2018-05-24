@@ -270,7 +270,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     );
   }
 
-  componentWillUpdate(nextProps) {
+  UNSAFE_componentWillUpdate(nextProps) {
     const prevBlockNumber = this.props.latestBlockNumber;
     const currentBlockNumber = nextProps.latestBlockNumber;
     if (prevBlockNumber !== currentBlockNumber) {

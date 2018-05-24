@@ -16,6 +16,7 @@ import { Map } from "immutable";
 import styles from "./OasisTokenTransferHistory.scss";
 import createEtherscanTransactionLink from "../utils/createEtherscanTransactionLink";
 import OasisSignificantDigitsWrapper from "./OasisSignificantDigits";
+import { ETH_UNIT_ETHER } from "../constants";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -28,7 +29,11 @@ const RecipientAddress = ({ address }) => (
 );
 
 const amountTemplate = ({ tokenAmount }) => (
-  <OasisSignificantDigitsWrapper amount={formatAmount(tokenAmount, true)} />
+  <OasisSignificantDigitsWrapper
+    fullPrecisionAmount={tokenAmount}
+    fullPrecisionUnit={ETH_UNIT_ETHER}
+    amount={formatAmount(tokenAmount, true)}
+  />
 );
 /* eslint-disable react/prop-types */
 const transferHistoryColsDefinition = () => [
@@ -79,7 +84,7 @@ export class OasisTokenTransferHistoryWrapper extends PureComponent {
     );
   }
 
-  componentWillUpdate({
+  UNSAFE_componentWillUpdate({
     selectedToken,
     latestBlockNumber,
     contractsLoaded,

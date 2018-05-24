@@ -10,6 +10,7 @@ import styles from "./OasisSellOrders.scss";
 import CSSModules from "react-css-modules";
 import { OFFER_STATUS_INACTIVE } from "../store/reducers/offers";
 import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
+import { ETH_UNIT_ETHER } from '../constants';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
 const propTypes = PropTypes && {
@@ -27,13 +28,24 @@ const actionsColumnTemplate = function() {
 };
 
 const priceTemplate = row => (
-  <OasisSignificantDigitsWrapper amount={row.ask_price} />
+  <OasisSignificantDigitsWrapper
+    fullPrecisionAmount={row.ask_price_full_precision}
+    amount={row.ask_price}
+  />
 );
 const baseTokenTemplate = row => (
-  <OasisSignificantDigitsWrapper amount={row.sell_how_much} />
+  <OasisSignificantDigitsWrapper
+    fullPrecisionUnit={ETH_UNIT_ETHER}
+    fullPrecisionAmount={row.sell_how_much_full_precision}
+    amount={row.sell_how_much}
+  />
 );
 const quoteTokenTemplate = row => (
-  <OasisSignificantDigitsWrapper amount={row.buy_how_much} />
+  <OasisSignificantDigitsWrapper
+    fullPrecisionUnit={ETH_UNIT_ETHER}
+    fullPrecisionAmount={row.buy_how_much_full_precision}
+    amount={row.buy_how_much}
+  />
 );
 
 const colsDefinition = (baseToken, quoteToken, orderActions) => {

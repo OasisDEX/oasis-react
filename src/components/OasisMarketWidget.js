@@ -17,6 +17,7 @@ import {
 import CSSModules from "react-css-modules";
 import styles from "./OasisMarketWidget.scss";
 import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
+import { ETH_UNIT_ETHER } from "../constants";
 
 const periodHeading = {
   [DAY]: "daily",
@@ -26,12 +27,23 @@ const periodHeading = {
 
 const tradingPairPriceTemplate = row =>
   row.tradingPairPrice ? (
-    <OasisSignificantDigitsWrapper amount={row.tradingPairPrice} />
+    <OasisSignificantDigitsWrapper
+      amount={row.tradingPairPrice}
+      fullPrecisionAmount={row.tradingPairPriceFullPrecision}
+    />
   ) : (
     "N/A"
   );
 const volumeTemplate = row =>
-  row.volume ? <OasisSignificantDigitsWrapper amount={row.volume} /> : "N/A";
+  row.volume ? (
+    <OasisSignificantDigitsWrapper
+      fullPrecisionUnit={ETH_UNIT_ETHER}
+      fullPrecisionAmount={row.volumeFullPrecision}
+      amount={row.volume}
+    />
+  ) : (
+    "N/A"
+  );
 
 const colDefinition = period => {
   return [
@@ -86,7 +98,9 @@ class OasisMarketWidget extends PureComponent {
         ),
         tradingPair: pair,
         volume: formatVolume(tradingPairVolume),
+        volumeFullPrecision: tradingPairVolume,
         tradingPairPrice: formatPrice(tradingPairPrice),
+        tradingPairPriceFullPrecision: tradingPairPrice,
         rawTradingPair: { baseToken: baseToken, quoteToken: quoteToken }
       };
     } else {

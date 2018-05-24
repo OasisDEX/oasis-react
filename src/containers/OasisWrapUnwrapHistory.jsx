@@ -25,7 +25,7 @@ export class OasisWrapUnwrapHistoryWrapper extends PureComponent {
     );
   }
 
-  async componentWillUpdate({ latestBlockNumber, contractsLoaded, isTokenWrapUnwrapHistoryLoading }) {
+  async UNSAFE_componentWillUpdate({ latestBlockNumber, contractsLoaded, isTokenWrapUnwrapHistoryLoading }) {
     if(latestBlockNumber && contractsLoaded && !isTokenWrapUnwrapHistoryLoading) {
       await this.props.actions.loadGNTBrokerAddress();
       this.props.actions.loadWrapUnwrapsHistory();

@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisPopup should render 1`] = `
+<div>
+  <Manager>
+    <Reference />
+    <Popper
+      placement="right"
+    />
+  </Manager>
+  );
+</div>
+`;
+
+exports[`(Container) OasisPopup will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisPopup will receive right props 1`] = `Object {}`;

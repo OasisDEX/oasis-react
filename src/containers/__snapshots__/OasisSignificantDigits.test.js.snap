@@ -1,24 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) OasisSignificantDigits should render 1`] = `
-<span>
-  <span>
-    42
-  </span>
-  <span>
-    .
-  </span>
-  <span>
-    00112
-  </span>
-  <span
-    style={
-      Object {
-        "opacity": 0.5,
-      }
-    }
-  />
-</span>
+<Manager>
+  <Reference />
+</Manager>
 `;
 
 exports[`(Container) OasisSignificantDigits will receive right actions 1`] = `

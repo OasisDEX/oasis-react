@@ -95,7 +95,7 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
     );
   }
 
-  componentWillUpdate(nextProps) {
+  UNSAFE_componentWillUpdate(nextProps) {
     const pairChanged =
       nextProps.activeTradingPair !== this.props.activeTradingPair;
     const contractsInitiallyLoaded =
