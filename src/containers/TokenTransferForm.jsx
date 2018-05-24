@@ -76,7 +76,7 @@ export class TokenTransferFormWrapper extends PureComponent {
     );
   }
 
-  componentWillUpdate(nextProps) {
+  UNSAFE_componentWillUpdate(nextProps) {
     if (this.props.selectedToken !== nextProps.selectedToken) {
       this.props.change("token", nextProps.selectedToken);
     }

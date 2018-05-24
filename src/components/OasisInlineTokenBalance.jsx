@@ -1,11 +1,11 @@
-import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { PureComponent } from "react";
+import { PropTypes } from "prop-types";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import { formatAmount } from '../utils/tokens/pair';
-import OasisLoadingIndicator from './OasisLoadingIndicator';
-import OasisSignificantDigitsWrapper  from '../containers/OasisSignificantDigits';
-
+import { formatAmount } from "../utils/tokens/pair";
+import OasisLoadingIndicator from "./OasisLoadingIndicator";
+import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
+import { ETH_UNIT_ETHER } from '../constants';
 
 const propTypes = PropTypes && {
   balance: PropTypes.string,
@@ -14,23 +14,27 @@ const propTypes = PropTypes && {
 };
 const defaultProps = {};
 
-
 class OasisInlineTokenBalance extends PureComponent {
   render() {
     const { balance, token, inWei } = this.props;
-    if ((!!balance) && token) {
+    if (!!balance && token) {
       return (
         <span>
-          <OasisSignificantDigitsWrapper amount={formatAmount(balance, inWei)}/> <b>{token}</b>
+          <OasisSignificantDigitsWrapper
+            fullPrecisionUnit={ETH_UNIT_ETHER}
+            fullPrecisionAmount={balance}
+            amount={formatAmount(balance, inWei)}
+          />{" "}
+          <b>{token}</b>
         </span>
       );
     } else {
-      return (<OasisLoadingIndicator/>);
+      return <OasisLoadingIndicator />;
     }
   }
 }
 
-OasisInlineTokenBalance.displayName = 'OasisInlineTokenBalance';
+OasisInlineTokenBalance.displayName = "OasisInlineTokenBalance";
 OasisInlineTokenBalance.propTypes = propTypes;
 OasisInlineTokenBalance.defaultProps = defaultProps;
 export default OasisInlineTokenBalance;

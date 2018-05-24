@@ -54,7 +54,7 @@ class OasisAccordion extends PureComponent {
     );
   }
 
-  componentWillUpdate(nextProps) {
+  UNSAFE_componentWillUpdate(nextProps) {
     if (this.props.isOpen !== nextProps.isOpen) {
       this.setState({ isOpen: nextProps.isOpen });
     }
