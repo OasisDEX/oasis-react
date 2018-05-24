@@ -73,7 +73,7 @@ export class OasisTokenSelectWrapper extends PureComponent {
 
 export function mapStateToProps(state, props) {
   return {
-    tokens: tokens.baseTokens(state),
+    tokens: tokens.allTokens(state),
     defaultToken: tokens.defaultBaseToken(state),
     selected: tokenSelectors.selectedToken(state, props.name)
   };

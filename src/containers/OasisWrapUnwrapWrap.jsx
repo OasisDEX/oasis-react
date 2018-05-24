@@ -44,11 +44,12 @@ export class OasisWrapUnwrapWrapWrapper extends PureComponent {
     );
   }
 
-  onTransactionStart() {
+  onTransactionStart(txStartTimestamp, txStartMeta) {
     this.setState({
       txStatus: TX_STATUS_AWAITING_USER_ACCEPTANCE,
       disableForm: true,
-      lockCancelButton: true
+      lockCancelButton: true,
+      txStartMeta
     });
   }
 
@@ -58,6 +59,7 @@ export class OasisWrapUnwrapWrapWrapper extends PureComponent {
       disableForm: false,
       lockCancelButton: false
     });
+    this.props.actions.resetActiveWrapForm();
   }
   onTransactionPending({ txStartTimestamp }) {
     this.setState({
@@ -66,20 +68,35 @@ export class OasisWrapUnwrapWrapWrapper extends PureComponent {
     });
   }
 
-  onTransactionCompleted() {
+  onTransactionCompleted(to, hasNextTransaction) {
     this.setState({
       txStatus: TX_STATUS_CONFIRMED
     });
-    setTimeout(
-      () => {
-        this.props.actions.resetActiveWrapForm();
-        this.setState({
-          txStatus: undefined,
-          txStartTimestamp: undefined,
-          disableForm: false
-        });
-      }, 2000
-    )
+
+    if (hasNextTransaction) {
+      setTimeout(
+        () => {
+          this.props.actions.resetActiveWrapForm();
+          this.setState({
+            txStatus: undefined,
+            txStartTimestamp: undefined,
+            // disableForm: false
+          });
+        }, 3000
+      );
+    } else {
+      setTimeout(
+        () => {
+          this.props.actions.resetActiveWrapForm();
+          this.setState({
+            txStatus: undefined,
+            txStartTimestamp: undefined,
+            disableForm: false
+          });
+        }, 3000
+      )
+
+    }
   }
 
   onTransactionRejected({ txHash }) {
@@ -93,10 +110,10 @@ export class OasisWrapUnwrapWrapWrapper extends PureComponent {
 
   render() {
     const { activeUnwrappedToken, activeUnwrappedTokenBalance } = this.props;
-    const { txStatus, txStartTimestamp } = this.state;
+    const { txStatus, txStartTimestamp, txStartMeta } = this.state;
     return (
       <OasisWrapUnwrapWrap
-        transactionState={{ txStatus, txStartTimestamp }}
+        transactionState={{ txStatus, txStartTimestamp, txStartMeta }}
         onSubmit={this.makeWrap}
         activeUnwrappedToken={activeUnwrappedToken}
         activeUnwrappedTokenBalance={activeUnwrappedTokenBalance}

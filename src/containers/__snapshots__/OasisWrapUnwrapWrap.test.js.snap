@@ -7,6 +7,7 @@ exports[`(Container) OasisWrapUnwrapWrap should render 1`] = `
   onSubmit={[Function]}
   transactionState={
     Object {
+      "txStartMeta": undefined,
       "txStartTimestamp": undefined,
       "txStatus": undefined,
     }

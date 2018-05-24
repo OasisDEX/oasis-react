@@ -8,7 +8,10 @@ import { Field, reduxForm } from "redux-form/immutable";
 // import { normalize } from "../utils/forms/offers";
 import wrapUnwrap from "../store/selectors/wrapUnwrap";
 import web3 from "../bootstrap/web3";
-import wrapUnwrapReducer from "../store/reducers/wrapUnwrap";
+import wrapUnwrapReducer, {
+  WRAP_UNWRAP_CLEAR_DEPOSIT_BROKER,
+  WRAP_UNWRAP_CREATE_DEPOSIT_BROKER,
+} from '../store/reducers/wrapUnwrap';
 import OasisButton from "../components/OasisButton";
 import tableStyles from "../styles/modules/_table.scss";
 import styles from "./OasisTokenWrapForm.scss";
@@ -30,6 +33,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
     super(props);
     this.validate = this.validate.bind(this);
     this.setWrapMax = this.setWrapMax.bind(this);
+    this.transactionInfoBlock = this.transactionInfoBlock.bind(this);
   }
 
   validate(value) {
@@ -45,8 +49,25 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
     this.props.actions.setWrapMax();
   }
 
-  transactionInfoBlock() {
-    const { wrapTokenAmount, activeUnwrappedToken } = this.props;
+  transactionInfoBlock(txMeta) {
+    const { wrapTokenAmount, activeUnwrappedToken, transactionState: { txStartMeta } } = this.props;
+    const metaData =  txStartMeta || txMeta;
+    if (metaData) {
+      switch (metaData.txSubType) {
+        case WRAP_UNWRAP_CREATE_DEPOSIT_BROKER:
+          return (
+            <div>
+              Create <b>{activeUnwrappedToken}</b> broker
+            </div>
+          );
+        case WRAP_UNWRAP_CLEAR_DEPOSIT_BROKER:
+          return (
+            <div>
+              Clear <b>{activeUnwrappedToken}</b> broker
+            </div>
+          );
+      }
+    }
     return (
       <div>
         Wrap{" "}
@@ -55,12 +76,14 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
         </b>
       </div>
     );
+
+
   }
   renderTransactionStatus() {
     const { transactionState: { txStatus, txStartTimestamp } } = this.props;
     return <OasisTransactionStatusWrapperInfoBox
       txStatus={txStatus}
-      infoText={this.transactionInfoBlock()}
+      infoText={this.transactionInfoBlock}
       localStatus={txStatus}
       txTimestamp={txStartTimestamp}
       txType={TX_WRAP}

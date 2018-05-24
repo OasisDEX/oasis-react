@@ -48,15 +48,7 @@ exports[`(Container) OasisTokenWrapForm should render 1`] = `
   </table>
   <div>
     <OasisTransactionStatusWrapperInfoBox
-      infoText={
-        <div>
-          Wrap
-           
-          <b>
-             
-          </b>
-        </div>
-      }
+      infoText={[Function]}
       localStatus="TX/STATUS_AWAITING_CONFIRMATION"
       txStatus="TX/STATUS_AWAITING_CONFIRMATION"
       txTimestamp={1}

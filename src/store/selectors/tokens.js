@@ -21,6 +21,12 @@ const validBaseTokensList = createSelector(
   state => state.get('baseTokens'),
 );
 
+const allTokens = createSelector(
+  tokens,
+  state => state.get('allTokens').sort(),
+);
+
+
 const validQuoteTokensList = createSelector(
   tokens,
   state => state.get('quoteTokens'),
@@ -87,6 +93,7 @@ export default {
   getTokensSpecsObject,
   precision,
   baseTokens,
+  allTokens,
   activeTradingPairBaseToken,
   activeTradingPairQuoteToken,
   getErc20Tokens

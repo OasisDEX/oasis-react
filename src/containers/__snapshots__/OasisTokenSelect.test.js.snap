@@ -7,103 +7,115 @@ exports[`(Container) OasisTokenSelect should render 1`] = `
   value="MKR"
 >
   <option
-    key="1ST"
+    key="0"
     value="1ST"
   >
     1ST
   </option>
   <option
-    key="BAT"
+    key="1"
     value="BAT"
   >
     BAT
   </option>
   <option
-    key="DGD"
+    key="2"
+    value="DAI"
+  >
+    DAI
+  </option>
+  <option
+    key="3"
     value="DGD"
   >
     DGD
   </option>
   <option
-    key="GUP"
+    key="4"
+    value="GNT"
+  >
+    GNT
+  </option>
+  <option
+    key="5"
     value="GUP"
   >
     GUP
   </option>
   <option
-    key="ICN"
+    key="6"
     value="ICN"
   >
     ICN
   </option>
   <option
-    key="MKR"
+    key="7"
     value="MKR"
   >
     MKR
   </option>
   <option
-    key="MLN"
+    key="8"
     value="MLN"
   >
     MLN
   </option>
   <option
-    key="NMR"
+    key="9"
     value="NMR"
   >
     NMR
   </option>
   <option
-    key="PLU"
+    key="10"
     value="PLU"
   >
     PLU
   </option>
   <option
-    key="REP"
+    key="11"
     value="REP"
   >
     REP
   </option>
   <option
-    key="RHOC"
+    key="12"
     value="RHOC"
   >
     RHOC
   </option>
   <option
-    key="SAI"
+    key="13"
     value="SAI"
   >
     SAI
   </option>
   <option
-    key="SNGLS"
+    key="14"
     value="SNGLS"
   >
     SNGLS
   </option>
   <option
-    key="TIME"
+    key="15"
     value="TIME"
   >
     TIME
   </option>
   <option
-    key="VSL"
+    key="16"
     value="VSL"
   >
     VSL
   </option>
   <option
-    key="W-ETH"
+    key="17"
     value="W-ETH"
   >
     W-ETH
   </option>
   <option
-    key="W-GNT"
+    key="18"
     value="W-GNT"
   >
     W-GNT
@@ -125,10 +137,12 @@ exports[`(Container) OasisTokenSelect will receive right props 1`] = `
 Object {
   "defaultToken": "MKR",
   "selected": undefined,
-  "tokens": Immutable.OrderedSet [
+  "tokens": Immutable.List [
     "1ST",
     "BAT",
+    "DAI",
     "DGD",
+    "GNT",
     "GUP",
     "ICN",
     "MKR",

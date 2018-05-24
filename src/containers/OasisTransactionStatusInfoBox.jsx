@@ -2,7 +2,6 @@ import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
 
 import textStyles from "../styles/modules/_typography.scss";
-import InfoBox from "../components/InfoBox";
 import CSSModules from "react-css-modules";
 import OasisTransactionStatusWrapper  from "./OasisTransactionStatus";
 
@@ -17,16 +16,9 @@ const propTypes = PropTypes && {
 export class OasisTransactionStatusWrapperInfoBox extends PureComponent {
 
   render() {
-    const { infoText, txStatus, ...props } = this.props;
+    const { txStatus } = this.props;
     return txStatus ? (
-      <InfoBox justifyContent="space-between" alignItems="baseline" size="sm">
-        <div>
-          {infoText}
-        </div>
-        <OasisTransactionStatusWrapper
-          {...props}
-        />
-      </InfoBox>
+      <OasisTransactionStatusWrapper{...this.props}/>
     ) : null;
   }
 }
