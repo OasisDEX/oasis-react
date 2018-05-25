@@ -1,0 +1,21 @@
+version: "2"
+checks:
+  file-lines:
+    config:
+      threshold: 500
+  method-lines:
+    config:
+      threshold: 50
+#  similar-code:
+#    config:
+#      threshold: # language-specific defaults. an override will affect all languages.
+#  identical-code:
+#    config:
+#      threshold: # language-specific defaults. an override will affect all languages.
+engines:
+  duplication:
+    enabled: true
+    config:
+      languages:
+        javascript:
+          mass_threshold: 75
