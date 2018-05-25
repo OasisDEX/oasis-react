@@ -63,6 +63,44 @@ class OasisMarketHistory extends PureComponent {
     window.focus();
   }
 
+  toHistoricalTrades(tradeHistoryEntry) {
+
+    const {
+      activeTradingPair: { baseToken, quoteToken }
+    } = this.props;
+    
+    let baseAmount = null,
+      quoteAmount = null;
+
+    if (
+      tradeHistoryEntry.buyWhichToken === quoteToken &&
+      tradeHistoryEntry.sellWhichToken === baseToken
+    ) {
+      baseAmount = new BigNumber(tradeHistoryEntry.sellHowMuch);
+      quoteAmount = new BigNumber(tradeHistoryEntry.buyHowMuch);
+    } else if (
+      tradeHistoryEntry.buyWhichToken === baseToken &&
+      tradeHistoryEntry.sellWhichToken === quoteToken
+    ) {
+      baseAmount = new BigNumber(tradeHistoryEntry.buyHowMuch);
+      quoteAmount = new BigNumber(tradeHistoryEntry.sellHowMuch);
+    }
+
+    return {
+      transactionHash: tradeHistoryEntry.transactionHash,
+      date: moment.unix(tradeHistoryEntry.timestamp).format("DD-MM HH:mm"),
+      tradeType: (
+        <OasisTradeType order={tradeHistoryEntry} baseCurrency={baseToken} />
+      ),
+      baseAmount: formatAmount(baseAmount, true),
+      baseAmountFullPrecision: baseAmount,
+      quoteAmount: formatAmount(quoteAmount, true),
+      quoteAmountFullPrecision: quoteAmount,
+      price: formatPrice(price(tradeHistoryEntry, baseToken, quoteToken)),
+      priceAmountFullPrecision: price(tradeHistoryEntry, baseToken, quoteToken)
+    };
+  }
+
   render() {
     const {
       activeNetworkName,
@@ -72,40 +110,7 @@ class OasisMarketHistory extends PureComponent {
     } = this.props;
     const sortedTrades = orderByTimestamp(trades.toJSON(), DESCENDING);
 
-    const toHistoricalTrades = tradeHistoryEntry => {
-      let baseAmount = null,
-        quoteAmount = null;
-
-      if (
-        tradeHistoryEntry.buyWhichToken === quoteToken &&
-        tradeHistoryEntry.sellWhichToken === baseToken
-      ) {
-        baseAmount = new BigNumber(tradeHistoryEntry.sellHowMuch);
-        quoteAmount = new BigNumber(tradeHistoryEntry.buyHowMuch);
-      } else if (
-        tradeHistoryEntry.buyWhichToken === baseToken &&
-        tradeHistoryEntry.sellWhichToken === quoteToken
-      ) {
-        baseAmount = new BigNumber(tradeHistoryEntry.buyHowMuch);
-        quoteAmount = new BigNumber(tradeHistoryEntry.sellHowMuch);
-      }
-
-      return {
-        transactionHash: tradeHistoryEntry.transactionHash,
-        date: moment.unix(tradeHistoryEntry.timestamp).format("DD-MM HH:mm"),
-        tradeType: (
-          <OasisTradeType order={tradeHistoryEntry} baseCurrency={baseToken} />
-        ),
-        baseAmount: formatAmount(baseAmount, true),
-        baseAmountFullPrecision: baseAmount,
-        quoteAmount: formatAmount(quoteAmount, true),
-        quoteAmountFullPrecision: quoteAmount,
-        price: formatPrice(price(tradeHistoryEntry, baseToken, quoteToken)),
-        priceAmountFullPrecision: price(tradeHistoryEntry, baseToken, quoteToken)
-      };
-    };
-
-    const marketHistory = sortedTrades.map(toHistoricalTrades);
+    const marketHistory = sortedTrades.map(this.toHistoricalTrades);
 
     return (
       <OasisWidgetFrame
