@@ -4,14 +4,8 @@ exports[`(Container) TokenAmountInputField should render 1`] = `
 <Field
   autoComplete="off"
   component={[Function]}
-  format={[Function]}
   maxAmountLimit="0"
   name="exampleName"
-  normalize={[Function]}
-  onChange={[Function]}
-  onClick={[Function]}
-  onFocus={[Function]}
-  onMouseDown={[Function]}
   required={true}
   selectedToken="MKR"
   validate={

@@ -23,7 +23,9 @@ each(testCases).describe("addTransactionEpic", (description, sync) => {
 
     const latestBlockNumber = jest.fn()
       .mockReturnValueOnce('a')
-      .mockReturnValueOnce('b');
+      .mockReturnValueOnce('b')
+      .mockReturnValueOnce('c')
+      .mockReturnValueOnce('d');
 
     const promise = store.dispatch(transactions.actions.addTransactionEpic(
       {

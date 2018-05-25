@@ -56,7 +56,6 @@ export class OasisTransactionStatusWrapper extends PureComponent {
 
   render() {
     const { transaction, infoText } = this.props;
-    console.log({ transaction, infoText });
     return (
       <InfoBox justifyContent="space-between" alignItems="baseline" size="sm" fullWidth>
         <div className={this.hasTransactionFailed() ? textStyles.textDanger : ""} style={{display: 'flex', alignContent: 'space-between'}}>

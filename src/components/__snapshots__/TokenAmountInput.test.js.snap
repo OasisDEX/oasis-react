@@ -2,7 +2,10 @@
 
 exports[`(Component) TokenAmountInput should render 1`] = `
 <div>
-  <input />
+  <MaskedTokenAmountInput
+    meta={Object {}}
+    selectedToken="MKR"
+  />
   <span
     className="undefined "
   >
