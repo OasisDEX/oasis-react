@@ -38,9 +38,9 @@ const BUY_GAS = 1000000;
 const CANCEL_GAS = 1000000;
 
 
-const OFFER_SYNC_TYPE_INITIAL = 'OFFERS/OFFER_SYNC_TYPE_INITIAL';
-const OFFER_SYNC_TYPE_UPDATE = 'OFFERS/OFFER_SYNC_TYPE_UPDATE';
-const OFFER_SYNC_TYPE_NEW_OFFER = 'OFFERS/OFFER_SYNC_NEW_OFFER';
+export const OFFER_SYNC_TYPE_INITIAL = 'OFFERS/OFFER_SYNC_TYPE_INITIAL';
+export const OFFER_SYNC_TYPE_UPDATE = 'OFFERS/OFFER_SYNC_TYPE_UPDATE';
+export const OFFER_SYNC_TYPE_NEW_OFFER = 'OFFERS/OFFER_SYNC_NEW_OFFER';
 
 export const OFFER_STATUS_INACTIVE = 'OFFERS/OFFER_STATUS_INACTIVE';
 
@@ -83,27 +83,33 @@ const loadOffer = createAction(
   async (offerId) => window.contracts.market.offers(offerId),
 );
 
-const syncOffer = (offerId, syncType = OFFER_SYNC_TYPE_INITIAL, previousOfferState) => async (dispatch, getState) => {
-  const offer = (await dispatch(loadOffer(offerId))).value;
+const syncOffer = (offerId, syncType = OFFER_SYNC_TYPE_INITIAL, previousOfferState, {
+  doLoadOffer = loadOffer,
+  doGetOfferTradingPairAndType = getOfferTradingPairAndType,
+  doGetTradingPairOfferCount = getTradingPairOfferCount,
+  doSetOfferEpic = setOfferEpic,
+} = {}) => async (dispatch, getState) => {
+
+  const offer = (await dispatch(doLoadOffer(offerId))).value;
   // const isBuyEnabled = Session.get('isBuyEnabled');
   const [
     sellHowMuch, sellWhichTokenAddress, buyHowMuch, buyWhichTokenAddress, owner, timestamp,
   ] = offer;
 
-  const { baseToken, quoteToken, offerType } = getOfferTradingPairAndType(
+  const { baseToken, quoteToken, offerType } = doGetOfferTradingPairAndType(
     { buyWhichTokenAddress, sellWhichTokenAddress, syncType }, getState(),
   );
 
   const id = offerId.toString();
   await dispatch(
-    getTradingPairOfferCount(baseToken, quoteToken),
+    doGetTradingPairOfferCount(baseToken, quoteToken),
   );
 
   switch (syncType) {
 
     case OFFER_SYNC_TYPE_INITIAL:
       dispatch(
-        setOfferEpic({
+        doSetOfferEpic({
           id,
           sellHowMuch,
           sellWhichTokenAddress,
@@ -120,7 +126,7 @@ const syncOffer = (offerId, syncType = OFFER_SYNC_TYPE_INITIAL, previousOfferSta
 
     case OFFER_SYNC_TYPE_NEW_OFFER:
       dispatch(
-        setOfferEpic({
+        doSetOfferEpic({
           id,
           sellHowMuch,
           sellWhichTokenAddress,
@@ -137,7 +143,7 @@ const syncOffer = (offerId, syncType = OFFER_SYNC_TYPE_INITIAL, previousOfferSta
 
     case OFFER_SYNC_TYPE_UPDATE: {
       dispatch(
-        setOfferEpic({
+        doSetOfferEpic({
           id,
           sellHowMuch,
           sellWhichTokenAddress,
@@ -162,14 +168,18 @@ const syncOffer = (offerId, syncType = OFFER_SYNC_TYPE_INITIAL, previousOfferSta
 };
 
 const loadBuyOffers = createPromiseActions('OFFERS/LOAD_BUY_OFFERS');
-const loadBuyOffersEpic = (offerCount, sellToken, buyToken) => async (dispatch) => {
-  let currentBuyOfferId = (await dispatch(getBestOffer(buyToken, sellToken))).value.toNumber();
+const loadBuyOffersEpic = (offerCount, sellToken, buyToken, {
+  doGetBestOffer = getBestOffer,
+  doSyncOffer = syncOffer,
+  doGetWorseOffer = getWorseOffer,
+} = {}) => async (dispatch) => {
+  let currentBuyOfferId = (await dispatch(doGetBestOffer(buyToken, sellToken))).value.toNumber();
   const buyOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
   dispatch(loadBuyOffers.pending(buyOffersTradingPair));
   while (currentBuyOfferId !== 0) {
     // console.log({currentBuyOfferId})
-    dispatch(syncOffer(currentBuyOfferId));
-    currentBuyOfferId = (await dispatch(getWorseOffer(currentBuyOfferId))).value.toNumber();
+    dispatch(doSyncOffer(currentBuyOfferId));
+    currentBuyOfferId = (await dispatch(doGetWorseOffer(currentBuyOfferId))).value.toNumber();
     --offerCount.buyOfferCount;
     if (!offerCount.buyOfferCount) {
       dispatch(loadBuyOffers.fulfilled(buyOffersTradingPair));
@@ -179,13 +189,17 @@ const loadBuyOffersEpic = (offerCount, sellToken, buyToken) => async (dispatch) 
 };
 
 const loadSellOffers = createPromiseActions('OFFERS/LOAD_SELL_OFFERS');
-const loadSellOffersEpic = (offerCount, sellToken, buyToken) => async (dispatch) => {
-  let currentSellOfferId = (await dispatch(getBestOffer(sellToken, buyToken))).value.toNumber();
+const loadSellOffersEpic = (offerCount, sellToken, buyToken, {
+  doGetBestOffer = getBestOffer,
+  doSyncOffer = syncOffer,
+  doGetWorseOffer = getWorseOffer,
+} = {}) => async (dispatch) => {
+  let currentSellOfferId = (await dispatch(doGetBestOffer(sellToken, buyToken))).value.toNumber();
   const sellOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
   dispatch(loadSellOffers.pending(sellOffersTradingPair));
   while (currentSellOfferId !== 0) {
-    dispatch(syncOffer(currentSellOfferId));
-    currentSellOfferId = (await dispatch(getWorseOffer(currentSellOfferId))).value.toNumber()
+    dispatch(doSyncOffer(currentSellOfferId));
+    currentSellOfferId = (await dispatch(doGetWorseOffer(currentSellOfferId))).value.toNumber()
     --offerCount.sellOfferCount;
     if (!offerCount.sellOfferCount) {
       dispatch(loadSellOffers.fulfilled(sellOffersTradingPair));
@@ -196,19 +210,23 @@ const loadSellOffersEpic = (offerCount, sellToken, buyToken) => async (dispatch)
 
 const tradingPairOffersAlreadyLoaded = createAction('OFFERS/TRADING_PAIR_ALREADY_LOADED');
 const syncOffers = createPromiseActions('OFFERS/SYNC_OFFERS');
-const syncOffersEpic = ({ baseToken, quoteToken }) => async (dispatch, getState) => {
+const syncOffersEpic = ({ baseToken, quoteToken }, {
+  doGetTradingPairOfferCount = getTradingPairOfferCount,
+  doLoadBuyOffersEpic = loadBuyOffersEpic,
+  doLoadSellOffersEpic = loadSellOffersEpic,
+} = {}) => async (dispatch, getState) => {
 
   if (offers.activeTradingPairOffersInitialLoadStatus(getState()) !== SYNC_STATUS_PRISTINE) {
     return dispatch(tradingPairOffersAlreadyLoaded({ baseToken, quoteToken }));
   }
   dispatch(syncOffers.pending({ baseToken, quoteToken }));
   dispatch(resetOffers({ baseToken, quoteToken }));
-  const offerCount = (await dispatch(getTradingPairOfferCount(baseToken, quoteToken))).value;
-  Promise.all([
-    dispatch(loadBuyOffersEpic(offerCount, baseToken, quoteToken)).catch(
+  const offerCount = (await dispatch(doGetTradingPairOfferCount(baseToken, quoteToken))).value;
+  return Promise.all([
+    dispatch(doLoadBuyOffersEpic(offerCount, baseToken, quoteToken)).catch(
       e => dispatch(loadBuyOffers.rejected(e)),
     ),
-    dispatch(loadSellOffersEpic(offerCount, baseToken, quoteToken)).catch(
+    dispatch(doLoadSellOffersEpic(offerCount, baseToken, quoteToken)).catch(
       e => dispatch(loadSellOffers.rejected(e, { tradingPair: { baseToken, quoteToken } })),
     ),
   ]).then(() => dispatch(syncOffers.fulfilled({ baseToken, quoteToken })));
@@ -252,10 +270,12 @@ const setOfferEpic = ({
                         syncType = OFFER_SYNC_TYPE_INITIAL,
                         tradingPair: { baseToken, quoteToken },
                         previousOfferState,
-                      }) => async (dispatch, getState) => {
+                      }, {
+                        doGetTokenByAddress = getTokenByAddress,
+                      } = {}) => async (dispatch, getState) => {
 
-  const sellToken = getTokenByAddress(sellWhichTokenAddress);
-  const buyToken = getTokenByAddress(buyWhichTokenAddress);
+  const sellToken = doGetTokenByAddress(sellWhichTokenAddress);
+  const buyToken = doGetTokenByAddress(buyWhichTokenAddress);
 
   /**
    * We ignore pairs that we cant find contract for.
@@ -609,6 +629,13 @@ const actions = {
   removeOrderCancelledByTheOwner
 };
 
+const testActions = {
+  syncOffer,
+  setOfferEpic,
+  loadBuyOffersEpic,
+  loadSellOffersEpic,
+};
+
 const reducer = handleActions({
   [initOffers]: (state, { payload }) => {
     return state.updateIn(['offers'], () => payload).set('offersInitialized', () => true);
@@ -785,5 +812,6 @@ const reducer = handleActions({
 
 export default {
   actions,
+  testActions,
   reducer,
 };
