@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 import { Map, List } from 'immutable';
 import tokens from './tokens';
 import reselect from '../../utils/reselect';
-import { SYNC_STATUS_COMPLETED, SYNC_STATUS_PENDING } from '../../constants';
+import { SYNC_STATUS_COMPLETED, SYNC_STATUS_PENDING, SYNC_STATUS_PRISTINE } from '../../constants';
 import web3 from '../../bootstrap/web3';
 
 const offers = state => state.get('offers');
@@ -54,8 +54,9 @@ const tradingPairOffersInitialLoadStatus = createSelector(
 const activeTradingPairOffersInitialLoadStatus = createSelector(
   offers,
   tokens.activeTradingPair,
-  (state, activeTradingPair) =>
-    state.getIn(['offers', Map(activeTradingPair), 'initialSyncStatus'])
+  (state, activeTradingPair) => state.hasIn(['offers', Map(activeTradingPair), 'initialSyncStatus'])
+    ? state.getIn(['offers', Map(activeTradingPair), 'initialSyncStatus']) :
+    SYNC_STATUS_PRISTINE
 );
 
 const activeTradingPairOffersInitialLoadPending = createSelector(

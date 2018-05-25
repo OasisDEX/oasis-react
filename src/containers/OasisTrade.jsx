@@ -81,7 +81,7 @@ export class OasisTradeWrapper extends PureComponent {
           loadingTradeHistory={loadingTradeHistory}
         />
         <OasisChart/>
-        <OasisTradeOrdersWrapper/>
+        {this.props.activeTradingPair && <OasisTradeOrdersWrapper/>}
       </FlexBox>
     );
   }

@@ -3,19 +3,20 @@
 exports[`(Container) OasisMakeSellOffer should render 1`] = `
 <OasisWidgetFrame
   className=""
-  heading="Sell W-ETH"
+  heading="Sell MKR"
   spaceForContent={true}
 >
   <OasisTokenBalance
     className=""
     summary="Available"
-    token="W-ETH"
+    token="MKR"
   />
   <div>
     <Connect(ReduxForm)
-      baseToken="W-ETH"
+      baseToken="MKR"
       form="makeSellOffer"
       offerMakeType="OFFER_MAKES/MAKE_SELL_OFFER"
+      quoteToken="DAI"
     />
   </div>
   <div>
@@ -27,7 +28,7 @@ exports[`(Container) OasisMakeSellOffer should render 1`] = `
     <div>
       <OasisInsufficientAmountOfToken
         noBorder={true}
-        tokenName="W-ETH"
+        tokenName="MKR"
       />
     </div>
     <InfoBox
@@ -67,13 +68,11 @@ Object {
     "baseToken": "MKR",
     "quoteToken": "DAI",
   },
-  "baseToken": undefined,
   "canMakeOffer": false,
   "contractsLoaded": true,
   "hasSufficientTokenAmount": false,
   "isModalOpen": false,
   "isPriceSet": true,
   "isVolumeEmptyOrZero": false,
-  "quoteToken": undefined,
 }
 `;

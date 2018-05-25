@@ -201,10 +201,8 @@ const syncOffersEpic = ({ baseToken, quoteToken }) => async (dispatch, getState)
   if (offers.activeTradingPairOffersInitialLoadStatus(getState()) !== SYNC_STATUS_PRISTINE) {
     return dispatch(tradingPairOffersAlreadyLoaded({ baseToken, quoteToken }));
   }
-
   dispatch(syncOffers.pending({ baseToken, quoteToken }));
   dispatch(resetOffers({ baseToken, quoteToken }));
-
   const offerCount = (await dispatch(getTradingPairOfferCount(baseToken, quoteToken))).value;
   Promise.all([
     dispatch(loadBuyOffersEpic(offerCount, baseToken, quoteToken)).catch(

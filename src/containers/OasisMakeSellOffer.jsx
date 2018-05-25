@@ -47,8 +47,7 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
 
   render() {
     const {
-      baseToken,
-      quoteToken,
+      activeTradingPair : { baseToken, quoteToken },
       hasSufficientTokenAmount,
       canMakeOffer
     } = this.props;
@@ -117,8 +116,6 @@ export function mapStateToProps(state) {
         ? offerMakes.canMakeOffer(state, MAKE_SELL_OFFER, true)
         : false,
     isModalOpen: offerMakes.isOfferMakeModalOpen(state, MAKE_SELL_OFFER),
-    baseToken: tokens.activeTradingPairBaseToken(state),
-    quoteToken: tokens.activeTradingPairQuoteToken(state),
     activeTradingPair: tokens.activeTradingPair(state),
     contractsLoaded: platform.contractsLoaded(state),
     isPriceSet: offerMakes.isMakeSellOfferPriceSet(state),

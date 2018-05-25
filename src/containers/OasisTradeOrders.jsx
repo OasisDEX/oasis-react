@@ -41,7 +41,6 @@ export class OasisTradeOrdersWrapper extends PureComponent {
 
     return isOfferTakeModalOpen && (
       <OasisTakeOfferModalWrapper
-        // activeOfferTake={activeOfferTake}
         offerTakeType={activeOfferTakeType}
       />
     )

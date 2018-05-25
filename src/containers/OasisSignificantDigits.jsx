@@ -12,7 +12,7 @@ const propTypes = PropTypes && {
   fractionWithNumbersColor: PropTypes.string,
   fractionZeroesColor: PropTypes.string,
   amount: PropTypes.string.isRequired,
-  fullPrecisionAmount: PropTypes.string,
+  fullPrecisionAmount: PropTypes.any,
   fullPrecisionUnit: PropTypes.string
 };
 

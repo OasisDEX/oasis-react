@@ -69,11 +69,11 @@ const precision = createSelector(
 );
 
 const activeTradingPairBaseToken = createSelector(
-  tokens, s => s.getIn(['activeTradingPair']).baseToken
+  tokens, s => s.get('activeTradingPair').baseToken
 );
 
 const activeTradingPairQuoteToken = createSelector(
-  tokens, s => s.getIn(['activeTradingPair']).quoteToken
+  tokens, s => s.get('activeTradingPair').quoteToken
 );
 
 const getErc20Tokens = createSelector(

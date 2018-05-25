@@ -176,6 +176,14 @@ const checkNetworkInitialEpic = () => async (dispatch, getState) => {
   dispatch(platformReducer.actions.web3Reset());
   const currentNetworkName = network.activeNetworkName(getState());
   dispatch(offersReducer.actions.initOffersEpic());
+  if(!tokens.activeTradingPair(getState())) {
+    dispatch(
+      tokensReducer.actions.setActiveTradingPairEpic(
+        tokens.defaultTradingPair(getState()),
+        false
+      )
+    )
+  }
 
   // Loading contracts and initializing market
   try {
