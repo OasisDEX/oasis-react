@@ -24,7 +24,7 @@ import OasisButton from "../components/OasisButton";
 import styles from "./OfferTakeForm.scss";
 import tableStyles from "../styles/modules/_table.scss";
 import CSSModules from "react-css-modules";
-import { amountMask } from '../inputMasks';
+import MaskedTokenAmountInput from "./MaskedTokenAmountInput";
 /**
  * Remove this styling TODO
  */
@@ -178,7 +178,6 @@ export class OfferTakeForm extends PureComponent {
                   // normalize={normalize}
                   type="text"
                   disabled={true}
-                  {...amountMask()}
                 />
               </td>
               <td className={tableStyles.currency}>{priceToken}</td>
@@ -190,14 +189,13 @@ export class OfferTakeForm extends PureComponent {
                   autoComplete="off"
                   style={fieldStyle}
                   name="volume"
-                  component="input"
+                  component={MaskedTokenAmountInput}
                   type="text"
                   validate={validateVolume}
                   min={0}
                   placeholder={0}
                   disabled={disableForm}
-                  {...amountMask({onChange: this.onVolumeFieldChange})}
-
+                  onChange={this.onVolumeFieldChange}
                 />
                 <div className={styles.errorMessage}>
                   {isVolumeGreaterThanOfferMax &&
@@ -220,12 +218,12 @@ export class OfferTakeForm extends PureComponent {
                     style={fieldStyle}
                     min={0}
                     name="total"
-                    component="input"
+                    component={MaskedTokenAmountInput}
                     type="text"
                     validate={validateTotal}
                     placeholder={0}
                     disabled={disableForm}
-                    {...amountMask({onChange: this.onTotalFieldChange})}
+                    onChange={this.onTotalFieldChange}
                   />
                 </div>
               </td>

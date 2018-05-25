@@ -138,47 +138,4 @@ const handleTransaction = (
   });
 };
 
-// /**
-//  *
-//  * @param updateState function that handles component state modification ( typically *setState* )
-//  * @param transactionAction action creator function that dispatches the transaction
-//  */
-//   //TODO: why unused?
-// const withHandleTransaction = (updateState, transactionAction) => {
-//   updateState({
-//     transaction: fromJS({
-//       txStatus: TX_STATUS_AWAITING_USER_ACCEPTANCE
-//     })
-//   });
-//
-//   transactionAction().then(
-//     //TODO: why async here?
-//     async ({ transactionConfirmationPromise, transactionHash }) => {
-//       updateState({
-//         transaction: fromJS({
-//           txStatus: TX_STATUS_AWAITING_CONFIRMATION,
-//           timestamp: Date.now(),
-//           txHash: transactionHash
-//         })
-//       });
-//       updateState({
-//         transaction: fromJS({
-//           txStatus: TX_STATUS_CONFIRMED,
-//           transactionReceipt: await transactionConfirmationPromise
-//         })
-//       });
-//     },
-//     transactionRejection => {
-//       updateState({
-//         transaction: fromJS({ txStatus: TX_STATUS_CANCELLED_BY_USER })
-//       });
-//
-//       return transactionRejection;
-//     }
-//   );
-// };
-//
-// const isTransactionConfirmed = ({ transaction }) =>
-//   transaction && transaction.get("txStatus") === TX_STATUS_CONFIRMED;
-
 export { handleTransaction };

@@ -104,6 +104,8 @@ const addTransactionEpic = (
 
       if (currentBlockNumber !== previousBlockNumber) {
 
+        previousBlockNumber = currentBlockNumber;
+
         let txReceipt;
 
         // console.log('before syncTransaction', txHash);
@@ -146,7 +148,6 @@ const addTransactionEpic = (
         }
         clearInterval(complete)
       }
-      previousBlockNumber = currentBlockNumber;
     }, transactionCheckInterval(getState()));
   });
 };

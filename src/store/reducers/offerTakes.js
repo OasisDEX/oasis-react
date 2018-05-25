@@ -48,8 +48,10 @@ const buyMaxEpic = ({quoteTokenBalance = balances.activeQuoteTokenBalance,
     web3.fromWei(priceBN.mul(volume), ETH_UNIT_ETHER) :
     web3.fromWei(usersQuoteTokenBalanceBN, ETH_UNIT_ETHER);
 
-  dispatch(form.change('takeOffer', 'total', total));
-  dispatch(defer(totalFieldValueChangedEpic, total));
+  const totalSerialized = total.toString();
+
+  dispatch(form.change('takeOffer', 'total', totalSerialized));
+  dispatch(defer(totalFieldValueChangedEpic, totalSerialized));
 };
 
 const sellMaxEpic = ({activeBaseTokenBalance = balances.activeBaseTokenBalance,

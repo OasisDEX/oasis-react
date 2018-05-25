@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
 import { VALIDATION_ERROR__VALUE_GREATER_THAN_BALANCE } from '../containers/TokenAmountInputField';
-// import ImmutablePropTypes from 'react-immutable-proptypes';
 import styles from './TokenAmountInput.scss';
+import MaskedTokenAmountInput from "./MaskedTokenAmountInput";
 
 const propTypes = PropTypes && {
 };
@@ -20,7 +20,7 @@ class TokenAmountInput extends PureComponent {
 
     return (
         <div className={styles.inputGroup}>
-          <input className={styles.input} {...this.props.input}/>
+          <MaskedTokenAmountInput className={styles.input} {...this.props}/>
           <span className={`${styles.currency} `}>
             {selectedToken}
           </span>

@@ -1,11 +1,9 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
-// import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Field, reduxForm } from 'redux-form/immutable'
-// import { normalize } from '../utils/forms/offers';
 import wrapUnwrap from '../store/selectors/wrapUnwrap';
 import web3 from '../bootstrap/web3';
 import wrapUnwrapReducer from '../store/reducers/wrapUnwrap';
@@ -16,7 +14,7 @@ import CSSModules from 'react-css-modules';
 import OasisTransactionStatusWrapperInfoBox  from './OasisTransactionStatusInfoBox';
 import { TX_UNWRAP } from '../store/reducers/transactions';
 import { formatAmount } from '../utils/tokens/pair';
-import { amountMask } from '../inputMasks';
+import MaskedTokenAmountInput from "../components/MaskedTokenAmountInput";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -91,11 +89,9 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
                       validate={this.validate}
                       autoComplete="off"
                       name="amount"
-                      component="input"
+                      component={MaskedTokenAmountInput}
                       placeholder={0}
-                      // normalize={normalize}
                       type="text"
-                      {...amountMask()}
                     />
                   </div>
                 </td>

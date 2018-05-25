@@ -337,7 +337,7 @@ const setWrapMax = () => (dispatch, getState) => {
       ? web3.fromWei(balances.ethBalance(getState()))
       : balances.tokenBalance(getState(), { tokenName: activeUnwrappedToken });
   if (maxWrapValueInEther) {
-    dispatch(change("wrapToken", "amount", maxWrapValueInEther));
+    dispatch(change("wrapToken", "amount", maxWrapValueInEther.toString()));
   }
 };
 
@@ -348,7 +348,7 @@ const setUnwrapMax = () => (dispatch, getState) => {
       ? web3.fromWei(balances.ethBalance(getState()))
       : balances.tokenBalance(getState(), { tokenName: activeWrappedToken });
   if (maxUnwrapValueInEther) {
-    dispatch(change("unwrapToken", "amount", maxUnwrapValueInEther));
+    dispatch(change("unwrapToken", "amount", maxUnwrapValueInEther.toString()));
   }
 };
 

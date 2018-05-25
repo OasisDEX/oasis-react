@@ -24,7 +24,7 @@ import CSSModules from "react-css-modules";
 import OasisVolumeIsGreaterThanUserBalance from "../components/OasisVolumeIsGreaterThanUserBalance";
 import { formatAmount, PRICE_DECIMAL } from '../utils/tokens/pair';
 import isNumeric from '../utils/numbers/isNumeric';
-import { amountMask } from '../inputMasks';
+import MaskedTokenAmountInput from "../components/MaskedTokenAmountInput";
 
 const propTypes = PropTypes && {
   // activeOfferMakeOfferData: ImmutablePropTypes.map.isRequired,
@@ -64,17 +64,17 @@ export class OfferMakeForm extends PureComponent {
     this.props.actions.sellMax(this.props.offerMakeType);
   }
 
-  onVolumeFieldChange(newValue) {
+  onVolumeFieldChange(event, newValue) {
     const { volumeFieldValueChanged } = this.props.actions;
     volumeFieldValueChanged(this.props.offerMakeType, newValue);
   }
 
-  onPriceFieldChange(newValue) {
-      const { priceFieldValueChanged } = this.props.actions;
-      priceFieldValueChanged(this.props.offerMakeType, newValue);
+  onPriceFieldChange(event, newValue) {
+    const { priceFieldValueChanged } = this.props.actions;
+    priceFieldValueChanged(this.props.offerMakeType, newValue);
   }
 
-  onTotalFieldChange(newValue) {
+  onTotalFieldChange(event, newValue) {
     const { totalFieldValueChanged } = this.props.actions;
     totalFieldValueChanged(this.props.offerMakeType, newValue);
   }
@@ -150,11 +150,11 @@ export class OfferMakeForm extends PureComponent {
                 <Field
                   autoComplete="off"
                   name="price"
-                  component="input"
+                  component={MaskedTokenAmountInput}
                   placeholder={0}
                   disabled={disableForm}
                   type="text"
-                  {...amountMask({onChange: this.onPriceFieldChange})}
+                  onChange={this.onPriceFieldChange}
                 />
               </td>
               <td className={styles.currency}> {priceToken}</td>
@@ -166,7 +166,7 @@ export class OfferMakeForm extends PureComponent {
                   autoComplete="off"
                   onBlur={formatValue}
                   name="volume"
-                  component="input"
+                  component={MaskedTokenAmountInput}
                   type="text"
                   validate={validateVolume}
                   min={0}
@@ -175,7 +175,7 @@ export class OfferMakeForm extends PureComponent {
                     greaterThanZeroValidator(currentFormValues.price) ||
                     disableForm
                   }
-                  {...amountMask({onChange: this.onVolumeFieldChange})}
+                  onChange={this.onVolumeFieldChange}
                 />
               </td>
               <td className={styles.currency}>
@@ -202,10 +202,9 @@ export class OfferMakeForm extends PureComponent {
                     autoComplete="off"
                     min={0}
                     onChange={this.onTotalFieldChange}
-                    // normalize={normalize}
                     onBlur={formatValue}
                     name="total"
-                    component="input"
+                    component={MaskedTokenAmountInput}
                     type="text"
                     validate={validateTotal}
                     placeholder={0}
@@ -214,7 +213,6 @@ export class OfferMakeForm extends PureComponent {
                       greaterThanZeroValidator(currentFormValues.volume) ||
                       disableForm
                     }
-                    {...amountMask({onChange: this.onTotalFieldChange})}
                   />
                 </div>
               </td>

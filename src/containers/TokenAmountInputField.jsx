@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { PropTypes } from 'prop-types';
-// import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -9,7 +8,6 @@ import balances from '../store/selectors/balances';
 import { Field } from 'redux-form/immutable';
 import TokenAmountInput from '../components/TokenAmountInput';
 import web3 from '../bootstrap/web3';
-import { amountMask } from '../inputMasks';
 
 const propTypes = PropTypes && {
   fieldName: PropTypes.string.isRequired,
@@ -52,7 +50,6 @@ export class TokenAmountInputFieldWrapper extends PureComponent {
         component={TokenAmountInput}
         selectedToken={selectedToken}
         name={fieldName}
-        {...amountMask()}
       />
     );
   }
