@@ -105,61 +105,18 @@ const syncOffer = (offerId, syncType = OFFER_SYNC_TYPE_INITIAL, previousOfferSta
     doGetTradingPairOfferCount(baseToken, quoteToken),
   );
 
-  switch (syncType) {
-
-    case OFFER_SYNC_TYPE_INITIAL:
-      dispatch(
-        doSetOfferEpic({
-          id,
-          sellHowMuch,
-          sellWhichTokenAddress,
-          buyHowMuch,
-          buyWhichTokenAddress,
-          owner,
-          timestamp,
-          offerType,
-          tradingPair: { baseToken, quoteToken },
-          syncType: OFFER_SYNC_TYPE_INITIAL,
-        }),
-      );
-      break;
-
-    case OFFER_SYNC_TYPE_NEW_OFFER:
-      dispatch(
-        doSetOfferEpic({
-          id,
-          sellHowMuch,
-          sellWhichTokenAddress,
-          buyHowMuch,
-          buyWhichTokenAddress,
-          owner,
-          timestamp,
-          tradingPair: { baseToken, quoteToken },
-          offerType,
-          syncType: OFFER_SYNC_TYPE_NEW_OFFER,
-        }),
-      );
-      break;
-
-    case OFFER_SYNC_TYPE_UPDATE: {
-      dispatch(
-        doSetOfferEpic({
-          id,
-          sellHowMuch,
-          sellWhichTokenAddress,
-          buyHowMuch,
-          buyWhichTokenAddress,
-          owner,
-          timestamp,
-          tradingPair: { baseToken, quoteToken },
-          offerType,
-          syncType: OFFER_SYNC_TYPE_UPDATE,
-          previousOfferState,
-        }),
-      );
-      break;
-    }
-  }
+  dispatch(doSetOfferEpic(Object.assign({
+    id,
+    sellHowMuch,
+    sellWhichTokenAddress,
+    buyHowMuch,
+    buyWhichTokenAddress,
+    owner,
+    timestamp,
+    offerType,
+    tradingPair: { baseToken, quoteToken },
+    syncType: syncType,
+  }, syncType == OFFER_SYNC_TYPE_UPDATE ? {previousOfferState} : {})));
 
   return {
     offer,
@@ -223,13 +180,15 @@ const syncOffersEpic = ({ baseToken, quoteToken }, {
   dispatch(resetOffers({ baseToken, quoteToken }));
   const offerCount = (await dispatch(doGetTradingPairOfferCount(baseToken, quoteToken))).value;
   return Promise.all([
-    dispatch(doLoadBuyOffersEpic(offerCount, baseToken, quoteToken)).catch(
-      e => dispatch(loadBuyOffers.rejected(e)),
+    dispatch(
+      doLoadBuyOffersEpic(offerCount, baseToken, quoteToken))
+      .catch(e => dispatch(loadBuyOffers.rejected(e))
     ),
-    dispatch(doLoadSellOffersEpic(offerCount, baseToken, quoteToken)).catch(
-      e => dispatch(loadSellOffers.rejected(e, { tradingPair: { baseToken, quoteToken } })),
+    dispatch(
+      doLoadSellOffersEpic(offerCount, baseToken, quoteToken))
+      .catch(e => dispatch(loadSellOffers.rejected(e, { tradingPair: { baseToken, quoteToken } })
     ),
-  ]).then(() => dispatch(syncOffers.fulfilled({ baseToken, quoteToken })));
+  )]).then(() => dispatch(syncOffers.fulfilled({ baseToken, quoteToken })));
 
 };
 
@@ -332,9 +291,7 @@ const setOfferEpic = ({
       } else {
         dispatch(setOffer({ offer, baseToken, quoteToken, offerType }));
       }
-
       break;
-
     case OFFER_SYNC_TYPE_UPDATE:
       if (sellHowMuchValue.eq(0) || buyHowMuchValue.eq(0)) {
         alert('filled in completely')
@@ -355,7 +312,6 @@ const setOfferEpic = ({
           ),
         );
       } else {
-
         dispatch(updateOffer({ offer, baseToken, quoteToken, offerType }));
         dispatch(
           offerPartiallyFilledIn(
@@ -518,43 +474,6 @@ const subscribeFilledOrdersEpic = (fromBlock, filter = {}) => async (dispatch, g
   );
   dispatch(subscribeFilledOrders.fulfilled());
 };
-
-  /** When the order matching is activated we are using ItemUpdate only to listen for events
-   * where a given order is getting cancelled or filled in ( in case of `buy` being enabled.*/
-  // window.contracts.market.LogItemUpdate((err, result) => {
-  //   if (!err) {
-  //     const idx = result.args.id;
-  //     Dapple['maker-otc'].objects.otc.offersReducer(idx.toNumber(), (error, data) => {
-  //       if (!error) {
-  //         const offer = Offers.findOne({ _id: idx.toString() });
-  //
-  //         if (offer) {
-  //           const [, , , , , active] = data;
-  //           Offers.syncOffer(idx.toNumber());
-  /**
-   * When the order matching is enabled there is check on the contract side
-   * before the creating new order.
-   * It checks if the new order is about to match existing one. There are couple of scenarios:
-   *
-   *  - New order is filled in completely but the existing one is completed partially or completely
-   *    = then no order is actually created on the blockchain so the UI has offer is transaction id only.
-   *
-   *  - New order is not filled in completely but fills the existing one completely
-   *    = then new order is created with the remainings after the matching is done.
-   *
-   * Transaction hash of the event in the first case scenario, corresponds to the transaction hash,
-   * used to store the offer on the client. In order to update the UI accordingly, when the first scenario is met
-   * we used the transaction has to remove the new order from the collection.
-   * */
-  // Offers.remove(result.transactionHash);
-  // if (!active) {
-  //   Offers.remove(idx.toString());
-  // }
-  // }
-  // }
-  // });
-  // }
-  // });
 
 const initOffers = createAction('OFFERS/INIT_OFFERS', initialOffersState => initialOffersState);
 const initOffersEpic = () => (dispatch, getState) => {
@@ -805,9 +724,6 @@ const reducer = handleActions({
         }
       },
     ),
-
-
-
 }, initialState);
 
 export default {
