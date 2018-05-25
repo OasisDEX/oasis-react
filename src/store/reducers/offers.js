@@ -16,6 +16,7 @@ import getOfferTradingPairAndType from '../../utils/offers/getOfferTradingPairAn
 import { handleTransaction } from '../../utils/transactions/handleTransaction';
 import offerTakes from '../selectors/offerTakes';
 import { SYNC_STATUS_COMPLETED, SYNC_STATUS_ERROR, SYNC_STATUS_PENDING, SYNC_STATUS_PRISTINE } from '../../constants';
+import { getMarketContractInstance, getTokenContractInstance } from '../../bootstrap/contracts';
 
 export const TYPE_BUY_OFFER = 'OFFERS/TYPE_BUY';
 export const TYPE_SELL_OFFER = 'OFFERS/TYPE_SELL';
@@ -52,16 +53,16 @@ const resetOffers = createAction(
 const getBestOffer = createAction(
   'OFFERS/GET_BEST_OFFER',
   async (sellToken, buyToken) => {
-    const sellTokenAddress = window.contracts.tokens[sellToken].address;
-    const buyTokenAddress = window.contracts.tokens[buyToken].address;
-    return window.contracts.market.getBestOffer(sellTokenAddress, buyTokenAddress);
+    const sellTokenAddress = getTokenContractInstance(sellToken).address;
+    const buyTokenAddress = getTokenContractInstance(buyToken).address;
+    return getMarketContractInstance().getBestOffer(sellTokenAddress, buyTokenAddress);
   },
 );
 
 const cancelOffer = createAction(
   'OFFERS/CANCEL_OFFER',
   (offerId) =>
-    window.contracts.market.cancel(offerId, { gas: CANCEL_GAS }),
+    getMarketContractInstance().cancel(offerId, { gas: CANCEL_GAS }),
 );
 const cancelOfferEpic = (offer, withCallbacks = {}) => dispatch => {
   return handleTransaction({
@@ -75,12 +76,12 @@ const cancelOfferEpic = (offer, withCallbacks = {}) => dispatch => {
 
 const getWorseOffer = createAction(
   'OFFERS/GET_WORSE_OFFER',
-  offerId => window.contracts.market.getWorseOffer(offerId),
+  offerId => getMarketContractInstance().getWorseOffer(offerId),
 );
 
 const loadOffer = createAction(
   'OFFERS/LOAD_OFFER',
-  async (offerId) => window.contracts.market.offers(offerId),
+  async (offerId) => getMarketContractInstance().offers(offerId),
 );
 
 const syncOffer = (offerId, syncType = OFFER_SYNC_TYPE_INITIAL, previousOfferState, {
@@ -326,12 +327,12 @@ const setOfferEpic = ({
 const getTradingPairOfferCount = createAction(
   'OFFERS/GET_TRADING_PAIR_OFFERS_COUNT',
   async (baseToken, quoteToken) => {
-    const baseAddress = window.contracts.tokens[baseToken].address;
-    const quoteAddress = window.contracts.tokens[quoteToken].address;
+    const baseAddress = getTokenContractInstance(baseToken).address;
+    const quoteAddress = getTokenContractInstance(quoteToken).address;
     return {
       baseToken, quoteToken,
-      buyOfferCount: (await window.contracts.market.getOfferCount(quoteAddress, baseAddress)).toNumber(),
-      sellOfferCount: (await window.contracts.market.getOfferCount(baseAddress, quoteAddress)).toNumber(),
+      buyOfferCount: (await getMarketContractInstance().getOfferCount(quoteAddress, baseAddress)).toNumber(),
+      sellOfferCount: (await getMarketContractInstance().getOfferCount(baseAddress, quoteAddress)).toNumber(),
     };
   },
 );
@@ -343,7 +344,7 @@ const getTradingPairOfferCount = createAction(
  */
 const newOfferFilledIn = createAction('OFFERS/NEW_OFFER_FILLED_IN', offerId => offerId);
 const subscribeNewOffersFilledInEpic = (fromBlock, filter = {}) => async dispatch => {
-  window.contracts.market.LogMake(filter, { fromBlock, toBlock: 'latest' })
+  getMarketContractInstance().LogMake(filter, { fromBlock, toBlock: 'latest' })
     .then((err, LogMakeEvent) => {
       const newOfferId = parseInt(LogMakeEvent.args.id, 16);
       dispatch(
@@ -363,7 +364,7 @@ const subscribeCancelledOrders = createPromiseActions(
 const subscribeCancelledOrdersEpic = (fromBlock, filter = {}) => async (dispatch, getState) => {
   dispatch(subscribeCancelledOrders.pending());
   try {
-    window.contracts.market.LogKill(filter, { fromBlock, toBlock: 'latest' }).then(
+    getMarketContractInstance().LogKill(filter, { fromBlock, toBlock: 'latest' }).then(
       (err, LogKillEvent) => {
         const {
           id,
@@ -422,7 +423,7 @@ const offerCompletelyFilledIn = createAction(
 
 const checkOfferIsActive = createAction(
   'OFFERS/CHECK_OFFER_IS_ACTIVE',
-  offerId => window.contracts.market.isActive(offerId),
+  offerId => getMarketContractInstance().isActive(offerId),
 );
 
 
@@ -439,7 +440,7 @@ const markOfferAsInactive = createAction(
 
 const subscribeFilledOrdersEpic = (fromBlock, filter = {}) => async (dispatch, getState) => {
   dispatch(subscribeFilledOrders.pending());
-  window.contracts.market.LogItemUpdate(filter, { fromBlock, toBlock: 'latest' }).then(
+  getMarketContractInstance().LogItemUpdate(filter, { fromBlock, toBlock: 'latest' }).then(
     async (err, LogItemUpdateEvent) => {
       const offerId = LogItemUpdateEvent.args.id.toNumber();
       const isOfferActive = (await dispatch(checkOfferIsActive(offerId))).value;

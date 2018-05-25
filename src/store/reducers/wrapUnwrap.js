@@ -12,12 +12,16 @@ import {
 import wrapUnwrap from "../selectors/wrapUnwrap";
 import accounts from "../selectors/accounts";
 import { fulfilled } from "../../utils/store";
-import getTokenContractInstance from "../../utils/contracts/getContractInstance";
 import web3 from "../../bootstrap/web3";
 import { DEFAULT_GAS_PRICE, TX_UNWRAP, TX_WRAP } from "./transactions";
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import balances from "../selectors/balances";
 import { handleTransaction } from "../../utils/transactions/handleTransaction";
+import {
+  getDepositBrokerContractInstance,
+  getTokenContractInstance,
+  getTokenNoProxyContractInstance, initDepositBrokerContract,
+} from '../../bootstrap/contracts';
 
 export const WRAP_UNWRAP_CREATE_DEPOSIT_BROKER =
   "WRAP_UNWRAP/CREATE_DEPOSIT_BROKER";
@@ -90,7 +94,7 @@ const loadGNTBrokerAddress = createAction(
   "WRAP_UNWRAP/LOAD_GNT_TOKEN_ADDRESS",
   address =>
     new Promise((resolve, reject) =>
-      window.contracts.WGNTNoProxy.getBroker.call(address, (e, address) => {
+      getTokenNoProxyContractInstance(TOKEN_WRAPPED_GNT).getBroker.call(address, (e, address) => {
         if (e) {
           reject(e);
         } else {
@@ -257,14 +261,14 @@ const loadDepositBrokerContractEpic = (tokenName = TOKEN_GOLEM) => (
   if (web3.toBigNumber(depositBrokerAddress).eq(0)) {
     dispatch(addressHasNoBrokerForToken(tokenName));
   } else {
-    window.contracts.initDepositBrokerContract(tokenName, depositBrokerAddress);
+    initDepositBrokerContract(tokenName, depositBrokerAddress);
   }
 };
 
 const clearDepositBroker = createAction(
   "WRAP_UNWRAP/CLEAR_DEPOSIT_BROKER",
   tokenName =>
-    window.contracts.getDepositBrokerContractInstance(tokenName).clear()
+    getDepositBrokerContractInstance(tokenName).clear()
 );
 
 const clearDepositBrokerEpic = (tokenName, withCallbacks) => dispatch => {

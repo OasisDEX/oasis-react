@@ -2,10 +2,10 @@ import { createAction, handleActions } from 'redux-actions';
 import { fromJS } from 'immutable';
 import accounts from '../selectors/accounts';
 import { createPromiseActions } from '../../utils/createPromiseActions';
-import getTokenContractInstance from '../../utils/contracts/getContractInstance';
 import period from '../../utils/period';
 import network from '../selectors/network';
 import networkReducer from './network';
+import { getTokenContractInstance } from '../../bootstrap/contracts';
 
 const initialState = fromJS({
   tokensLoadingStatus: {},
