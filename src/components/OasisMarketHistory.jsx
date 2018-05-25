@@ -68,7 +68,7 @@ class OasisMarketHistory extends PureComponent {
     const {
       activeTradingPair: { baseToken, quoteToken }
     } = this.props;
-    
+
     let baseAmount = null,
       quoteAmount = null;
 
