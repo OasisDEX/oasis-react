@@ -44,38 +44,6 @@ const initialState = fromJS({
 
 const syncNetwork = createPromiseActions("NETWORK/SYNC_NETWORK");
 
-// /**
-//  * TODO @Arek Revise this logic
-//  */
-// const syncNetworkEpic = () => async (dispatch, getStore) => {
-//   const isNetworkSyncPending = getStore().getIn(['network', 'sync', 'isPending']);
-//   dispatch(checkNetworkEpic());
-//   web3.eth.isSyncing((error, sync) => {
-//     if (!error) {
-//       dispatch(sessionReducer.actions.SetValue('syncing', sync !== false));
-//       // Stop all app activity
-//       if (sync === true) {
-//         web3.reset(true);
-//         dispatch(checkNetworkEpic());
-//         // show sync info
-//       } else if (sync) {
-//         dispatch(sessionReducer.actions.SetValue('startingBlock', sync.startingBlock));
-//         dispatch(sessionReducer.actions.SetValue('currentBlock', sync.currentBlock));
-//         dispatch(sessionReducer.actions.SetValue('highestBlock', sync.highestBlock));
-//       } else {
-//         dispatch(sessionReducer.actions.SetValue('highestBlock', sync.highestBlock));
-//         dispatch(sessionReducer.actions.SetValue('outOfSync', false));
-//         // offersReducer.actions.Sync();
-//         // web3.eth.filter('latest', () => {
-//         //   tokensReducer.actions.Sync();
-//         //   limitsReducer.actions.Sync();
-//         //   transactionsReducer.actions.Sync();
-//         // });
-//       }
-//     }
-//   });
-// };
-
 const CheckNetworkAction = createPromiseActions("NETWORK/CHECK_NETWORK");
 
 /**
@@ -142,7 +110,7 @@ const onNetworkCheckCompleted = (dispatch, getState) => async () => {
   const tradingPair =
     tokens.activeTradingPair(getState()) ||
     tokens.defaultTradingPair(getState()).toJSON()
-  console.log({tradingPair});
+  // console.log({tradingPair});
   dispatch(offersReducer.actions.syncOffersEpic(tradingPair));
 
   //Fetch LogTake events for set historicalRange

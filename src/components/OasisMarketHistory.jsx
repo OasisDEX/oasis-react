@@ -110,7 +110,7 @@ class OasisMarketHistory extends PureComponent {
     } = this.props;
     const sortedTrades = orderByTimestamp(trades.toJSON(), DESCENDING);
 
-    const marketHistory = sortedTrades.map(this.toHistoricalTrades);
+    const marketHistory = sortedTrades.map(this.toHistoricalTrades.bind(this));
 
     return (
       <OasisWidgetFrame
