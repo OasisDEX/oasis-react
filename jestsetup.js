@@ -2,73 +2,14 @@
 import { configure } from 'enzyme';
 import {Map} from 'immutable';
 import Adapter from 'enzyme-adapter-react-16';
-// import { MAKE_BUY_OFFER } from './src/store/reducers/offerMakes';
+
+jest.mock('./src/bootstrap/contracts');
+import  contractBootstrap from './src/bootstrap/contracts';
 
 configure({ adapter: new Adapter() });
-
 jest.mock('react-css-modules', () => Component => Component);
 
 
-global.contracts = {
-  tokens: {
-    BAT: {
-      allowance: jest.fn
-    },
-    DAI: {
-      allowance: jest.fn
-    },
-    DGD: {
-      allowance: jest.fn
-    },
-    GNT: {
-      allowance: jest.fn
-    },
-    GUP: {
-      allowance: jest.fn
-    },
-    ICN: {
-      allowance: jest.fn
-    },
-    MKR: {
-      allowance: jest.fn
-    },
-    MLN: {
-      allowance: jest.fn
-    },
-    NMR: {
-      allowance: jest.fn
-    },
-    PLU: {
-      allowance: jest.fn
-    },
-    REP: {
-      allowance: jest.fn
-    },
-    RHOC:{
-      allowance: jest.fn
-    },
-    SAI: {
-      allowance: jest.fn
-    },
-    SNGLS:{
-      allowance: jest.fn
-    },
-    TIME:{
-      allowance: jest.fn
-    },
-    VSL: {
-      allowance: jest.fn
-    },
-    'W-ETH':{
-      allowance: jest.fn
-    },
-    'W-GNT': {
-      allowance: jest.fn
-    }
-  },
-  market: {},
-  marketNoProxy: {}
-};
 
 global.storeMock = {
   contracts: {},
@@ -1271,3 +1212,5 @@ global.storeMock = {
     tokenTransfer: "MKR"
   }
 };
+
+contractBootstrap.init("kovan");

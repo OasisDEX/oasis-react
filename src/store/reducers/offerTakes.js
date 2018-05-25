@@ -14,6 +14,7 @@ import {fulfilled, pending, rejected} from '../../utils/store';
 import {handleTransaction} from '../../utils/transactions/handleTransaction';
 import {defer} from '../deferredThunk';
 import findOffer from '../../utils/offers/findOffer';
+import { getMarketContractInstance, getMarketNoProxyContractInstance } from '../../bootstrap/contracts';
 
 export const TAKE_BUY_OFFER = 'OFFER_TAKES/TAKE_BUY_OFFER';
 export const TAKE_SELL_OFFER = 'OFFER_TAKES/TAKE_SELL_OFFER';
@@ -76,7 +77,7 @@ const resetCompletedOfferCheck = createAction('OFFER_TAKES/RESET_COMPLETED_OFFER
 const sendBuyTransaction = createAction(
   'OFFER_TAKES/MARKET_BUY',
   (offerId, amount, gasLimit) =>
-    window.contracts.market.buy(offerId, amount, { gasLimit: gasLimit || DEFAULT_GAS_LIMIT }),
+    getMarketContractInstance().buy(offerId, amount, { gasLimit: gasLimit || DEFAULT_GAS_LIMIT }),
 );
 
 const takeOffer = createPromiseActions('OFFER_TAKES/TAKE_OFFER');
@@ -209,7 +210,7 @@ const getTransactionGasCostEstimate = createAction(
 
     console.log("trying to estimate: ", offerId, amount, offerOwner, DEFAULT_GAS_LIMIT);
 
-    window.contracts.marketNoProxy.buy.estimateGas(
+    getMarketNoProxyContractInstance().buy.estimateGas(
       offerId, amount, { to: offerOwner, gasLimit: DEFAULT_GAS_LIMIT },
       (e, estimation) => {
         if (e) {

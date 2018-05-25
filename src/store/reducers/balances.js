@@ -20,6 +20,7 @@ import { handleTransaction } from "../../utils/transactions/handleTransaction";
 import tokens from "../selectors/tokens";
 
 import { TX_ALLOWANCE_TRUST_TOGGLE } from "./transactions";
+import { getMarketContractInstance, getTokenContractInstance } from '../../bootstrap/contracts';
 
 const initialState = fromJS({
   accounts: [],
@@ -179,19 +180,19 @@ const subscribeTokenTransfersEventsEpic = (
 const setAllowance = createAction(
   "BALANCES/SET_ALLOWANCE",
   (tokenName, spenderAddress, newAllowance) =>
-    window.contracts.tokens[tokenName].approve(spenderAddress, newAllowance)
+    getTokenContractInstance(tokenName).approve(spenderAddress, newAllowance)
 );
 
 const setTokenTrustAddressEnabled = createAction(
   "BALANCES/SET_TOKEN_TRUST_ADDRESS_ENABLED",
   (tokenName, allowanceSubjectAddress) =>
-    window.contracts.tokens[tokenName].approve(allowanceSubjectAddress, -1)
+    getTokenContractInstance(tokenName).approve(allowanceSubjectAddress, -1)
 );
 
 const setTokenTrustAddressDisabled = createAction(
   "BALANCES/SET_TOKEN_TRUST_ADDRESS_DISABLED",
   (tokenName, spenderAddress) =>
-    window.contracts.tokens[tokenName].approve(
+    getTokenContractInstance(tokenName).approve(
       spenderAddress,
       TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED_MIN_MAX
     )
@@ -200,13 +201,13 @@ const setTokenTrustAddressDisabled = createAction(
 const getAccountTokenAllowanceForAddress = createAction(
   "BALANCES/GET_ACCOUNT_TOKEN_ALLOWANCE_FOR_ADDRESS",
   async (tokenName, account, spenderAddress) =>
-    window.contracts.tokens[tokenName].allowance(account, spenderAddress)
+    getTokenContractInstance(tokenName).allowance(account, spenderAddress)
 );
 
 const getDefaultAccountTokenAllowanceForAddressAction = createAction(
   "BALANCES/GET_DEFAULT_ACCOUNT_TOKEN_ALLOWANCE_FOR_ADDRESS",
   (tokenName, spenderAddress, defaultAccountAddress) =>
-    window.contracts.tokens[tokenName].allowance(
+    getTokenContractInstance(tokenName).allowance(
       defaultAccountAddress,
       spenderAddress
     ),
@@ -229,11 +230,11 @@ const getDefaultAccountTokenAllowanceForAddress = (
 const getDefaultAccountTokenAllowanceForMarketAction = createAction(
   "BALANCES/GET_DEFAULT_ACCOUNT_TOKEN_ALLOWANCE_FOR_ADDRESS",
   (tokenName, defaultAccountAddress) =>
-    window.contracts.tokens[tokenName].allowance(
+    getTokenContractInstance(tokenName).allowance(
       defaultAccountAddress,
-      window.contracts.market.address
+      getMarketContractInstance().address
     ),
-  tokenName => ({ tokenName, spenderAddress: window.contracts.market.address })
+  tokenName => ({ tokenName, spenderAddress: getMarketContractInstance().address })
 );
 
 const getDefaultAccountTokenAllowanceForMarket = tokenName => (

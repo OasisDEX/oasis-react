@@ -6,11 +6,11 @@ import { reset } from 'redux-form/immutable';
 
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import transfers from "../selectors/transfers";
-import getTokenContractInstance from "../../utils/contracts/getContractInstance";
 import { ETH_UNIT_ETHER } from "../../constants";
 import { TX__GROUP__TRANSFERS } from "./transactions";
 import balances from "../selectors/balances";
 import { handleTransaction } from "../../utils/transactions/handleTransaction";
+import { getTokenContractInstance } from '../../bootstrap/contracts';
 
 const initialState = Immutable.fromJS({});
 

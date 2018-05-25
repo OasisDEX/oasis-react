@@ -8,6 +8,7 @@ import logTakeToTrade from '../../utils/trades/logTakeToTrade';
 import first  from 'lodash/first';
 import { fulfilled } from '../../utils/store';
 import { web3p } from '../../bootstrap/web3';
+import { getMarketContractInstance } from '../../bootstrap/contracts';
 
 const initialState = fromJS({
   volumes: null,
@@ -119,7 +120,7 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock }) => (dispatch) => {
   dispatch(fetchLogTakeEventsAction.pending());
   return new Promise((resolve, reject) => {
     dispatch(loadingTradeHistory(true));
-    window.contracts.market.LogTake(
+    getMarketContractInstance().LogTake(
       {}, { fromBlock, toBlock })
       .get((err, logTakesList) => {
 
@@ -144,7 +145,7 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock }) => (dispatch) => {
 const subscribeLogTakeEventsAction = createPromiseActions(SUBSCRIBE_LOG_TAKE_EVENTS);
 const subscribeLogTakeEventsEpic = (fromBlock) => dispatch => {
   dispatch(subscribeLogTakeEventsAction.pending());
-  window.contracts.market.LogTake(
+  getMarketContractInstance().LogTake(
     {}, { fromBlock: fromBlock, toBlock: 'latest' },
   ).then((err, logTake) => dispatch(addTradeHistoryEntry(logTake)) );
   dispatch(subscribeLogTakeEventsAction.fulfilled());

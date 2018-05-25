@@ -2,7 +2,6 @@ import { createAction, handleActions } from 'redux-actions';
 import { fromJS } from 'immutable';
 import accounts from '../selectors/accounts';
 import { createPromiseActions } from '../../utils/createPromiseActions';
-import getTokenContractInstance from '../../utils/contracts/getContractInstance';
 import period from '../../utils/period';
 import network from '../selectors/network';
 import networkReducer from './network';
@@ -10,6 +9,7 @@ import { TOKEN_ETHER, TOKEN_GOLEM, TOKEN_WRAPPED_ETH, TOKEN_WRAPPED_GNT } from '
 import wrapUnwrap from '../selectors/wrapUnwrap';
 import balancesReducer from './balances';
 import createHistoryEntry from '../../utils/wrapUnwrapHistory/createHistoryEntry';
+import { getTokenContractInstance } from '../../bootstrap/contracts';
 
 const initialState = fromJS({
   historyLoadingStatus: null,

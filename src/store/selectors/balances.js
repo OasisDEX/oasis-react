@@ -1,33 +1,30 @@
-import { createSelector } from 'reselect';
-import BigNumber from 'bignumber.js';
-import reselect from '../../utils/reselect';
-import web3 from '../../bootstrap/web3';
+import { createSelector } from "reselect";
+import BigNumber from "bignumber.js";
+import reselect from "../../utils/reselect";
+import web3 from "../../bootstrap/web3";
 import {
   ETH_UNIT_ETHER,
   TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED,
-  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED, TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN,
-} from '../../constants';
+  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED,
+  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN
+} from "../../constants";
 
+import tokens from "./tokens";
+import { getMarketContractInstance } from "../../bootstrap/contracts";
 
-import tokens from './tokens';
+const balances = s => s.get("balances");
 
-const balances = s => s.get('balances');
+const tokenAllowances = createSelector(balances, s => s.get("tokenAllowances"));
 
-const tokenAllowances = createSelector(
-  balances, (s) => s.get('tokenAllowances')
-);
-
-const tokenBalances = createSelector(
-  balances, (s) => s.get('tokenBalances')
-);
+const tokenBalances = createSelector(balances, s => s.get("tokenBalances"));
 
 const tokenBalance = createSelector(
   tokenBalances,
   reselect.getProps,
   (s, { tokenName, balanceUnit = ETH_UNIT_ETHER, toBigNumber = true }) => {
     const tokenBalance = s.get(tokenName);
-    if(tokenBalance) {
-      if(toBigNumber) {
+    if (tokenBalance) {
+      if (toBigNumber) {
         return web3.fromWei(new BigNumber(s.get(tokenName), 10), balanceUnit);
       } else {
         return web3.fromWei(s.get(tokenName), balanceUnit);
@@ -42,25 +39,34 @@ const tokenAllowanceTrustStatus = createSelector(
   balances,
   reselect.getProps,
   (s, { tokenName, allowanceSubjectAddress }) => {
-    const tokenAllowance = s.getIn([ 'tokenAllowances', tokenName, allowanceSubjectAddress ]);
-    if(tokenAllowance) {
+    const tokenAllowance = s.getIn([
+      "tokenAllowances",
+      tokenName,
+      allowanceSubjectAddress
+    ]);
+    if (tokenAllowance) {
       const tokenAllowanceBN = new BigNumber(tokenAllowance);
-      const tokenTrustEnabledMinBN = new BigNumber(TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN);
-      if(tokenAllowanceBN.gte(tokenTrustEnabledMinBN)) {
+      const tokenTrustEnabledMinBN = new BigNumber(
+        TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN
+      );
+      if (tokenAllowanceBN.gte(tokenTrustEnabledMinBN)) {
         return TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED;
       } else {
         return TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED;
       }
-    } else { return null; }
+    } else {
+      return null;
+    }
   }
 );
 
 const tokenAllowanceStatusForActiveMarket = createSelector(
   (...args) => args,
   ([state, { tokenName }]) =>
-    tokenAllowanceTrustStatus(
-      state,
-      {tokenName, allowanceSubjectAddress: window.contracts.market.address })
+    tokenAllowanceTrustStatus(state, {
+      tokenName,
+      allowanceSubjectAddress: getMarketContractInstance().address
+    })
 );
 
 const activeBaseTokenBalance = createSelector(
@@ -69,11 +75,7 @@ const activeBaseTokenBalance = createSelector(
   (tokenBalances, baseToken) => tokenBalances.get(baseToken)
 );
 
-const ethBalance = createSelector(
-  balances,
-  s => s.get('ethBalance')
-);
-
+const ethBalance = createSelector(balances, s => s.get("ethBalance"));
 
 const activeQuoteTokenBalance = createSelector(
   tokenBalances,
@@ -92,4 +94,4 @@ export default {
   activeBaseTokenBalance,
   activeQuoteTokenBalance,
   tokenAllowanceStatusForActiveMarket
-}
+};

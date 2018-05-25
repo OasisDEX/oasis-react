@@ -4,6 +4,7 @@ import { fromJS } from 'immutable';
 
 import { fulfilled } from '../../utils/store';
 import { createPromiseActions } from '../../utils/createPromiseActions';
+import { getMarketContractInstance } from '../../bootstrap/contracts';
 
 const CHECK_IF_MARKET_IS_OPEN = 'MARKETS/CHECK_IF_MARKET_IS_OPEN';
 const CHECK_MARKET_CLOSE_TIME = 'MARKETS/CHECK_MARKET_CLOSE_TIME';
@@ -35,12 +36,12 @@ const initialState = fromJS({
 
 const checkIfMarketIsOpen = createAction(
   CHECK_IF_MARKET_IS_OPEN,
-  async () => window.contracts.market.isClosed().then(isClosed => !isClosed),
+  async () => getMarketContractInstance().isClosed().then(isClosed => !isClosed),
 );
 
 const checkMarketCloseTime = createAction(
   CHECK_MARKET_CLOSE_TIME,
-  async () => window.contracts.market.close_time(),
+  async () => getMarketContractInstance().close_time(),
 );
 
 const eventLogIsMatchingEnabled = createAction(
@@ -53,7 +54,7 @@ const subscribeLogMatchingEnabled = createPromiseActions(
 );
 const subscribeLogMatchingEnabledEpic = () => async dispatch => {
   dispatch(subscribeLogMatchingEnabled.pending());
-  window.contracts.market.LogMatchingEnabled({}, { fromBlock: 'latest' })
+  getMarketContractInstance().LogMatchingEnabled({}, { fromBlock: 'latest' })
     .then(
       status => dispatch(eventLogIsMatchingEnabled(status.args.isEnabled)),
     )
@@ -70,7 +71,7 @@ const checkIfOrderMatchingIsEnabled = createAction(
       if (marketType !== MARKET_TYPE_MATCHING_MARKET) {
         resolve(false);
       } else {
-        resolve(await window.contracts.market.matchingEnabled());
+        resolve(await getMarketContractInstance().matchingEnabled());
       }
     });
   },
@@ -83,12 +84,12 @@ const setActiveMarketAddress = createAction(
 
 const checkIfBuyEnabled = createAction(
   CHECK_IF_BUY_ENABLED,
-  () => window.contracts.market.buyEnabled()
+  () => getMarketContractInstance().buyEnabled()
 );
 
 const isBuyEnabled = createAction('MARKETS/IS_BUY_ENABLED', isEnabled => isEnabled);
 const subscribeLogBuyEnabledEventEpic = () => async (dispatch) => {
-    window.contracts.market.LogBuyEnabled({}, { fromBlock: 'latest' }).then(
+    getMarketContractInstance().LogBuyEnabled({}, { fromBlock: 'latest' }).then(
       ({ args }) => { dispatch(isBuyEnabled(args)); }
     )
   };

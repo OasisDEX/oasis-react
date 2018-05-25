@@ -15,6 +15,7 @@ import { defer } from "../deferredThunk";
 
 import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from "constants";
 import { handleTransaction } from "../../utils/transactions/handleTransaction";
+import { getMarketContractInstance, getMarketNoProxyContractInstance } from '../../bootstrap/contracts';
 
 const initialState = fromJS({
   makeBuyOffer: {
@@ -76,7 +77,7 @@ const sellMaxEpic = (
 const makeOfferTransaction = createAction(
   "OFFER_MAKES/MAKE_OFFER_TRANSACTION",
   ({ payAmount, payToken, buyAmount, buyToken, gasLimit }) =>
-    window.contracts.market.offer(payAmount, payToken, buyAmount, buyToken, 0, {
+    getMarketContractInstance().offer(payAmount, payToken, buyAmount, buyToken, 0, {
       gasLimit: gasLimit || DEFAULT_GAS_LIMIT
     })
 );
@@ -266,7 +267,7 @@ const getTransactionGasEstimate = createAction(
   "OFFER_MAKES/GET_TRANSACTION_GAS_ESTIMATE",
   (payAmount, payToken, buyAmount, buyToken, toAddress) =>
     new Promise((resolve, reject) => {
-      window.contracts.marketNoProxy.offer.estimateGas(
+      getMarketNoProxyContractInstance().offer.estimateGas(
         payAmount,
         payToken,
         buyAmount,
@@ -311,7 +312,7 @@ const updateTransactionGasCostEstimateEpic = (
     payToken = offerMake.get("sellTokenAddress"),
     buyAmount = offerMake.getIn(["offerData", "buyAmount"]),
     buyToken = offerMake.get("buyTokenAddress"),
-    toAddress = window.contracts.market.address;
+    toAddress = getMarketContractInstance().address;
 
   dispatch(
     defer(

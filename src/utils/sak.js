@@ -2,6 +2,7 @@ import balances from '../store/reducers/balances';
 import web3, {web3p} from "../bootstrap/web3";
 import markets from "../store/selectors/markets";
 import {ETH_UNIT_ETHER} from "../constants";
+import { getMarketContractInstance } from '../bootstrap/contracts';
 
 const fromWei = (x) =>  web3.fromWei(x, ETH_UNIT_ETHER);
 
@@ -48,7 +49,7 @@ const watch = (txHash) => {
 };
 
 const logTake = (fromBlock, toBlock ) => {
-  window.contracts.market.LogTake({}, {fromBlock, toBlock})
+  getMarketContractInstance().LogTake({}, {fromBlock, toBlock})
     .get((err, logTakesList) => {
       console.log('logTakesList', fromBlock, toBlock, logTakesList);
     });

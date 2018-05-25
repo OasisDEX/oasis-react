@@ -1,16 +1,16 @@
-import loadContact from "../utils/contracts/loadContract";
-import createContractInstance from "../utils/contracts/createContractInstance";
+import loadContact from "../../utils/contracts/loadContract";
+import createContractInstance from "../../utils/contracts/createContractInstance";
 
-const config = require("./../configs");
+const config = require("./../../configs");
 
-const erc20Abi = require("./../contracts/abi/standard-token/erc20.json");
-const WEthAbi = require("./../contracts/abi/standard-token/ds-eth-token.json");
-const TokenWrapperAbi = require("./../contracts/abi/token-wrapper/token-wrapper.json");
-const MatchingMarketAbi = require("./../contracts/abi/maker-otc/matching-market");
-const DepositBrokerAbi = require("./../contracts/abi/token-wrapper/deposit-broker");
+const erc20Abi = require("./../../contracts/abi/standard-token/erc20.json");
+const WEthAbi = require("./../../contracts/abi/standard-token/ds-eth-token.json");
+const TokenWrapperAbi = require("./../../contracts/abi/token-wrapper/token-wrapper.json");
+const MatchingMarketAbi = require("./../../contracts/abi/maker-otc/matching-market");
+const DepositBrokerAbi = require("./../../contracts/abi/token-wrapper/deposit-broker");
 import { fromJS } from "immutable";
-import web3 from "./web3";
-import { TOKEN_WRAPPED_GNT } from "../constants";
+import web3 from "./../web3";
+import { TOKEN_WRAPPED_GNT } from "../../constants";
 
 let brokers = fromJS({});
 let contracts = {};
@@ -203,3 +203,4 @@ export {
 export default {
   init
 };
+

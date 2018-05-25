@@ -7,7 +7,7 @@ import web3, { web3p } from "../../bootstrap/web3";
 
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import { fulfilled } from "../../utils/store";
-import contractsBootstrap from "../../bootstrap/contracts";
+import contractsBootstrap, { getTokenContractsList } from '../../bootstrap/contracts';
 import platformReducer from "./platform";
 import balancesReducer from "./balances";
 
@@ -78,7 +78,7 @@ const subscribeLatestBlockFilterEpic = () => async (dispatch, getState) => {
     dispatch(transactionsReducer.actions.getCurrentGasPrice());
     dispatch(
       balancesReducer.actions.syncTokenBalances(
-        window.contracts.tokens,
+        getTokenContractsList(),
         accounts.defaultAccount(getState())
       )
     );
@@ -129,7 +129,7 @@ const onNetworkCheckCompleted = (dispatch, getState) => async () => {
 
   dispatch(
     balancesReducer.actions.subscribeTokenTransfersEventsEpic(
-      window.contracts.tokens,
+      getTokenContractsList(),
       accounts.defaultAccount(getState())
     )
   );
@@ -174,7 +174,7 @@ const checkNetworkInitialEpic = () => async (dispatch, getState) => {
       ),
       dispatch(
         balancesReducer.actions.getAllTradedTokensBalances(
-          window.contracts.tokens,
+          getTokenContractsList(),
           accounts.defaultAccount(getState())
         )
       )
@@ -216,7 +216,7 @@ const checkNetworkEpic = () => async (dispatch, getState) => {
       ),
       dispatch(
         balancesReducer.actions.getAllTradedTokensBalances(
-          window.contracts.tokens,
+          getTokenContractsList(),
           accounts.defaultAccount(getState())
         )
       )
