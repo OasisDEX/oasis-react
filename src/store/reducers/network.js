@@ -146,18 +146,18 @@ const onNetworkCheckCompleted = (dispatch, getState) => async () => {
   dispatch(offersReducer.actions.syncOffersEpic(tradingPair));
 
   //Fetch LogTake events for set historicalRange
-  // dispatch(
-  //   tradesReducer.actions.fetchLogTakeEventsEpic({
-  //     fromBlock: currentLatestBlock - period.avgBlockPerDefaultPeriod(),
-  //     toBlock: currentLatestBlock,
-  //   }),
-  // )
-  // .then(
-  //   () => {
-  //     dispatch(tradesReducer.actions.initialMarketHistoryLoaded());
-  //     dispatch(tradesReducer.actions.subscribeLogTakeEventsEpic(currentLatestBlock));
-  //   },
-  // );
+  dispatch(
+    tradesReducer.actions.fetchLogTakeEventsEpic({
+      fromBlock: currentLatestBlock - period.avgBlockPerDefaultPeriod(),
+      toBlock: currentLatestBlock,
+    }),
+  )
+  .then(
+    () => {
+      dispatch(tradesReducer.actions.initialMarketHistoryLoaded());
+      dispatch(tradesReducer.actions.subscribeLogTakeEventsEpic(currentLatestBlock));
+    },
+  );
 
   dispatch(
     balancesReducer.actions.subscribeTokenTransfersEventsEpic(
