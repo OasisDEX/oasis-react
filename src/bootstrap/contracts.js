@@ -180,7 +180,7 @@ const getMarketContractInstance = () => {
 
 const getTokenContractsList = () => contracts.tokens;
 
-const getMarketNoProxyContractInstance = contracts.marketNoProxy;
+const getMarketNoProxyContractInstance =  () => contracts.marketNoProxy;
 const getTokenNoProxyContractInstance = tokenName =>
   contracts.noProxyTokens[tokenName];
 
