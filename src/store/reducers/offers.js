@@ -3,20 +3,15 @@ import { createAction, handleActions } from 'redux-actions';
 import { fromJS, List, Map } from 'immutable';
 
 import { fulfilled, pending } from '../../utils/store';
-import { createPromiseActions } from '../../utils/createPromiseActions';
 import tokens from '../selectors/tokens';
 import network from '../selectors/network';
 import offers from '../selectors/offers';
-import findOffer from '../../utils/offers/findOffer';
-import offerTakes from '../selectors/offerTakes';
 import { SYNC_STATUS_COMPLETED, SYNC_STATUS_ERROR, SYNC_STATUS_PENDING, SYNC_STATUS_PRISTINE } from '../../constants';
-import { getMarketContractInstance } from '../../bootstrap/contracts';
 import {offerCompletelyFilledIn, setOffer, setOfferEpic} from './offers/setOfferEpic';
 import {loadBuyOffers, loadBuyOffersEpic, loadSellOffers, loadSellOffersEpic} from './offers/loadOffers';
 import {getTradingPairOfferCount} from './offers/getTradingPairOffersCount';
 import {
   cancelOfferEpic,
-  getBestOffer,
   loadOffer,
   syncOffers,
   syncOffersEpic,

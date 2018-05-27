@@ -26,8 +26,9 @@ export const subscribeCancelledOrdersEpic = (fromBlock, filter = {}) => async (d
         } = LogKillEvent.args;
 
         console.log('LogKillEvent', id, LogKillEvent);
-        const { tradingPair , offerType } = findOffer(id, getState());
-        if(tradingPair.baseToken && tradingPair.quoteToken) {
+        const offerInfo = findOffer(id, getState());
+        if(offerInfo) {
+          const { tradingPair , offerType } = offerInfo;
           dispatch(
             offerCancelledEvent(
               {
