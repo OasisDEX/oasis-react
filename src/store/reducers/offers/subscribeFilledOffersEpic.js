@@ -21,7 +21,6 @@ export const checkOfferIsActive = createAction(
   offerId => getMarketContractInstance().isActive(offerId),
 );
 
-
 export const subscribeFilledOrders = createPromiseActions(
   'OFFERS/SUBSCRIBE_FILLED_OFFERS',
 );
