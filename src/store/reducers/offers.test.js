@@ -26,6 +26,7 @@ each([
     const getTradingPairOfferCount = jest.fn(() => () => null);
     const promise = store.dispatch(offers.testActions.syncOffer('61209', syncType, null, {
       doLoadOffer: () => async () => ({value: [new BigNumber("130350000000000000"), "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", new BigNumber("100000000000000000"), "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2", "0x2495eb6895c2e6c591ae9eb63a07b4a450623220", false, new BigNumber("0")]}),
+      doGetTokenByAddress: (address) => ({"0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2": "MKR", "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": "W-ETH"}[address]),
       doGetOfferTradingPairAndType: () => ({baseToken: "MKR", quoteToken: "W-ETH", offerType: "OFFERS/TYPE_BUY"}),
       doGetTradingPairOfferCount: getTradingPairOfferCount,
       doSetOfferEpic: setOfferEpic,

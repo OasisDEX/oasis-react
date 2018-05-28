@@ -17,6 +17,7 @@ export const syncOffer = (
   previousOfferState,
   {
     doLoadOffer = loadOffer,
+    doGetTokenByAddress = getTokenByAddress,
     doGetOfferTradingPairAndType = getOfferTradingPairAndType,
     doGetTradingPairOfferCount = getTradingPairOfferCount,
     doSetOfferEpic = setOfferEpic
@@ -34,7 +35,7 @@ export const syncOffer = (
   ] = offer;
 
 
-  const tokenAdresessAreValid =  getTokenByAddress(buyWhichTokenAddress) && getTokenByAddress(sellWhichTokenAddress);
+  const tokenAdresessAreValid =  doGetTokenByAddress(buyWhichTokenAddress) && doGetTokenByAddress(sellWhichTokenAddress);
   if (tokenAdresessAreValid) {
     const { baseToken, quoteToken, offerType } = doGetOfferTradingPairAndType(
       { buyWhichTokenAddress, sellWhichTokenAddress, syncType },
