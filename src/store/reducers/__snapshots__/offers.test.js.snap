@@ -177,13 +177,13 @@ Array [
         "buyHowMuch": "100000000000000000",
         "buyHowMuch_filter": 100000000000000000,
         "buyWhichToken": "MKR",
-        "buyWhichTokenAddress": "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
         "id": 61210,
         "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
         "sellHowMuch": "130350000000000000",
         "sellHowMuch_filter": 130350000000000000,
         "sellWhichToken": "W-ETH",
-        "sellWhichTokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
         "status": undefined,
       },
       "offerType": "OFFERS/TYPE_BUY",
@@ -209,13 +209,13 @@ Array [
         "buyHowMuch": "100000000000000000",
         "buyHowMuch_filter": 100000000000000000,
         "buyWhichToken": "MKR",
-        "buyWhichTokenAddress": "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
         "id": 61209,
         "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
         "sellHowMuch": "130350000000000000",
         "sellHowMuch_filter": 130350000000000000,
         "sellWhichToken": "W-ETH",
-        "sellWhichTokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
         "status": undefined,
       },
       "offerType": "OFFERS/TYPE_BUY",
@@ -242,13 +242,13 @@ Array [
         "buyHowMuch": "100000000000000000",
         "buyHowMuch_filter": 100000000000000000,
         "buyWhichToken": "MKR",
-        "buyWhichTokenAddress": "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
         "id": 61209,
         "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
         "sellHowMuch": "130350000000000000",
         "sellHowMuch_filter": 130350000000000000,
         "sellWhichToken": "W-ETH",
-        "sellWhichTokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
         "status": undefined,
       },
       "offerType": "OFFERS/TYPE_BUY",
@@ -278,13 +278,13 @@ Array [
         "buyHowMuch": "0",
         "buyHowMuch_filter": 0,
         "buyWhichToken": "MKR",
-        "buyWhichTokenAddress": "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
         "id": 61209,
         "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
         "sellHowMuch": "130350000000000000",
         "sellHowMuch_filter": 130350000000000000,
         "sellWhichToken": "W-ETH",
-        "sellWhichTokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
         "status": undefined,
       },
     },
@@ -308,13 +308,13 @@ Array [
         "buyHowMuch": "100000000000000000",
         "buyHowMuch_filter": 100000000000000000,
         "buyWhichToken": "MKR",
-        "buyWhichTokenAddress": "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
         "id": 61209,
         "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
         "sellHowMuch": "130350000000000000",
         "sellHowMuch_filter": 130350000000000000,
         "sellWhichToken": "W-ETH",
-        "sellWhichTokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
         "status": undefined,
       },
       "offerType": "OFFERS/TYPE_BUY",
@@ -338,13 +338,13 @@ Array [
         "buyHowMuch": "100000000000000000",
         "buyHowMuch_filter": 100000000000000000,
         "buyWhichToken": "MKR",
-        "buyWhichTokenAddress": "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
         "id": 61209,
         "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
         "sellHowMuch": "130350000000000000",
         "sellHowMuch_filter": 130350000000000000,
         "sellWhichToken": "W-ETH",
-        "sellWhichTokenAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
         "status": undefined,
       },
     },
@@ -353,62 +353,162 @@ Array [
 ]
 `;
 
-exports[`syncOffer initial sync 1`] = `undefined`;
+exports[`syncOffer initial sync 1`] = `
+Object {
+  "offer": Array [
+    "130350000000000000",
+    "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+    "100000000000000000",
+    "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+    "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
+    false,
+    "0",
+  ],
+  "offerMeta": Object {
+    "baseToken": "MKR",
+    "offerType": "OFFERS/TYPE_BUY",
+    "quoteToken": "W-ETH",
+  },
+}
+`;
 
-exports[`syncOffer initial sync 2`] = `
+exports[`syncOffer initial sync 2`] = `Array []`;
+
+exports[`syncOffer initial sync 3`] = `
 Array [
-  Object {
-    "payload": Object {
-      "offerId": "61209",
-      "previousOfferState": null,
+  Array [
+    "MKR",
+    "W-ETH",
+  ],
+]
+`;
+
+exports[`syncOffer initial sync 4`] = `
+Array [
+  Array [
+    Object {
+      "buyHowMuch": "100000000000000000",
+      "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+      "id": "61209",
+      "offerType": "OFFERS/TYPE_BUY",
+      "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
+      "sellHowMuch": "130350000000000000",
+      "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
       "syncType": "OFFERS/OFFER_SYNC_TYPE_INITIAL",
+      "timestamp": false,
+      "tradingPair": Object {
+        "baseToken": "MKR",
+        "quoteToken": "W-ETH",
+      },
     },
-    "type": "OFFERS/ATTEMPT_TO_SYNC_REMOVED_OFFER",
-  },
+  ],
 ]
 `;
 
-exports[`syncOffer initial sync 3`] = `Array []`;
+exports[`syncOffer new offer sync 1`] = `
+Object {
+  "offer": Array [
+    "130350000000000000",
+    "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+    "100000000000000000",
+    "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+    "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
+    false,
+    "0",
+  ],
+  "offerMeta": Object {
+    "baseToken": "MKR",
+    "offerType": "OFFERS/TYPE_BUY",
+    "quoteToken": "W-ETH",
+  },
+}
+`;
 
-exports[`syncOffer initial sync 4`] = `Array []`;
+exports[`syncOffer new offer sync 2`] = `Array []`;
 
-exports[`syncOffer new offer sync 1`] = `undefined`;
-
-exports[`syncOffer new offer sync 2`] = `
+exports[`syncOffer new offer sync 3`] = `
 Array [
-  Object {
-    "payload": Object {
-      "offerId": "61209",
-      "previousOfferState": null,
+  Array [
+    "MKR",
+    "W-ETH",
+  ],
+]
+`;
+
+exports[`syncOffer new offer sync 4`] = `
+Array [
+  Array [
+    Object {
+      "buyHowMuch": "100000000000000000",
+      "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+      "id": "61209",
+      "offerType": "OFFERS/TYPE_BUY",
+      "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
+      "sellHowMuch": "130350000000000000",
+      "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
       "syncType": "OFFERS/OFFER_SYNC_NEW_OFFER",
+      "timestamp": false,
+      "tradingPair": Object {
+        "baseToken": "MKR",
+        "quoteToken": "W-ETH",
+      },
     },
-    "type": "OFFERS/ATTEMPT_TO_SYNC_REMOVED_OFFER",
-  },
+  ],
 ]
 `;
 
-exports[`syncOffer new offer sync 3`] = `Array []`;
+exports[`syncOffer update sync 1`] = `
+Object {
+  "offer": Array [
+    "130350000000000000",
+    "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+    "100000000000000000",
+    "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+    "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
+    false,
+    "0",
+  ],
+  "offerMeta": Object {
+    "baseToken": "MKR",
+    "offerType": "OFFERS/TYPE_BUY",
+    "quoteToken": "W-ETH",
+  },
+}
+`;
 
-exports[`syncOffer new offer sync 4`] = `Array []`;
+exports[`syncOffer update sync 2`] = `Array []`;
 
-exports[`syncOffer update sync 1`] = `undefined`;
-
-exports[`syncOffer update sync 2`] = `
+exports[`syncOffer update sync 3`] = `
 Array [
-  Object {
-    "payload": Object {
-      "offerId": "61209",
-      "previousOfferState": null,
-      "syncType": "OFFERS/OFFER_SYNC_TYPE_UPDATE",
-    },
-    "type": "OFFERS/ATTEMPT_TO_SYNC_REMOVED_OFFER",
-  },
+  Array [
+    "MKR",
+    "W-ETH",
+  ],
 ]
 `;
 
-exports[`syncOffer update sync 3`] = `Array []`;
-
-exports[`syncOffer update sync 4`] = `Array []`;
+exports[`syncOffer update sync 4`] = `
+Array [
+  Array [
+    Object {
+      "buyHowMuch": "100000000000000000",
+      "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+      "id": "61209",
+      "offerType": "OFFERS/TYPE_BUY",
+      "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
+      "previousOfferState": null,
+      "sellHowMuch": "130350000000000000",
+      "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+      "syncType": "OFFERS/OFFER_SYNC_TYPE_UPDATE",
+      "timestamp": false,
+      "tradingPair": Object {
+        "baseToken": "MKR",
+        "quoteToken": "W-ETH",
+      },
+    },
+  ],
+]
+`;
 
 exports[`syncOffersEpic main 1`] = `
 Object {

@@ -7,11 +7,14 @@ import each from 'jest-each';
 import BigNumber from 'bignumber.js';
 import {Map, List} from 'immutable';
 
+import config from '../../configs';
 import offers from './offers';
 import {OFFER_SYNC_TYPE_INITIAL, OFFER_SYNC_TYPE_NEW_OFFER, OFFER_SYNC_TYPE_UPDATE} from './offers';
 import {TYPE_BUY_OFFER} from "./offers";
 import conversion from '../../utils/conversion';
 import {SYNC_STATUS_PRISTINE} from '../../constants';
+
+const TOKEN_ADDRS = config.tokens.kovan;
 
 each([
   ['initial sync', OFFER_SYNC_TYPE_INITIAL],
@@ -20,14 +23,26 @@ each([
 ]).describe('syncOffer', (description, syncType) => {
 
   test(description, async () => {
-    const store = configureMockStore([thunk])({});
+    const store = configureMockStore([thunk])(Map({
+      tokens: Map({
+        precision: 18,
+        tokenSpecs: Map({
+          "MKR": Map({}),
+          "W-ETH": Map({}),
+        }),
+        tradingPairs: List([
+          Map({
+            base: "MKR",
+            quote: "W-ETH",
+          }),
+        ]),
+      }),
+    }));
 
     const setOfferEpic = jest.fn(() => () => null);
     const getTradingPairOfferCount = jest.fn(() => () => null);
     const promise = store.dispatch(offers.testActions.syncOffer('61209', syncType, null, {
-      doLoadOffer: () => async () => ({value: [new BigNumber("130350000000000000"), "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", new BigNumber("100000000000000000"), "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2", "0x2495eb6895c2e6c591ae9eb63a07b4a450623220", false, new BigNumber("0")]}),
-      doGetTokenByAddress: (address) => ({"0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2": "MKR", "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": "W-ETH"}[address]),
-      doGetOfferTradingPairAndType: () => ({baseToken: "MKR", quoteToken: "W-ETH", offerType: "OFFERS/TYPE_BUY"}),
+      doLoadOffer: () => async () => ({value: [new BigNumber("130350000000000000"), TOKEN_ADDRS["W-ETH"], new BigNumber("100000000000000000"), TOKEN_ADDRS["MKR"], "0x2495eb6895c2e6c591ae9eb63a07b4a450623220", false, new BigNumber("0")]}),
       doGetTradingPairOfferCount: getTradingPairOfferCount,
       doSetOfferEpic: setOfferEpic,
     }));
@@ -78,18 +93,16 @@ each([
     const promise = store.dispatch(offers.testActions.setOfferEpic(Object.assign({
       id: 61209,
       sellHowMuch: new BigNumber("130350000000000000"),
-      sellWhichTokenAddress: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      sellWhichTokenAddress: TOKEN_ADDRS["W-ETH"],
       buyHowMuch: new BigNumber("100000000000000000"),
-      buyWhichTokenAddress: "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
+      buyWhichTokenAddress: TOKEN_ADDRS["MKR"],
       owner: "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
       status: undefined,
       offerType: TYPE_BUY_OFFER,
       syncType: syncType,
       tradingPair: {baseToken: "MKR", quoteToken: "W-ETH"},
       previousOfferState: undefined,
-    }, overrides), {
-      doGetTokenByAddress: (address) => ({"0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2": "MKR", "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": "W-ETH"}[address]),
-    }));
+    }, overrides)));
 
     const result = await promise;
 

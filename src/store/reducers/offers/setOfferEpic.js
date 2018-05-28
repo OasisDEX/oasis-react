@@ -38,12 +38,10 @@ export const setOfferEpic = ({
                         syncType = OFFER_SYNC_TYPE_INITIAL,
                         tradingPair: { baseToken, quoteToken },
                         previousOfferState,
-                      }, {
-                        doGetTokenByAddress = getTokenByAddress,
-                      } = {}) => async (dispatch, getState) => {
+                      }) => async (dispatch, getState) => {
 
-  const sellToken = doGetTokenByAddress(sellWhichTokenAddress);
-  const buyToken = doGetTokenByAddress(buyWhichTokenAddress);
+  const sellToken = getTokenByAddress(sellWhichTokenAddress);
+  const buyToken = getTokenByAddress(buyWhichTokenAddress);
 
   /**
    * We ignore pairs that we cant find contract for.
