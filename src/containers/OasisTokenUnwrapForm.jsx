@@ -36,7 +36,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
 
   validate(value) {
     const { activeWrappedTokenBalance } = this.props;
-    if (!value) {
+    if (!value || value == 0) {
       return 'VALIDATE_ERROR/VALUE_IS_REQUIRED';
     }else if (web3.fromWei(activeWrappedTokenBalance).lt(value)) {
       return 'VALIDATE_ERROR/WRAP_AMOUNT_GREATER_THAN_TOKEN_BALANCE'
