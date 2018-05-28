@@ -9,6 +9,7 @@ exports[`(Container) OasisTransactionStatus should render 1`] = `
   justifyContent="space-between"
   size="sm"
 >
+  <div />
   <div
     className=""
     style={
@@ -18,9 +19,7 @@ exports[`(Container) OasisTransactionStatus should render 1`] = `
       }
     }
   >
-    <div />
     <TransactionStatus
-      noBorder={true}
       transaction={
         Immutable.Map {
           txType: "OFFER_TAKES/TAKE_BUY_OFFER",

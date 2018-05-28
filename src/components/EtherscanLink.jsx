@@ -21,11 +21,12 @@ const defaultProps = {
   networkName: "kovan"
 };
 
-const linkStyle = {
+const linkStyle = (maxWidth = "150px") => ({
   textOverflow: "ellipsis",
   display: "inline-block",
-  overflow: "hidden"
-};
+  overflow: "hidden",
+  maxWidth: maxWidth
+});
 
 class EtherscanLink extends PureComponent {
   render() {
@@ -38,7 +39,7 @@ class EtherscanLink extends PureComponent {
     switch (this.props.type) {
       case ETHERSCAN_LINK_TYPE_TRANSACTION: {
         return (
-          <a target="_blank" style={linkStyle} href={url} {...props}>
+          <a target="_blank" style={linkStyle()} href={url} {...props}>
             <span>{label || txHash}</span>
           </a>
         );
