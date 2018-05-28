@@ -19,8 +19,9 @@ const propTypes = PropTypes && {
 export const VALIDATION_ERROR__VALUE_GREATER_THAN_BALANCE = 'VALIDATION_ERROR/VALUE_GREATER_THAN_BALANCE';
 export const VALIDATION_ERROR__NON_NUMERIC_VALUE = 'VALIDATION_ERROR/NON_NUMERIC_VALUE';
 
-const validateIsNumber = value => {
-  if (isNaN(parseFloat(value))) {
+const validateIsNonZeroNumber = value => {
+  const parsedValue = parseFloat(value);
+  if (isNaN(parsedValue) || parsedValue === 0) {
     return [VALIDATION_ERROR__NON_NUMERIC_VALUE]
   }
 };
@@ -46,7 +47,7 @@ export class TokenAmountInputFieldWrapper extends PureComponent {
         disabled={!maxAmountLimit || disabled}
         maxAmountLimit={maxAmountLimit}
         required
-        validate={[validateIsNumber, this.validateTokenAmount]}
+        validate={[validateIsNonZeroNumber, this.validateTokenAmount]}
         component={TokenAmountInput}
         selectedToken={selectedToken}
         name={fieldName}
