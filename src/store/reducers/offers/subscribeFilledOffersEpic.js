@@ -49,6 +49,7 @@ export const subscribeFilledOffersEpic = (fromBlock, filter = {}) => async (disp
       else {
         const offerInOrderBook = findOffer(offerId, getState());
         if (offerInOrderBook) {
+          console.log({offerInOrderBook})
           if (offerTakes.activeOfferTakeOfferId(getState()) === offerId.toString()) {
             dispatch(markOfferAsInactive(offerInOrderBook));
           } else {

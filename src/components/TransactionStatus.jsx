@@ -29,7 +29,10 @@ class TransactionStatus extends PureComponent {
       case TX_STATUS_AWAITING_USER_ACCEPTANCE:
         return (
           <div>
-            Sign Trans.<StatusPictogram status={transaction.get("txStatus")} className={styles.imgRight} />
+            Sign Trans.<StatusPictogram
+              status={transaction.get("txStatus")}
+              className={styles.imgRight}
+            />
           </div>
         );
       case TX_STATUS_CANCELLED_BY_USER:
@@ -41,7 +44,10 @@ class TransactionStatus extends PureComponent {
               type={ETHERSCAN_LINK_TYPE_TRANSACTION}
               txHash={transaction.get("txHash")}
             />
-            <StatusPictogram status={transaction.get("txStatus")} className={styles.imgRight} />
+            <StatusPictogram
+              status={transaction.get("txStatus")}
+              className={styles.imgRight}
+            />
           </FlexBox>
         );
       case TX_STATUS_CONFIRMED:
@@ -52,18 +58,25 @@ class TransactionStatus extends PureComponent {
               type={ETHERSCAN_LINK_TYPE_TRANSACTION}
               txHash={transaction.get("txHash")}
             />
-            <StatusPictogram status={transaction.get("txStatus")} className={styles.imgRight} />
+            <StatusPictogram
+              status={transaction.get("txStatus")}
+              className={styles.imgRight}
+            />
           </FlexBox>
         );
 
       case TX_STATUS_REJECTED:
         return (
           <FlexBox alignItems="baseline">
-            <StatusPictogram status={transaction.get("txStatus")} className={styles.imgLeft} />
+            <StatusPictogram
+              status={transaction.get("txStatus")}
+              className={styles.imgLeft}
+            />
             Your transaction
-            <EtherscanLink  className={styles.spaceBoth}
+            <EtherscanLink
+              className={styles.spaceBoth}
               type={ETHERSCAN_LINK_TYPE_TRANSACTION}
-              txHash="sdfs324sdf"
+              txHash={transaction.get("txHash")}
             />{" "}
             failed
           </FlexBox>
