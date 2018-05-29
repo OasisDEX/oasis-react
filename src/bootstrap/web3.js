@@ -32,7 +32,13 @@ const init = () => {
   if (web3 && window.web3) {
     web3.setProvider(window.web3.currentProvider);
   } else {
-    web3.setProvider(new Web3.providers.HttpProvider(settings.nodeURL));
+    fetch(settings.nodeURL).then(
+      () => {
+        console.info('Connecting to local Parity node');
+        web3.setProvider(new Web3.providers.HttpProvider(settings.nodeURL));
+      },
+      () => console.info('No connection!')
+    )
   }
   web3p = new window.Proxy(web3, proxiedWeb3Handler);
 };
