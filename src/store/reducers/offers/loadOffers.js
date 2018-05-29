@@ -10,16 +10,13 @@ export const loadSellOffersEpic = (offerCount, sellToken, buyToken, {
 } = {}) => async (dispatch) => {
   const sellOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
   try {
-    let currentSellOfferId = (await dispatch(doGetBestOffer(sellToken, buyToken))).value.toNumber();
     dispatch(loadSellOffers.pending(sellOffersTradingPair));
+    let currentSellOfferId = (await dispatch(doGetBestOffer(sellToken, buyToken))).value.toNumber();
     while (currentSellOfferId !== 0) {
       dispatch(doSyncOffer(currentSellOfferId));
       currentSellOfferId = (await dispatch(doGetWorseOffer(currentSellOfferId))).value.toNumber()
-      --offerCount.sellOfferCount;
-      if (!offerCount.sellOfferCount) {
-        dispatch(loadSellOffers.fulfilled(sellOffersTradingPair));
-      }
     }
+    dispatch(loadSellOffers.fulfilled(sellOffersTradingPair));
     return loadSellOffers;
   } catch(e) {
     dispatch(loadSellOffers.rejected(e));
@@ -34,17 +31,13 @@ export const loadBuyOffersEpic = (offerCount, sellToken, buyToken, {
 } = {}) => async (dispatch) => {
   const buyOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
   try {
-    let currentBuyOfferId = (await dispatch(doGetBestOffer(buyToken, sellToken))).value.toNumber();
     dispatch(loadBuyOffers.pending(buyOffersTradingPair));
+    let currentBuyOfferId = (await dispatch(doGetBestOffer(buyToken, sellToken))).value.toNumber();
     while (currentBuyOfferId !== 0) {
-      // console.log({currentBuyOfferId})
       dispatch(doSyncOffer(currentBuyOfferId));
       currentBuyOfferId = (await dispatch(doGetWorseOffer(currentBuyOfferId))).value.toNumber();
-      --offerCount.buyOfferCount;
-      if (!offerCount.buyOfferCount) {
-        dispatch(loadBuyOffers.fulfilled(buyOffersTradingPair));
-      }
     }
+    dispatch(loadBuyOffers.fulfilled(buyOffersTradingPair));
     return loadBuyOffers;
   } catch(e) {
     dispatch(loadBuyOffers.rejected(e));
