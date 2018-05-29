@@ -1,6 +1,6 @@
 import offers from '../../selectors/offers';
 import {createPromiseActions} from '../../../utils/createPromiseActions';
-import {loadBuyOffers, loadBuyOffersEpic, loadSellOffers, loadSellOffersEpic} from './loadOffers';
+import {loadBuyOffersEpic, loadSellOffersEpic} from './loadOffers';
 import {createAction} from 'redux-actions';
 import {SYNC_STATUS_PRISTINE} from '../../../constants';
 import {getMarketContractInstance, getTokenContractInstance} from '../../../bootstrap/contracts';
@@ -72,14 +72,7 @@ export const syncOffersEpic = ({ baseToken, quoteToken }, {
   dispatch(resetOffers({ baseToken, quoteToken }));
   const offerCount = (await dispatch(doGetTradingPairOfferCount(baseToken, quoteToken))).value;
   return Promise.all([
-    dispatch(
-      doLoadBuyOffersEpic(offerCount, baseToken, quoteToken))
-    .catch(e => dispatch(loadBuyOffers.rejected(e))
-    ),
-    dispatch(
-      doLoadSellOffersEpic(offerCount, baseToken, quoteToken))
-    .catch(e => dispatch(loadSellOffers.rejected(e, { tradingPair: { baseToken, quoteToken } })
-      ),
-    )]).then(() => dispatch(syncOffers.fulfilled({ baseToken, quoteToken })));
-
+    dispatch(doLoadBuyOffersEpic(offerCount, baseToken, quoteToken)),
+    dispatch(doLoadSellOffersEpic(offerCount, baseToken, quoteToken)),
+  ]).then(() => dispatch(syncOffers.fulfilled({ baseToken, quoteToken })));
 };

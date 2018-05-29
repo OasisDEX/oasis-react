@@ -182,14 +182,17 @@ const reducer = handleActions({
   [loadBuyOffers.fulfilled]: (state, { payload }) =>
     state.setIn(['offers', Map(payload), 'loadingBuyOffers'], SYNC_STATUS_COMPLETED),
   [loadBuyOffers.rejected]: (state, { payload }) =>
-    state.setIn(['offers', Map(payload), 'loadingBuyOffers'], SYNC_STATUS_ERROR),
+    // state.setIn(['offers', Map(payload), 'loadingBuyOffers'], SYNC_STATUS_ERROR),
+    { throw payload },
 
   [loadSellOffers.pending]: (state, { payload }) =>
     state.setIn(['offers', Map(payload), 'loadingSellOffers'], SYNC_STATUS_PENDING),
   [loadSellOffers.fulfilled]: (state, { payload }) =>
     state.setIn(['offers', Map(payload), 'loadingSellOffers'], SYNC_STATUS_COMPLETED),
   [loadSellOffers.rejected]: (state, { payload }) =>
-    state.setIn(['offers', Map(payload), 'loadingSellOffers'], SYNC_STATUS_ERROR),
+    // state.setIn(['offers', Map(payload), 'loadingSellOffers'], SYNC_STATUS_ERROR),
+    { throw payload },
+
   [offerCancelledEvent]: (state, { payload: { tradingPair, offerType, offerId } }) => {
     switch (offerType) {
       case TYPE_BUY_OFFER:
