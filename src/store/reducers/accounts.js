@@ -33,7 +33,7 @@ const setAccounts = createAction(
 
 const defaultAccountChanged = createAction(
   'ACCOUNTS/DEFAULT_ACCOUNT_CHANGED',
-  () => Date.now() / 1000
+  () => Date.now().toString()
 );
 
 const checkAccountsEpic = () => async (dispatch, getState) => {

@@ -25,7 +25,10 @@ import {
   getConnectedNetworkId
 } from "./network/checkNetworkEpic";
 import { CheckNetworkAction } from "./network/CheckNetworkAction";
-import { setLastNetworkCheckStartAt, setLastNetworkCheckEndAt } from './network/onNetworkCheckCompleted';
+import {
+  setLastNetworkCheckStartAt,
+  setLastNetworkCheckEndAt
+} from "./network/onNetworkCheckEndEpic";
 
 const initialState = fromJS({
   status: CLOSED,
@@ -36,7 +39,8 @@ const initialState = fromJS({
   outOfSync: null,
   latestEthereumPrice: null,
   isNetworkCheckPending: null,
-  lastNetworkCheckAt: { start: null, end: null }
+  lastNetworkCheckAt: { start: null, end: null },
+  latestBlockReceivedAt: null
 });
 
 const syncNetwork = createPromiseActions("NETWORK/SYNC_NETWORK");
@@ -50,7 +54,7 @@ const actions = {
   disconnected,
   checkNetworkInitialEpic,
   checkNetworkEpic,
-  getBlock,http://localhost:3000/trade/MKR/W-ETH
+  getBlock,
   getLatestBlock,
   getLatestBlockNumber,
   getConnectedNetworkId,
@@ -90,8 +94,13 @@ const reducer = handleActions(
         "activeNetworkId",
         nid => (!!payload && nid === payload ? nid : payload)
       ),
-    [fulfilled(getLatestBlockNumber)]: (state, { payload }) =>
-      state.update("latestBlockNumber", () => payload),
+    [fulfilled(getLatestBlockNumber)]: (
+      state,
+      { payload: { latestBlockNumber, latestBlockReceivedAt } }
+    ) =>
+      state
+        .update("latestBlockNumber", () => latestBlockNumber)
+        .set("latestBlockReceivedAt", latestBlockReceivedAt),
     [fulfilled(fetchEthereumPrice)]: (state, { payload }) =>
       state.set("latestEthereumPrice", payload[0])
   },

@@ -13,6 +13,7 @@ import wrapUnwrapHistoryReducer from '../store/reducers/wrapUnwrapHistory';
 import platform from '../store/selectors/platform';
 import network from '../store/selectors/network';
 import wrapUnwrapReducer from '../store/reducers/wrapUnwrap';
+import accounts from '../store/selectors/accounts';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -25,8 +26,8 @@ export class OasisWrapUnwrapHistoryWrapper extends PureComponent {
     );
   }
 
-  async UNSAFE_componentWillUpdate({ latestBlockNumber, contractsLoaded, isTokenWrapUnwrapHistoryLoading }) {
-    if(latestBlockNumber && contractsLoaded && !isTokenWrapUnwrapHistoryLoading) {
+  async UNSAFE_componentWillUpdate({ latestBlockNumber, contractsLoaded, hasAccountEntry }) {
+    if(latestBlockNumber && contractsLoaded && !hasAccountEntry) {
       await this.props.actions.loadGNTBrokerAddress();
       this.props.actions.loadWrapUnwrapsHistory();
     }
@@ -36,11 +37,13 @@ export class OasisWrapUnwrapHistoryWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
+    defaultAccount: accounts.defaultAccount(state),
     activeNetworkName: network.activeNetworkName(state),
     contractsLoaded: platform.contractsLoaded(state),
     latestBlockNumber: network.latestBlockNumber(state),
     wrapUnwrapHistoryList: wrapUnwrapHistory.tokenWrapUnwrapHistory(state),
-    isTokenWrapUnwrapHistoryLoading: wrapUnwrapHistory.isTokenWrapUnwrapHistoryLoading(state)
+    isTokenWrapUnwrapHistoryLoading: wrapUnwrapHistory.isTokenWrapUnwrapHistoryLoading(state),
+    hasAccountEntry: wrapUnwrapHistory.hasAccountEntry(state, accounts.defaultAccount(state))
   };
 }
 export function mapDispatchToProps(dispatch) {

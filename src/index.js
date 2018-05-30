@@ -25,6 +25,10 @@ import version from "./version";
 import network from "./store/selectors/network";
 import { CheckNetworkAction } from "./store/reducers/network/CheckNetworkAction";
 import { web3p } from "./bootstrap/web3";
+import {
+  setLastNetworkCheckEndAt,
+  setLastNetworkCheckStartAt
+} from "./store/reducers/network/onNetworkCheckEndEpic";
 
 //sentry.io configuration
 if (version.env === "production") {
@@ -40,10 +44,16 @@ const { store, history } = configureStore();
 sak(store);
 
 export const HEALTHCHECK_INTERVAL_MS = 2000;
+const PENDING_INITIAL_NETWORK_CHECK = "PENDING_INITIAL_NETWORK_CHECK";
 
 const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
+  if (network.isNetworkCheckPending(getState()) === true) {
+    return;
+  }
+  dispatch(setLastNetworkCheckStartAt());
   if (isInitialHealthcheck) {
     dispatch(networkReducer.actions.connecting());
+  } else {
   }
   Promise.all([Network.checkConnectivity()])
     .then(async providerType => {
@@ -58,15 +68,15 @@ const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
         });
       }
 
-      dispatch(networkReducer.actions.connected());
-      if (isInitialHealthcheck) {
-        /**
-         * We only do this once, since later we subscribe to 'latest' filter
-         * to get notified on new block resolved
-         */
-        dispatch(networkReducer.actions.getLatestBlockNumber());
-      }
       if (providerType && connectedNetworkId.value) {
+        dispatch(networkReducer.actions.connected());
+        if (isInitialHealthcheck) {
+          /**
+           * We only do this once, since later we subscribe to 'latest' filter
+           * to get notified on new block resolved
+           */
+          dispatch(networkReducer.actions.getLatestBlockNumber());
+        }
         const previousDefaultAccount = accounts.defaultAccount(getState());
         if (
           HAS_ACCOUNTS ===
@@ -76,10 +86,9 @@ const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
             /**
              *  Initialize session on first run of the healthcheck or when default address changes
              */
-            const currentDefaultAccount = accounts.defaultAccount(getState());
             if (
               isInitialHealthcheck ||
-              previousDefaultAccount !== currentDefaultAccount
+              previousDefaultAccount !== accounts.defaultAccount(getState())
             ) {
               Session.init(dispatch, getState);
             }
@@ -89,16 +98,21 @@ const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
           await dispatch(
             isInitialHealthcheck
               ? networkReducer.actions.checkNetworkInitialEpic()
-              : networkReducer.actions.checkNetworkEpic()
+              : networkReducer.actions.checkNetworkEpic(
+                  previousDefaultAccount !== accounts.defaultAccount(getState())
+                )
           );
         } else {
           dispatch(CheckNetworkAction.fulfilled());
+          dispatch(setLastNetworkCheckEndAt());
         }
       }
     })
     .catch(error => {
       console.log("Error in healthCheck!", error);
       dispatch(networkReducer.actions.disconnected());
+      dispatch(CheckNetworkAction.fulfilled());
+      dispatch(setLastNetworkCheckEndAt());
       errorHandler.handle(error);
     });
 };
@@ -108,23 +122,35 @@ const bootstrap = async () => {
   period.init(getState);
   conversion.init(getState);
   await dispatch(platformReducer.actions.web3Initialized(web3.init()));
+  let networkCheckIntervalId = null;
+  let checkingConnectivity = null;
   const checkIfInitiallyLocked = setInterval(() => {
-    Network.checkConnectivity().then(async () => {
-      if (web3p.eth.accounts.length) {
-        clearInterval(checkIfInitiallyLocked);
-        await healthCheck(dispatch, getState, true);
-        setInterval(
-          await healthCheck.bind(null, dispatch, getState),
-          HEALTHCHECK_INTERVAL_MS
-        );
-      } else {
-        dispatch(platformReducer.actions.metamaskLocked());
-      }
-    }).catch(error => {
-      console.log("Error in healthCheck!", error);
-      dispatch(networkReducer.actions.disconnected());
-      errorHandler.handle(error);
-    });
+    if (
+      !checkingConnectivity &&
+      networkCheckIntervalId !== PENDING_INITIAL_NETWORK_CHECK
+    ) {
+      checkingConnectivity = true;
+      Network.checkConnectivity()
+        .then(async () => {
+          if (web3p.eth.accounts.length) {
+            networkCheckIntervalId = PENDING_INITIAL_NETWORK_CHECK;
+            clearInterval(checkIfInitiallyLocked);
+            await healthCheck(dispatch, getState, true);
+            networkCheckIntervalId = setInterval(
+              await healthCheck.bind(null, dispatch, getState),
+              HEALTHCHECK_INTERVAL_MS
+            );
+          } else {
+            dispatch(platformReducer.actions.metamaskLocked());
+          }
+          checkingConnectivity = false;
+        })
+        .catch(error => {
+          console.log("Error in healthCheck!", error);
+          dispatch(networkReducer.actions.disconnected());
+          errorHandler.handle(error);
+        });
+    }
   }, 1000);
 };
 

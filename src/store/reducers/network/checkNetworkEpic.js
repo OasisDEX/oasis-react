@@ -8,20 +8,21 @@ import platformReducer from "../platform";
 import accounts from "../../selectors/accounts";
 import { createAction } from "redux-actions";
 import { web3p } from "../../../bootstrap/web3";
-import { onNetworkCheckCompleted } from "./onNetworkCheckCompleted";
+import { onNetworkCheckEndEpic } from "./onNetworkCheckEndEpic";
 
 export const getConnectedNetworkId = createAction(
   "NETWORK/GET_CONNECTED_NETWORK_ID",
   () => web3p.version.getNetwork()
 );
 
-export const checkNetworkEpic = () => async (dispatch, getState) => {
-  if (network.isNetworkCheckPending(getState())) { return; }
+export const checkNetworkEpic = (hasAccountChanged) => async (dispatch, getState) => {
+
+  if (network.isNetworkCheckPending(getState()) === true) { console.log('check pending'); return; }
+
   dispatch(CheckNetworkAction.pending());
   const previousNetworkId = network.activeNetworkId(getState());
   const currentNetworkIdAction = await dispatch(getConnectedNetworkId());
   const currentNetworkName = network.activeNetworkName(getState());
-
   if (previousNetworkId !== currentNetworkIdAction.value) {
     /**
      * When network has changed we:
@@ -29,7 +30,6 @@ export const checkNetworkEpic = () => async (dispatch, getState) => {
      * - reload contracts with new network adressess.
      * - initialize market on the new network.
      * - load token allowances.
-     *
      */
     return await Promise.all([
       dispatch(platformReducer.actions.web3Reset()),
@@ -50,6 +50,8 @@ export const checkNetworkEpic = () => async (dispatch, getState) => {
           accounts.defaultAccount(getState())
         )
       )
-    ]).then(onNetworkCheckCompleted(dispatch, getState));
+    ]).then(onNetworkCheckEndEpic(dispatch, getState, true));
+  } else {
+    onNetworkCheckEndEpic(dispatch, getState, false, hasAccountChanged);
   }
 };

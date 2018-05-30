@@ -1,17 +1,29 @@
-import Web3 from 'web3';
+import Web3 from "web3";
+import { fromJS } from "immutable";
+
 const web3 = new Web3();
 
 export default web3;
 
 let web3p = null;
 
-const settings = require('../settings');
+const subscriptions = {
+  tokenTransferEventSubs: fromJS({}),
+  transferHistoryEventSubs: fromJS({}),
+  wrapUnwrapHistoryEventSubs: fromJS({}),
+  ethBalanceChangeEventSub: null
+};
 
-const promisify = (inner) =>
+const settings = require("../settings");
+
+const promisify = inner =>
   new Promise((resolve, reject) =>
     inner((err, res) => {
-      if (err) { reject(err) }
-      else { resolve(res); }
+      if (err) {
+        reject(err);
+      } else {
+        resolve(res);
+      }
     })
   );
 
@@ -20,12 +32,46 @@ const proxiedWeb3Handler = {
     const inner = target[name];
     if (inner instanceof Function) {
       return (...args) => promisify(cb => inner(...args, cb));
-    } else if (typeof inner === 'object') {
+    } else if (typeof inner === "object") {
       return new window.Proxy(inner, proxiedWeb3Handler);
     } else {
       return inner;
     }
-  },
+  }
+};
+
+const registerAccountSpecificSubscriptions = ({
+  tokenTransferEventSubs,
+  transferHistoryEventSub,
+  wrapUnwrapHistoryEventSub,
+  ethBalanceChangeEventSub,
+}) => {
+  if (tokenTransferEventSubs) {
+    subscriptions.tokenTransferEventSubs = tokenTransferEventSubs;
+  } else if (transferHistoryEventSub) {
+    subscriptions.transferHistoryEventSubs = subscriptions.transferHistoryEventSubs.set(
+      transferHistoryEventSub.key, transferHistoryEventSub.value
+    );
+  } else if (wrapUnwrapHistoryEventSub) {
+    subscriptions.wrapUnwrapHistoryEventSubs = subscriptions.wrapUnwrapHistoryEventSubs.set(
+      wrapUnwrapHistoryEventSub.key, wrapUnwrapHistoryEventSub.value
+    );
+  } else if (ethBalanceChangeEventSub) {
+    subscriptions.ethBalanceChangeEventSub = ethBalanceChangeEventSub
+  }
+};
+
+const getSubscriptions = () => subscriptions;
+
+const clearAccountSpecificSubscriptions = () => {
+  subscriptions.tokenTransferEventSubs.valueSeq().forEach(sub => sub.stopWatching());
+  subscriptions.transferHistoryEventSubs.valueSeq().forEach(sub => sub.stopWatching());
+  subscriptions.wrapUnwrapHistoryEventSubs.valueSeq().forEach(sub => sub.stopWatching());
+  subscriptions.ethBalanceChangeEventSub.stopWatching();
+  subscriptions.tokenTransferEventSubs = fromJS({});
+  subscriptions.transferHistoryEventSubs = fromJS({});
+  subscriptions.wrapUnwrapHistoryEventSubs = fromJS({});
+  subscriptions.ethBalanceChangeEventSub = null;
 };
 
 const init = () => {
@@ -34,13 +80,19 @@ const init = () => {
   } else {
     fetch(settings.nodeURL).then(
       () => {
-        console.info('Connecting to local Parity node');
+        console.info("Connecting to local Parity node");
         web3.setProvider(new Web3.providers.HttpProvider(settings.nodeURL));
       },
-      () => console.info('No connection!')
-    )
+      () => console.info("No connection!")
+    );
   }
   web3p = new window.Proxy(web3, proxiedWeb3Handler);
 };
 
-export { init, web3p };
+export {
+  init,
+  web3p,
+  registerAccountSpecificSubscriptions,
+  getSubscriptions,
+  clearAccountSpecificSubscriptions
+};

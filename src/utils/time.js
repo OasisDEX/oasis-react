@@ -7,7 +7,6 @@ const getTimestamp = (timestampRes = TIMESTAMP_RESOLUTION_MS) => {
   switch (timestampRes) {
     case  TIMESTAMP_RESOLUTION_SEC: return Math.ceil(currentTimestamp / 1000);
     case  TIMESTAMP_RESOLUTION_MS: return currentTimestamp;
-
   }
 };
 

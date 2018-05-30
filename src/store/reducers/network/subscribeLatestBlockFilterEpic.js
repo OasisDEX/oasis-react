@@ -8,6 +8,7 @@ import accounts from "../../selectors/accounts";
 import tokensReducer from "../tokens";
 import offersReducer from "../offers";
 import { createAction } from "redux-actions";
+import { getTimestamp } from "../../../utils/time";
 
 export const fetchEthereumPrice = createAction(
   "NETWORK/FETCH_ETHEREUM_PRICE",
@@ -22,7 +23,13 @@ export const fetchEthereumPrice = createAction(
  */
 export const getLatestBlockNumber = createAction(
   "NETWORK_GET_LATEST_BLOCK_NUMBER",
-  async () => web3p.eth.getBlockNumber()
+  async () =>
+    web3p.eth
+      .getBlockNumber()
+      .then(latestBlockNumber => ({
+        latestBlockNumber,
+        latestBlockReceivedAt: getTimestamp()
+      }))
 );
 
 export const getBlock = createAction(
