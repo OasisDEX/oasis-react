@@ -20,6 +20,7 @@ exports[`(Container) OasisTokenTransfer should render 1`] = `
     token="MKR"
   />
   <Connect(ReduxForm)
+    disabled={false}
     onSubmit={[Function]}
     transferState={
       <OasisTransactionStatusWrapperInfoBox
