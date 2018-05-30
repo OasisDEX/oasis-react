@@ -71,9 +71,7 @@ const loadEtherWrapUnwrapsHistoryEpic = (address, config) => async (dispatch, ge
   const tokenName = TOKEN_ETHER;
   const filterAddress = address || accounts.defaultAccount(getState());
   const tokenContract = getTokenContractInstance(TOKEN_WRAPPED_ETH);
-  if (false === wrapUnwrapHistory.hasAccountEntry(getState(), filterAddress)) {
-    dispatch(initializeAccountList(filterAddress));
-  }
+  console.log('loadEtherWrapUnwrapsHistoryEpic', filterAddress)
   const currentLatestBlock = network.latestBlockNumber(getState());
   const fromBlock = currentLatestBlock - period.avgBlockPerActivePeriod();
   const toBlock = 'latest';
@@ -210,7 +208,13 @@ const loadGNTWrapUnwrapsHistoryEpic = (address, config) => async (dispatch, getS
 };
 
 
-const loadWrapUnwrapsHistoryEpic = () => (dispatch) => {
+const loadWrapUnwrapsHistoryEpic = () => (dispatch,getState) => {
+  const defaultAccount = accounts.defaultAccount(getState());
+  if (false === wrapUnwrapHistory.hasAccountEntry(getState(), defaultAccount)) {
+    dispatch(initializeAccountList(defaultAccount));
+  } else {
+    return;
+  }
   dispatch(loadingWrapUnwrapHistorySetPending());
   dispatch(loadEtherWrapUnwrapsHistoryEpic());
   dispatch(loadGNTWrapUnwrapsHistoryEpic());
