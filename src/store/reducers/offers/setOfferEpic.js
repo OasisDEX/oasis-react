@@ -108,7 +108,6 @@ export const setOfferEpic = ({
       break;
     case OFFER_SYNC_TYPE_UPDATE:
       if (sellHowMuchValue.eq(0) || buyHowMuchValue.eq(0)) {
-        alert('filled in completely')
         console.log('COMPLETE FILLED_IN',{
           sellHowMuch,
           sellWhichTokenAddress,

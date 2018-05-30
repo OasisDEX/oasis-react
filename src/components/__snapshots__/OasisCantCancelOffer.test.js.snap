@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisCantCancelOffer should render 1`] = `
+<InfoBox
+  className=""
+  color="danger"
+  size="md"
+>
+  This offer has been taken. You cannot cancel it anymore.
+</InfoBox>
+`;

@@ -2,16 +2,18 @@
 /* eslint-disable import/first */
 import React from 'react';
 import { shallow } from 'enzyme';
-import OasisOfferCancelModal from './OasisOfferCancelModal';
+import OasisCantCancelOffer from './OasisCantCancelOffer';
 
 
-describe('(Component) OasisOfferCancelModal', () => {
+describe('(Component) OasisCantCancelOffer', () => {
   it('should render', () => {
     const props = {
-      canOfferBeCancelled: false
+      children: (
+        <span>test</span>
+      )
     };
     const wrapper = shallow(
-      <OasisOfferCancelModal {...props}/>
+      <OasisCantCancelOffer {...props}/>
     );
 
     expect(wrapper).toMatchSnapshot();

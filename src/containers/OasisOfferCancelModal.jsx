@@ -1,11 +1,11 @@
 import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
 import ImmutablePropTypes from "react-immutable-proptypes";
+import { Map } from "immutable";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import OasisOfferCancelModal from "../components/OasisOfferCancelModal";
-import OasisButton from "../components/OasisButton";
 import offersReducer, {
   TYPE_BUY_OFFER,
   TYPE_SELL_OFFER
@@ -17,28 +17,33 @@ import {
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
 import tokens from "../store/selectors/tokens";
+import offers from '../store/selectors/offers';
+import network from '../store/selectors/network';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
-  offer: ImmutablePropTypes.map.isRequired
+  offer: ImmutablePropTypes.map.isRequired,
+  onModalClose: PropTypes.func.isRequired
 };
 
 export class OasisOfferCancelModalWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
-    this.onModalOpen = this.onModalOpen.bind(this);
     this.onModalClose = this.onModalClose.bind(this);
     this.onCancelOffer = this.onCancelOffer.bind(this);
   }
 
-  onModalOpen() {
-    this.setState({ modalOpen: true });
+  componentDidMount() {
+    this.setState(
+      { offer: Map(this.props.offer) },
+      () => this.setState({ modalOpen: true })
+    );
   }
 
   onCancelOffer() {
-    const { offer, actions } = this.props;
-    actions.cancelOffer(offer, {
+    const { actions } = this.props;
+    actions.cancelOffer(this.state.offer, {
       onStart: this.onTransactionStart.bind(this),
       onCancelCleanup: this.onTransactionCancelledByUser.bind(this),
       onPending: this.onTransactionPending.bind(this),
@@ -84,21 +89,21 @@ export class OasisOfferCancelModalWrapper extends PureComponent {
   }
 
   onModalClose() {
-    const { actions, offer, activeTradingPair } = this.props;
+    const { actions, activeTradingPair } = this.props;
+    const { offer } = this.state;
     this.setState({
       modalOpen: false,
       txStartTimestamp: undefined,
       txStatus: undefined
     });
+    this.props.onModalClose();
 
     if (this.state.txStatus === TX_STATUS_CONFIRMED) {
-      setTimeout(() => {
-        actions.removeOrderCancelledByTheOwner({
-          offerType: offer.get('offerType'),
-          offerId: offer.get('id'),
-          tradingPair: activeTradingPair
-        })
-      }, 300);
+      actions.removeOrderCancelledByTheOwner({
+        offerType: offer.get("offerType"),
+        offerId: offer.get("id"),
+        tradingPair: activeTradingPair
+      });
     }
   }
 
@@ -110,7 +115,8 @@ export class OasisOfferCancelModalWrapper extends PureComponent {
   }
 
   getTokenNameAndAmount() {
-    const { offer, activeTradingPair: { baseToken, quoteToken } } = this.props;
+    const { activeTradingPair: { baseToken, quoteToken } } = this.props;
+    const { offer } = this.state;
     switch (offer.get("offerType")) {
       case TYPE_BUY_OFFER:
         return { tokenName: quoteToken, tokenAmount: offer.get("quoteAmount") };
@@ -121,17 +127,12 @@ export class OasisOfferCancelModalWrapper extends PureComponent {
 
   render() {
     const { modalOpen } = this.state;
+    const { canOfferBeCancelled } = this.props;
     return (
       <div>
-        <OasisButton
-          onClick={this.onModalOpen}
-          disabled={this.state.modalOpen}
-          size="xs"
-        >
-          {this.state.modalOpen ? "cancel" : "cancel"}
-        </OasisButton>
         {modalOpen ? (
           <OasisOfferCancelModal
+            canOfferBeCancelled={canOfferBeCancelled}
             {...this.getTokenNameAndAmount()}
             askForConfirmToClose={this.cancelIsAwaitingAcceptanceOrPending()}
             txStartTimestamp={this.state.txStartTimestamp}
@@ -145,15 +146,18 @@ export class OasisOfferCancelModalWrapper extends PureComponent {
   }
 }
 
-export function mapStateToProps(state) {
+export function mapStateToProps(state, props) {
   return {
-    activeTradingPair: tokens.activeTradingPair(state)
+    latestBlockNumber: network.latestBlockNumber(state),
+    activeTradingPair: tokens.activeTradingPair(state),
+    canOfferBeCancelled: offers.canOfferBeCancelled(state, props.offer ? props.offer.get('id'): null)
   };
 }
 export function mapDispatchToProps(dispatch) {
   const actions = {
     cancelOffer: offersReducer.actions.cancelOfferEpic,
-    removeOrderCancelledByTheOwner: offersReducer.actions.removeOrderCancelledByTheOwner
+    removeOrderCancelledByTheOwner:
+      offersReducer.actions.removeOrderCancelledByTheOwner
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

@@ -12,12 +12,14 @@ import { shallow } from 'enzyme';
 
 describe('(Container) OasisOfferCancelModal', () => {
   const state = fromJS(global.storeMock);
-  const initialProps = mapStateToProps(state);
+  const initialProps = mapStateToProps(state, {});
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,
     ...initialProps,
-    offer: fromJS({})
+    offer: fromJS({}),
+    canOfferBeCancelled: false,
+    onModalClose: jest.fn
   };
 
   it('will receive right props', () => {
