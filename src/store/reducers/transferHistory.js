@@ -7,10 +7,11 @@ import network from "../selectors/network";
 import networkReducer from "./network";
 import { getTokenContractInstance } from "../../bootstrap/contracts";
 import { registerAccountSpecificSubscriptions } from "../../bootstrap/web3";
+import transferHistory from "../selectors/transferHistory";
 
 const initialState = fromJS({
   tokensLoadingStatus: {},
-  transferHistory: [],
+  transferHistory: {},
   historyLoadedForAddress: {}
 });
 
@@ -22,6 +23,8 @@ const Init = createAction("TRANSFER_HISTORY/INIT", () => null);
 
 export const TRANSFER_HISTORY_LOAD_STATUS_PENDING =
   "TRANSFER_HISTORY/LOAD_STATUS_PENDING";
+export const TRANSFER_HISTORY_LOAD_STATUS_INITIALLY_LOADED =
+  "TRANSFER_HISTORY/LOAD_STATUS_INITIALLY_LOADED";
 export const TRANSFER_HISTORY_LOAD_STATUS_COMPLETED =
   "TRANSFER_HISTORY/LOAD_STATUS_COMPLETED";
 export const TRANSFER_HISTORY_LOAD_STATUS_PAUSED =
@@ -39,8 +42,20 @@ const tokenTransferEvent = createAction(
     userAddress,
     event,
     blockInfo,
-    transferType
-  ) => ({ tokenName, userAddress, event, blockInfo, transferType })
+    transferType,
+    accountAddress
+  ) => ({
+    tokenName,
+    userAddress,
+    event,
+    blockInfo,
+    transferType,
+    accountAddress
+  })
+);
+
+const initializeAccountList = createAction(
+  "TRANSFER_HISTORY/INITIALIZE_ACCOUNT_LIST"
 );
 
 const loadTokenTransfersHistory = createPromiseActions(
@@ -66,11 +81,18 @@ const loadTokenTransfersHistoryEpic = (tokenName, address, config) => async (
   dispatch,
   getState
 ) => {
+  const defaultAccount = accounts.defaultAccount(getState());
+  if (false === transferHistory.hasAccountEntry(getState(), defaultAccount)) {
+    dispatch(initializeAccountList(defaultAccount));
+  } else if (
+    transferHistory.getTokenTransferHistoryStatus(getState(), tokenName)
+  ) {
+    return;
+  }
   dispatch(loadTokenTransfersHistory.pending());
   dispatch(loadingTokenTransferHistorySetPending(tokenName));
 
-  console.log("loadTokenTransfersHistory");
-  const filterAddress = address || accounts.defaultAccount(getState());
+  const filterAddress = address || defaultAccount;
   const tokenContract = getTokenContractInstance(tokenName);
 
   const fromBlock =
@@ -90,7 +112,8 @@ const loadTokenTransfersHistoryEpic = (tokenName, address, config) => async (
         filterAddress,
         transferEvent,
         blockInfo,
-        transferType
+        transferType,
+        defaultAccount
       )
     );
   };
@@ -112,7 +135,6 @@ const loadTokenTransfersHistoryEpic = (tokenName, address, config) => async (
     }
   });
   dispatch(loadingTokenTransferHistorySetCompleted(tokenName));
-
 };
 
 const actions = {
@@ -122,12 +144,15 @@ const actions = {
 
 const reducer = handleActions(
   {
+    [initializeAccountList]: (state, { payload }) => {
+      return state.setIn(["transferHistory", payload], fromJS([]));
+    },
     [tokenTransferEvent]: (
       state,
-      { payload: { tokenName, event, blockInfo, transferType } }
+      { payload: { tokenName, event, blockInfo, transferType, accountAddress } }
     ) => {
       const { from, to, value } = event.args;
-      return state.update("transferHistory", thList =>
+      return state.updateIn(["transferHistory", accountAddress], thList =>
         thList.push(
           fromJS({
             tokenName,

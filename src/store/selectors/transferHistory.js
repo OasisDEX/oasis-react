@@ -1,3 +1,4 @@
+import { fromJS } from "immutable";
 import { createSelector } from "reselect";
 import reselect from "../../utils/reselect";
 import { TRANSFER_HISTORY_LOAD_STATUS_PENDING } from "../reducers/transferHistory";
@@ -19,25 +20,30 @@ const isTokenTransferHistoryLoading = createSelector(
     TRANSFER_HISTORY_LOAD_STATUS_PENDING
 );
 
+const hasAccountEntry = createSelector(
+  transferHistory,
+  reselect.getProps,
+  (s, account) =>
+    s.hasIn(['transferHistory', account])
+);
+
 const tokenTransferHistory = createSelector(
   transferHistory,
   reselect.getProps,
   accounts.defaultAccount,
   (s, tokenName, defaultAccount) =>
-    s
-      .get("transferHistory")
-      .filter(
-        thItem =>
-          thItem.get("tokenName") === tokenName &&
-          [thItem.get("fromAddress"), thItem.get("toAddress")].includes(defaultAccount)
-      )
-      .sort((p, n) => (p.get("timestamp") > n.get("timestamp") ? -1 : 1))
+    s.hasIn(["transferHistory", defaultAccount])
+      ? s
+          .getIn(["transferHistory", defaultAccount])
+          .filter(thItem => thItem.get("tokenName") === tokenName)
+          .sort((p, n) => (p.get("timestamp") > n.get("timestamp") ? -1 : 1))
+      : fromJS([])
 );
 
 const isInitializedForAccount = createSelector(
   transferHistory,
   accounts.defaultAccount,
-  (s, accountAddress) => s.getIn(['historyLoadedForAddress', accountAddress])
+  (s, accountAddress) => s.getIn(["historyLoadedForAddress", accountAddress])
 );
 
 export default {
@@ -45,5 +51,6 @@ export default {
   getTokenTransferHistoryStatus,
   isTokenTransferHistoryLoading,
   tokenTransferHistory,
-  isInitializedForAccount
+  isInitializedForAccount,
+  hasAccountEntry
 };

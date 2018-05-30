@@ -55,7 +55,7 @@ export class OasisWrapUnwrapHistory extends PureComponent {
       <OasisWidgetFrame
         heading="History"
         loadProgressSection={
-          isTokenWrapUnwrapHistoryLoading ? <OasisLoadingIndicator /> : null
+          isTokenWrapUnwrapHistoryLoading ? <OasisLoadingIndicator size="sm"/> : null
         }
       >
         <div>

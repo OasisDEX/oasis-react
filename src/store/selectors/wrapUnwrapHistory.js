@@ -22,7 +22,8 @@ const hasAccountEntry = createSelector(
   reselect.getProps,
   (s, account) =>
     s.hasIn(['wrapUnwrapHistory', account])
-)
+);
+
 const tokenWrapUnwrapHistory = createSelector(
   wrapUnwrapHistory,
   accounts.defaultAccount,
