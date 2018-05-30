@@ -16,6 +16,6 @@ export const subscribeNewOffersFilledInEpic = (fromBlock, filter = {}, {
     dispatch(
       newOfferFilledIn(newOfferId),
     );
-    console.log({ LogMakeEvent })
+    // console.log({ LogMakeEvent })
   });
 };

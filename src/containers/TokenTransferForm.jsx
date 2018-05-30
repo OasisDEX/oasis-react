@@ -44,6 +44,7 @@ export class TokenTransferFormWrapper extends PureComponent {
                     onClick={actions.transferMax}
                     size="xs"
                     className={styles.setMaxBtn}
+                    disabled={disabled}
                   >
                     transfer max
                   </OasisButton>
@@ -55,6 +56,7 @@ export class TokenTransferFormWrapper extends PureComponent {
                     component={"input"}
                     type={"text"}
                     name={"token"}
+                    disabled={true}
                     hidden
                   />
                 </div>

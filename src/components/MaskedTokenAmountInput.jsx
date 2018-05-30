@@ -11,7 +11,7 @@ class MaskedTokenAmountInput extends PureComponent {
   render() {
     const newProps = {...this.props.input};
 
-    // console.log(newProps);
+    newProps.disabled = this.props.disabled;
 
     newProps.onChange = (event) => {
       // console.log("onChange", event.target.value);

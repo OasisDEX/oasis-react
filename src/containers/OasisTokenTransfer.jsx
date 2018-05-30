@@ -141,6 +141,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
 
   render() {
     const { selectedToken } = this.props;
+    const { txStatus } = this.state;
     return (
       <OasisWidgetFrame
         heading="Transfer"
@@ -153,7 +154,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
           decimalPlaces={5}
         />
         <TokenTransferFormWrapper
-          disabled={this.shouldDisable()}
+          disabled={this.shouldDisable() || !!txStatus}
           onSubmit={this.makeTransfer}
           transferState={this.renderTransactionStatus()}
         />
