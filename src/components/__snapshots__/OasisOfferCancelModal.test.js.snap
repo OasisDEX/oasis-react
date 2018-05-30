@@ -25,27 +25,7 @@ exports[`(Component) OasisOfferCancelModal should render 1`] = `
       </button>
     </div>
     <div>
-      <InfoBoxWithIco
-        alignItems="center"
-        color="danger"
-        icon="warning"
-      >
-        <div>
-          This action will return
-          <b
-            style={
-              Object {
-                "display": "inlineBlock",
-                "marginLeft": "5px",
-                "marginRight": "5px",
-              }
-            }
-          >
-             
-          </b>
-          to your token balance. If someone (partially) fills this order before you cancel await, your order may not or only be partially cancelled.
-        </div>
-      </InfoBoxWithIco>
+      <OasisCantCancelOffer />
     </div>
     <div>
       <OasisTransactionStatusWrapperInfoBox
@@ -57,11 +37,10 @@ exports[`(Component) OasisOfferCancelModal should render 1`] = `
         txType="TRANSACTIONS/GROUP__OFFERS/OFFER_CANCEL"
       />
     </div>
-    <div />
     <div>
       <OasisButton
         btnType="button"
-        caption="Cancel"
+        caption="Close"
         color="default"
         onClick={[Function]}
         size="md"
@@ -70,6 +49,7 @@ exports[`(Component) OasisOfferCancelModal should render 1`] = `
         btnType="button"
         caption="Cancel offer"
         color="danger"
+        disabled={true}
         onClick={[Function]}
         size="md"
       />

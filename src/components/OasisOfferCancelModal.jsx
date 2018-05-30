@@ -13,6 +13,7 @@ import {
   TX_STATUS_CONFIRMED
 } from "../store/reducers/transactions";
 import OasisTransactionStatusWrapperInfoBox from "../containers/OasisTransactionStatusInfoBox";
+import OasisCantCancelOffer from "./OasisCantCancelOffer";
 
 const propTypes = PropTypes && {
   onCloseModal: PropTypes.func,
@@ -20,7 +21,8 @@ const propTypes = PropTypes && {
   txStartTimestamp: PropTypes.number,
   askForConfirmToClose: PropTypes.bool,
   tokenAmount: PropTypes.string,
-  tokenName: PropTypes.string
+  tokenName: PropTypes.string,
+  canOfferBeCancelled: PropTypes.bool.isRequired
 };
 const defaultProps = {};
 
@@ -48,62 +50,81 @@ class OasisOfferCancelModal extends PureComponent {
 
   transactionStatusSection() {
     const { localStatus, txStartTimestamp } = this.props;
-    return <OasisTransactionStatusWrapperInfoBox
-              txStatus={localStatus}
-              infoText={<strong>Cancel offer</strong>}
-              txType={TX_OFFER_CANCEL}
-              localStatus={localStatus}
-              txTimestamp={txStartTimestamp}
-    /> ;
+    return (
+      <OasisTransactionStatusWrapperInfoBox
+        txStatus={localStatus}
+        infoText={<strong>Cancel offer</strong>}
+        txType={TX_OFFER_CANCEL}
+        localStatus={localStatus}
+        txTimestamp={txStartTimestamp}
+      />
+    );
   }
 
   cancelTransactionConfirmed() {
     return this.props.localStatus === TX_STATUS_CONFIRMED;
   }
 
+  renderInfo() {
+    const { tokenAmount, tokenName, canOfferBeCancelled } = this.props;
+    return canOfferBeCancelled || this.props.localStatus ? (
+      <div>
+        <InfoBoxWithIco color="danger" icon="warning">
+          <div>
+            This action will return
+            <b
+              style={{
+                display: "inlineBlock",
+                marginLeft: "5px",
+                marginRight: "5px"
+              }}
+            >
+              {tokenAmount} {tokenName}
+            </b>
+            to your token balance. If someone (partially) fills this order
+            before you cancel await, your order may not or only be partially
+            cancelled.
+          </div>
+        </InfoBoxWithIco>
+      </div>
+    ) : (
+      <OasisCantCancelOffer />
+    );
+  }
+
   render() {
-    const { tokenAmount, tokenName, localStatus } = this.props;
+    const { localStatus, canOfferBeCancelled } = this.props;
     return (
-      <ReactModal ariaHideApp={false} isOpen={true} className={modalStyles.modal}>
+      <ReactModal
+        ariaHideApp={false}
+        isOpen={true}
+        className={modalStyles.modal}
+      >
         <div>
           <div>
             <h4 className={styles.heading}>Cancel Offer</h4>
-            <button className={modalStyles.closeModalBtn} onClick={this.onCloseModal}>
+            <button
+              className={modalStyles.closeModalBtn}
+              onClick={this.onCloseModal}
+            >
               ×
             </button>
           </div>
-          <div>
-            <InfoBoxWithIco color="danger" icon="warning" >
-                <div>
-                  This action will return
-                  <b
-                    style={{
-                      display: "inlineBlock",
-                      marginLeft: "5px",
-                      marginRight: "5px"
-                    }}
-                  >
-                    {tokenAmount} {tokenName}
-                  </b>
-                  to your token balance. If someone (partially) fills this order
-                  before you cancel await, your order may not or only be
-                  partially cancelled.
-                </div>
-            </InfoBoxWithIco>
-          </div>
+          <div>{this.renderInfo()}</div>
           <div>{this.transactionStatusSection()}</div>
-          <div />
           <div className={styles.actions}>
             <OasisButton
               onClick={this.onCloseModal}
               caption={
-                this.askForConfirmToClose() || this.cancelTransactionConfirmed()
+                this.askForConfirmToClose() ||
+                this.cancelTransactionConfirmed() ||
+                !canOfferBeCancelled
                   ? "Close"
                   : "Cancel"
               }
             />
             <OasisButton
-              disabled={localStatus}
+              disabled={localStatus || !canOfferBeCancelled}
               onClick={this.onCancelOffer}
               caption="Cancel offer"
               color="danger"

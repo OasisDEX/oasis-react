@@ -2,14 +2,12 @@
 
 exports[`(Container) OasisOfferCancelModal should render 1`] = `
 <div>
-  <OasisButton
-    btnType="button"
-    color="default"
-    onClick={[Function]}
-    size="xs"
-  >
-    cancel
-  </OasisButton>
+  <OasisOfferCancelModal
+    askForConfirmToClose={false}
+    canOfferBeCancelled={false}
+    onCancelOffer={[Function]}
+    onModalClose={[Function]}
+  />
 </div>
 `;
 
@@ -28,5 +26,7 @@ Object {
     "baseToken": "MKR",
     "quoteToken": "DAI",
   },
+  "canOfferBeCancelled": false,
+  "latestBlockNumber": 6716998,
 }
 `;

@@ -17,7 +17,7 @@ export const getConnectedNetworkId = createAction(
 
 export const checkNetworkEpic = (hasAccountChanged) => async (dispatch, getState) => {
 
-  if (network.isNetworkCheckPending(getState()) === true) { console.log('check pending'); return; }
+  if (network.isNetworkCheckPending(getState()) === true) { return; }
 
   dispatch(CheckNetworkAction.pending());
   const previousNetworkId = network.activeNetworkId(getState());

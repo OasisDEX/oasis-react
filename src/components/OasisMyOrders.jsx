@@ -20,9 +20,13 @@ import styles from "./OasisMyOrders.scss";
 import OasisOfferCancelModalWrapper from "../containers/OasisOfferCancelModal";
 import { TYPE_BUY_OFFER, TYPE_SELL_OFFER } from "../store/reducers/offers";
 import { OasisSignificantDigitsWrapper } from "../containers/OasisSignificantDigits";
+import OasisButton from "./OasisButton";
 
 const myOrdersDisplayFormat = offer => {
-  let baseAmount = null, baseAmountFullPrecision = null, quoteAmount = null, quoteAmountFullPrecision = null;
+  let baseAmount = null,
+    baseAmountFullPrecision = null,
+    quoteAmount = null,
+    quoteAmountFullPrecision = null;
   switch (offer.tradeType) {
     case BID:
       baseAmount = formatAmount(offer.buyHowMuch, true, ETH_UNIT_ETHER);
@@ -64,10 +68,17 @@ const myOffersFilter = entry => {
   return isOfferMaker || isOfferTaker;
 };
 
-const actionsColumnTemplate = function(offer) {
+let actionsColumnTemplate = function(offer) {
+  const { offerToCancel } = this.state;
   return isOfferOwner(offer) ? (
     <div>
-      <OasisOfferCancelModalWrapper offer={fromJS(offer)} />
+      <OasisButton
+        size="xs"
+        disabled={offerToCancel}
+        onClick={() => this.setState({ offerToCancel: offer })}
+      >
+        Cancel
+      </OasisButton>
     </div>
   ) : null;
 };
@@ -148,8 +159,10 @@ const defaultProps = {};
 class OasisMyOrders extends PureComponent {
   constructor(props) {
     super(props);
+    this.state = {};
     this.viewType = "Open";
     this.onViewTypeChange = this.onViewTypeChange.bind(this);
+    actionsColumnTemplate = actionsColumnTemplate.bind(this);
   }
 
   onViewTypeChange(ev) {
@@ -188,11 +201,13 @@ class OasisMyOrders extends PureComponent {
 
     if (myOpenOffers.count()) {
       return (
-        <OasisTable
-          rows={myOpenOffers.toArray()}
-          col={openOrdersColsDefinition(baseToken, quoteToken, orderActions)}
-          className={styles.openOffers}
-        />
+        <div>
+          <OasisTable
+            rows={myOpenOffers.toArray()}
+            col={openOrdersColsDefinition(baseToken, quoteToken, orderActions)}
+            className={styles.openOffers}
+          />
+        </div>
       );
     } else {
       return (
@@ -260,8 +275,8 @@ class OasisMyOrders extends PureComponent {
     }
   }
 
-  render() {
-    const select = (
+  renderSelect() {
+    return (
       <OasisSelect
         onChange={this.onViewTypeChange}
         value={this.viewType}
@@ -271,9 +286,21 @@ class OasisMyOrders extends PureComponent {
         <option value={"Closed"}>Closed</option>
       </OasisSelect>
     );
+  }
 
+  render() {
+    const { offerToCancel } = this.state;
     return (
-      <OasisWidgetFrame heading={"MY ORDERS"} headingChildren={select}>
+      <OasisWidgetFrame
+        heading={"MY ORDERS"}
+        headingChildren={this.renderSelect()}
+      >
+        {offerToCancel && (
+          <OasisOfferCancelModalWrapper
+            onModalClose={() => this.setState({ offerToCancel: undefined })}
+            offer={fromJS(offerToCancel)}
+          />
+        )}
         <div>{this.renderContent()}</div>
       </OasisWidgetFrame>
     );

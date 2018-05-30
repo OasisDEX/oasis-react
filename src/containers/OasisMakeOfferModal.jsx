@@ -118,8 +118,6 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
       txStatus: TX_STATUS_AWAITING_CONFIRMATION,
       txStartTimestamp
     });
-// eslint-disable-next-line no-debugger
-    debugger;
   }
 
   askForConfirmationBeforeModalClose() {

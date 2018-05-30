@@ -4,6 +4,9 @@ import tokens from './tokens';
 import reselect from '../../utils/reselect';
 import { SYNC_STATUS_COMPLETED, SYNC_STATUS_PENDING, SYNC_STATUS_PRISTINE } from '../../constants';
 import web3 from '../../bootstrap/web3';
+import accounts from './accounts';
+import findOffer from '../../utils/offers/findOffer';
+import { OFFER_STATUS_INACTIVE } from '../reducers/offers';
 
 const offers = state => state.get('offers');
 
@@ -108,6 +111,19 @@ const activeTradingPairOffersLoadProgress = createSelector(
   }
 );
 
+const canOfferBeCancelled = createSelector(
+  (rootState, offerId) => {
+    if (offerId) {
+      const foundOffer = findOffer(offerId, rootState);
+      if (foundOffer && foundOffer.offer && foundOffer.offer.status !== OFFER_STATUS_INACTIVE) {
+        return foundOffer.offer.owner.toString() === accounts.defaultAccount(rootState).toString();
+      } else {
+        return false;
+      }
+    }
+  },
+  canCancel => Boolean(canCancel)
+);
 
 export default {
   state: offers,
@@ -125,5 +141,6 @@ export default {
   allOffers,
   activeTradingPairBestBuyOfferId,
   activeTradingPairBestSellOfferId,
-  activeTradingPairOffersLoadProgress
+  activeTradingPairOffersLoadProgress,
+  canOfferBeCancelled
 }
