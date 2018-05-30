@@ -29,8 +29,6 @@ Array [
 ]
 `;
 
-exports[`load(Buy/Sell)OffersEpic buy(0) 3`] = `Array []`;
-
 exports[`load(Buy/Sell)OffersEpic buy(1) 1`] = `
 Object {
   "fulfilled": [Function],
@@ -49,6 +47,12 @@ Array [
     "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
   },
   Object {
+    "payload": Array [
+      900,
+    ],
+    "type": "MOCK___SYNC_OFFER",
+  },
+  Object {
     "payload": Object {
       "baseToken": "MKR",
       "quoteToken": "W-ETH",
@@ -57,14 +61,6 @@ Array [
       "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
     ],
   },
-]
-`;
-
-exports[`load(Buy/Sell)OffersEpic buy(1) 3`] = `
-Array [
-  Array [
-    900,
-  ],
 ]
 `;
 
@@ -86,6 +82,18 @@ Array [
     "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
   },
   Object {
+    "payload": Array [
+      800,
+    ],
+    "type": "MOCK___SYNC_OFFER",
+  },
+  Object {
+    "payload": Array [
+      700,
+    ],
+    "type": "MOCK___SYNC_OFFER",
+  },
+  Object {
     "payload": Object {
       "baseToken": "MKR",
       "quoteToken": "W-ETH",
@@ -94,17 +102,6 @@ Array [
       "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
     ],
   },
-]
-`;
-
-exports[`load(Buy/Sell)OffersEpic buy(2) 3`] = `
-Array [
-  Array [
-    800,
-  ],
-  Array [
-    700,
-  ],
 ]
 `;
 
@@ -137,8 +134,6 @@ Array [
 ]
 `;
 
-exports[`load(Buy/Sell)OffersEpic sell(0) 3`] = `Array []`;
-
 exports[`load(Buy/Sell)OffersEpic sell(1) 1`] = `
 Object {
   "fulfilled": [Function],
@@ -157,6 +152,12 @@ Array [
     "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
   },
   Object {
+    "payload": Array [
+      900,
+    ],
+    "type": "MOCK___SYNC_OFFER",
+  },
+  Object {
     "payload": Object {
       "baseToken": "MKR",
       "quoteToken": "W-ETH",
@@ -165,14 +166,6 @@ Array [
       "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
     ],
   },
-]
-`;
-
-exports[`load(Buy/Sell)OffersEpic sell(1) 3`] = `
-Array [
-  Array [
-    900,
-  ],
 ]
 `;
 
@@ -194,6 +187,18 @@ Array [
     "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
   },
   Object {
+    "payload": Array [
+      800,
+    ],
+    "type": "MOCK___SYNC_OFFER",
+  },
+  Object {
+    "payload": Array [
+      700,
+    ],
+    "type": "MOCK___SYNC_OFFER",
+  },
+  Object {
     "payload": Object {
       "baseToken": "MKR",
       "quoteToken": "W-ETH",
@@ -202,17 +207,6 @@ Array [
       "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
     ],
   },
-]
-`;
-
-exports[`load(Buy/Sell)OffersEpic sell(2) 3`] = `
-Array [
-  Array [
-    800,
-  ],
-  Array [
-    700,
-  ],
 ]
 `;
 
@@ -432,7 +426,7 @@ Array [
       "MKR",
       "W-ETH",
     ],
-    "type": "TEST@GET_TRADING_PAIR_OFFERS_COUNT",
+    "type": "MOCK___GET_TRADING_PAIR_OFFERS_COUNT",
   },
   Object {
     "type": Array [
@@ -471,7 +465,7 @@ Array [
       61212,
       "OFFERS/OFFER_SYNC_NEW_OFFER",
     ],
-    "type": "TEST@SYNC_OFFER",
+    "type": "MOCK___SYNC_OFFER",
   },
 ]
 `;
@@ -508,7 +502,7 @@ Array [
         "id": 61211,
       },
     ],
-    "type": "TEST@SYNC_OFFER",
+    "type": "MOCK___SYNC_OFFER",
   },
 ]
 `;
@@ -670,36 +664,35 @@ Object {
 }
 `;
 
-exports[`syncOffer initial sync 2`] = `Array []`;
-
-exports[`syncOffer initial sync 3`] = `
+exports[`syncOffer initial sync 2`] = `
 Array [
-  Array [
-    "MKR",
-    "W-ETH",
-  ],
-]
-`;
-
-exports[`syncOffer initial sync 4`] = `
-Array [
-  Array [
-    Object {
-      "buyHowMuch": "100000000000000000",
-      "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
-      "id": "61209",
-      "offerType": "OFFERS/TYPE_BUY",
-      "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
-      "sellHowMuch": "130350000000000000",
-      "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
-      "syncType": "OFFERS/OFFER_SYNC_TYPE_INITIAL",
-      "timestamp": false,
-      "tradingPair": Object {
-        "baseToken": "MKR",
-        "quoteToken": "W-ETH",
+  Object {
+    "payload": Array [
+      "MKR",
+      "W-ETH",
+    ],
+    "type": "MOCK___GET_TRADING_PAIR_OFFERS_COUNT",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "buyHowMuch": "100000000000000000",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "61209",
+        "offerType": "OFFERS/TYPE_BUY",
+        "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
+        "sellHowMuch": "130350000000000000",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "syncType": "OFFERS/OFFER_SYNC_TYPE_INITIAL",
+        "timestamp": false,
+        "tradingPair": Object {
+          "baseToken": "MKR",
+          "quoteToken": "W-ETH",
+        },
       },
-    },
-  ],
+    ],
+    "type": "MOCK___OFFERS/SET_OFFER",
+  },
 ]
 `;
 
@@ -722,36 +715,35 @@ Object {
 }
 `;
 
-exports[`syncOffer new offer sync 2`] = `Array []`;
-
-exports[`syncOffer new offer sync 3`] = `
+exports[`syncOffer new offer sync 2`] = `
 Array [
-  Array [
-    "MKR",
-    "W-ETH",
-  ],
-]
-`;
-
-exports[`syncOffer new offer sync 4`] = `
-Array [
-  Array [
-    Object {
-      "buyHowMuch": "100000000000000000",
-      "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
-      "id": "61209",
-      "offerType": "OFFERS/TYPE_BUY",
-      "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
-      "sellHowMuch": "130350000000000000",
-      "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
-      "syncType": "OFFERS/OFFER_SYNC_NEW_OFFER",
-      "timestamp": false,
-      "tradingPair": Object {
-        "baseToken": "MKR",
-        "quoteToken": "W-ETH",
+  Object {
+    "payload": Array [
+      "MKR",
+      "W-ETH",
+    ],
+    "type": "MOCK___GET_TRADING_PAIR_OFFERS_COUNT",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "buyHowMuch": "100000000000000000",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "61209",
+        "offerType": "OFFERS/TYPE_BUY",
+        "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
+        "sellHowMuch": "130350000000000000",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "syncType": "OFFERS/OFFER_SYNC_NEW_OFFER",
+        "timestamp": false,
+        "tradingPair": Object {
+          "baseToken": "MKR",
+          "quoteToken": "W-ETH",
+        },
       },
-    },
-  ],
+    ],
+    "type": "MOCK___OFFERS/SET_OFFER",
+  },
 ]
 `;
 
@@ -774,37 +766,36 @@ Object {
 }
 `;
 
-exports[`syncOffer update sync 2`] = `Array []`;
-
-exports[`syncOffer update sync 3`] = `
+exports[`syncOffer update sync 2`] = `
 Array [
-  Array [
-    "MKR",
-    "W-ETH",
-  ],
-]
-`;
-
-exports[`syncOffer update sync 4`] = `
-Array [
-  Array [
-    Object {
-      "buyHowMuch": "100000000000000000",
-      "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
-      "id": "61209",
-      "offerType": "OFFERS/TYPE_BUY",
-      "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
-      "previousOfferState": null,
-      "sellHowMuch": "130350000000000000",
-      "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
-      "syncType": "OFFERS/OFFER_SYNC_TYPE_UPDATE",
-      "timestamp": false,
-      "tradingPair": Object {
-        "baseToken": "MKR",
-        "quoteToken": "W-ETH",
+  Object {
+    "payload": Array [
+      "MKR",
+      "W-ETH",
+    ],
+    "type": "MOCK___GET_TRADING_PAIR_OFFERS_COUNT",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "buyHowMuch": "100000000000000000",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "61209",
+        "offerType": "OFFERS/TYPE_BUY",
+        "owner": "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
+        "previousOfferState": null,
+        "sellHowMuch": "130350000000000000",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "syncType": "OFFERS/OFFER_SYNC_TYPE_UPDATE",
+        "timestamp": false,
+        "tradingPair": Object {
+          "baseToken": "MKR",
+          "quoteToken": "W-ETH",
+        },
       },
-    },
-  ],
+    ],
+    "type": "MOCK___OFFERS/SET_OFFER",
+  },
 ]
 `;
 
@@ -837,6 +828,22 @@ Array [
     "type": "OFFERS/RESET_OFFERS",
   },
   Object {
+    "payload": Array [
+      10,
+      "MKR",
+      "W-ETH",
+    ],
+    "type": "MOCK___OFFERS/LOAD_BUY_OFFERS",
+  },
+  Object {
+    "payload": Array [
+      10,
+      "MKR",
+      "W-ETH",
+    ],
+    "type": "MOCK___OFFERS/LOAD_SELL_OFFERS",
+  },
+  Object {
     "payload": Object {
       "baseToken": "MKR",
       "quoteToken": "W-ETH",
@@ -845,25 +852,5 @@ Array [
       "OFFERS/SYNC_OFFERS_FULFILLED",
     ],
   },
-]
-`;
-
-exports[`syncOffersEpic main 3`] = `
-Array [
-  Array [
-    10,
-    "MKR",
-    "W-ETH",
-  ],
-]
-`;
-
-exports[`syncOffersEpic main 4`] = `
-Array [
-  Array [
-    10,
-    "MKR",
-    "W-ETH",
-  ],
 ]
 `;

@@ -3,10 +3,10 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import each from 'jest-each';
+import {mockAction} from '../../utils/testHelpers';
 
 import BigNumber from 'bignumber.js';
 import {Map, List} from 'immutable';
-import {createAction} from 'redux-actions';
 
 import config from '../../configs';
 import offers from './offers';
@@ -40,20 +40,16 @@ each([
       }),
     }));
 
-    const setOfferEpic = jest.fn(() => () => null);
-    const getTradingPairOfferCount = jest.fn(() => () => null);
     const promise = store.dispatch(offers.testActions.syncOffer('61209', syncType, null, {
       doLoadOffer: () => async () => ({value: [new BigNumber("130350000000000000"), TOKEN_ADDRS["W-ETH"], new BigNumber("100000000000000000"), TOKEN_ADDRS["MKR"], "0x2495eb6895c2e6c591ae9eb63a07b4a450623220", false, new BigNumber("0")]}),
-      doGetTradingPairOfferCount: getTradingPairOfferCount,
-      doSetOfferEpic: setOfferEpic,
+      doGetTradingPairOfferCount: mockAction('GET_TRADING_PAIR_OFFERS_COUNT'),
+      doSetOfferEpic: mockAction('OFFERS/SET_OFFER'),
     }));
 
     const result = await promise;
 
     expect(result).toMatchSnapshot();
     expect(store.getActions()).toMatchSnapshot();
-    expect(getTradingPairOfferCount.mock.calls).toMatchSnapshot();
-    expect(setOfferEpic.mock.calls).toMatchSnapshot();
   });
 
 });
@@ -126,10 +122,9 @@ each([
     const store = configureMockStore([thunk])({});
 
     const getOfferIds = offerIds.reduce((a, id) => a.mockReturnValueOnce(id), jest.fn()).mockReturnValue(0);
-    const syncOffer = jest.fn(() => () => null);
     const promise = store.dispatch(action({buyOfferCount: 100, sellOfferCount: 100}, "MKR", "W-ETH", {
       doGetBestOffer: () => async () => ({value: new BigNumber(getOfferIds())}),
-      doSyncOffer: syncOffer,
+      doSyncOffer: mockAction('SYNC_OFFER'),
       doGetWorseOffer: () => async () => ({value: new BigNumber(getOfferIds())}),
     }));
 
@@ -137,7 +132,6 @@ each([
 
     expect(result).toMatchSnapshot();
     expect(store.getActions()).toMatchSnapshot();
-    expect(syncOffer.mock.calls).toMatchSnapshot();
   });
 
 });
@@ -160,20 +154,16 @@ describe('syncOffersEpic', () => {
       }),
     }));
 
-    const loadBuyOffersEpic = jest.fn(() => async () => null);
-    const loadSellOffersEpic = jest.fn(() => async () => null);
     const promise = store.dispatch(offers.actions.syncOffersEpic({baseToken: "MKR", quoteToken: "W-ETH"}, {
       doGetTradingPairOfferCount: () => async () => ({value: 10}),
-      doLoadBuyOffersEpic: loadBuyOffersEpic,
-      doLoadSellOffersEpic: loadSellOffersEpic,
+      doLoadBuyOffersEpic: mockAction('OFFERS/LOAD_BUY_OFFERS'),
+      doLoadSellOffersEpic: mockAction('OFFERS/LOAD_SELL_OFFERS'),
     }));
 
     const result = await promise;
 
     expect(result).toMatchSnapshot();
     expect(store.getActions()).toMatchSnapshot();
-    expect(loadBuyOffersEpic.mock.calls).toMatchSnapshot();
-    expect(loadSellOffersEpic.mock.calls).toMatchSnapshot();
   });
 
 });
@@ -219,7 +209,7 @@ describe('subscribeCancelledOrdersEpic', () => {
       doGetMarketContractInstance: () => ({
         LogKill: LogKill,
       }),
-      doGetTradingPairOfferCount: createAction('TEST@GET_TRADING_PAIR_OFFERS_COUNT', (...args) => args),
+      doGetTradingPairOfferCount: mockAction('GET_TRADING_PAIR_OFFERS_COUNT'),
     }));
 
     const result = await promise;
@@ -261,7 +251,7 @@ each([
         LogItemUpdate: LogItemUpdate,
       }),
       doCheckOfferIsActive: () => async () => ({value: active}),
-      doSyncOffer: createAction('TEST@SYNC_OFFER', (...args) => args),
+      doSyncOffer: mockAction('SYNC_OFFER'),
     }));
 
     const result = await promise;

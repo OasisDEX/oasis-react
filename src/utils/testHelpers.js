@@ -1,5 +1,6 @@
 import MockDate from 'mockdate';
 import moment from 'moment-timezone';
+import {createAction} from 'redux-actions';
 
 export function mockDate(date, block) {
   try {
@@ -10,4 +11,8 @@ export function mockDate(date, block) {
     MockDate.reset();
     moment.tz.setDefault(moment.tz.guess());
   }
+}
+
+export function mockAction(name) {
+  return createAction('MOCK___' + name, (...args) => args);
 }
