@@ -87,7 +87,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
     />;
   }
   render() {
-    const { valid, handleSubmit, activeUnwrappedToken } = this.props;
+    const { valid, handleSubmit, activeUnwrappedToken, disabled} = this.props;
     return (
       <form onSubmit={handleSubmit}>
         <table className={tableStyles.table}>
@@ -101,6 +101,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
                     size="xs"
                     className={tableStyles.inputBtn}
                     onClick={this.setWrapMax}
+                    disabled={disabled}
                   >
                     wrap max
                   </OasisButton>
@@ -112,6 +113,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
                     name="amount"
                     component={MaskedTokenAmountInput}
                     placeholder={0}
+                    disabled={disabled}
                   />
                 </div>
               </td>
@@ -121,7 +123,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
         </table>
         <div>{this.renderTransactionStatus()}</div>
         <div className={styles.footer}>
-          <OasisButton type="submit" disabled={!valid}>
+          <OasisButton type="submit" disabled={!valid || disabled}>
             Wrap
           </OasisButton>
         </div>

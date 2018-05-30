@@ -15,7 +15,13 @@ exports[`(Component) OasisWrapUnwrapWrap should render 1`] = `
     />
   </OasisTokenBalance>
   <Connect(ReduxForm)
+    disabled={true}
     onSubmit={[Function]}
+    transactionState={
+      Object {
+        "txStatus": true,
+      }
+    }
   />
   <WrapUnwrapStatus
     type="wrap"

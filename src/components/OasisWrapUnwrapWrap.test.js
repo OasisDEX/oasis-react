@@ -9,7 +9,8 @@ describe('(Component) OasisWrapUnwrapWrap', () => {
   it('should render', () => {
     const props = {
       onSubmit: jest.fn,
-      activeUnwrappedTokenBalance: new BigNumber(100)
+      activeUnwrappedTokenBalance: new BigNumber(100),
+      transactionState: { txStatus: true }
     };
     const wrapper = shallow(
       <OasisWrapUnwrapWrap {...props}/>,

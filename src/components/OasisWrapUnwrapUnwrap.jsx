@@ -37,6 +37,7 @@ class OasisWrapUnwrapUnwrap extends PureComponent {
           transactionState={transactionState}
           onSubmit={onSubmit}
           activeWrappedToken={activeWrappedToken}
+          disabled={!!transactionState.txStatus}
         />
         <WrapUnwrapStatusWrapper type={WRAP_STATUS_VIEW_TYPE_UNWRAP} />
       </OasisWidgetFrame>
