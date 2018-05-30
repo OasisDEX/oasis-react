@@ -5,6 +5,7 @@ import findOffer from '../../../utils/offers/findOffer';
 import {createAction} from 'redux-actions';
 import {TYPE_BUY_OFFER, TYPE_SELL_OFFER} from '../offers';
 import {Map} from 'immutable';
+import { OFFER_STATUS_INACTIVE } from './index';
 
 export const removeOrderCancelledByTheOwner = createAction(
   'OFFER/REMOVE_OFFER_CANCELLED_BY_THE_OWNER',
@@ -58,34 +59,50 @@ export const subscribeCancelledOrdersEpic = (fromBlock, filter = {}, {
 };
 
 export const reducer = {
-  [offerCancelledEvent]: (state, { payload: { tradingPair, offerType, offerId } }) => {
-    switch (offerType) {
-      case TYPE_BUY_OFFER:
-        return state
-          .updateIn(['offers', Map(tradingPair), 'buyOffers'],
-            buyOfferList => buyOfferList.filter(offer => offer.id !== offerId),
-          );
-      case TYPE_SELL_OFFER:
-        return state
-          .updateIn(['offers', Map(tradingPair), 'sellOffers'],
-            sellOfferList => sellOfferList.filter(offer => offer.id !== offerId),
-          );
-
-    }
-  },
-  [removeOrderCancelledByTheOwner]: (state, { payload: { tradingPair, offerType, offerId } }) => {
-    switch (offerType) {
-      case TYPE_BUY_OFFER:
-        return state
-          .updateIn(['offers', Map(tradingPair), 'buyOffers'],
-            buyOfferList => buyOfferList.filter(offer => offer.id !== offerId),
-          );
-      case TYPE_SELL_OFFER:
-        return state
-          .updateIn(['offers', Map(tradingPair), 'sellOffers'],
-            sellOfferList => sellOfferList.filter(offer => offer.id !== offerId),
-          );
-
-    }
-  },
+  [offerCancelledEvent]: (state, { payload: { offerId, tradingPair, offerType } }) =>
+    state.updateIn(
+      ['offers', Map(tradingPair)], tradingPairOffers => {
+        switch (offerType) {
+          case TYPE_BUY_OFFER :
+            return tradingPairOffers.updateIn(['buyOffers'], buyOffers =>
+              buyOffers.update(buyOffers.findIndex(
+                buyOffer => buyOffer.id === offerId), (offerToUpdate) => {
+                  return { ...offerToUpdate, status: OFFER_STATUS_INACTIVE };
+                },
+              ),
+            );
+          case TYPE_SELL_OFFER:
+            return tradingPairOffers.updateIn(['sellOffers'], sellOffers =>
+              sellOffers.update(sellOffers.findIndex(
+                sellOffer => sellOffer.id === offerId), (offerToUpdate) =>  {
+                  return { ...offerToUpdate, status: OFFER_STATUS_INACTIVE };
+                },
+              ),
+            );
+        }
+      },
+    ),
+  [removeOrderCancelledByTheOwner]: (state, { payload: { offerId, tradingPair, offerType } }) =>
+    state.updateIn(
+      ['offers', Map(tradingPair)], tradingPairOffers => {
+        switch (offerType) {
+          case TYPE_BUY_OFFER :
+            return tradingPairOffers.updateIn(['buyOffers'], buyOffers =>
+              buyOffers.update(buyOffers.findIndex(
+                buyOffer => buyOffer.id === offerId), (offerToUpdate) => {
+                  return { ...offerToUpdate, status: OFFER_STATUS_INACTIVE };
+                },
+              ),
+            );
+          case TYPE_SELL_OFFER:
+            return tradingPairOffers.updateIn(['sellOffers'], sellOffers =>
+              sellOffers.update(sellOffers.findIndex(
+                sellOffer => sellOffer.id === offerId), (offerToUpdate) =>  {
+                  return { ...offerToUpdate, status: OFFER_STATUS_INACTIVE };
+                },
+              ),
+            );
+        }
+      },
+    ),
 };
