@@ -1,5 +1,7 @@
 import {getMarketContractInstance, getTokenContractInstance} from '../../../bootstrap/contracts';
 import {createAction} from 'redux-actions';
+import {Map} from 'immutable';
+import {fulfilled} from '../../../utils/store';
 
 export const getTradingPairOfferCount = createAction(
   'OFFERS/GET_TRADING_PAIR_OFFERS_COUNT',
@@ -13,3 +15,18 @@ export const getTradingPairOfferCount = createAction(
     };
   },
 );
+
+export const reducer = {
+  [fulfilled(getTradingPairOfferCount)]:
+    (state, { payload: { baseToken, quoteToken, buyOfferCount, sellOfferCount } }) => {
+      // console.log('getTradingPairOfferCount', baseToken, quoteToken);
+      return state.updateIn(
+        ['offers', Map({ baseToken, quoteToken })],
+        tradingPairOffers => {
+          return tradingPairOffers
+            .updateIn(['buyOfferCount'], () => buyOfferCount)
+            .updateIn(['sellOfferCount'], () => sellOfferCount);
+        },
+      );
+    },
+};

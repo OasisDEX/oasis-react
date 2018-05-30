@@ -1,6 +1,8 @@
 import {createPromiseActions} from '../../../utils/createPromiseActions';
 import {syncOffer} from './syncOfferEpic';
 import {getBestOffer, getWorseOffer} from './syncOffersEpic';
+import {Map} from 'immutable';
+import {SYNC_STATUS_COMPLETED, SYNC_STATUS_PENDING} from '../../../constants';
 
 export const loadSellOffers = createPromiseActions('OFFERS/LOAD_SELL_OFFERS');
 export const loadSellOffersEpic = (offerCount, sellToken, buyToken, {
@@ -42,4 +44,22 @@ export const loadBuyOffersEpic = (offerCount, sellToken, buyToken, {
   } catch(e) {
     dispatch(loadBuyOffers.rejected(e));
   }
+};
+
+export const reducer = {
+  [loadBuyOffers.pending]: (state, { payload }) =>
+    state.setIn(['offers', Map(payload), 'loadingBuyOffers'], SYNC_STATUS_PENDING),
+  [loadBuyOffers.fulfilled]: (state, { payload }) =>
+    state.setIn(['offers', Map(payload), 'loadingBuyOffers'], SYNC_STATUS_COMPLETED),
+  [loadBuyOffers.rejected]: (state, { payload }) =>
+    // state.setIn(['offers', Map(payload), 'loadingBuyOffers'], SYNC_STATUS_ERROR),
+    { throw payload },
+
+  [loadSellOffers.pending]: (state, { payload }) =>
+    state.setIn(['offers', Map(payload), 'loadingSellOffers'], SYNC_STATUS_PENDING),
+  [loadSellOffers.fulfilled]: (state, { payload }) =>
+    state.setIn(['offers', Map(payload), 'loadingSellOffers'], SYNC_STATUS_COMPLETED),
+  [loadSellOffers.rejected]: (state, { payload }) =>
+    // state.setIn(['offers', Map(payload), 'loadingSellOffers'], SYNC_STATUS_ERROR),
+    { throw payload },
 };

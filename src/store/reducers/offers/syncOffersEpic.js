@@ -2,21 +2,16 @@ import offers from '../../selectors/offers';
 import {createPromiseActions} from '../../../utils/createPromiseActions';
 import {loadBuyOffersEpic, loadSellOffersEpic} from './loadOffers';
 import {createAction} from 'redux-actions';
-import {SYNC_STATUS_PRISTINE} from '../../../constants';
+import {SYNC_STATUS_COMPLETED, SYNC_STATUS_ERROR, SYNC_STATUS_PENDING, SYNC_STATUS_PRISTINE} from '../../../constants';
 import {getMarketContractInstance, getTokenContractInstance} from '../../../bootstrap/contracts';
 import {handleTransaction} from '../../../utils/transactions/handleTransaction';
 import {TX_OFFER_CANCEL} from '../transactions';
 import {CANCEL_GAS} from '../offers';
 import {getTradingPairOfferCount} from './getTradingPairOffersCount';
+import {Map} from 'immutable';
 
 export const tradingPairOffersAlreadyLoaded = createAction('OFFERS/TRADING_PAIR_ALREADY_LOADED');
 
-
-export const updateOffer = createAction(
-  'OFFERS/UPDATE_OFFER',
-  ({ offer, baseToken, quoteToken, offerType, previousOfferState }) =>
-    ({ offer, baseToken, quoteToken, offerType, previousOfferState }),
-);
 
 const resetOffers = createAction(
   'OFFERS/RESET_OFFERS',
@@ -52,11 +47,6 @@ export const getWorseOffer = createAction(
   offerId => getMarketContractInstance().getWorseOffer(offerId),
 );
 
-export const loadOffer = createAction(
-  'OFFERS/LOAD_OFFER',
-  async (offerId) => getMarketContractInstance().offers(offerId),
-);
-
 
 export const syncOffers = createPromiseActions('OFFERS/SYNC_OFFERS');
 export const syncOffersEpic = ({ baseToken, quoteToken }, {
@@ -75,4 +65,16 @@ export const syncOffersEpic = ({ baseToken, quoteToken }, {
     dispatch(doLoadBuyOffersEpic(offerCount, baseToken, quoteToken)),
     dispatch(doLoadSellOffersEpic(offerCount, baseToken, quoteToken)),
   ]).then(() => dispatch(syncOffers.fulfilled({ baseToken, quoteToken })));
+};
+
+export const reducer = {
+  [syncOffers.pending]: (state, { payload }) =>
+    state.updateIn(['offers', Map(payload), 'initialSyncStatus'], () => SYNC_STATUS_PENDING),
+  [syncOffers.fulfilled]: (state, { payload }) =>
+    state.updateIn(['offers', Map(payload), 'initialSyncStatus'], () => SYNC_STATUS_COMPLETED),
+  [syncOffers.rejected]: (state, { payload }) =>
+    state.updateIn(['offers', Map(payload), 'initialSyncStatus'], () => SYNC_STATUS_ERROR),
+  // [pending(syncOffers)]: state => state.set('initialSyncStatus', SYNC_STATUS_PENDING),
+  // [fulfilled(syncOffers)]: state => state.set('initialSyncStatus', SYNC_STATUS_COMPLETED),
+  // [rejected(syncOffers)]: state => state.set('initialSyncStatus', SYNC_STATUS_ERROR),
 };

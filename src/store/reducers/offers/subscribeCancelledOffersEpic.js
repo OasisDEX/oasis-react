@@ -3,6 +3,8 @@ import {createPromiseActions} from '../../../utils/createPromiseActions';
 import {getMarketContractInstance} from '../../../bootstrap/contracts';
 import findOffer from '../../../utils/offers/findOffer';
 import {createAction} from 'redux-actions';
+import {TYPE_BUY_OFFER, TYPE_SELL_OFFER} from '../offers';
+import {Map} from 'immutable';
 
 export const removeOrderCancelledByTheOwner = createAction(
   'OFFER/REMOVE_OFFER_CANCELLED_BY_THE_OWNER',
@@ -50,4 +52,37 @@ export const subscribeCancelledOrdersEpic = (fromBlock, filter = {}) => async (d
     dispatch(subscribeCancelledOrders.rejected(e));
   }
   dispatch(subscribeCancelledOrders.fulfilled());
+};
+
+export const reducer = {
+  [offerCancelledEvent]: (state, { payload: { tradingPair, offerType, offerId } }) => {
+    switch (offerType) {
+      case TYPE_BUY_OFFER:
+        return state
+          .updateIn(['offers', Map(tradingPair), 'buyOffers'],
+            buyOfferList => buyOfferList.filter(offer => offer.id !== offerId),
+          );
+      case TYPE_SELL_OFFER:
+        return state
+          .updateIn(['offers', Map(tradingPair), 'sellOffers'],
+            sellOfferList => sellOfferList.filter(offer => offer.id !== offerId),
+          );
+
+    }
+  },
+  [removeOrderCancelledByTheOwner]: (state, { payload: { tradingPair, offerType, offerId } }) => {
+    switch (offerType) {
+      case TYPE_BUY_OFFER:
+        return state
+          .updateIn(['offers', Map(tradingPair), 'buyOffers'],
+            buyOfferList => buyOfferList.filter(offer => offer.id !== offerId),
+          );
+      case TYPE_SELL_OFFER:
+        return state
+          .updateIn(['offers', Map(tradingPair), 'sellOffers'],
+            sellOfferList => sellOfferList.filter(offer => offer.id !== offerId),
+          );
+
+    }
+  },
 };

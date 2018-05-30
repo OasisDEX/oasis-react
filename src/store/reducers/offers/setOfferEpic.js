@@ -4,8 +4,9 @@ import findOffer from '../../../utils/offers/findOffer';
 import getTokenByAddress from '../../../utils/tokens/getTokenByAddress';
 import tokens from '../../selectors/tokens';
 import {createAction} from 'redux-actions';
-import {updateOffer} from './syncOffersEpic';
 import BigNumber from 'bignumber.js';
+import {Map} from 'immutable';
+import {TYPE_BUY_OFFER, TYPE_SELL_OFFER} from '../offers';
 
 export const setOffer = createAction(
   'OFFERS/SET_OFFER',
@@ -24,6 +25,12 @@ export const offerCompletelyFilledIn = createAction(
     ({ offerId, baseToken, quoteToken, offerType, updatedOffer, previousOfferState }),
 );
 
+
+export const updateOffer = createAction(
+  'OFFERS/UPDATE_OFFER',
+  ({ offer, baseToken, quoteToken, offerType, previousOfferState }) =>
+    ({ offer, baseToken, quoteToken, offerType, previousOfferState }),
+);
 
 
 export const setOfferEpic = ({
@@ -128,4 +135,62 @@ export const setOfferEpic = ({
       }
       break;
   }
+};
+
+export const reducer = {
+  [setOffer]: (state, { payload: { offer, baseToken, quoteToken, offerType } }) => {
+    return state.updateIn(
+      ['offers', Map({ baseToken, quoteToken })], tradingPairOffers => {
+        switch (offerType) {
+          case TYPE_BUY_OFFER:
+            return tradingPairOffers.updateIn(['buyOffers'], buyOffers => buyOffers.push(offer));
+          case TYPE_SELL_OFFER:
+            return tradingPairOffers.updateIn(['sellOffers'], sellOffers => sellOffers.push(offer));
+          default: {
+            console.log(
+              'this should never happen !!!', { offer, baseToken, quoteToken, offerType },
+            );
+            return tradingPairOffers;
+          }
+        }
+      },
+    );
+  },
+  [updateOffer]: (state, { payload: { offer, baseToken, quoteToken, offerType } }) =>
+    state.updateIn(
+      ['offers', Map({ baseToken, quoteToken })], tradingPairOffers => {
+        switch (offerType) {
+          case TYPE_BUY_OFFER :
+            return tradingPairOffers.updateIn(['buyOffers'], buyOffers =>
+              buyOffers.update(buyOffers.findIndex(
+                buyOffer => buyOffer.id == offer.id), () => offer,
+              ),
+            );
+          case TYPE_SELL_OFFER:
+            return tradingPairOffers.updateIn(['sellOffers'], sellOffers =>
+              sellOffers.update(sellOffers.findIndex(
+                sellOffer => sellOffer.id == offer.id), () => offer,
+              ),
+            );
+        }
+      },
+    ),
+  // [offerPartiallyFilledIn]:
+  //   (state, { payload: { offerId, tradingPair, offerType, updatedOffer, previousOfferState } }) => state,
+  [offerCompletelyFilledIn]:
+    (state, { payload: { offerId, tradingPair, offerType } }) => {
+      switch (offerType) {
+        case TYPE_BUY_OFFER:
+          return state
+            .updateIn(['offers', Map(tradingPair), 'buyOffers'],
+              buyOfferList => buyOfferList.filter(offer => offer.id !== offerId),
+            );
+        case TYPE_SELL_OFFER:
+          return state
+            .updateIn(['offers', Map(tradingPair), 'sellOffers'],
+              sellOfferList => sellOfferList.filter(offer => offer.id !== offerId),
+            );
+
+      }
+    },
 };

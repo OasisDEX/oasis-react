@@ -36,3 +36,11 @@ export const getBestOfferIdsForActiveTradingPairEpic = () => async (dispatch, ge
     })
   );
 };
+
+export const reducer = {
+  [setActiveTradingPairBestOfferIds]:
+    (state, {payload: { bestBuyOfferId, bestSellOfferId }}) =>
+      state
+        .setIn(['activeTradingPairBestOfferId', 'bestBuyOfferId'], bestBuyOfferId)
+        .setIn(['activeTradingPairBestOfferId', 'bestSellOfferId'], bestSellOfferId),
+};

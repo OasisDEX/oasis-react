@@ -5,7 +5,9 @@ import offerTakes from '../../selectors/offerTakes';
 import {createPromiseActions} from '../../../utils/createPromiseActions';
 import {getMarketContractInstance} from '../../../bootstrap/contracts';
 import {createAction} from 'redux-actions';
-
+import {Map} from 'immutable';
+import {TYPE_BUY_OFFER, TYPE_SELL_OFFER} from '../offers';
+import {OFFER_STATUS_INACTIVE} from '../offers';
 
 export const removeOfferFromTheOrderBook = createAction(
   'OFFERS/REMOVE_OFFER_FROM_THE_ORDER_BOOK',
@@ -61,4 +63,45 @@ export const subscribeFilledOffersEpic = (fromBlock, filter = {}) => async (disp
     err => subscribeFilledOrders.rejected(err),
   );
   dispatch(subscribeFilledOrders.fulfilled());
+};
+
+export const reducer = {
+  [removeOfferFromTheOrderBook]: (state, { payload: { tradingPair, offerType, offerId } }) => {
+    switch (offerType) {
+      case TYPE_BUY_OFFER:
+        return state
+          .updateIn(['offers', Map(tradingPair), 'buyOffers'],
+            buyOfferList => buyOfferList.filter(offer => offer.id !== offerId),
+          );
+      case TYPE_SELL_OFFER:
+        return state
+          .updateIn(['offers', Map(tradingPair), 'sellOffers'],
+            sellOfferList => sellOfferList.filter(offer => offer.id !== offerId),
+          );
+
+    }
+  },
+  [markOfferAsInactive]: (state, { payload: { offerId, tradingPair, offerType } }) =>
+    state.updateIn(
+      ['offers', Map(tradingPair)], tradingPairOffers => {
+        switch (offerType) {
+          case TYPE_BUY_OFFER :
+            return tradingPairOffers.updateIn(['buyOffers'], buyOffers =>
+              buyOffers.update(buyOffers.findIndex(
+                buyOffer => buyOffer.id === offerId), (offerToUpdate) => {
+                  return { ...offerToUpdate, status: OFFER_STATUS_INACTIVE };
+                },
+              ),
+            );
+          case TYPE_SELL_OFFER:
+            return tradingPairOffers.updateIn(['sellOffers'], sellOffers =>
+              sellOffers.update(sellOffers.findIndex(
+                sellOffer => sellOffer.id === offerId), (offerToUpdate) =>  {
+                  return { ...offerToUpdate, status: OFFER_STATUS_INACTIVE };
+                },
+              ),
+            );
+        }
+      },
+    ),
 };
