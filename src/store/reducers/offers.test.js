@@ -6,6 +6,7 @@ import each from 'jest-each';
 
 import BigNumber from 'bignumber.js';
 import {Map, List} from 'immutable';
+import {createAction} from 'redux-actions';
 
 import config from '../../configs';
 import offers from './offers';
@@ -173,6 +174,101 @@ describe('syncOffersEpic', () => {
     expect(store.getActions()).toMatchSnapshot();
     expect(loadBuyOffersEpic.mock.calls).toMatchSnapshot();
     expect(loadSellOffersEpic.mock.calls).toMatchSnapshot();
+  });
+
+});
+
+describe('subscribeNewOffersFilledInEpic', () => {
+
+  test('main', async () => {
+    const store = configureMockStore([thunk])(Map({}));
+
+    const LogMake = jest.fn(() => ({then: (onSuccess) => onSuccess(null, {args: {id: 123}})}));
+    const promise = store.dispatch(offers.testActions.subscribeNewOffersFilledInEpic(1, {}, {
+      doGetMarketContractInstance: () => ({
+        LogMake: LogMake,
+      }),
+    }));
+
+    const result = await promise;
+
+    expect(result).toMatchSnapshot();
+    expect(store.getActions()).toMatchSnapshot();
+    expect(LogMake.mock.calls).toMatchSnapshot();
+  });
+
+});
+
+describe('subscribeCancelledOrdersEpic', () => {
+
+  test('main', async () => {
+    const store = configureMockStore([thunk])(Map({
+      offers: Map({
+        offers: Map()
+          .set(Map({baseToken: 'MKR', quoteToken: 'W-ETH'}), Map({
+            buyOfferCount: 1,
+            buyOffers: List([
+              {id: 61211},
+            ]),
+          })),
+      }),
+    }));
+
+    const LogKill = jest.fn(() => ({then: (onSuccess) => onSuccess(null, {args: {id: 61211}})}));
+    const promise = store.dispatch(offers.testActions.subscribeCancelledOrdersEpic(1, {}, {
+      doGetMarketContractInstance: () => ({
+        LogKill: LogKill,
+      }),
+      doGetTradingPairOfferCount: createAction('TEST@GET_TRADING_PAIR_OFFERS_COUNT', (...args) => args),
+    }));
+
+    const result = await promise;
+
+    expect(result).toMatchSnapshot();
+    expect(store.getActions()).toMatchSnapshot();
+    expect(LogKill.mock.calls).toMatchSnapshot();
+  });
+
+});
+
+each([
+  ['active new', 61212, true],
+  ['active update', 61211, true],
+  ['passive new', 61212, false],
+  ['passive update offerTake', 61211, false, 61211],
+  ['passive update', 61211, false],
+]).describe('subscribeFilledOffersEpic', (description, id, active, offerTake = null) => {
+
+  test(description, async () => {
+    const store = configureMockStore([thunk])(Map({
+      offers: Map({
+        offers: Map()
+          .set(Map({baseToken: 'MKR', quoteToken: 'W-ETH'}), Map({
+            buyOfferCount: 1,
+            buyOffers: List([
+              {id: 61211},
+            ]),
+          })),
+      }),
+      offerTakes: Map({
+        activeOfferTakeOfferId: String(offerTake),
+      }),
+    }));
+
+    const LogItemUpdate = jest.fn(() => ({then: (onSuccess) => onSuccess(null, {args: {id: new BigNumber(id)}})}));
+    const promise = store.dispatch(offers.testActions.subscribeFilledOffersEpic(1, {}, {
+      doGetMarketContractInstance: () => ({
+        LogItemUpdate: LogItemUpdate,
+      }),
+      doCheckOfferIsActive: () => async () => ({value: active}),
+      doSyncOffer: createAction('TEST@SYNC_OFFER', (...args) => args),
+    }));
+
+    const result = await promise;
+
+    expect(result).toMatchSnapshot();
+    expect(store.getActions()).toMatchSnapshot();
+    expect(LogItemUpdate.mock.calls).toMatchSnapshot();
   });
 
 });

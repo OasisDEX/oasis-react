@@ -407,6 +407,250 @@ Array [
 ]
 `;
 
+exports[`subscribeCancelledOrdersEpic main 1`] = `undefined`;
+
+exports[`subscribeCancelledOrdersEpic main 2`] = `
+Array [
+  Object {
+    "type": "OFFERS/SUBSCRIBE_CANCELLED_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "maker": undefined,
+      "offerId": "397841",
+      "offerType": "OFFERS/TYPE_BUY",
+      "timestamp": undefined,
+      "tradingPair": Object {
+        "baseToken": "MKR",
+        "quoteToken": "W-ETH",
+      },
+    },
+    "type": "OFFERS/EVENT___OFFER_CANCELLED",
+  },
+  Object {
+    "payload": Array [
+      "MKR",
+      "W-ETH",
+    ],
+    "type": "TEST@GET_TRADING_PAIR_OFFERS_COUNT",
+  },
+  Object {
+    "type": Array [
+      "OFFERS/SUBSCRIBE_CANCELLED_OFFERS_FULFILLED",
+    ],
+  },
+]
+`;
+
+exports[`subscribeCancelledOrdersEpic main 3`] = `
+Array [
+  Array [
+    Object {},
+    Object {
+      "fromBlock": 1,
+      "toBlock": "latest",
+    },
+  ],
+]
+`;
+
+exports[`subscribeFilledOffersEpic active new 1`] = `undefined`;
+
+exports[`subscribeFilledOffersEpic active new 2`] = `
+Array [
+  Object {
+    "type": "OFFERS/SUBSCRIBE_FILLED_OFFERS_PENDING",
+  },
+  Object {
+    "type": Array [
+      "OFFERS/SUBSCRIBE_FILLED_OFFERS_FULFILLED",
+    ],
+  },
+  Object {
+    "payload": Array [
+      61212,
+      "OFFERS/OFFER_SYNC_NEW_OFFER",
+    ],
+    "type": "TEST@SYNC_OFFER",
+  },
+]
+`;
+
+exports[`subscribeFilledOffersEpic active new 3`] = `
+Array [
+  Array [
+    Object {},
+    Object {
+      "fromBlock": 1,
+      "toBlock": "latest",
+    },
+  ],
+]
+`;
+
+exports[`subscribeFilledOffersEpic active update 1`] = `undefined`;
+
+exports[`subscribeFilledOffersEpic active update 2`] = `
+Array [
+  Object {
+    "type": "OFFERS/SUBSCRIBE_FILLED_OFFERS_PENDING",
+  },
+  Object {
+    "type": Array [
+      "OFFERS/SUBSCRIBE_FILLED_OFFERS_FULFILLED",
+    ],
+  },
+  Object {
+    "payload": Array [
+      61211,
+      "OFFERS/OFFER_SYNC_TYPE_UPDATE",
+      Object {
+        "id": 61211,
+      },
+    ],
+    "type": "TEST@SYNC_OFFER",
+  },
+]
+`;
+
+exports[`subscribeFilledOffersEpic active update 3`] = `
+Array [
+  Array [
+    Object {},
+    Object {
+      "fromBlock": 1,
+      "toBlock": "latest",
+    },
+  ],
+]
+`;
+
+exports[`subscribeFilledOffersEpic passive new 1`] = `undefined`;
+
+exports[`subscribeFilledOffersEpic passive new 2`] = `
+Array [
+  Object {
+    "type": "OFFERS/SUBSCRIBE_FILLED_OFFERS_PENDING",
+  },
+  Object {
+    "type": Array [
+      "OFFERS/SUBSCRIBE_FILLED_OFFERS_FULFILLED",
+    ],
+  },
+]
+`;
+
+exports[`subscribeFilledOffersEpic passive new 3`] = `
+Array [
+  Array [
+    Object {},
+    Object {
+      "fromBlock": 1,
+      "toBlock": "latest",
+    },
+  ],
+]
+`;
+
+exports[`subscribeFilledOffersEpic passive update 1`] = `undefined`;
+
+exports[`subscribeFilledOffersEpic passive update 2`] = `
+Array [
+  Object {
+    "type": "OFFERS/SUBSCRIBE_FILLED_OFFERS_PENDING",
+  },
+  Object {
+    "type": Array [
+      "OFFERS/SUBSCRIBE_FILLED_OFFERS_FULFILLED",
+    ],
+  },
+  Object {
+    "payload": Object {
+      "offerId": 61211,
+      "offerType": "OFFERS/TYPE_BUY",
+      "tradingPair": Object {
+        "baseToken": "MKR",
+        "quoteToken": "W-ETH",
+      },
+    },
+    "type": "OFFERS/REMOVE_OFFER_FROM_THE_ORDER_BOOK",
+  },
+]
+`;
+
+exports[`subscribeFilledOffersEpic passive update 3`] = `
+Array [
+  Array [
+    Object {},
+    Object {
+      "fromBlock": 1,
+      "toBlock": "latest",
+    },
+  ],
+]
+`;
+
+exports[`subscribeFilledOffersEpic passive update offerTake 1`] = `undefined`;
+
+exports[`subscribeFilledOffersEpic passive update offerTake 2`] = `
+Array [
+  Object {
+    "type": "OFFERS/SUBSCRIBE_FILLED_OFFERS_PENDING",
+  },
+  Object {
+    "type": Array [
+      "OFFERS/SUBSCRIBE_FILLED_OFFERS_FULFILLED",
+    ],
+  },
+  Object {
+    "payload": Object {
+      "offerId": 61211,
+      "offerType": "OFFERS/TYPE_BUY",
+      "tradingPair": Object {
+        "baseToken": "MKR",
+        "quoteToken": "W-ETH",
+      },
+    },
+    "type": "OFFERS/MARK_OFFER_AS_INACTIVE",
+  },
+]
+`;
+
+exports[`subscribeFilledOffersEpic passive update offerTake 3`] = `
+Array [
+  Array [
+    Object {},
+    Object {
+      "fromBlock": 1,
+      "toBlock": "latest",
+    },
+  ],
+]
+`;
+
+exports[`subscribeNewOffersFilledInEpic main 1`] = `undefined`;
+
+exports[`subscribeNewOffersFilledInEpic main 2`] = `
+Array [
+  Object {
+    "payload": 291,
+    "type": "OFFERS/NEW_OFFER_FILLED_IN",
+  },
+]
+`;
+
+exports[`subscribeNewOffersFilledInEpic main 3`] = `
+Array [
+  Array [
+    Object {},
+    Object {
+      "fromBlock": 1,
+      "toBlock": "latest",
+    },
+  ],
+]
+`;
+
 exports[`syncOffer initial sync 1`] = `
 Object {
   "offer": Array [

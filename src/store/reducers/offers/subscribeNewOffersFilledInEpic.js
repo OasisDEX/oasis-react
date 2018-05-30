@@ -7,8 +7,10 @@ import {createAction} from 'redux-actions';
  *
  */
 const newOfferFilledIn = createAction('OFFERS/NEW_OFFER_FILLED_IN', offerId => offerId);
-export const subscribeNewOffersFilledInEpic = (fromBlock, filter = {}) => async dispatch => {
-  getMarketContractInstance().LogMake(filter, { fromBlock, toBlock: 'latest' })
+export const subscribeNewOffersFilledInEpic = (fromBlock, filter = {}, {
+  doGetMarketContractInstance = getMarketContractInstance,
+} = {}) => async dispatch => {
+  doGetMarketContractInstance().LogMake(filter, { fromBlock, toBlock: 'latest' })
   .then((err, LogMakeEvent) => {
     const newOfferId = parseInt(LogMakeEvent.args.id, 16);
     dispatch(

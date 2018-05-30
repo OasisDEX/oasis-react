@@ -123,6 +123,9 @@ const testActions = {
   setOfferEpic,
   loadBuyOffersEpic,
   loadSellOffersEpic,
+  subscribeNewOffersFilledInEpic,
+  subscribeCancelledOrdersEpic,
+  subscribeFilledOffersEpic,
 };
 
 const offersReducer = {

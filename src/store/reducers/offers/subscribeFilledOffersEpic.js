@@ -26,12 +26,16 @@ export const checkOfferIsActive = createAction(
 export const subscribeFilledOrders = createPromiseActions(
   'OFFERS/SUBSCRIBE_FILLED_OFFERS',
 );
-export const subscribeFilledOffersEpic = (fromBlock, filter = {}) => async (dispatch, getState) => {
+export const subscribeFilledOffersEpic = (fromBlock, filter = {}, {
+  doGetMarketContractInstance = getMarketContractInstance,
+  doCheckOfferIsActive = checkOfferIsActive,
+  doSyncOffer = syncOffer,
+} = {}) => async (dispatch, getState) => {
   dispatch(subscribeFilledOrders.pending());
-  getMarketContractInstance().LogItemUpdate(filter, { fromBlock, toBlock: 'latest' }).then(
+  doGetMarketContractInstance().LogItemUpdate(filter, { fromBlock, toBlock: 'latest' }).then(
     async (err, LogItemUpdateEvent) => {
       const offerId = LogItemUpdateEvent.args.id.toNumber();
-      const isOfferActive = (await dispatch(checkOfferIsActive(offerId))).value;
+      const isOfferActive = (await dispatch(doCheckOfferIsActive(offerId))).value;
       if (offerId && isOfferActive) {
 
         /**
@@ -42,10 +46,10 @@ export const subscribeFilledOffersEpic = (fromBlock, filter = {}) => async (disp
         const offerSearchResult = findOffer(offerId, getState());
         if (offerSearchResult) {
           // console.log('LogItemUpdate', offerId, LogItemUpdateEvent, OFFER_SYNC_TYPE_UPDATE);
-          dispatch(syncOffer(offerId, OFFER_SYNC_TYPE_UPDATE, offerSearchResult.offer));
+          dispatch(doSyncOffer(offerId, OFFER_SYNC_TYPE_UPDATE, offerSearchResult.offer));
         } else {
           // console.log('LogItemUpdate', offerId, LogItemUpdateEvent, OFFER_SYNC_TYPE_NEW_OFFER);
-          dispatch(syncOffer(offerId, OFFER_SYNC_TYPE_NEW_OFFER));
+          dispatch(doSyncOffer(offerId, OFFER_SYNC_TYPE_NEW_OFFER));
         }
       } // else offer is being cancelled ( handled in LogKill )
       else {

@@ -16,10 +16,13 @@ export const offerCancelledEvent = createAction(
 const subscribeCancelledOrders = createPromiseActions(
   'OFFERS/SUBSCRIBE_CANCELLED_OFFERS',
 );
-export const subscribeCancelledOrdersEpic = (fromBlock, filter = {}) => async (dispatch, getState) => {
+export const subscribeCancelledOrdersEpic = (fromBlock, filter = {}, {
+  doGetMarketContractInstance = getMarketContractInstance,
+  doGetTradingPairOfferCount = getTradingPairOfferCount,
+} = {}) => async (dispatch, getState) => {
   dispatch(subscribeCancelledOrders.pending());
   try {
-    getMarketContractInstance().LogKill(filter, { fromBlock, toBlock: 'latest' }).then(
+    doGetMarketContractInstance().LogKill(filter, { fromBlock, toBlock: 'latest' }).then(
       (err, LogKillEvent) => {
         const {
           id,
@@ -43,7 +46,7 @@ export const subscribeCancelledOrdersEpic = (fromBlock, filter = {}) => async (d
             ),
           );
           dispatch(
-            getTradingPairOfferCount(tradingPair.baseToken, tradingPair.quoteToken),
+            doGetTradingPairOfferCount(tradingPair.baseToken, tradingPair.quoteToken),
           );
         }
       },
