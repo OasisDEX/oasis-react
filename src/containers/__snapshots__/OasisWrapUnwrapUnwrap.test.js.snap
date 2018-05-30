@@ -27,5 +27,6 @@ exports[`(Container) OasisWrapUnwrapUnwrap will receive right props 1`] = `
 Object {
   "activeWrappedToken": "W-GNT",
   "activeWrappedTokenBalance": "0",
+  "defaultAccount": "0x0000000000000000000000000000000000000000",
 }
 `;

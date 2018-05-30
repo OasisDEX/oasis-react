@@ -4,7 +4,7 @@ import { OFFER_SYNC_TYPE_INITIAL, OFFER_SYNC_TYPE_UPDATE } from "../offers";
 import { setOfferEpic } from "./setOfferEpic";
 import { loadOffer } from "./syncOffersEpic";
 import { createAction } from "redux-actions";
-import getTokenByAddress from '../../../utils/tokens/getTokenByAddress';
+import getTokenByAddress from "../../../utils/tokens/getTokenByAddress";
 
 const attemptToSyncRemovedOffer = createAction(
   "OFFERS/ATTEMPT_TO_SYNC_REMOVED_OFFER",
@@ -32,9 +32,9 @@ export const syncOffer = (
     timestamp
   ] = offer;
 
-
-  const tokenAddressesAreValid =  getTokenByAddress(buyWhichTokenAddress) && getTokenByAddress(sellWhichTokenAddress);
-  console.log({tokenAddressesAreValid})
+  const tokenAddressesAreValid =
+    getTokenByAddress(buyWhichTokenAddress) &&
+    getTokenByAddress(sellWhichTokenAddress);
   if (tokenAddressesAreValid) {
     const { baseToken, quoteToken, offerType } = getOfferTradingPairAndType(
       { buyWhichTokenAddress, sellWhichTokenAddress, syncType },
@@ -43,16 +43,13 @@ export const syncOffer = (
 
     const id = offerId.toString();
     try {
-
       await dispatch(doGetTradingPairOfferCount(baseToken, quoteToken));
     } catch (e) {
-
       console.log("Could not find the token pair", {
         buyWhichTokenAddressToken: getTokenByAddress(buyWhichTokenAddress),
         sellWhichTokenAddressToken: getTokenByAddress(sellWhichTokenAddress)
-      })
+      });
     }
-
 
     dispatch(
       doSetOfferEpic(

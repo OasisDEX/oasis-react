@@ -10,9 +10,12 @@ import styles from "./OasisWrapUnwrapHistory.scss";
 
 import { formatAmount } from "../utils/tokens/pair";
 import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
-import { ETH_UNIT_ETHER } from '../constants';
+import { ETH_UNIT_ETHER } from "../constants";
+import OasisLoadingIndicator from "./OasisLoadingIndicator";
 
-const propTypes = PropTypes && {};
+const propTypes = PropTypes && {
+  isTokenWrapUnwrapHistoryLoading: PropTypes.bool
+};
 
 const amountTemplate = row => (
   <OasisSignificantDigitsWrapper
@@ -45,10 +48,16 @@ export class OasisWrapUnwrapHistory extends PureComponent {
   render() {
     const {
       wrapUnwrapHistoryList = fromJS([]),
-      activeNetworkName
+      activeNetworkName,
+      isTokenWrapUnwrapHistoryLoading
     } = this.props;
     return (
-      <OasisWidgetFrame heading="History">
+      <OasisWidgetFrame
+        heading="History"
+        loadProgressSection={
+          isTokenWrapUnwrapHistoryLoading ? <OasisLoadingIndicator /> : null
+        }
+      >
         <div>
           {
             <OasisTable

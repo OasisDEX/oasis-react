@@ -2,6 +2,7 @@ import { createSelector } from "reselect";
 import reselect from "../../utils/reselect";
 import { fromJS } from "immutable";
 import config from "../../configs";
+import accounts from "./accounts";
 
 const network = state => state.get("network");
 
@@ -47,14 +48,24 @@ const getTokenAddress = createSelector(
   (tokens, tokenName) => tokens.get(tokenName)
 );
 
-const isNetworkCheckPending = createSelector(
-  network,
-  s => s.get('isNetworkCheckPending')
+const isNetworkCheckPending = createSelector(network, s =>
+  s.get("isNetworkCheckPending")
 );
 
-const lastNetworkCheckAt = createSelector(
+const lastNetworkCheckAt = createSelector(network, s =>
+  s.get("lastNetworkCheckAt")
+);
+
+const hasDefaultAccountChanged = createSelector(
   network,
-  s => s.get('lastNetworkCheckAt')
+  accounts.state,
+  (s, accountsState) =>
+    parseInt(s.getIn("lastNetworkCheckAt", "start")) < parseInt(accountsState.get("lastAccountSwitchAt"))
+);
+
+const lastCheckTotalTimeMs = createSelector(
+  network,
+  s => parseInt(s.getIn("lastNetworkCheckAt", "end"))  - parseInt(s.getIn("lastNetworkCheckAt", "start"))
 );
 
 
@@ -70,5 +81,7 @@ export default {
   getTokenAddress,
   tokenAddresses,
   isNetworkCheckPending,
-  lastNetworkCheckAt
+  lastNetworkCheckAt,
+  hasDefaultAccountChanged,
+  lastCheckTotalTimeMs
 };

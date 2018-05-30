@@ -13,7 +13,7 @@ const propTypes = PropTypes && {
   vertical: PropTypes.bool,
   fullWidth: PropTypes.bool,
   noBorder: PropTypes.bool,
-  hidden: PropTypes.bool
+  hidden: PropTypes.bool,
 };
 
 const defaultProps = {

@@ -9,7 +9,7 @@ import tokensReducer from "../tokens";
 import accounts from "../../selectors/accounts";
 import offersReducer from "../offers";
 import { CheckNetworkAction } from "./CheckNetworkAction";
-import { onNetworkCheckCompleted } from "./onNetworkCheckCompleted";
+import { onNetworkCheckEndEpic } from "./onNetworkCheckEndEpic";
 
 export const checkNetworkInitialEpic = () => async (dispatch, getState) => {
   dispatch(CheckNetworkAction.pending());
@@ -50,7 +50,7 @@ export const checkNetworkInitialEpic = () => async (dispatch, getState) => {
           accounts.defaultAccount(getState())
         )
       )
-    ]).then(onNetworkCheckCompleted(dispatch, getState));
+    ]).then(onNetworkCheckEndEpic(dispatch, getState, true));
   } catch (e) {
     console.warn("Can't fetch network data!", e);
   }

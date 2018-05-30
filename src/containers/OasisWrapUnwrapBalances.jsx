@@ -9,6 +9,7 @@ import OasisWrapUnwrapBalances from '../components/OasisWrapUnwrapBalances';
 import wrapUnwrap from '../store/selectors/wrapUnwrap';
 import platformReducer from '../store/reducers/platform';
 import wrapUnwrapReducer from '../store/reducers/wrapUnwrap';
+import accounts from '../store/selectors/accounts';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -19,6 +20,7 @@ export class OasisWrapUnwrapBalancesWrapper extends PureComponent {
     const {
       wrapUnwrapBalances,
       activeUnwrappedToken,
+      defaultAccount,
       actions: {
         changeRoute,
         setActiveWrapUnwrappedToken,
@@ -28,6 +30,7 @@ export class OasisWrapUnwrapBalancesWrapper extends PureComponent {
     } = this.props;
     return (
       <OasisWrapUnwrapBalances
+        defaultAccount={defaultAccount}
         resetActiveWrapForm={resetActiveWrapForm}
         resetActiveUnwrapForm={resetActiveUnwrapForm}
         changeRoute={changeRoute}
@@ -41,6 +44,7 @@ export class OasisWrapUnwrapBalancesWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
+    defaultAccount: accounts.defaultAccount(state),
     wrapUnwrapBalances: wrapUnwrap.wrapUnwrapBalances(state),
     activeUnwrappedToken: wrapUnwrap.activeUnwrappedToken(state)
   };

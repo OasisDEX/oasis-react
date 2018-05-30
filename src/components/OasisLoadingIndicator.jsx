@@ -12,7 +12,7 @@ const defaultProps = {};
 
 class OasisLoadingIndicator extends PureComponent {
   render() {
-    const { marginLeft = 0, marginRight = 0 } = this.props;
+    const { marginLeft = 0, marginRight = 0, size } = this.props;
     const style = {
       display: "inline-block",
       marginLeft,
@@ -20,7 +20,7 @@ class OasisLoadingIndicator extends PureComponent {
     };
     return (
       <span style={style}>
-        <OasisIcon size={'sm'} icon="loading" />
+        <OasisIcon size={size ? size: 'sm'} icon="loading" />
       </span>
     );
   }

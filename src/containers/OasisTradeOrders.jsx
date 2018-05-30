@@ -22,6 +22,7 @@ import OasisMakeBuyOfferWrapper  from './OasisMakeBuyOffer';
 import OasisMakeSellOfferWrapper  from './OasisMakeSellOffer';
 import network from '../store/selectors/network';
 import {FlexBox} from "../components/FlexBox";
+import accounts from '../store/selectors/accounts';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -112,6 +113,7 @@ export class OasisTradeOrdersWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
+    defaultAccount: accounts.defaultAccount(state),
     activeTradingPair: tokens.activeTradingPair(state),
     marketData: tradesSelectors.marketsData(state),
     initialMarketHistoryLoaded: tradesSelectors.initialMarketHistoryLoaded(state),

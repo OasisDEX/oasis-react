@@ -21,7 +21,7 @@ const propTypes = PropTypes && {
   txTimestamp: PropTypes.number,
   txType: PropTypes.string,
   localStatus: PropTypes.string,
-  customBlock: PropTypes.oneOfType([PropTypes.node, PropTypes.func])
+  customBlock: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
 };
 
 export class OasisTransactionStatusWrapper extends PureComponent {

@@ -114,6 +114,7 @@ Object {
   "buyOfferCount": undefined,
   "buyOffers": Immutable.List [
 ],
+  "defaultAccount": "0x0000000000000000000000000000000000000000",
   "initialMarketHistoryLoaded": true,
   "isOfferTakeModalOpen": true,
   "marketData": Immutable.List [

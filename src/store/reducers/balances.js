@@ -12,7 +12,10 @@ import {
   TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED_MIN_MAX,
   TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED
 } from "../../constants";
-import web3, { web3p } from "../../bootstrap/web3";
+import web3, {
+  registerAccountSpecificSubscriptions,
+  web3p
+} from "../../bootstrap/web3";
 import balances from "../selectors/balances";
 import accounts from "../selectors/accounts";
 import network from "../selectors/network";
@@ -20,7 +23,10 @@ import { handleTransaction } from "../../utils/transactions/handleTransaction";
 import tokens from "../selectors/tokens";
 
 import { TX_ALLOWANCE_TRUST_TOGGLE } from "./transactions";
-import { getMarketContractInstance, getTokenContractInstance } from '../../bootstrap/contracts';
+import {
+  getMarketContractInstance,
+  getTokenContractInstance
+} from "../../bootstrap/contracts";
 
 const initialState = fromJS({
   accounts: [],
@@ -76,15 +82,17 @@ const subscribeAccountEthBalanceChangeEventEpic = accountAddress => async (
   const allAccountEvents = web3.eth.filter("latest", {
     address: accountAddress
   });
-  allAccountEvents.watch(() => {
-    web3p.eth.getBalance(accountAddress).then(accEthBalance => {
-      const previousBalance = getState().getIn(["balances", "ethBalance"]);
-      if (previousBalance !== null) {
-        if (accEthBalance.cmp(previousBalance)) {
-          dispatch(etherBalanceChanged(accEthBalance));
+  registerAccountSpecificSubscriptions({
+    ethBalanceChangeEventSub: allAccountEvents.watch(() => {
+      web3p.eth.getBalance(accountAddress).then(accEthBalance => {
+        const previousBalance = getState().getIn(["balances", "ethBalance"]);
+        if (previousBalance !== null) {
+          if (accEthBalance.cmp(previousBalance)) {
+            dispatch(etherBalanceChanged(accEthBalance));
+          }
         }
-      }
-    });
+      });
+    })
   });
   dispatch(subscribeAccountEthBalanceChangeEvent.fulfilled());
 };
@@ -155,12 +163,12 @@ const subscribeTokenTransfersEventsEpic = (
   address
 ) => async (dispatch, getState) => {
   dispatch(subscribeTokenTransfersEvents$.pending());
-
+  let subscriptionsMap = fromJS({});
   Object.entries(tokensContractsList).forEach(([tokenName, tokenContract]) => {
     /**
      * Listen to all erc20 transfer events from now.
      */
-    tokenContract
+    const subscription = tokenContract
       .Transfer(
         {},
         { fromBlock: network.latestBlockNumber(getState()), toBlock: "latest" }
@@ -173,6 +181,10 @@ const subscribeTokenTransfersEventsEpic = (
           dispatch(tokenTransferToEvent(tokenName, address, transferEvent));
         }
       });
+    subscriptionsMap = subscriptionsMap.set(tokenName, subscription);
+  });
+  registerAccountSpecificSubscriptions({
+    tokenTransferEventSubs: subscriptionsMap
   });
   dispatch(subscribeTokenTransfersEvents$.fulfilled());
 };
@@ -234,7 +246,10 @@ const getDefaultAccountTokenAllowanceForMarketAction = createAction(
       defaultAccountAddress,
       getMarketContractInstance().address
     ),
-  tokenName => ({ tokenName, spenderAddress: getMarketContractInstance().address })
+  tokenName => ({
+    tokenName,
+    spenderAddress: getMarketContractInstance().address
+  })
 );
 
 const getDefaultAccountTokenAllowanceForMarket = tokenName => (

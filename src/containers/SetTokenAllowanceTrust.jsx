@@ -157,6 +157,8 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
         txTimestamp={txTimestamp}
         localStatus={txStatus}
         txType={TX_ALLOWANCE_TRUST_TOGGLE}
+        noBorder
+        noPadding
       />
     ) : null;
   }

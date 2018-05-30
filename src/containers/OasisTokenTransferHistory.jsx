@@ -17,6 +17,8 @@ import styles from "./OasisTokenTransferHistory.scss";
 import createEtherscanTransactionLink from "../utils/createEtherscanTransactionLink";
 import OasisSignificantDigitsWrapper from "./OasisSignificantDigits";
 import { ETH_UNIT_ETHER } from "../constants";
+import OasisLoadingIndicator from '../components/OasisLoadingIndicator';
+import accounts from '../store/selectors/accounts';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -66,9 +68,11 @@ export class OasisTokenTransferHistoryWrapper extends PureComponent {
   }
 
   render() {
-    const { transferHistoryList = Map(), activeNetworkName } = this.props;
+    const { transferHistoryList = Map(), activeNetworkName, isTokenTransferHistoryLoading } = this.props;
     return (
-      <OasisWidgetFrame heading="History">
+      <OasisWidgetFrame
+        loadProgressSection={isTokenTransferHistoryLoading ? <OasisLoadingIndicator size={"md"}/> : null}
+        heading="History">
         <div>
           {
             <OasisTable
@@ -89,14 +93,17 @@ export class OasisTokenTransferHistoryWrapper extends PureComponent {
     latestBlockNumber,
     contractsLoaded,
     actions,
-    isTokenTransferHistoryLoading
+    isTokenTransferHistoryLoading,
+    transferHistoryList
   }) {
     if (
       latestBlockNumber &&
       contractsLoaded &&
       !isTokenTransferHistoryLoading
     ) {
-      actions.loadTokenTransfersHistory(selectedToken);
+      if (!transferHistoryList.count()) {
+        actions.loadTokenTransfersHistory(selectedToken);
+      }
     }
   }
 }
@@ -104,6 +111,7 @@ export class OasisTokenTransferHistoryWrapper extends PureComponent {
 export function mapStateToProps(state) {
   const selectedToken = transfers.selectedToken(state);
   return {
+    defaultAccount: accounts.defaultAccount(state),
     selectedToken,
     activeNetworkName: network.activeNetworkName(state),
     contractsLoaded: platform.contractsLoaded(state),

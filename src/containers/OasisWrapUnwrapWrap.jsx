@@ -12,6 +12,7 @@ import {
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
   TX_STATUS_CONFIRMED, TX_STATUS_REJECTED,
 } from '../store/reducers/transactions';
+import accounts from '../store/selectors/accounts';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -124,6 +125,7 @@ export class OasisWrapUnwrapWrapWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
+    defaultAccount: accounts.defaultAccount(state),
     activeUnwrappedToken: wrapUnwrap.activeUnwrappedToken(state),
     activeUnwrappedTokenBalance: wrapUnwrap.activeUnwrappedTokenBalance(state)
   };
