@@ -18,7 +18,7 @@ import { isOfferOwner } from "../utils/orders";
 import OasisSelect from "./OasisSelect";
 import styles from "./OasisMyOrders.scss";
 import OasisOfferCancelModalWrapper from "../containers/OasisOfferCancelModal";
-import { TYPE_BUY_OFFER, TYPE_SELL_OFFER } from "../store/reducers/offers";
+import { OFFER_STATUS_INACTIVE, TYPE_BUY_OFFER, TYPE_SELL_OFFER } from '../store/reducers/offers';
 import { OasisSignificantDigitsWrapper } from "../containers/OasisSignificantDigits";
 import OasisButton from "./OasisButton";
 
@@ -58,7 +58,7 @@ const myOrdersDisplayFormat = offer => {
 
 const myOpenOffersFilter = entry => {
   const myAccountAddress = web3.eth.defaultAccount;
-  return entry.owner.toString() === myAccountAddress.toString();
+  return entry.owner.toString() === myAccountAddress.toString() && entry.status !== OFFER_STATUS_INACTIVE;
 };
 
 const myOffersFilter = entry => {
