@@ -68,6 +68,11 @@ const lastCheckTotalTimeMs = createSelector(
   s => parseInt(s.getIn("lastNetworkCheckAt", "end"))  - parseInt(s.getIn("lastNetworkCheckAt", "start"))
 );
 
+const noProviderConnected = createSelector(
+  network,
+  s => s.get("noProviderConnected")
+);
+
 
 export default {
   state: network,
@@ -83,5 +88,6 @@ export default {
   isNetworkCheckPending,
   lastNetworkCheckAt,
   hasDefaultAccountChanged,
-  lastCheckTotalTimeMs
+  lastCheckTotalTimeMs,
+  noProviderConnected
 };

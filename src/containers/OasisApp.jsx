@@ -12,11 +12,13 @@ import OasisFooterWrapper from './OasisFooter';
 import OasisMainContentWrapper from './OasisMainContent';
 import OasisMessagesSectionWrapper from './OasisMessagesSection';
 import Locked from '../components/Locked';
+import NoConnection from '../components/NoConnection';
 
 import styles from './OasisApp.scss';
 import CSSModules from 'react-css-modules';
 
 import version from '../version'
+import network from '../store/selectors/network';
 
 const propTypes = PropTypes && {};
 
@@ -32,6 +34,11 @@ export class OasisAppWrapper extends PureComponent {
   }
 
   render() {
+    const { noProviderConnected } = this.props;
+    if (noProviderConnected) {
+      return <NoConnection/>;
+    }
+
     return this.accountLocked() || (
       <div>
         <BrowserRouter>
@@ -57,6 +64,7 @@ export class OasisAppWrapper extends PureComponent {
 export function mapStateToProps(state) {
   return {
     isAccountLocked: platform.isAccountLocked(state),
+    noProviderConnected: network.noProviderConnected(state)
   };
 }
 

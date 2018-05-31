@@ -40,13 +40,17 @@ const initialState = fromJS({
   latestEthereumPrice: null,
   isNetworkCheckPending: null,
   lastNetworkCheckAt: { start: null, end: null },
-  latestBlockReceivedAt: null
+  latestBlockReceivedAt: null,
+  noProviderConnected: true
 });
 
 const syncNetwork = createPromiseActions("NETWORK/SYNC_NETWORK");
 const connected = createAction("NETWORK/CONNECTED");
 const connecting = createAction("NETWORK/CONNECTING");
 const disconnected = createAction("NETWORK/DISCONNECTED");
+
+const setNoProviderConnected = createAction("NETWORK/NO_PROVIDER_CONNECTED");
+
 
 const actions = {
   connected,
@@ -58,11 +62,13 @@ const actions = {
   getLatestBlock,
   getLatestBlockNumber,
   getConnectedNetworkId,
-  fetchEthereumPrice
+  fetchEthereumPrice,
+  setNoProviderConnected,
 };
 
 const reducer = handleActions(
   {
+    [setNoProviderConnected]: (state, { payload }) => state.set("noProviderConnected", payload),
     [setLastNetworkCheckStartAt]: (state, { payload }) =>
       state.setIn(["lastNetworkCheckAt", "start"], payload),
     [setLastNetworkCheckEndAt]: (state, { payload }) =>

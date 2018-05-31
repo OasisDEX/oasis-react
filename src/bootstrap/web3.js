@@ -77,16 +77,18 @@ const clearAccountSpecificSubscriptions = () => {
 const init = () => {
   if (web3 && window.web3) {
     web3.setProvider(window.web3.currentProvider);
+    web3p = new window.Proxy(web3, proxiedWeb3Handler);
   } else {
+    console.info("Cant connect to inPage Provider!");
     fetch(settings.nodeURL).then(
       () => {
         console.info("Connecting to local Parity node");
         web3.setProvider(new Web3.providers.HttpProvider(settings.nodeURL));
-      },
-      () => console.info("No connection!")
-    );
+        web3p = new window.Proxy(web3, proxiedWeb3Handler);
+      },() => {}
+    ).catch(() => console.info("Cant connect to local node!"));
   }
-  web3p = new window.Proxy(web3, proxiedWeb3Handler);
+
 };
 
 export {

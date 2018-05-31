@@ -7,6 +7,7 @@ import { ConnectedRouter } from "react-router-redux";
 import "./index.css";
 import OasisAppWrapper from "./containers/OasisApp";
 
+
 import * as web3 from "./bootstrap/web3";
 import * as Network from "./bootstrap/network";
 import configureStore from "./store";
@@ -132,6 +133,7 @@ const bootstrap = async () => {
       checkingConnectivity = true;
       Network.checkConnectivity()
         .then(async () => {
+          dispatch(networkReducer.actions.setNoProviderConnected(false));
           if (web3p.eth.accounts.length) {
             networkCheckIntervalId = PENDING_INITIAL_NETWORK_CHECK;
             clearInterval(checkIfInitiallyLocked);
@@ -147,8 +149,10 @@ const bootstrap = async () => {
         })
         .catch(error => {
           console.log("Error in healthCheck!", error);
+          dispatch(networkReducer.actions.setNoProviderConnected(true));
           dispatch(networkReducer.actions.disconnected());
           errorHandler.handle(error);
+          setTimeout(() => location.reload(true), 5000);
         });
     }
   }, 1000);
@@ -156,12 +160,17 @@ const bootstrap = async () => {
 
 Raven.context(function() {
   (async () => {
-    await bootstrap();
+    try {
+      await bootstrap();
+    } catch (e) {
+      console.log(e)
+    }
     ReactDOM.render(
       <Provider store={store}>
         <ConnectedRouter history={history}>
           <OasisAppWrapper />
         </ConnectedRouter>
+
       </Provider>,
       document.getElementById("root")
     );

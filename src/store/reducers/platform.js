@@ -16,7 +16,6 @@ const initialState = fromJS(
     ordersLoadStatus: false,
     tradeHistoryLoadStatus: false,
     marketVolumeLoadStatus: false,
-
     metamaskLocked: false,
     lastNetworkSwitchAt: null,
     defaultTradingPair: {baseToken: 'MKR', quoteToken: 'W-ETH'},
