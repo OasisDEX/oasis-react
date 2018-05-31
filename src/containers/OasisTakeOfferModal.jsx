@@ -30,7 +30,7 @@ import {
   TX_STATUS_CONFIRMED,
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
-import {OasisTransactionStatusWrapperInfoBox} from "./OasisTransactionStatusInfoBox";
+import { OasisTransactionStatusWrapperInfoBox } from "./OasisTransactionStatusInfoBox";
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -152,10 +152,11 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
 
   renderOfferNotAvailableWarning() {
     const { isCurrentOfferActive } = this.props;
-    const pendingOrConfirmed = [TX_STATUS_CONFIRMED, TX_STATUS_AWAITING_CONFIRMATION].includes(this.state.txStatus);
-    if (
-      !(pendingOrConfirmed || isCurrentOfferActive)
-    ) {
+    const pendingOrConfirmed = [
+      TX_STATUS_CONFIRMED,
+      TX_STATUS_AWAITING_CONFIRMATION
+    ].includes(this.state.txStatus);
+    if (!(pendingOrConfirmed || isCurrentOfferActive)) {
       return <OasisOfferNotAvailable />;
     } else return null;
   }
@@ -189,6 +190,14 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
         (this.state.txStatus && this.state.txStatus !== TX_STATUS_REJECTED)
     );
   }
+
+  isTransactionPendingOrAwaitingAcceptance() {
+    return [
+      TX_STATUS_AWAITING_USER_ACCEPTANCE,
+      TX_STATUS_AWAITING_CONFIRMATION
+    ].includes(this.state.txStatus);
+  }
+
   render() {
     const {
       offerTakeType,
@@ -205,9 +214,11 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
         className={modalStyles.modal}
       >
         <h4 className={styles.heading}>{getOfferTitle(offerTakeType)}</h4>
-        <button className={modalStyles.closeModalBtn} onClick={this.onCancel}>
-          <span>×</span>
-        </button>
+        {!this.isTransactionPendingOrAwaitingAcceptance() ? (
+          <button className={modalStyles.closeModalBtn} onClick={this.onCancel}>
+            <span>×</span>
+          </button>
+        ) : null}
         <OasisTokenBalanceSummary summary="Available" token={sellToken} />
         <div>
           <div>
@@ -250,7 +261,10 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
             )}
           </div>
           <div className={styles.footer}>
-            <OasisButton onClick={this.onCancel}>
+            <OasisButton
+              disabled={this.isTransactionPendingOrAwaitingAcceptance()}
+              onClick={this.onCancel}
+            >
               {this.askForConfirmationBeforeModalClose() ? "Close" : "Cancel"}
             </OasisButton>
             <div className="notificationsSection" />

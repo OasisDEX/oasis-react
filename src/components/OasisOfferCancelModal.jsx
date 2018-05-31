@@ -10,6 +10,8 @@ import modalStyles from "../styles/modules/_modal.scss";
 import OasisButton from "./OasisButton";
 import {
   TX_OFFER_CANCEL,
+  TX_STATUS_AWAITING_CONFIRMATION,
+  TX_STATUS_AWAITING_USER_ACCEPTANCE,
   TX_STATUS_CONFIRMED
 } from "../store/reducers/transactions";
 import OasisTransactionStatusWrapperInfoBox from "../containers/OasisTransactionStatusInfoBox";
@@ -65,6 +67,13 @@ class OasisOfferCancelModal extends PureComponent {
     return this.props.localStatus === TX_STATUS_CONFIRMED;
   }
 
+  isTransactionPendingOrAwaitingAcceptance() {
+    return [
+      TX_STATUS_AWAITING_USER_ACCEPTANCE,
+      TX_STATUS_AWAITING_CONFIRMATION
+    ].includes(this.props.localStatus);
+  }
+
   renderInfo() {
     const { tokenAmount, tokenName, canOfferBeCancelled } = this.props;
     return canOfferBeCancelled || this.props.localStatus ? (
@@ -103,17 +112,20 @@ class OasisOfferCancelModal extends PureComponent {
         <div>
           <div>
             <h4 className={styles.heading}>Cancel Offer</h4>
-            <button
-              className={modalStyles.closeModalBtn}
-              onClick={this.onCloseModal}
-            >
-              ×
-            </button>
+            {!this.isTransactionPendingOrAwaitingAcceptance() ? (
+              <button
+                className={modalStyles.closeModalBtn}
+                onClick={this.onCloseModal}
+              >
+                ×
+              </button>
+            ) : null}
           </div>
           <div>{this.renderInfo()}</div>
           <div>{this.transactionStatusSection()}</div>
           <div className={styles.actions}>
             <OasisButton
+              disabled={this.isTransactionPendingOrAwaitingAcceptance()}
               onClick={this.onCloseModal}
               caption={
                 this.askForConfirmToClose() ||

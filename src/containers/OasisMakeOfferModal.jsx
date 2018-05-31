@@ -26,9 +26,9 @@ import {
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
 import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBox";
-import { isPriceSet } from '../store/selectors';
-import InfoBox from '../components/InfoBox';
-import OasisOfferBelowDustLimitWrapper  from './OasisOfferBelowDustLimit';
+import { isPriceSet } from "../store/selectors";
+import InfoBox from "../components/InfoBox";
+import OasisOfferBelowDustLimitWrapper from "./OasisOfferBelowDustLimit";
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -143,17 +143,26 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
 
   renderTransactionStatus() {
     const { txStartTimestamp, txStatus } = this.state;
-    return <OasisTransactionStatusWrapperInfoBox
-      txStatus={txStatus}
-      infoText={<strong>Process order</strong>}
-      txTimestamp={txStartTimestamp}
-      localStatus={txStatus}
-      txType={TX_OFFER_MAKE}
-    />;
+    return (
+      <OasisTransactionStatusWrapperInfoBox
+        txStatus={txStatus}
+        infoText={<strong>Process order</strong>}
+        txTimestamp={txStartTimestamp}
+        localStatus={txStatus}
+        txType={TX_OFFER_MAKE}
+      />
+    );
   }
 
   isOfferMakeCompleted() {
     return this.state.txStatus === TX_STATUS_CONFIRMED;
+  }
+
+  isTransactionPendingOrAwaitingAcceptance() {
+    return [
+      TX_STATUS_AWAITING_USER_ACCEPTANCE,
+      TX_STATUS_AWAITING_CONFIRMATION
+    ].includes(this.state.txStatus);
   }
 
   render() {
@@ -175,9 +184,11 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
         className={modalStyles.modal}
       >
         <h4 className={styles.heading}>{getOfferTitle(offerMakeType)}</h4>
-        <button className={modalStyles.closeModalBtn} onClick={this.onCancel}>
-          ×
-        </button>
+        {!this.isTransactionPendingOrAwaitingAcceptance() ? (
+          <button className={modalStyles.closeModalBtn} onClick={this.onCancel}>
+            ×
+          </button>
+        ) : null}
         <OasisTokenBalanceSummary summary="Available" token={sellToken} />
         <div>
           <OfferMakeForm
@@ -191,18 +202,20 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
             Enter a price to unlock amount and total.
           </InfoBox>
           <div>
-            <OasisOfferBelowDustLimitWrapper offerType={offerMakeType}/>
+            <OasisOfferBelowDustLimitWrapper offerType={offerMakeType} />
           </div>
           <OasisOfferSummary
             disableBalanceWarning={this.isOfferMakeCompleted()}
-            offerType={offerMakeType} />
+            offerType={offerMakeType}
+          />
           {this.renderTransactionStatus()}
           <SetTokenAllowanceTrustWrapper
             onTransactionPending={() =>
               this.setState({ lockCancelButton: true })
             }
             onTransactionCompleted={newAllowanceStatus => {
-              newAllowanceStatus && getTransactionGasCostEstimate(offerMakeType);
+              newAllowanceStatus &&
+                getTransactionGasCostEstimate(offerMakeType);
               this.setState({
                 lockCancelButton: false
               });
@@ -216,7 +229,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
             tokenName={sellToken}
           />
           <div className={styles.footer}>
-            <OasisButton onClick={this.onCancel}>
+            <OasisButton disabled={this.isTransactionPendingOrAwaitingAcceptance()} onClick={this.onCancel}>
               {this.askForConfirmationBeforeModalClose() ? "Close" : "Cancel"}
             </OasisButton>
             <OasisButton
@@ -251,7 +264,8 @@ export function mapDispatchToProps(dispatch) {
     setOfferMakeModalClosed:
       offerMakesReducer.actions.setOfferMakeModalClosedEpic,
     makeOffer: offerMakesReducer.actions.makeOfferEpic,
-    getTransactionGasCostEstimate: offerMakesReducer.actions.updateTransactionGasCostEstimateEpic
+    getTransactionGasCostEstimate:
+      offerMakesReducer.actions.updateTransactionGasCostEstimateEpic
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

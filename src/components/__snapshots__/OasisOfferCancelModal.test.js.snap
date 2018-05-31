@@ -42,6 +42,7 @@ exports[`(Component) OasisOfferCancelModal should render 1`] = `
         btnType="button"
         caption="Close"
         color="default"
+        disabled={false}
         onClick={[Function]}
         size="md"
       />
