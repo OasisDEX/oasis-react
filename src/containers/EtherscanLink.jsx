@@ -22,7 +22,7 @@ const propTypes = PropTypes && {
   )
 };
 
-export class EthercanLinkWrapper extends PureComponent {
+export class EtherscanLinkWrapper extends PureComponent {
   render() {
     return (
       <EtherscanLink {...this.props}/>
@@ -39,7 +39,7 @@ export function mapDispatchToProps() {
   return {};
 }
 
-EthercanLinkWrapper.propTypes = propTypes;
-EthercanLinkWrapper.displayName = 'EthercanLink';
+EtherscanLinkWrapper.propTypes = propTypes;
+EtherscanLinkWrapper.displayName = 'EtherscanLink';
 
-export default connect(mapStateToProps, mapDispatchToProps)(EthercanLinkWrapper);
+export default connect(mapStateToProps, mapDispatchToProps)(EtherscanLinkWrapper);

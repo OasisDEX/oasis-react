@@ -9,8 +9,7 @@ exports[`(Component) TransactionStatus should render 1`] = `
   vertical={false}
   wrap={false}
 >
-  <EtherscanLink
-    networkName="kovan"
+  <Connect(EtherscanLink)
     type="ETHERSCAN_LINK_TYPE_TRANSACTION"
   />
   <StatusPictogram

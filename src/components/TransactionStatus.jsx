@@ -13,9 +13,10 @@ import {
   TX_STATUS_CONFIRMED,
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
-import EtherscanLink, {
+import {
   ETHERSCAN_LINK_TYPE_TRANSACTION
 } from "./EtherscanLink";
+import EtherscanLinkWrapper from '../containers/EtherscanLink';
 
 const propTypes = PropTypes && {
   transaction: ImmutablePropTypes.map.isRequired
@@ -40,7 +41,7 @@ class TransactionStatus extends PureComponent {
       case TX_STATUS_AWAITING_CONFIRMATION:
         return (
           <FlexBox alignItems="baseline">
-            <EtherscanLink
+            <EtherscanLinkWrapper
               type={ETHERSCAN_LINK_TYPE_TRANSACTION}
               txHash={transaction.get("txHash")}
             />
@@ -53,7 +54,7 @@ class TransactionStatus extends PureComponent {
       case TX_STATUS_CONFIRMED:
         return (
           <FlexBox alignItems="baseline">
-            <EtherscanLink
+            <EtherscanLinkWrapper
               label={"Confirmed"}
               type={ETHERSCAN_LINK_TYPE_TRANSACTION}
               txHash={transaction.get("txHash")}
@@ -73,7 +74,7 @@ class TransactionStatus extends PureComponent {
               className={styles.imgLeft}
             />
             Your transaction
-            <EtherscanLink
+            <EtherscanLinkWrapper
               className={styles.spaceBoth}
               type={ETHERSCAN_LINK_TYPE_TRANSACTION}
               txHash={transaction.get("txHash")}

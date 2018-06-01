@@ -15,6 +15,7 @@ import {
 import textStyles from "../styles/modules/_typography.scss";
 import CSSModules from "react-css-modules";
 import InfoBox from "../components/InfoBox";
+import network from '../store/selectors/network';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -83,6 +84,7 @@ export class OasisTransactionStatusWrapper extends PureComponent {
 export function mapStateToProps(state, { txTimestamp, txType, localStatus }) {
   const status = fromJS({ txStatus: localStatus });
   return {
+    networkName: network.activeNetworkName(state),
     transaction:
       transactions.getTransactionByTimestampAndType(state, {
         txTimestamp,

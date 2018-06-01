@@ -38,6 +38,7 @@ Object {
 
 exports[`(Container) OasisTransactionStatus will receive right props 1`] = `
 Object {
+  "networkName": "kovan",
   "transaction": Immutable.Map {
     txStatus: undefined,
 },

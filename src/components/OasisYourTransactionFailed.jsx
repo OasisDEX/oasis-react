@@ -5,7 +5,7 @@ import { PropTypes } from "prop-types";
 import styles from "./OasisYourTransactionFailed.scss";
 import textStyles from '../styles/modules/_typography.scss';
 import InfoBox from "./InfoBox";
-import { EthercanLinkWrapper } from "../containers/EtherscanLink";
+import { EtherscanLinkWrapper } from "../containers/EtherscanLink";
 import { ETHERSCAN_LINK_TYPE_TRANSACTION } from "./EtherscanLink";
 import StatusPictogram from './StatusPictogram';
 import { TX_STATUS_REJECTED } from '../store/reducers/transactions';
@@ -25,7 +25,7 @@ class OasisYourTransactionFailed extends PureComponent {
             <span className={styles.infoText}>
               Your transaction
             </span>
-            <EthercanLinkWrapper
+            <EtherscanLinkWrapper
               txHash={txHash}
               type={ETHERSCAN_LINK_TYPE_TRANSACTION}
               className={textStyles.spaceBoth}

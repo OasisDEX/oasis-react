@@ -18,7 +18,6 @@ const propTypes = PropTypes && {
   ])
 };
 const defaultProps = {
-  networkName: "kovan"
 };
 
 const linkStyle = (maxWidth = "150px") => ({
@@ -31,7 +30,6 @@ const linkStyle = (maxWidth = "150px") => ({
 class EtherscanLink extends PureComponent {
   render() {
     const { txHash, label, networkName, address, ...props } = this.props;
-
     const url = createEtherscanTransactionLink({
       activeNetworkName: networkName,
       transactionHash: txHash
