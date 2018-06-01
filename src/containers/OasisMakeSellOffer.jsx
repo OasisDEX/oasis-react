@@ -9,10 +9,7 @@ import OasisWidgetFrame from "../containers/OasisWidgetFrame";
 import OasisTokenBalanceSummary from "./OasisTokenBalanceSummary";
 import OfferMakeForm from "./OasisOfferMakeForm";
 import offerMakesReducer from "../store/reducers/offerMakes";
-import {
-  MAKE_SELL_OFFER,
-  MAKE_SELL_OFFER_FORM_NAME
-} from "../constants";
+import { MAKE_SELL_OFFER, MAKE_SELL_OFFER_FORM_NAME } from "../constants";
 import OasisMakeOfferModalWrapper from "./OasisMakeOfferModal";
 import offerMakes from "../store/selectors/offerMakes";
 import OasisInsufficientAmountOfToken from "../components/OasisInsufficientAmountOfToken";
@@ -47,7 +44,7 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
 
   render() {
     const {
-      activeTradingPair : { baseToken, quoteToken },
+      activeTradingPair: { baseToken, quoteToken },
       hasSufficientTokenAmount,
       canMakeOffer
     } = this.props;
@@ -65,9 +62,6 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
           {this.getModal(formProps)}
           <OfferMakeForm {...formProps} />
         </div>
-        <div>
-          <OasisOfferBelowDustLimitWrapper offerType={MAKE_SELL_OFFER} />
-        </div>
         <div className={styles.footer}>
           <div className={styles.helpBlock}>
             {hasSufficientTokenAmount === false && (
@@ -76,6 +70,7 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
                 tokenName={baseToken}
               />
             )}
+            <OasisOfferBelowDustLimitWrapper offerType={MAKE_SELL_OFFER} />
             <InfoBox hidden={this.props.isPriceSet} noBorder>
               Enter a price to unlock amount and total.
             </InfoBox>

@@ -9,7 +9,8 @@ import OasisIcon from '../components/OasisIcon';
 const propTypes = PropTypes && {
   children: PropTypes.node,
   icon: PropTypes.string,
-  alignItems: PropTypes.string
+  alignItems: PropTypes.string,
+  additionalStyles: PropTypes.object
 };
 
 const defaultProps = {
