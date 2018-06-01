@@ -11,6 +11,7 @@ exports[`(Component) OasisLoadingIndicator should render 1`] = `
   }
 >
   <OasisIcon
+    className=""
     icon="loading"
     size="sm"
   />

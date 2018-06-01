@@ -45,7 +45,7 @@ class OasisAccordion extends PureComponent {
         className={`${styles.content} ${styles[infoBoxSize]}`}>
       {children}</div>;
     return (
-      <InfoBox className={`${styles.accordion} ${className}`} vertical={true} size={infoBoxSize} {...props}>
+      <InfoBox className={`${styles.accordion} ${className ? className : ''}`} vertical={true} size={infoBoxSize} {...props}>
         <FlexBox justifyContent="normal" alignItems="baseline">
           {this.toggleSection()}
           {heading}

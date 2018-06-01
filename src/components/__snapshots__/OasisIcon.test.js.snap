@@ -2,7 +2,7 @@
 
 exports[`(Component) OasisIcon should render 1`] = `
 <div
-  className="undefined "
+  className="undefined  "
 >
   <img
     className=""

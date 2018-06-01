@@ -30,16 +30,16 @@ exports[`(Container) OasisMakeSellOffer should render 1`] = `
         noBorder={true}
         tokenName="MKR"
       />
+      <InfoBox
+        className=""
+        color="default"
+        hidden={true}
+        noBorder={true}
+        size="md"
+      >
+        Enter a price to unlock amount and total.
+      </InfoBox>
     </div>
-    <InfoBox
-      className=""
-      color="default"
-      hidden={true}
-      noBorder={true}
-      size="md"
-    >
-      Enter a price to unlock amount and total.
-    </InfoBox>
     <OasisButton
       btnType="button"
       color="danger"

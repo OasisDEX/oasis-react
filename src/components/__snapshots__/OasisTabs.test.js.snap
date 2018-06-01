@@ -1,14 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Component) OasisTabs should render 1`] = `
-<div
-  styleName="row-tabs"
->
-  <ul
-    styleName="Tabs"
-  >
+<div>
+  <ul>
     <li
-      styleName="Tab "
+      className="undefined "
     >
       <NavLink
         activeClassName="active"
@@ -19,7 +15,7 @@ exports[`(Component) OasisTabs should render 1`] = `
       </NavLink>
     </li>
     <li
-      styleName="Tab Tab--2x "
+      className="undefined undefined "
     >
       <NavLink
         activeClassName="active"
@@ -30,7 +26,7 @@ exports[`(Component) OasisTabs should render 1`] = `
       </NavLink>
     </li>
     <li
-      styleName="Tab "
+      className="undefined "
     >
       <NavLink
         activeClassName="active"
