@@ -14,6 +14,7 @@ const propTypes = PropTypes && {
   fullWidth: PropTypes.bool,
   noBorder: PropTypes.bool,
   hidden: PropTypes.bool,
+  additionalStyles: PropTypes.object
 };
 
 const defaultProps = {
@@ -30,20 +31,20 @@ export class InfoBox extends PureComponent {
       className,
       fullWidth,
       noBorder,
+      additionalStyles,
       ...props
     } = this.props;
     return (
       <FlexBox
+        additionalStyles={additionalStyles}
         hidden={this.props.hidden}
-        className={
-         `${styles.box}
+        className={`${styles.box}
           ${styles[color]}
-          ${!noBorder? styles[size]: styles['sm']}
+          ${!noBorder ? styles[size] : styles["sm"]}
           ${className}
           ${fullWidth ? styles.fullWidth : ""}
-          ${noBorder ? styles.noBorder: ''}
-          `
-        }
+          ${noBorder ? styles.noBorder : ""}
+          `}
         {...props}
       >
         {this.props.children}
