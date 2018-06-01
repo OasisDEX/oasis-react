@@ -12,7 +12,7 @@
   font-size: 24px;
 
   h2 {
-    @extend .montserrat-semibold;
+    font-weight: 700;
     opacity: 0.8;
     color: #222228;
   }
@@ -46,7 +46,7 @@
   .PUseClients {
     display: inline-block;
     color: #546979;
-    @extend .montserrat-semibold;
+    font-weight: 700;
   }
 
   .PConnectGeth {
@@ -94,7 +94,7 @@
     }
 
     .SpanMontserratSemiBold {
-      @extend .montserrat-semibold;
+      font-weight: 700;
       font-size: 21px;
       color: #4F5362;
     }

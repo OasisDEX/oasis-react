@@ -20,20 +20,6 @@ $border-more: #A8ACB9;
 $color-place-order: #4F5362;
 $color-cancel-order: #A8ACB9;
 
-/* FONTS */
-
-.montserrat-semibold {
-  font-family: 'Montserrat-SemiBold', sans-serif;
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: Montserrat;
-  src: url("./../fonts/Montserrat-Medium.woff") format('woff'),
-  url("./../fonts/Montserrat-Medium.woff2") format('woff2');
-  font-weight: 500;
-}
-
 /* CUSTOM SCROLLBAR TABLE SCROLLING */
 
 .t-scroll tbody::-webkit-scrollbar {
@@ -271,7 +257,7 @@ table {
   }
 
   .network-type {
-    @extend .montserrat-semibold;
+    font-weight: 700;
     margin-right: 8px;
     font-size: 12px;
     color: #4F5362;
@@ -1394,7 +1380,7 @@ button.dex-btn-default.sell, button.dex-btn-max.sell {
   }
 
   .btn-warning {
-    @extend .montserrat-semibold;
+    font-weight: 700;
     border: 1px solid $color-sell;
     border-radius: 100px;
     color: $color-sell;
@@ -1521,7 +1507,7 @@ button.dex-btn-default.sell, button.dex-btn-max.sell {
 }
 
 .btn-submit-order {
-  @extend .montserrat-semibold;
+  font-weight: 700;
   background-color: transparent;
   border: 1px solid;
   border-radius: 100px;
@@ -1752,7 +1738,7 @@ button.dex-btn-default.sell, button.dex-btn-max.sell {
       color: #4A4A4A;
     }
     a {
-      @extend .montserrat-semibold;
+      font-weight: 700;
       font-size: 14px;
       color: #546979;
       &:hover {
@@ -2240,7 +2226,7 @@ span.loading-icon {
       z-index: 1;
       position: relative;
       cursor: pointer;
-      @extend .montserrat-semibold;
+      font-weight: 700;
       font-size: 12px;
       text-transform: uppercase;
     }
