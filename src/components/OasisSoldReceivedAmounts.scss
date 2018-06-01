@@ -2,34 +2,8 @@
 
 .base {}
 
-.circleIco {
-  width: 15px;
-  height: 15px;
-  min-width: 15px;
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 0;
-
-  border-radius: 50%;
-  border: 2px solid;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0;
-
+.icon {
   margin-right: 1em;
-}
-
-
-
-.red {
-  color: $danger-text;
-}
-
-.green {
-  color: $success-text;
 }
 
 .baseText {

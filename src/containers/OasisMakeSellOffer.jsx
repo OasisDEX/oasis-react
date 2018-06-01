@@ -76,10 +76,10 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
                 tokenName={baseToken}
               />
             )}
+            <InfoBox hidden={this.props.isPriceSet} noBorder>
+              Enter a price to unlock amount and total.
+            </InfoBox>
           </div>
-          <InfoBox hidden={this.props.isPriceSet} noBorder>
-            Enter a price to unlock amount and total.
-          </InfoBox>
           <OasisButton
             className={styles.callToAction}
             color="danger"

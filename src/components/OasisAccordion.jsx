@@ -15,6 +15,7 @@ const propTypes = PropTypes && {
 };
 const defaultProps = {
   infoBoxSize: 'md',
+  className: '',
   children: (<div/>)
 };
 
@@ -39,17 +40,17 @@ class OasisAccordion extends PureComponent {
 
 
   render() {
-    const { infoBoxSize } = this.props;
+    const { infoBoxSize, heading, children, className, ...props } = this.props;
     let childrenDiv = <div
         className={`${styles.content} ${styles[infoBoxSize]}`}>
-      {this.props.children}</div>;
+      {children}</div>;
     return (
-      <InfoBox className={styles.accordion} vertical={true} size={infoBoxSize}>
+      <InfoBox className={`${styles.accordion} ${className}`} vertical={true} size={infoBoxSize} {...props}>
         <FlexBox justifyContent="normal" alignItems="baseline">
           {this.toggleSection()}
-          {this.props.heading}
+          {heading}
         </FlexBox>
-        {this.state.isOpen && this.props.children && childrenDiv}
+        {this.state.isOpen && children && childrenDiv}
       </InfoBox>
     );
   }

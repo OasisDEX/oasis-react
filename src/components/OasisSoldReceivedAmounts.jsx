@@ -6,6 +6,7 @@ import styles from "./OasisSoldReceivedAmounts.scss";
 import FlexBox from "./FlexBox";
 import CSSModules from "react-css-modules/dist/index";
 import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
+import OasisIcon from "./OasisIcon";
 
 const propTypes = PropTypes && {
   sellToken: PropTypes.string.isRequired,
@@ -15,9 +16,9 @@ const propTypes = PropTypes && {
 };
 const defaultProps = {};
 
-const TokenAmount = ({ tokenName, tokenAmount, sign, color, ...props }) => (
+const TokenAmount = ({ tokenName, tokenAmount, icon, ...props }) => (
   <FlexBox alignItems="center" {...props}>
-    <span className={`${styles.circleIco} ${styles[color]}`}>{sign}</span>
+    <OasisIcon icon={icon} size="md" className={styles.icon}/>
     <span className={styles.baseText}>
       { tokenAmount !== 'N/A' ? (
         <OasisSignificantDigitsWrapper amount={tokenAmount.toString()} />
@@ -32,16 +33,14 @@ const TokenAmount = ({ tokenName, tokenAmount, sign, color, ...props }) => (
 TokenAmount.propTypes = {
   tokenName: PropTypes.string,
   tokenAmount: PropTypes.string,
-  sign: PropTypes.string,
-  color: PropTypes.string
+  icon: PropTypes.string
 };
 
 const TokenReceivedAmount = ({ tokenName, tokenAmount, ...props }) => (
   <TokenAmount
     tokenName={tokenName}
     tokenAmount={tokenAmount}
-    sign="+"
-    color="green"
+    icon="add"
     {...props}
   />
 );
@@ -55,8 +54,7 @@ const TokenSoldAmount = ({ tokenName, tokenAmount, ...props }) => (
   <TokenAmount
     tokenName={tokenName}
     tokenAmount={tokenAmount}
-    sign="-"
-    color="red"
+    icon="subtract"
     {...props}
   />
 );

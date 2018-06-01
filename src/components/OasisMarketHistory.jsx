@@ -117,7 +117,7 @@ class OasisMarketHistory extends PureComponent {
         loadProgressSection={
           loadingTradeHistory ? <OasisLoadingIndicator /> : null
         }
-        heading={`MARKET HISTORY (${sortedTrades.length})`}
+        heading={`MARKET HISTORY`}
       >
         <OasisTable
           onRowClick={OasisMarketHistory.onRowClick}

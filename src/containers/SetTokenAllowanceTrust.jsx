@@ -184,7 +184,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
 
   mainInfoBoxContent() {
     return (
-      <OasisAccordion isOpen={true} heading={this.renderAccordionHeading()}>
+      <OasisAccordion isOpen={false} heading={this.renderAccordionHeading()} className={styles.smallAccordion}>
         {this.renderAccordionContent()}
       </OasisAccordion>
     );

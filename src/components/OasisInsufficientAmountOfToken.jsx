@@ -4,6 +4,7 @@ import { PropTypes } from 'prop-types';
 
 import textStyles from '../styles/modules/_typography.scss';
 import InfoBox from './InfoBox';
+import {InfoBoxWithIco} from "./InfoBoxWithIco";
 
 const propTypes = PropTypes && {
   tokenName: PropTypes.string.isRequired,
@@ -14,10 +15,16 @@ const defaultProps = {};
 
 class OasisInsufficientAmountOfToken extends PureComponent {
   render() {
-    return (
-        <InfoBox color="danger" noBorder={this.props.noBorder}>
-            You do not have enough <strong className={textStyles.spaceBoth}>{this.props.tokenName}</strong> tokens.
+    const { noBorder, tokenName, ...props }=  this.props;
+    const content = <span> You do not have enough <strong className={textStyles.spaceBoth}>{tokenName}</strong> tokens.</span>;
+    return noBorder ? (
+        <InfoBox color="danger" noBorder={noBorder} {...props}>
+          {content}
         </InfoBox>
+    ) : (
+      <InfoBoxWithIco color="danger" icon="warning" {...props}>
+        {content}
+      </InfoBoxWithIco>
     );
   }
 }

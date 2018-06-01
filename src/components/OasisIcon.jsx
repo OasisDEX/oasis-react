@@ -15,7 +15,8 @@ const arrowLeftIcon = require("../assets/od-icons/icon_arrow_left.svg");
 const idleIcon = require("../assets/od-icons/icon_idle.svg");
 const infoIcon = require("../assets/od-icons/icon-info.svg");
 const warningIcon = require("../assets/od-icons/icon-warning.svg");
-
+const addIcon = require("../assets/ic_add_circle_24px.svg");
+const subtractIcon = require("../assets/ic_remove_24px.svg");
 
 
 const propTypes = PropTypes && {
@@ -29,14 +30,17 @@ const propTypes = PropTypes && {
     "arrowRight",
     "idle",
     "info",
-    "warning"
+    "warning",
+    "add",
+    "subtract"
   ]).isRequired,
   onClick: PropTypes.func,
   color: PropTypes.string
 };
 
 const defaultProps = {
-  size: "md"
+  size: "lg",
+  className: ''
 };
 
 const icons = {
@@ -49,7 +53,9 @@ const icons = {
   arrowRight: arrowRightIcon,
   idle: idleIcon,
   info:infoIcon,
-  warning: warningIcon
+  warning: warningIcon,
+  add: addIcon,
+  subtract: subtractIcon
 };
 
 const colors = {
@@ -57,16 +63,17 @@ const colors = {
 };
 
 const sizes = {
-  lg: 48,
-  md: 24,
+  xlg: 48,
+  lg: 24,
+  md: 18,
   sm: 12
 };
 
 export class OasisIcon extends PureComponent {
   render() {
-    const { size, icon, color } = this.props;
+    const { size, icon, color, onClick, className, ...props } = this.props;
     return (
-      <div onClick={this.props.onClick} className={`${styles.base} ${this.props.onClick ? styles.clickable: '' }`}>
+      <div onClick={onClick} className={`${styles.base} ${onClick ? styles.clickable: '' } ${className}`} {...props}>
         <img
           className={`${ color ? colors[color] : '' }`}
           style={{ width: `${sizes[size]}px`, height: `${sizes[size]}px` }}
