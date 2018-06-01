@@ -12,6 +12,7 @@ import { formatAmount } from "../utils/tokens/pair";
 import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
 import { ETH_UNIT_ETHER } from "../constants";
 import OasisLoadingIndicator from "./OasisLoadingIndicator";
+import createEtherscanTransactionLink from "../utils/createEtherscanTransactionLink";
 
 const propTypes = PropTypes && {
   isTokenWrapUnwrapHistoryLoading: PropTypes.bool
@@ -38,9 +39,10 @@ const wrapUnwrapHistoryColsDefinition = () => [
 
 export class OasisWrapUnwrapHistory extends PureComponent {
   onRowClick({ transactionHash }, { activeNetworkName }) {
-    const url = `https://${activeNetworkName}.etherscan.io/tx/${
+    const url = createEtherscanTransactionLink({
+      activeNetworkName,
       transactionHash
-    }`;
+    });
     window.open(url, "_blank");
     window.focus();
   }
@@ -55,7 +57,9 @@ export class OasisWrapUnwrapHistory extends PureComponent {
       <OasisWidgetFrame
         heading="History"
         loadProgressSection={
-          isTokenWrapUnwrapHistoryLoading ? <OasisLoadingIndicator size="sm"/> : null
+          isTokenWrapUnwrapHistoryLoading ? (
+            <OasisLoadingIndicator size="sm" />
+          ) : null
         }
       >
         <div>
