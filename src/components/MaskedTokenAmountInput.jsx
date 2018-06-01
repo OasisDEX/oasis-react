@@ -8,25 +8,27 @@ const propTypes = PropTypes && {
 const defaultProps = {};
 
 class MaskedTokenAmountInput extends PureComponent {
+
+  forwardEvent(callback) {
+    return (event) => {
+      const value = event.target.value;
+      // console.log("forwardEvent", value);
+      callback(value.replace(/,/g, ''));
+    };
+  }
+
   render() {
     const newProps = {...this.props.input};
 
     newProps.disabled = this.props.disabled;
-
-    newProps.onChange = (event) => {
-      // console.log("onChange", event.target.value);
-      this.props.input.onChange(event.target.value.replace(/,/g, ''));
-    };
-
-    newProps.onBlur = (event) => {
-      // console.log("onBlur", event.target.value);
-      this.props.input.onBlur(event.target.value.replace(/,/g, ''));
-    };
+    newProps.onChange = this.forwardEvent(this.props.input.onChange);
+    newProps.onBlur = this.forwardEvent(this.props.input.onBlur);
 
     return (
         <MaskedInput
           autoComplete='off'
           mask={createNumberMask({ allowDecimal: true, decimalLimit: 5, prefix: '' })}
+          guide={false}
           {...newProps }/>
     );
   }
