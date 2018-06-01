@@ -2,7 +2,7 @@
 @import '../styles/modules/grid';
 @import '../styles/modules/typography';
 
-.row-tabs {
+.rowTabs {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,7 +17,7 @@
   }
 }
 
-.Tabs {
+.tabs {
   display: flex;
 
   width: $tabs-width;
@@ -30,52 +30,61 @@
   margin-bottom: 0;
 
   overflow: hidden;
+}
 
-  & .Tab {
-    flex-basis: 100%;
-    height: 40px;
-    border-right: 1px solid $gray;
+.tab {
+  flex-basis: 100%;
+  height: 40px;
+  border-right: 1px solid $gray;
 
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 
-    &--2x {
-      flex-basis: 200%;
+
+  &:hover {
+    background: $tabs-background--on-hover;
+    cursor: pointer;
+
+    a {
+      color: $gray-blueish;
     }
+  }
 
+  &:last-child {
+    border-right: 0;
+  }
+
+  a {
+    color: $gray;
+    text-decoration: none;
+    @include text();
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     &:hover {
-      background: $tabs-background--on-hover;
-      cursor: pointer;
-
-      & a {
-        color: $gray-blueish;
-      }
-    }
-
-    &:last-child {
-      border-right: 0;
-    }
-
-    & a {
-      color: $gray;
-      text-decoration: none;
-      @include text();
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      &:hover {
-        color: $gray-blueish;
-      }
-
+      color: $gray-blueish;
     }
 
   }
+
+  &.active {
+    background-color: #E8E9ED;
+    &, & > a {
+      color: #4F5362;
+    }
+  }
+
 }
 
-.Tab.active {
-   background-color: #E8E9ED;
-   color: #4F5362;
- }
+.tabBig {
+    flex-basis: 130%;
+}
+
+//
+//.active {
+//   background-color: #E8E9ED;
+//   color: #4F5362;
+// }

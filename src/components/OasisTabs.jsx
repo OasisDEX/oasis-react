@@ -12,20 +12,19 @@ const defaultProps = {};
 class OasisTabs extends PureComponent {
   isActive(basePath) {
     const  { pathname } = this.props;
-    if (pathname && pathname.indexOf(basePath) === 0) { return 'active'; }
-    else { return ''; }
+    return (pathname && pathname.indexOf(basePath) === 0) ? styles.active : ''
   }
   render() {
     return (
-      <div styleName="row-tabs">
-        <ul styleName="Tabs">
-          <li styleName={`Tab ${this.isActive('/trade')}`}>
+      <div className={styles.rowTabs}>
+        <ul className={styles.tabs}>
+          <li className={`${styles.tab} ${this.isActive('/trade')}`}>
             <NavLink to={'/trade'}>Trade</NavLink>
           </li>
-          <li styleName={`Tab Tab--2x ${this.isActive('/wrap-unwrap')}`}>
+          <li className={`${styles.tab} ${styles.tabBig} ${this.isActive('/wrap-unwrap')}`}>
             <NavLink to={'/wrap-unwrap'}>Wrap / Unwrap</NavLink>
           </li>
-          <li styleName={`Tab ${this.isActive('/transfer')}`}>
+          <li className={`${styles.tab} ${this.isActive('/transfer')}`}>
             <NavLink to={'/transfer'}>Transfer</NavLink>
           </li>
         </ul>

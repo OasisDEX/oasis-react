@@ -1,7 +1,7 @@
 @import "../styles/modules/constants";
 
 .selectContainer {
-  border: 1px solid #D3D5DC;
+  border: 1px solid $btn-border-default;
   background-color: transparent;
   display: inline-block;
 }
@@ -10,7 +10,7 @@
   -moz-appearance: none;
   -webkit-appearance: none;
   background-color: transparent;
-  color: #4F5362;
+  color: $btn-text-default;
   border: none;
   z-index: 1;
   position: relative;
@@ -26,7 +26,7 @@
 }
 
 .selectGlyph {
-  color: #D3D5DC;
+  color: #aaaebb;
   z-index: -1;
 }
 
@@ -40,7 +40,7 @@
 
   .select {
     margin-right: -20px;
-    padding: 7px 25px 7px 10px;
+    padding: 8px 30px 8px 10px;
     font-size: 12px;
   }
 }
