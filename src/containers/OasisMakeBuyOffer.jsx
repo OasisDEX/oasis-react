@@ -67,10 +67,12 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
             {hasSufficientTokenAmount === false && (
               <OasisInsufficientAmountOfToken tokenName={quoteToken} noBorder />
             )}
-            <OasisOfferBelowDustLimitWrapper
-              noBorder
-              offerType={MAKE_BUY_OFFER}
-            />
+            {hasSufficientTokenAmount && (
+              <OasisOfferBelowDustLimitWrapper
+                noBorder
+                offerType={MAKE_BUY_OFFER}
+              />
+            )}
             <InfoBox hidden={this.props.isPriceSet} noBorder>
               Enter a price to unlock amount and total.
             </InfoBox>

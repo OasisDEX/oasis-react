@@ -25,9 +25,6 @@ exports[`(Container) OasisMakeSellOffer should render 1`] = `
         noBorder={true}
         tokenName="MKR"
       />
-      <Connect(OasisOfferBelowDustLimit)
-        offerType="OFFER_MAKES/MAKE_SELL_OFFER"
-      />
       <InfoBox
         className=""
         color="default"

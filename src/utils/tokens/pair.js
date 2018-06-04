@@ -20,7 +20,7 @@ const trades = (marketData, baseToken, quoteToken) =>
     }
   });
 
-const volume = (tradingPairTrades, baseToken) => {
+const volume = (tradingPairTrades, baseToken, quoteToken) => {
   /**
    *
    * Reduce token pair history entries to single volume number.
@@ -30,9 +30,9 @@ const volume = (tradingPairTrades, baseToken) => {
    * - unit is wei
    */
   const tradingPairTradesToVolume = (volume, currentTradingPairTrade) => {
-    if (currentTradingPairTrade.buyWhichToken === baseToken) {
+    if (currentTradingPairTrade.buyWhichToken === quoteToken) {
       return volume.add(currentTradingPairTrade.buyHowMuch);
-    } else if (currentTradingPairTrade.sellWhichToken === baseToken) {
+    } else if (currentTradingPairTrade.sellWhichToken === quoteToken) {
       return volume.add(currentTradingPairTrade.sellHowMuch);
     }
   };
@@ -135,7 +135,7 @@ const formatAmount = (
 const formatVolume = tradingPairVolume =>
   web3
     .fromWei(tradingPairVolume, ETH_UNIT_ETHER)
-    .toFixed(12)
+    .toFormat(4)
     .toString()
     .replace(replacePattern, "$1.$2");
 

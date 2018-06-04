@@ -16,7 +16,7 @@ const propTypes = PropTypes && {
   fullPrecisionUnit: PropTypes.string
 };
 
-const splitPattern = /^(\d+,?\d*).(\d*[1-9]+|0)?(\d*)$/;
+const splitPattern = /^(\d+[,\d]*\d*).(\d*[1-9]+|0)?(\d*)$/;
 export class OasisSignificantDigitsWrapper extends PureComponent {
   constructor(props) {
     super(props);
