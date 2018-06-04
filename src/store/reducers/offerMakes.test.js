@@ -84,8 +84,8 @@ each([[MAKE_BUY_OFFER], [MAKE_SELL_OFFER]]).test("sellMaxEpic", (offerMakeType) 
 
   store.dispatch(offerMakes.actions.sellMaxEpic(
     offerMakeType,
-    { activeBaseTokenBalance: () => 33,
-      currentFormValues: () => ({price: 1})
+    { activeBaseTokenBalance: () => 100,
+      currentFormValues: () => ({price: 0.8})
     }));
 
   expect(store.getActions()).toMatchSnapshot();
