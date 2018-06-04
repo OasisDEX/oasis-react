@@ -4,509 +4,509 @@
       "constant": false,
       "inputs": [
         {
-          "name": 'pay_gem',
-          "type": 'address'
+          "name": "pay_gem",
+          "type": "address"
         },
         {
-          "name": 'buy_gem',
-          "type": 'address'
+          "name": "buy_gem",
+          "type": "address"
         },
         {
-          "name": 'pay_amt',
-          "type": 'uint128'
+          "name": "pay_amt",
+          "type": "uint128"
         },
         {
-          "name": 'buy_amt',
-          "type": 'uint128'
+          "name": "buy_amt",
+          "type": "uint128"
         }
       ],
-      "name": 'make',
+      "name": "make",
       "outputs": [
         {
-          "name": 'id',
-          "type": 'bytes32'
+          "name": "id",
+          "type": "bytes32"
         }
       ],
       "payable": false,
-      "stateMutability": 'nonpayable',
-      "type": 'function'
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
       "constant": true,
       "inputs": [],
-      "name": 'last_offer_id',
+      "name": "last_offer_id",
       "outputs": [
         {
-          "name": '',
-          "type": 'uint256'
+          "name": "",
+          "type": "uint256"
         }
       ],
       "payable": false,
-      "stateMutability": 'view',
-      "type": 'function'
+      "stateMutability": "view",
+      "type": "function"
     },
     {
       "constant": false,
       "inputs": [
         {
-          "name": 'id',
-          "type": 'uint256'
+          "name": "id",
+          "type": "uint256"
         }
       ],
-      "name": 'cancel',
+      "name": "cancel",
       "outputs": [
         {
-          "name": 'success',
-          "type": 'bool'
+          "name": "success",
+          "type": "bool"
         }
       ],
       "payable": false,
-      "stateMutability": 'nonpayable',
-      "type": 'function'
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
       "constant": true,
       "inputs": [
         {
-          "name": 'id',
-          "type": 'uint256'
+          "name": "id",
+          "type": "uint256"
         }
       ],
-      "name": 'getOffer',
+      "name": "getOffer",
       "outputs": [
         {
-          "name": '',
-          "type": 'uint256'
+          "name": "",
+          "type": "uint256"
         },
         {
-          "name": '',
-          "type": 'address'
+          "name": "",
+          "type": "address"
         },
         {
-          "name": '',
-          "type": 'uint256'
+          "name": "",
+          "type": "uint256"
         },
         {
-          "name": '',
-          "type": 'address'
+          "name": "",
+          "type": "address"
         }
       ],
       "payable": false,
-      "stateMutability": 'view',
-      "type": 'function'
+      "stateMutability": "view",
+      "type": "function"
     },
     {
       "constant": false,
       "inputs": [
         {
-          "name": 'id',
-          "type": 'bytes32'
+          "name": "id",
+          "type": "bytes32"
         },
         {
-          "name": 'maxTakeAmount',
-          "type": 'uint128'
+          "name": "maxTakeAmount",
+          "type": "uint128"
         }
       ],
-      "name": 'take',
+      "name": "take",
       "outputs": [],
       "payable": false,
-      "stateMutability": 'nonpayable',
-      "type": 'function'
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
       "constant": false,
       "inputs": [
         {
-          "name": 'id_',
-          "type": 'bytes32'
+          "name": "id_",
+          "type": "bytes32"
         }
       ],
-      "name": 'bump',
+      "name": "bump",
       "outputs": [],
       "payable": false,
-      "stateMutability": 'nonpayable',
-      "type": 'function'
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
       "constant": true,
       "inputs": [
         {
-          "name": 'id',
-          "type": 'uint256'
+          "name": "id",
+          "type": "uint256"
         }
       ],
-      "name": 'isActive',
+      "name": "isActive",
       "outputs": [
         {
-          "name": 'active',
-          "type": 'bool'
+          "name": "active",
+          "type": "bool"
         }
       ],
       "payable": false,
-      "stateMutability": 'view',
-      "type": 'function'
+      "stateMutability": "view",
+      "type": "function"
     },
     {
       "constant": true,
       "inputs": [
         {
-          "name": '',
-          "type": 'uint256'
+          "name": "",
+          "type": "uint256"
         }
       ],
-      "name": 'offers',
+      "name": "offers",
       "outputs": [
         {
-          "name": 'pay_amt',
-          "type": 'uint256'
+          "name": "pay_amt",
+          "type": "uint256"
         },
         {
-          "name": 'pay_gem',
-          "type": 'address'
+          "name": "pay_gem",
+          "type": "address"
         },
         {
-          "name": 'buy_amt',
-          "type": 'uint256'
+          "name": "buy_amt",
+          "type": "uint256"
         },
         {
-          "name": 'buy_gem',
-          "type": 'address'
+          "name": "buy_gem",
+          "type": "address"
         },
         {
-          "name": 'owner',
-          "type": 'address'
+          "name": "owner",
+          "type": "address"
         },
         {
-          "name": 'active',
-          "type": 'bool'
+          "name": "active",
+          "type": "bool"
         },
         {
-          "name": 'timestamp',
-          "type": 'uint64'
+          "name": "timestamp",
+          "type": "uint64"
         }
       ],
       "payable": false,
-      "stateMutability": 'view',
-      "type": 'function'
+      "stateMutability": "view",
+      "type": "function"
     },
     {
       "constant": false,
       "inputs": [
         {
-          "name": 'id',
-          "type": 'bytes32'
+          "name": "id",
+          "type": "bytes32"
         }
       ],
-      "name": 'kill',
+      "name": "kill",
       "outputs": [],
       "payable": false,
-      "stateMutability": 'nonpayable',
-      "type": 'function'
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
       "constant": true,
       "inputs": [
         {
-          "name": 'id',
-          "type": 'uint256'
+          "name": "id",
+          "type": "uint256"
         }
       ],
-      "name": 'getOwner',
+      "name": "getOwner",
       "outputs": [
         {
-          "name": 'owner',
-          "type": 'address'
+          "name": "owner",
+          "type": "address"
         }
       ],
       "payable": false,
-      "stateMutability": 'view',
-      "type": 'function'
+      "stateMutability": "view",
+      "type": "function"
     },
     {
       "constant": false,
       "inputs": [
         {
-          "name": 'id',
-          "type": 'uint256'
+          "name": "id",
+          "type": "uint256"
         },
         {
-          "name": 'quantity',
-          "type": 'uint256'
+          "name": "quantity",
+          "type": "uint256"
         }
       ],
-      "name": 'buy',
+      "name": "buy",
       "outputs": [
         {
-          "name": '',
-          "type": 'bool'
+          "name": "",
+          "type": "bool"
         }
       ],
       "payable": false,
-      "stateMutability": 'nonpayable',
-      "type": 'function'
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
       "constant": false,
       "inputs": [
         {
-          "name": 'pay_amt',
-          "type": 'uint256'
+          "name": "pay_amt",
+          "type": "uint256"
         },
         {
-          "name": 'pay_gem',
-          "type": 'address'
+          "name": "pay_gem",
+          "type": "address"
         },
         {
-          "name": 'buy_amt',
-          "type": 'uint256'
+          "name": "buy_amt",
+          "type": "uint256"
         },
         {
-          "name": 'buy_gem',
-          "type": 'address'
+          "name": "buy_gem",
+          "type": "address"
         }
       ],
-      "name": 'offer',
+      "name": "offer",
       "outputs": [
         {
-          "name": 'id',
-          "type": 'uint256'
+          "name": "id",
+          "type": "uint256"
         }
       ],
       "payable": false,
-      "stateMutability": 'nonpayable',
-      "type": 'function'
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
       "anonymous": false,
       "inputs": [
         {
           "indexed": false,
-          "name": 'id',
-          "type": 'uint256'
+          "name": "id",
+          "type": "uint256"
         }
       ],
-      "name": 'LogItemUpdate',
-      "type": 'event'
+      "name": "LogItemUpdate",
+      "type": "event"
     },
     {
       "anonymous": false,
       "inputs": [
         {
           "indexed": false,
-          "name": 'pay_amt',
-          "type": 'uint256'
+          "name": "pay_amt",
+          "type": "uint256"
         },
         {
           "indexed": true,
-          "name": 'pay_gem',
-          "type": 'address'
+          "name": "pay_gem",
+          "type": "address"
         },
         {
           "indexed": false,
-          "name": 'buy_amt',
-          "type": 'uint256'
+          "name": "buy_amt",
+          "type": "uint256"
         },
         {
           "indexed": true,
-          "name": 'buy_gem',
-          "type": 'address'
+          "name": "buy_gem",
+          "type": "address"
         }
       ],
-      "name": 'LogTrade',
-      "type": 'event'
+      "name": "LogTrade",
+      "type": "event"
     },
     {
       "anonymous": false,
       "inputs": [
         {
           "indexed": true,
-          "name": 'id',
-          "type": 'bytes32'
+          "name": "id",
+          "type": "bytes32"
         },
         {
           "indexed": true,
-          "name": 'pair',
-          "type": 'bytes32'
+          "name": "pair",
+          "type": "bytes32"
         },
         {
           "indexed": true,
-          "name": 'maker',
-          "type": 'address'
+          "name": "maker",
+          "type": "address"
         },
         {
           "indexed": false,
-          "name": 'pay_gem',
-          "type": 'address'
+          "name": "pay_gem",
+          "type": "address"
         },
         {
           "indexed": false,
-          "name": 'buy_gem',
-          "type": 'address'
+          "name": "buy_gem",
+          "type": "address"
         },
         {
           "indexed": false,
-          "name": 'pay_amt',
-          "type": 'uint128'
+          "name": "pay_amt",
+          "type": "uint128"
         },
         {
           "indexed": false,
-          "name": 'buy_amt',
-          "type": 'uint128'
+          "name": "buy_amt",
+          "type": "uint128"
         },
         {
           "indexed": false,
-          "name": 'timestamp',
-          "type": 'uint64'
+          "name": "timestamp",
+          "type": "uint64"
         }
       ],
-      "name": 'LogMake',
-      "type": 'event'
+      "name": "LogMake",
+      "type": "event"
     },
     {
       "anonymous": false,
       "inputs": [
         {
           "indexed": true,
-          "name": 'id',
-          "type": 'bytes32'
+          "name": "id",
+          "type": "bytes32"
         },
         {
           "indexed": true,
-          "name": 'pair',
-          "type": 'bytes32'
+          "name": "pair",
+          "type": "bytes32"
         },
         {
           "indexed": true,
-          "name": 'maker',
-          "type": 'address'
+          "name": "maker",
+          "type": "address"
         },
         {
           "indexed": false,
-          "name": 'pay_gem',
-          "type": 'address'
+          "name": "pay_gem",
+          "type": "address"
         },
         {
           "indexed": false,
-          "name": 'buy_gem',
-          "type": 'address'
+          "name": "buy_gem",
+          "type": "address"
         },
         {
           "indexed": false,
-          "name": 'pay_amt',
-          "type": 'uint128'
+          "name": "pay_amt",
+          "type": "uint128"
         },
         {
           "indexed": false,
-          "name": 'buy_amt',
-          "type": 'uint128'
+          "name": "buy_amt",
+          "type": "uint128"
         },
         {
           "indexed": false,
-          "name": 'timestamp',
-          "type": 'uint64'
+          "name": "timestamp",
+          "type": "uint64"
         }
       ],
-      "name": 'LogBump',
-      "type": 'event'
+      "name": "LogBump",
+      "type": "event"
     },
     {
       "anonymous": false,
       "inputs": [
         {
           "indexed": false,
-          "name": 'id',
-          "type": 'bytes32'
+          "name": "id",
+          "type": "bytes32"
         },
         {
           "indexed": true,
-          "name": 'pair',
-          "type": 'bytes32'
+          "name": "pair",
+          "type": "bytes32"
         },
         {
           "indexed": true,
-          "name": 'maker',
-          "type": 'address'
+          "name": "maker",
+          "type": "address"
         },
         {
           "indexed": false,
-          "name": 'pay_gem',
-          "type": 'address'
+          "name": "pay_gem",
+          "type": "address"
         },
         {
           "indexed": false,
-          "name": 'buy_gem',
-          "type": 'address'
+          "name": "buy_gem",
+          "type": "address"
         },
         {
           "indexed": true,
-          "name": 'taker',
-          "type": 'address'
+          "name": "taker",
+          "type": "address"
         },
         {
           "indexed": false,
-          "name": 'take_amt',
-          "type": 'uint128'
+          "name": "take_amt",
+          "type": "uint128"
         },
         {
           "indexed": false,
-          "name": 'give_amt',
-          "type": 'uint128'
+          "name": "give_amt",
+          "type": "uint128"
         },
         {
           "indexed": false,
-          "name": 'timestamp',
-          "type": 'uint64'
+          "name": "timestamp",
+          "type": "uint64"
         }
       ],
-      "name": 'LogTake',
-      "type": 'event'
+      "name": "LogTake",
+      "type": "event"
     },
     {
       "anonymous": false,
       "inputs": [
         {
           "indexed": true,
-          "name": 'id',
-          "type": 'bytes32'
+          "name": "id",
+          "type": "bytes32"
         },
         {
           "indexed": true,
-          "name": 'pair',
-          "type": 'bytes32'
+          "name": "pair",
+          "type": "bytes32"
         },
         {
           "indexed": true,
-          "name": 'maker',
-          "type": 'address'
+          "name": "maker",
+          "type": "address"
         },
         {
           "indexed": false,
-          "name": 'pay_gem',
-          "type": 'address'
+          "name": "pay_gem",
+          "type": "address"
         },
         {
           "indexed": false,
-          "name": 'buy_gem',
-          "type": 'address'
+          "name": "buy_gem",
+          "type": "address"
         },
         {
           "indexed": false,
-          "name": 'pay_amt',
-          "type": 'uint128'
+          "name": "pay_amt",
+          "type": "uint128"
         },
         {
           "indexed": false,
-          "name": 'buy_amt',
-          "type": 'uint128'
+          "name": "buy_amt",
+          "type": "uint128"
         },
         {
           "indexed": false,
-          "name": 'timestamp',
-          "type": 'uint64'
+          "name": "timestamp",
+          "type": "uint64"
         }
       ],
-      "name": 'LogKill',
-      "type": 'event'
+      "name": "LogKill",
+      "type": "event"
     }
   ]
-};
+}
