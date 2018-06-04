@@ -312,17 +312,19 @@ const updateTransactionGasCostEstimateEpic = (
     buyAmount = offerMake.getIn(["offerData", "buyAmount"]),
     buyToken = offerMake.get("buyTokenAddress"),
     toAddress = getMarketContractInstance().address;
+  if(payAmount > 0 && buyAmount > 0) {
+    dispatch(
+      defer(
+        getTransactionGasEstimate,
+        payAmount,
+        payToken,
+        buyAmount,
+        buyToken,
+        toAddress
+      )
+    );
+  }
 
-  dispatch(
-    defer(
-      getTransactionGasEstimate,
-      payAmount,
-      payToken,
-      buyAmount,
-      buyToken,
-      toAddress
-    )
-  );
 };
 
 const updateTransactionGasCostEstimateEpicThrottled = throttle(

@@ -247,7 +247,7 @@ const getTransactionGasCostEstimateEpic = (
     getTransactionGasCostEstimate,
     {
       offerId,
-      amount: web3.toWei(getBuyAmount(getState), ETH_UNIT_ETHER).toString(),
+      amount: web3.toWei(getBuyAmount(getState), ETH_UNIT_ETHER),
       offerOwner: activeOfferTakeOfferOwner(getState()),
       activeOfferData: activeOfferTakeOfferData(getState()),
     })
