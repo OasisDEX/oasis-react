@@ -60,9 +60,8 @@ const sellMaxEpic = (
   const usersBaseTokenBalanceBN = web3.toBigNumber(web3.fromWei(balance));
   const priceBN = web3.toBigNumber(price.toString());
 
-  const totalSerialized = web3
-    .toBigNumber(usersBaseTokenBalanceBN.mul(priceBN))
-    .mul(price)
+  const totalSerialized = usersBaseTokenBalanceBN
+    .mul(priceBN)
     .toFixed()
     .toString();
   dispatch(change(formName, "total", totalSerialized));

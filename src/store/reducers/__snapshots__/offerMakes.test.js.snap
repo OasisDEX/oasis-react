@@ -540,14 +540,14 @@ Array [
       "persistentSubmitErrors": undefined,
       "touch": undefined,
     },
-    "payload": "0.000000000000000033",
+    "payload": "0.00000000000000008",
     "type": "@@redux-form/CHANGE",
   },
   Object {
     "payload": Object {
       "args": Array [
         "OFFER_MAKES/MAKE_BUY_OFFER",
-        "0.000000000000000033",
+        "0.00000000000000008",
       ],
       "thunk": [Function],
       "thunkName": "totalFieldValueChangedEpic",
@@ -566,14 +566,14 @@ Array [
       "persistentSubmitErrors": undefined,
       "touch": undefined,
     },
-    "payload": "0.000000000000000033",
+    "payload": "0.00000000000000008",
     "type": "@@redux-form/CHANGE",
   },
   Object {
     "payload": Object {
       "args": Array [
         "OFFER_MAKES/MAKE_SELL_OFFER",
-        "0.000000000000000033",
+        "0.00000000000000008",
       ],
       "thunk": [Function],
       "thunkName": "totalFieldValueChangedEpic",
