@@ -25,7 +25,7 @@ const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
 };
 
-export class OasisMakeSellOfferWrapper extends PureComponent {
+export class OasisMakeSellOfferWrapper extends React.Component {
   constructor(props) {
     super(props);
     this.onModalOpen = this.onModalOpen.bind(this);
@@ -103,6 +103,12 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
     if (contractsInitiallyLoaded || pairChanged) {
       this.props.actions.initializeOfferMake(MAKE_SELL_OFFER);
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return !this.props.isModalOpen || nextProps.isModalOpen === false ? (
+      this.state !== nextState || this.props !== nextProps
+    ) : false;
   }
 }
 

@@ -25,7 +25,7 @@ const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
 };
 
-export class OasisMakeBuyOfferWrapper extends PureComponent {
+export class OasisMakeBuyOfferWrapper extends React.Component {
   constructor(props) {
     super(props);
     this.onModalOpen = this.onModalOpen.bind(this);
@@ -46,7 +46,8 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
     const {
       activeTradingPair: { baseToken, quoteToken },
       hasSufficientTokenAmount,
-      canMakeOffer
+      canMakeOffer,
+      isModalOpen
     } = this.props;
 
     const formProps = {
@@ -60,7 +61,7 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
         <OasisTokenBalanceSummary summary="Available" token={quoteToken} />
         <div>
           {this.getModal(formProps)}
-          <OfferMakeForm {...formProps} />
+          <OfferMakeForm {...formProps} shouldFormUpdate={isModalOpen} />
         </div>
         <div className={styles.footer}>
           <div className={styles.helpBlock}>
@@ -90,6 +91,12 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
         </div>
       </OasisWidgetFrame>
     );
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return !this.props.isModalOpen || nextProps.isModalOpen === false ? (
+      this.state !== nextState || this.props !== nextProps
+    ) : false;
   }
 
   UNSAFE_componentWillUpdate(nextProps) {

@@ -8,7 +8,9 @@ exports[`(Component) OasisVolumeIsOverTheOfferMax should render 1`] = `
 >
   Current volume is greater than offer maximum of 
   <b>
+    1234.00000
      
+    W-GNT
   </b>
 </InfoBoxWithIco>
 `;

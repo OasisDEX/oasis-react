@@ -250,8 +250,16 @@ const totalFieldValueChangedEpic = (
           .toString()
       )
     );
+    dispatch(defer(updateTransactionGasCostEstimateEpicThrottled, offerMakeType));
+  } else {
+    dispatch(
+      localChange(
+        offerMakeType,
+        "volume",
+        "0"
+      )
+    );
   }
-  dispatch(defer(updateTransactionGasCostEstimateEpicThrottled, offerMakeType));
 };
 
 /**

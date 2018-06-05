@@ -242,6 +242,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
       buyToken,
       isVolumeGreaterThanOfferMax,
       canFulfillOffer,
+      isTokenTradingEnabled,
       actions: { getTransactionGasCostEstimate }
     } = this.props;
 
@@ -268,7 +269,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
           <div className="statusSection">
             <div>{this.renderOfferSummary()}</div>
             <div>
-              {isVolumeGreaterThanOfferMax &&
+              {isTokenTradingEnabled && isVolumeGreaterThanOfferMax &&
                 !this.state.disableForm && (
                   <OasisVolumeIsOverTheOfferMax
                     tokenName={buyToken}

@@ -10,8 +10,7 @@ Object {
 
 exports[`(Container) OasisOfferBelowDustLimit will receive right props 1`] = `
 Object {
-  "isOfferBelowLimit": undefined,
+  "isOfferBelowLimit": false,
   "tokenMinLimit": "0",
-  "tokenName": undefined,
 }
 `;

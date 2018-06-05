@@ -15,6 +15,7 @@ exports[`(Container) OasisOfferSummary should render 1`] = `
     }
     isTokenTradingEnabled={false}
     isVolumeOrPriceEmptyOrZero={false}
+    offerType="OFFER_MAKES/MAKE_BUY_OFFER"
     sellToken="W-ETH"
   />
   <OasisInsufficientAmountOfToken
