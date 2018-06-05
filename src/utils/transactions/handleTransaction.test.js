@@ -1,6 +1,7 @@
 import {handleTransaction} from './handleTransaction';
 import { fromJS } from "immutable";
 import {
+  TX_STATUS_ERROR,
   TX_STATUS_CANCELLED_BY_USER,
 } from '../../store/reducers/transactions';
 
@@ -17,7 +18,9 @@ describe("handleTransaction", () => {
       transactionDispatcher: () => Promise.resolve(undefined),
     });
 
-    await expect(result).rejects.toBe('No response from transactionDispatcher!')
+    await expect(result).rejects.toEqual({
+      status: TX_STATUS_ERROR,
+      message: 'No response from transactionDispatcher!'})
   });
 
   test('transaction rejected', async () => {
@@ -32,7 +35,7 @@ describe("handleTransaction", () => {
       withCallbacks: { onCancelCleanup },
     });
 
-    await expect(result).rejects.toBe(TX_STATUS_CANCELLED_BY_USER);
+    await expect(result).resolves.toEqual({status: TX_STATUS_CANCELLED_BY_USER});
     expect(onTransactionCancelled.mock.calls.length).toBe(1);
     expect(onCancelCleanup.mock.calls.length).toBe(1);
 
