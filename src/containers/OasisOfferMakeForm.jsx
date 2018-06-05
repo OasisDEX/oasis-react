@@ -17,8 +17,8 @@ import OasisButton from '../components/OasisButton';
 import styles from './OasisOfferMakeForm.scss';
 import CSSModules from 'react-css-modules';
 import OasisVolumeIsGreaterThanUserBalance from '../components/OasisVolumeIsGreaterThanUserBalance';
-import { formatAmount, PRICE_DECIMAL } from '../utils/tokens/pair';
-import isNumeric from '../utils/numbers/isNumeric';
+// import { formatAmount, PRICE_DECIMAL } from '../utils/tokens/pair';
+// import isNumeric from '../utils/numbers/isNumeric';
 import MaskedTokenAmountInput from '../components/MaskedTokenAmountInput';
 
 const propTypes = PropTypes && {
@@ -122,11 +122,11 @@ export class OfferMakeForm extends PureComponent {
     this.setState({ showMaxButton: false });
   }
 
-  formatField(value, fieldName) {
-    if (isNumeric(value)) {
-      return formatAmount(value, false, null, PRICE_DECIMAL);
-    }
-  }
+  // formatField(value, fieldName) {
+  //   if (isNumeric(value)) {
+  //     return formatAmount(value, false, null, PRICE_DECIMAL);
+  //   }
+  // }
 
   renderPriceField(disableForm) {
     return (
