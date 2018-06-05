@@ -70,7 +70,13 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
                 tokenName={baseToken}
               />
             )}
-            {hasSufficientTokenAmount && <OasisOfferBelowDustLimitWrapper noBorder offerType={MAKE_SELL_OFFER} />}
+            {hasSufficientTokenAmount && (
+              <OasisOfferBelowDustLimitWrapper
+                noBorder
+                tokenName={baseToken}
+                offerType={MAKE_SELL_OFFER}
+              />
+            )}
             <InfoBox hidden={this.props.isPriceSet} noBorder>
               Enter a price to unlock amount and total.
             </InfoBox>

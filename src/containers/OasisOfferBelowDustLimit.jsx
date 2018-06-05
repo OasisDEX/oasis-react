@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import offerMakes from "../store/selectors/offerMakes";
 import limits from "../store/selectors/limits";
-import tokens from "../store/selectors/tokens";
 import { formatAmount } from "../utils/tokens/pair";
 import InfoBox from "../components/InfoBox";
 import OasisIcon from "../components/OasisIcon";
@@ -45,11 +44,10 @@ export class OasisOfferBelowDustLimitWrapper extends PureComponent {
   }
 }
 
-export function mapStateToProps(state, { offerType }) {
+export function mapStateToProps(state, { offerType, tokenName }) {
   return {
-    tokenName: tokens.activeTradingPairQuoteToken(state),
     isOfferBelowLimit: offerMakes.isOfferBelowLimit(state, offerType),
-    tokenMinLimit: limits.quoteTokenMinSellLimitInEther(state)
+    tokenMinLimit: limits.tokenMinSellLimitInEther(state, tokenName)
   };
 }
 export function mapDispatchToProps(dispatch) {

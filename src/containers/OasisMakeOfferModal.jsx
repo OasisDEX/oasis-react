@@ -242,7 +242,12 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
         <div>
           {this.renderFormAndSummary()}
           <div>
-            <OasisOfferBelowDustLimitWrapper offerType={offerMakeType} />
+            {sellToken && (
+              <OasisOfferBelowDustLimitWrapper
+                tokenName={sellToken}
+                offerType={offerMakeType}
+              />
+            )}
             <InfoBoxWithIco
               icon="info"
               fullWidth

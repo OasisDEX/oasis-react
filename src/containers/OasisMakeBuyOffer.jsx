@@ -70,6 +70,7 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
             {hasSufficientTokenAmount && (
               <OasisOfferBelowDustLimitWrapper
                 noBorder
+                tokenName={quoteToken}
                 offerType={MAKE_BUY_OFFER}
               />
             )}

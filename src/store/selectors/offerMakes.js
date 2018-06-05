@@ -14,7 +14,7 @@ import reselect from "../../utils/reselect";
 import offerMakeToFormName from "../../utils/offers/offerMakeToFormName";
 import tokens from "./tokens";
 import network from "./network";
-import { fromJS } from "immutable";
+import { fromJS, Map } from "immutable";
 import limits from "./limits";
 import isNumeric from "../../utils/numbers/isNumeric";
 
@@ -171,23 +171,53 @@ const isVolumeOrPriceEmptyOrZero = createSelector(
 );
 
 const isOfferBelowLimit = createSelector(
-  rootState =>
-    limits.tokenMinSellLimitInWei(
-      rootState,
-      tokens.activeTradingPairQuoteToken(rootState)
-    ),
+  (rootState, offerMakeType) => {
+    let tokenName = null;
+    const activeTradingPair = Map(tokens.activeTradingPair(rootState));
+    if (!activeTradingPair.has('baseToken') && activeTradingPair.has('quoteToken')) {
+      return null
+    }
+    switch (offerMakeType) {
+      case MAKE_BUY_OFFER:
+        tokenName = activeTradingPair.get("quoteToken");
+        break;
+      case MAKE_SELL_OFFER:
+        tokenName = activeTradingPair.get("baseToken");
+        break;
+      default:
+        throw new Error("No offer make type provided!");
+    }
+    return limits.tokenMinSellLimitInWei(rootState, tokenName);
+  },
   (rootState, offerMakeType) =>
     makeFormValuesSelector(offerMakeToFormName(offerMakeType))(
       rootState,
-      "total"
+      "total",
+      "volume"
     ),
-  (tokenMinSellLimitInWei, total) => {
+  reselect.getProps,
+  (tokenMinSellLimitInWei, { total, volume }, offerMakeType) => {
+    if (tokenMinSellLimitInWei === null) {
+      return null;
+    }
+    let amount = null;
+    switch (offerMakeType) {
+      case MAKE_BUY_OFFER:
+        amount = total;
+        break;
+      case MAKE_SELL_OFFER:
+        amount = volume;
+        break;
+      default:
+        throw new Error("No offer make type provided!");
+    }
+
     if (
       isNumeric(tokenMinSellLimitInWei) &&
-      isNumeric(total) &&
-      parseFloat(total) > 0
+      isNumeric(amount) &&
+      parseFloat(amount) > 0
     ) {
-      return web3.toBigNumber(web3.fromWei(tokenMinSellLimitInWei)).gt(total);
+      return web3.toBigNumber(web3.fromWei(tokenMinSellLimitInWei)).gt(amount);
     }
   }
 );
@@ -208,7 +238,7 @@ const canMakeOffer = createSelector(
     );
   },
   isVolumeOrPriceEmptyOrZero,
-  isOfferBelowLimit,
+  (rootState, offerMakeType) => isOfferBelowLimit(rootState, offerMakeType),
   (
     hasSufficientTokenAmount,
     canSendTransaction,
