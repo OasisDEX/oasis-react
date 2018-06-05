@@ -3,7 +3,8 @@ import transactions, {
   TX_STATUS_AWAITING_CONFIRMATION,
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
   TX_STATUS_CANCELLED_BY_USER,
-  TX_STATUS_CONFIRMED
+  TX_STATUS_CONFIRMED,
+  TX_STATUS_ERROR
 } from "../../store/reducers/transactions";
 import { fromJS } from "immutable";
 import { getTimestamp } from "../time";
@@ -81,7 +82,7 @@ const handleTransaction = (
        * Then continue with component calling the action
        */
       onCancelCleanup && onCancelCleanup();
-      reject(TX_STATUS_CANCELLED_BY_USER);
+      resolve({status: TX_STATUS_CANCELLED_BY_USER});
     });
 
     // console.log('transactionActionResult', transactionActionResult);
@@ -108,6 +109,7 @@ const handleTransaction = (
       onPending && onPending({ txHash: transactionHash, txStartTimestamp });
 
       resolve({
+        status: TX_STATUS_CONFIRMED,
         transactionConfirmationPromise: transactionConfirmationPromise
           .then(to => {
             //First run Epic completion handler
@@ -133,7 +135,10 @@ const handleTransaction = (
         transactionHash
       });
     } else {
-      reject("No response from transactionDispatcher!");
+      reject({
+        status: TX_STATUS_ERROR,
+        message: "No response from transactionDispatcher!"
+      });
     }
   });
 };
