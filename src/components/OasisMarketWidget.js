@@ -18,6 +18,7 @@ import CSSModules from "react-css-modules";
 import styles from "./OasisMarketWidget.scss";
 import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
 import { ETH_UNIT_ETHER } from "../constants";
+import moment from "moment-timezone";
 
 const periodHeading = {
   [DAY]: "daily",
@@ -69,6 +70,8 @@ class OasisMarketWidget extends PureComponent {
     super(props);
     this.transformRow = this.transformRow.bind(this);
     this.onTableRowClick = this.onTableRowClick.bind(this);
+    this.now = Date.now() / 1000;
+    this.weekAgo = moment(Date.now()).startOf('day').subtract(6, 'days').unix()
   }
 
   transformRow(row) {
@@ -81,14 +84,23 @@ class OasisMarketWidget extends PureComponent {
       </span>
     );
     if (marketData) {
-      const tradingPairTrades = trades(marketData, baseToken, quoteToken);
+
+      const weeklyTradingPairTrades = trades(marketData, baseToken, quoteToken)
+        .filter((marketHistoryEntry) => {
+          const {timestamp} = marketHistoryEntry;
+
+          if(timestamp > this.weekAgo) {
+            return marketHistoryEntry;
+          }
+        });
+
       const tradingPairVolume = volume(
-        tradingPairTrades,
+        weeklyTradingPairTrades,
         baseToken,
         quoteToken
       );
       const tradingPairPrice = tradingPairVolume.toNumber()
-        ? price(tradingPairTrades.last(), baseToken, quoteToken)
+        ? price(weeklyTradingPairTrades.last(), baseToken, quoteToken)
         : null;
       return {
         isActive: isCurrentRowActive(
