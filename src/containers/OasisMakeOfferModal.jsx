@@ -26,9 +26,9 @@ import {
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
 import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBox";
-import { isPriceSet } from "../store/selectors";
-import InfoBox from "../components/InfoBox";
+import { getActiveOfferAllowanceStatus, isPriceSet } from "../store/selectors";
 import OasisOfferBelowDustLimitWrapper from "./OasisOfferBelowDustLimit";
+import InfoBoxWithIco from "../components/InfoBoxWithIco";
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -165,17 +165,66 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
     ].includes(this.state.txStatus);
   }
 
-  render() {
+  renderFormAndSummary() {
     const {
       baseToken,
       quoteToken,
       offerMakeType,
-      canMakeOffer,
+      form,
+      isTokenTradingEnabled
+    } = this.props;
+    const { newAllowanceStatus } = this.state;
+    return (
+      <div>
+        <OfferMakeForm
+          baseToken={baseToken}
+          quoteToken={quoteToken}
+          offerMakeType={offerMakeType}
+          form={form}
+          disableForm={this.state.disableForm}
+        />
+        <OasisOfferSummary
+          disableBalanceWarning={
+            this.isOfferMakeCompleted() ||
+            (false === isTokenTradingEnabled && !newAllowanceStatus)
+          }
+          offerType={offerMakeType}
+        />
+      </div>
+    );
+  }
+
+  renderSetTokenAllowance() {
+    const {
+      offerMakeType,
       marketAddress,
       sellToken,
-      form,
       actions: { getTransactionGasCostEstimate }
     } = this.props;
+
+    return (
+      <SetTokenAllowanceTrustWrapper
+        onTransactionPending={() => this.setState({ lockCancelButton: true })}
+        onTransactionCompleted={newAllowanceStatus => {
+          newAllowanceStatus && getTransactionGasCostEstimate(offerMakeType);
+          this.setState({
+            newAllowanceStatus,
+            lockCancelButton: false
+          });
+        }}
+        onCancelCleanup={() =>
+          this.setState({
+            lockCancelButton: false
+          })
+        }
+        allowanceSubjectAddress={marketAddress}
+        tokenName={sellToken}
+      />
+    );
+  }
+
+  render() {
+    const { baseToken, offerMakeType, canMakeOffer, sellToken } = this.props;
 
     return (
       <ReactModal
@@ -191,45 +240,24 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
         ) : null}
         <OasisTokenBalanceSummary summary="Available" token={sellToken} />
         <div>
-          <OfferMakeForm
-            baseToken={baseToken}
-            quoteToken={quoteToken}
-            offerMakeType={offerMakeType}
-            form={form}
-            disableForm={this.state.disableForm}
-          />
-          <InfoBox hidden={this.props.isPriceSet} noBorder>
-            Enter a price to unlock amount and total.
-          </InfoBox>
+          {this.renderFormAndSummary()}
           <div>
             <OasisOfferBelowDustLimitWrapper offerType={offerMakeType} />
+            <InfoBoxWithIco
+              icon="info"
+              fullWidth
+              hidden={this.props.isPriceSet}
+            >
+              Enter a price to unlock amount and total.
+            </InfoBoxWithIco>
           </div>
-          <OasisOfferSummary
-            disableBalanceWarning={this.isOfferMakeCompleted()}
-            offerType={offerMakeType}
-          />
           {this.renderTransactionStatus()}
-          <SetTokenAllowanceTrustWrapper
-            onTransactionPending={() =>
-              this.setState({ lockCancelButton: true })
-            }
-            onTransactionCompleted={newAllowanceStatus => {
-              newAllowanceStatus &&
-                getTransactionGasCostEstimate(offerMakeType);
-              this.setState({
-                lockCancelButton: false
-              });
-            }}
-            onCancelCleanup={() =>
-              this.setState({
-                lockCancelButton: false
-              })
-            }
-            allowanceSubjectAddress={marketAddress}
-            tokenName={sellToken}
-          />
+          {this.renderSetTokenAllowance()}
           <div className={styles.footer}>
-            <OasisButton disabled={this.isTransactionPendingOrAwaitingAcceptance()} onClick={this.onCancel}>
+            <OasisButton
+              disabled={this.isTransactionPendingOrAwaitingAcceptance()}
+              onClick={this.onCancel}
+            >
               {this.askForConfirmationBeforeModalClose() ? "Close" : "Cancel"}
             </OasisButton>
             <OasisButton
@@ -251,6 +279,10 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
 
 export function mapStateToProps(state, props) {
   return {
+    isTokenTradingEnabled: getActiveOfferAllowanceStatus(
+      state,
+      props.offerMakeType
+    ),
     marketAddress: markets.activeMarketAddress(state),
     canMakeOffer: offerMakes.canMakeOffer(state, props.offerMakeType),
     buyToken: offerMakes.activeOfferMakeBuyToken(state, props.form),

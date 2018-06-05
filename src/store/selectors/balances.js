@@ -60,6 +60,7 @@ const tokenAllowanceTrustStatus = createSelector(
   }
 );
 
+
 const tokenAllowanceStatusForActiveMarket = createSelector(
   (...args) => args,
   ([state, { tokenName }]) =>
@@ -93,5 +94,5 @@ export default {
   tokenAllowanceTrustStatus,
   activeBaseTokenBalance,
   activeQuoteTokenBalance,
-  tokenAllowanceStatusForActiveMarket
+  tokenAllowanceStatusForActiveMarket,
 };

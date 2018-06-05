@@ -11,7 +11,6 @@ exports[`(Container) OasisOfferMakeForm should render 1`] = `
     }
   }
   activeTradingPairPrecision={18}
-  isVolumeGreaterThanOfferMax={false}
   offerTakeType="OFFER_TAKES/TAKE_SELL_OFFER"
 />
 `;
@@ -33,7 +32,6 @@ Object {
   "activeOfferTakeOfferData": undefined,
   "activeTradingPairPrecision": 18,
   "buyToken": undefined,
-  "isVolumeGreaterThanOfferMax": false,
   "offerTakeType": "OFFER_TAKES/TAKE_SELL_OFFER",
   "sellToken": undefined,
 }

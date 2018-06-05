@@ -43,7 +43,7 @@ export class OasisGasPriceWrapper extends PureComponent {
           </div>
           <div className={styles.detailsTradingSecCol}>
             <span className={styles.estimateUSD}>
-              {formatAmount(cost.mul(latestEthereumPrice.price_usd))} USD
+              ~{formatAmount(cost.mul(latestEthereumPrice.price_usd))} USD
             </span>
           </div>
         </FlexBox>
