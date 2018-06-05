@@ -27,27 +27,28 @@ exports[`(Container) OasisMakeOfferModal should render 1`] = `
     token="DAI"
   />
   <div>
-    <Connect(ReduxForm)
-      offerMakeType="OFFER_MAKES/MAKE_BUY_OFFER"
-    />
-    <InfoBox
-      className=""
-      color="default"
-      hidden={true}
-      noBorder={true}
-      size="md"
-    >
-      Enter a price to unlock amount and total.
-    </InfoBox>
+    <div>
+      <Connect(ReduxForm)
+        offerMakeType="OFFER_MAKES/MAKE_BUY_OFFER"
+      />
+      <Connect(OasisOfferSummary)
+        disableBalanceWarning={true}
+        offerType="OFFER_MAKES/MAKE_BUY_OFFER"
+      />
+    </div>
     <div>
       <Connect(OasisOfferBelowDustLimit)
         offerType="OFFER_MAKES/MAKE_BUY_OFFER"
       />
+      <InfoBoxWithIco
+        alignItems="center"
+        fullWidth={true}
+        hidden={true}
+        icon="info"
+      >
+        Enter a price to unlock amount and total.
+      </InfoBoxWithIco>
     </div>
-    <Connect(OasisOfferSummary)
-      disableBalanceWarning={false}
-      offerType="OFFER_MAKES/MAKE_BUY_OFFER"
-    />
     <OasisTransactionStatusWrapperInfoBox
       infoText={
         <strong>
@@ -102,6 +103,7 @@ Object {
   "buyToken": "MKR",
   "canMakeOffer": false,
   "isPriceSet": true,
+  "isTokenTradingEnabled": false,
   "marketAddress": "0x8cf1cab422a0b6b554077a361f8419cdf122a9f9",
   "sellToken": "DAI",
 }

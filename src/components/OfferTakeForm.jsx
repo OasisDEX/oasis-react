@@ -38,22 +38,10 @@ const propTypes = PropTypes && {
   sellToken: PropTypes.string.isRequired,
   offerTakeType: PropTypes.string.isRequired,
   activeTradingPairPrecision: PropTypes.number.isRequired,
-  isVolumeGreaterThanOfferMax: PropTypes.oneOfType([
-    PropTypes.bool,
-    PropTypes.string
-  ]).isRequired,
   activeBaseTokenBalance: PropTypes.string.isRequired
 };
 
 const defaultProps = {};
-
-const VolumeIsOverTheOfferMax = ({ offerMax }) => (
-  <div>
-    Current volume is greater than offer maximum of <b>{offerMax}</b>
-  </div>
-);
-
-VolumeIsOverTheOfferMax.propTypes = { offerMax: PropTypes.string.isRequired };
 
 const validateVolume = [greaterThanZeroValidator, numericFormatValidator];
 const validateTotal = [greaterThanZeroValidator, numericFormatValidator];
@@ -78,19 +66,19 @@ export class OfferTakeForm extends PureComponent {
   }
 
   onVolumeFieldChange(event, newValue) {
-    console.log('onVolumeFieldChange', newValue);
+    console.log("onVolumeFieldChange", newValue);
     const { volumeFieldValueChanged } = this.props.actions;
     // if (newValue.toString() !== previousValue.toString()) {
-      setTimeout(() => volumeFieldValueChanged(newValue), 0);
+    setTimeout(() => volumeFieldValueChanged(newValue), 0);
     // }
   }
 
   onTotalFieldChange(event, newValue) {
     // console.log("onTotalFieldChange", newValue, previousValue);
-    console.log('onTotalFieldChange', newValue);
+    console.log("onTotalFieldChange", newValue);
     const { totalFieldValueChanged } = this.props.actions;
     // if (newValue.toString() !== previousValue.toString()) {
-      setTimeout(() => totalFieldValueChanged(newValue), 0);
+    setTimeout(() => totalFieldValueChanged(newValue), 0);
     // }
   }
 
@@ -129,18 +117,85 @@ export class OfferTakeForm extends PureComponent {
     }
   }
 
-  render() {
-    const {
-      offerTakeType,
-      handleSubmit,
-      buyToken,
-      sellToken,
-      isVolumeGreaterThanOfferMax,
-      disableForm
-    } = this.props;
-    let volumeToken = null,
-      totalToken = null,
-      priceToken = null;
+  renderPriceField() {
+    const { priceToken } = this.getTokensByOfferTakeType();
+    return (
+      <tr>
+        <th>Price</th>
+        <td className={tableStyles.withInput}>
+          <Field
+            autoComplete="off"
+            style={fieldStyle}
+            name="price"
+            component="input"
+            format={formatValue}
+            placeholder={0}
+            // normalize={normalize}
+            type="text"
+            disabled={true}
+          />
+        </td>
+        <td className={tableStyles.currency}>{priceToken}</td>
+      </tr>
+    );
+  }
+
+  renderAmountField(disableForm) {
+    const { volumeToken } = this.getTokensByOfferTakeType();
+    return (
+      <tr>
+        <th>Amount</th>
+        <td className={tableStyles.withInput}>
+          <Field
+            autoComplete="off"
+            style={fieldStyle}
+            name="volume"
+            component={MaskedTokenAmountInput}
+            type="text"
+            validate={validateVolume}
+            min={0}
+            placeholder={0}
+            disabled={disableForm}
+            onChange={this.onVolumeFieldChange}
+          />
+        </td>
+        <td className={tableStyles.currency}>{volumeToken}</td>
+      </tr>
+    );
+  }
+
+  renderTotalField(disableForm) {
+    const { totalToken } = this.getTokensByOfferTakeType();
+    return (
+      <tr>
+        <th>Total</th>
+        <td className={tableStyles.withInput}>
+          <div className={tableStyles.inputGroup}>
+            {this.setMaxButton()}
+            <Field
+              autoComplete="off"
+              style={fieldStyle}
+              min={0}
+              name="total"
+              component={MaskedTokenAmountInput}
+              type="text"
+              validate={validateTotal}
+              placeholder={0}
+              disabled={disableForm}
+              onChange={this.onTotalFieldChange}
+            />
+          </div>
+        </td>
+        <td className={tableStyles.currency}>{totalToken}</td>
+      </tr>
+    );
+  }
+
+  getTokensByOfferTakeType() {
+    const { offerTakeType, buyToken, sellToken } = this.props;
+    let priceToken = null,
+      volumeToken = null,
+      totalToken = null;
     switch (offerTakeType) {
       case TAKE_BUY_OFFER:
         {
@@ -157,82 +212,23 @@ export class OfferTakeForm extends PureComponent {
         }
         break;
     }
+    return { priceToken, volumeToken, totalToken };
+  }
+
+  render() {
+    const { handleSubmit, disableForm } = this.props;
     return (
       <form onSubmit={handleSubmit}>
         <table className={tableStyles.table}>
           <tbody>
-            <tr>
-              <th>Price</th>
-              <td className={tableStyles.withInput}>
-                <Field
-                  autoComplete="off"
-                  style={fieldStyle}
-                  name="price"
-                  component="input"
-                  format={formatValue}
-                  placeholder={0}
-                  // normalize={normalize}
-                  type="text"
-                  disabled={true}
-                />
-              </td>
-              <td className={tableStyles.currency}>{priceToken}</td>
-            </tr>
-            <tr>
-              <th>Amount</th>
-              <td className={tableStyles.withInput}>
-                <Field
-                  autoComplete="off"
-                  style={fieldStyle}
-                  name="volume"
-                  component={MaskedTokenAmountInput}
-                  type="text"
-                  validate={validateVolume}
-                  min={0}
-                  placeholder={0}
-                  disabled={disableForm}
-                  onChange={this.onVolumeFieldChange}
-                />
-                <div className={styles.errorMessage}>
-                  {isVolumeGreaterThanOfferMax &&
-                    !disableForm && (
-                      <VolumeIsOverTheOfferMax
-                        offerMax={isVolumeGreaterThanOfferMax}
-                      />
-                    )}
-                </div>
-              </td>
-              <td className={tableStyles.currency}>{volumeToken}</td>
-            </tr>
-            <tr>
-              <th>Total</th>
-              <td className={tableStyles.withInput}>
-                <div className={tableStyles.inputGroup}>
-                  {this.setMaxButton()}
-                  <Field
-                    autoComplete="off"
-                    style={fieldStyle}
-                    min={0}
-                    name="total"
-                    component={MaskedTokenAmountInput}
-                    type="text"
-                    validate={validateTotal}
-                    placeholder={0}
-                    disabled={disableForm}
-                    onChange={this.onTotalFieldChange}
-                  />
-                </div>
-              </td>
-              <td className={tableStyles.currency}>{totalToken}</td>
-            </tr>
+            {this.renderPriceField(disableForm)}
+            {this.renderAmountField(disableForm)}
+            {this.renderTotalField(disableForm)}
           </tbody>
         </table>
       </form>
     );
   }
-  // componentDidMount() {
-  //    setTimeout(()=> this.props.estimateGas(), 500)
-  // }
 }
 
 OfferTakeForm.displayName = "OfferTakeForm";
@@ -246,7 +242,6 @@ export function mapStateToProps(state) {
     sellToken: offerTakes.activeOfferTakeSellToken(state),
     offerTakeType: offerTakes.activeOfferTakeType(state),
     activeTradingPairPrecision: tokens.precision(state),
-    isVolumeGreaterThanOfferMax: offerTakes.isVolumeGreaterThanOfferMax(state),
     activeBaseTokenBalance: balances.activeBaseTokenBalance(state)
   };
 }
