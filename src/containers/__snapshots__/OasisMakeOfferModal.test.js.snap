@@ -39,6 +39,7 @@ exports[`(Container) OasisMakeOfferModal should render 1`] = `
     <div>
       <Connect(OasisOfferBelowDustLimit)
         offerType="OFFER_MAKES/MAKE_BUY_OFFER"
+        tokenName="DAI"
       />
       <InfoBoxWithIco
         alignItems="center"

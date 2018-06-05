@@ -17,6 +17,7 @@ exports[`(Container) OasisMakeBuyOffer should render 1`] = `
       form="makeBuyOffer"
       offerMakeType="OFFER_MAKES/MAKE_BUY_OFFER"
       quoteToken="DAI"
+      shouldFormUpdate={false}
     />
   </div>
   <div>

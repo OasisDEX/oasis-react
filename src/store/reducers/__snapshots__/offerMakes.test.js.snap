@@ -55,14 +55,14 @@ Array [
 exports[`make offer form priceFieldChangedEpic price set to: invalid(a) for: OFFER_MAKES/MAKE_BUY_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_BUY_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeBuyOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -70,14 +70,14 @@ Array [
 exports[`make offer form priceFieldChangedEpic price set to: invalid(a) for: OFFER_MAKES/MAKE_SELL_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_SELL_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeSellOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -85,14 +85,14 @@ Array [
 exports[`make offer form priceFieldChangedEpic price set to: negative number(-1) for: OFFER_MAKES/MAKE_BUY_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_BUY_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeBuyOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -100,14 +100,14 @@ Array [
 exports[`make offer form priceFieldChangedEpic price set to: negative number(-1) for: OFFER_MAKES/MAKE_SELL_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_SELL_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeSellOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -115,14 +115,14 @@ Array [
 exports[`make offer form priceFieldChangedEpic price set to: reasonable amount(100) for: OFFER_MAKES/MAKE_BUY_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_BUY_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeBuyOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -130,14 +130,14 @@ Array [
 exports[`make offer form priceFieldChangedEpic price set to: reasonable amount(100) for: OFFER_MAKES/MAKE_SELL_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_SELL_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeSellOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -145,14 +145,14 @@ Array [
 exports[`make offer form priceFieldChangedEpic price set to: zero(0) for: OFFER_MAKES/MAKE_BUY_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_BUY_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeBuyOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -160,14 +160,14 @@ Array [
 exports[`make offer form priceFieldChangedEpic price set to: zero(0) for: OFFER_MAKES/MAKE_SELL_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_SELL_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeSellOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -175,14 +175,14 @@ Array [
 exports[`make offer form totalFieldValueChangedEpic total set to: invalid(a) for: OFFER_MAKES/MAKE_BUY_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_BUY_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeBuyOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -190,14 +190,14 @@ Array [
 exports[`make offer form totalFieldValueChangedEpic total set to: invalid(a) for: OFFER_MAKES/MAKE_SELL_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_SELL_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeSellOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -205,14 +205,14 @@ Array [
 exports[`make offer form totalFieldValueChangedEpic total set to: negative number(-1) for: OFFER_MAKES/MAKE_BUY_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_BUY_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeBuyOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -220,14 +220,14 @@ Array [
 exports[`make offer form totalFieldValueChangedEpic total set to: negative number(-1) for: OFFER_MAKES/MAKE_SELL_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_SELL_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeSellOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -235,14 +235,14 @@ Array [
 exports[`make offer form totalFieldValueChangedEpic total set to: reasonable amount(100) for: OFFER_MAKES/MAKE_BUY_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_BUY_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeBuyOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -250,14 +250,14 @@ Array [
 exports[`make offer form totalFieldValueChangedEpic total set to: reasonable amount(100) for: OFFER_MAKES/MAKE_SELL_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_SELL_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeSellOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -265,14 +265,14 @@ Array [
 exports[`make offer form totalFieldValueChangedEpic total set to: zero(0) for: OFFER_MAKES/MAKE_BUY_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_BUY_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeBuyOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;
@@ -280,14 +280,14 @@ Array [
 exports[`make offer form totalFieldValueChangedEpic total set to: zero(0) for: OFFER_MAKES/MAKE_SELL_OFFER 1`] = `
 Array [
   Object {
-    "payload": Object {
-      "args": Array [
-        "OFFER_MAKES/MAKE_SELL_OFFER",
-      ],
-      "thunk": [Function],
-      "thunkName": "debounced",
+    "meta": Object {
+      "field": "volume",
+      "form": "makeSellOffer",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
     },
-    "type": "deferred-thunk",
+    "payload": "0",
+    "type": "@@redux-form/CHANGE",
   },
 ]
 `;

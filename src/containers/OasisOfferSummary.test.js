@@ -18,6 +18,7 @@ describe('(Container) OasisOfferSummary', () => {
   const props = {
     ...initialActions,
     ...initialProps,
+    offerType: MAKE_BUY_OFFER,
     offerFormValues: fromJS({}),
     hasSufficientTokenAmount: false,
     tokenName: TOKEN_MAKER,
