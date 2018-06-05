@@ -38,7 +38,6 @@ describe("handleTransaction", () => {
     await expect(result).resolves.toEqual({status: TX_STATUS_CANCELLED_BY_USER});
     expect(onTransactionCancelled.mock.calls.length).toBe(1);
     expect(onCancelCleanup.mock.calls.length).toBe(1);
-
   });
 
   test('transaction accepted and completed', async () => {

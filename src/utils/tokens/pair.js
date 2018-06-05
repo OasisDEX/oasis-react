@@ -8,6 +8,7 @@ export const PRICE_DECIMAL = 5;
 // export const AMOUNT_DECIMAL = 5;
 
 const format = (baseToken, quoteToken) => `${baseToken}/${quoteToken}`;
+
 const trades = (marketData, baseToken, quoteToken) =>
   marketData.filter(marketHistoryEntry => {
     const { sellWhichToken, buyWhichToken } = marketHistoryEntry;
