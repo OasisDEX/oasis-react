@@ -179,6 +179,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
             <OasisOfferSummaryWrapper
               disableBalanceWarning={
                 this.isTakeInProgressOrOfferTaken() ||
+                this.state.txStatus ||
                 Boolean(isVolumeGreaterThanOfferMax) ||
                 isTokenTradingEnabled === false
               }

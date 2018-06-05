@@ -186,6 +186,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
         <OasisOfferSummary
           disableBalanceWarning={
             this.isOfferMakeCompleted() ||
+            this.isTransactionPendingOrAwaitingAcceptance() ||
             (false === isTokenTradingEnabled && !newAllowanceStatus)
           }
           offerType={offerMakeType}
