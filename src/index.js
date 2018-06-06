@@ -19,7 +19,7 @@ import { Session } from "./utils/session";
 import accounts from "./store/selectors/accounts";
 import period from "./utils/period";
 import conversion from "./utils/conversion";
-import { errorHandler } from "./utils/errorHandlers";
+// import { errorHandler } from "./utils/errorHandlers";
 import sak from "./utils/sak";
 import Raven from "raven-js";
 import version from "./version";
@@ -32,7 +32,7 @@ import {
 } from "./store/reducers/network/onNetworkCheckEndEpic";
 
 //sentry.io configuration
-if (version.env === "production") {
+if (version.env === "production" && version.branch !== 'master') {
   console.log("sentry.io configured!");
   Raven.config("https://8ca5cb1ed0e04a57bb36c7720e235754@sentry.io/1208618", {
     release: version.hash,
@@ -51,11 +51,13 @@ const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
   if (network.isNetworkCheckPending(getState()) === true) {
     return;
   }
+
   dispatch(setLastNetworkCheckStartAt());
+
   if (isInitialHealthcheck) {
     dispatch(networkReducer.actions.connecting());
-  } else {
   }
+
   Promise.all([Network.checkConnectivity()])
     .then(async providerType => {
       const connectedNetworkId = await dispatch(
@@ -110,11 +112,11 @@ const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
       }
     })
     .catch(error => {
-      console.log("Error in healthCheck!", error);
+      console.debug("Error in healthCheck!", error);
       dispatch(networkReducer.actions.disconnected());
       dispatch(CheckNetworkAction.fulfilled());
       dispatch(setLastNetworkCheckEndAt());
-      errorHandler.handle(error);
+      // errorHandler.handle(error);
     });
 };
 
@@ -148,10 +150,10 @@ const bootstrap = async () => {
           checkingConnectivity = false;
         })
         .catch(error => {
-          console.log("Error in healthCheck!", error);
+          console.debug("Error in healthCheck!", error);
           dispatch(networkReducer.actions.setNoProviderConnected(true));
           dispatch(networkReducer.actions.disconnected());
-          errorHandler.handle(error);
+          // errorHandler.handle(error);
           setTimeout(() => location.reload(true), 5000);
         });
     }

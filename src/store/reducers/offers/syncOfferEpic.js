@@ -52,10 +52,12 @@ export const syncOffer = (
     try {
       await dispatch(doGetTradingPairOfferCount(baseToken, quoteToken));
     } catch (e) {
-      console.log("Could not find the token pair", {
-        buyWhichTokenAddressToken: getTokenByAddress(buyWhichTokenAddress),
-        sellWhichTokenAddressToken: getTokenByAddress(sellWhichTokenAddress)
-      });
+      console.log(
+        "Could not find the token pair",
+        getTokenByAddress(buyWhichTokenAddress),
+        getTokenByAddress(sellWhichTokenAddress),
+        e
+      );
     }
 
     dispatch(
