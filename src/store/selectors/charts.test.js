@@ -2,12 +2,9 @@
 import charts from './charts';
 import { Map, List } from 'immutable';
 import moment from 'moment-timezone';
-import { mockDate } from '../../utils/testHelpers';
-import BigNumber from 'bignumber.js';
+import { mockDate, wei } from '../../utils/testHelpers';
 
 const refDate = (f) => mockDate('2018-05-16', f);
-
-const wei = x => new BigNumber(1000000000000000000).mul(x).toString();
 
 const state = refDate(() => Map({
   trades: Map({

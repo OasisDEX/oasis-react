@@ -1,0 +1,330 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`resetActiveUnwrapForm main 1`] = `
+Object {
+  "meta": Object {
+    "form": "unwrapToken",
+  },
+  "type": "@@redux-form/RESET",
+}
+`;
+
+exports[`resetActiveUnwrapForm main 2`] = `
+Array [
+  Object {
+    "meta": Object {
+      "form": "unwrapToken",
+    },
+    "type": "@@redux-form/RESET",
+  },
+]
+`;
+
+exports[`resetActiveWrapForm main 1`] = `
+Object {
+  "meta": Object {
+    "form": "wrapToken",
+  },
+  "type": "@@redux-form/RESET",
+}
+`;
+
+exports[`resetActiveWrapForm main 2`] = `
+Array [
+  Object {
+    "meta": Object {
+      "form": "wrapToken",
+    },
+    "type": "@@redux-form/RESET",
+  },
+]
+`;
+
+exports[`setActiveWrapUnwrappedToken main 1`] = `
+Object {
+  "payload": "ETH",
+  "type": "WRAP_UNWRAP/SET_ACTIVE_UNWRAPPED_TOKEN",
+}
+`;
+
+exports[`setActiveWrapUnwrappedToken main 2`] = `
+Array [
+  Object {
+    "payload": "ETH",
+    "type": "WRAP_UNWRAP/SET_ACTIVE_UNWRAPPED_TOKEN",
+  },
+]
+`;
+
+exports[`setUnwrapMax main 1`] = `undefined`;
+
+exports[`setUnwrapMax main 2`] = `
+Array [
+  Object {
+    "meta": Object {
+      "field": "amount",
+      "form": "unwrapToken",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "5",
+    "type": "@@redux-form/CHANGE",
+  },
+]
+`;
+
+exports[`setWrapMax main 1`] = `undefined`;
+
+exports[`setWrapMax main 2`] = `
+Array [
+  Object {
+    "meta": Object {
+      "field": "amount",
+      "form": "wrapToken",
+      "persistentSubmitErrors": undefined,
+      "touch": undefined,
+    },
+    "payload": "10",
+    "type": "@@redux-form/CHANGE",
+  },
+]
+`;
+
+exports[`unwrapEtherEpic main 1`] = `
+Object {
+  "status": "TX/STATUS_CONFIRMED",
+  "transactionConfirmationPromise": Promise {},
+  "transactionHash": "0xabcd",
+}
+`;
+
+exports[`unwrapEtherEpic main 2`] = `
+Immutable.Map {
+  value: "0xcdef",
+}
+`;
+
+exports[`unwrapEtherEpic main 3`] = `
+Array [
+  Object {
+    "type": "WRAP_UNWRAP/UNWRAP_ETHER_PENDING",
+  },
+  Object {
+    "payload": Array [
+      1528156800000,
+      undefined,
+    ],
+    "type": "MOCK___onStart",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "txHash": "0xabcd",
+        "txStartTimestamp": 1528156800000,
+      },
+    ],
+    "type": "MOCK___onPending",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "value": "0xcdef",
+      },
+      undefined,
+    ],
+    "type": "MOCK___onCompleted",
+  },
+]
+`;
+
+exports[`unwrapGNTTokenEpic main 1`] = `
+Object {
+  "status": "TX/STATUS_CONFIRMED",
+  "transactionConfirmationPromise": Promise {},
+  "transactionHash": "0xabcd",
+}
+`;
+
+exports[`unwrapGNTTokenEpic main 2`] = `
+Immutable.Map {
+  value: "0xcdef",
+}
+`;
+
+exports[`unwrapGNTTokenEpic main 3`] = `
+Array [
+  Object {
+    "type": "WRAP_UNWRAP/UNWRAP_GNT_TOKEN_PENDING",
+  },
+  Object {
+    "payload": Array [
+      1528156800000,
+      undefined,
+    ],
+    "type": "MOCK___onStart",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "txHash": "0xabcd",
+        "txStartTimestamp": 1528156800000,
+      },
+    ],
+    "type": "MOCK___onPending",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "value": "0xcdef",
+      },
+      undefined,
+    ],
+    "type": "MOCK___onCompleted",
+  },
+]
+`;
+
+exports[`wrapETHTokenEpic main 1`] = `
+Object {
+  "status": "TX/STATUS_CONFIRMED",
+  "transactionConfirmationPromise": Promise {},
+  "transactionHash": "0xabcd",
+}
+`;
+
+exports[`wrapETHTokenEpic main 2`] = `
+Immutable.Map {
+  value: "0xcdef",
+}
+`;
+
+exports[`wrapETHTokenEpic main 3`] = `
+Array [
+  Object {
+    "type": "WRAP_UNWRAP/WRAP_ETHER_PENDING",
+  },
+  Object {
+    "payload": Array [
+      1528156800000,
+      undefined,
+    ],
+    "type": "MOCK___onStart",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "txHash": "0xabcd",
+        "txStartTimestamp": 1528156800000,
+      },
+    ],
+    "type": "MOCK___onPending",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "value": "0xcdef",
+      },
+      undefined,
+    ],
+    "type": "MOCK___onCompleted",
+  },
+]
+`;
+
+exports[`wrapGNTTokenEpic with broker 1`] = `
+Object {
+  "status": "TX/STATUS_CONFIRMED",
+  "transactionConfirmationPromise": Promise {},
+  "transactionHash": "0xabcd",
+}
+`;
+
+exports[`wrapGNTTokenEpic with broker 2`] = `
+Immutable.Map {
+  value: "0xcdef",
+}
+`;
+
+exports[`wrapGNTTokenEpic with broker 3`] = `
+Array [
+  Object {
+    "type": "WRAP_UNWRAP/WRAP_GNT_TOKEN_PENDING",
+  },
+  Object {
+    "payload": Array [
+      1528156800000,
+      Object {
+        "txSubType": "wrapGNT",
+      },
+    ],
+    "type": "MOCK___onStart",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "txHash": "0xabcd",
+        "txStartTimestamp": 1528156800000,
+      },
+    ],
+    "type": "MOCK___onPending",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "value": "0xcdef",
+      },
+      true,
+    ],
+    "type": "MOCK___onCompleted",
+  },
+]
+`;
+
+exports[`wrapGNTTokenEpic without broker 1`] = `
+Object {
+  "status": "TX/STATUS_CONFIRMED",
+  "transactionConfirmationPromise": Promise {},
+  "transactionHash": "0xef01",
+}
+`;
+
+exports[`wrapGNTTokenEpic without broker 2`] = `
+Immutable.Map {
+  value: "0xcdef",
+}
+`;
+
+exports[`wrapGNTTokenEpic without broker 3`] = `
+Array [
+  Object {
+    "type": "WRAP_UNWRAP/WRAP_GNT_TOKEN_PENDING",
+  },
+  Object {
+    "payload": Array [
+      1528156800000,
+      Object {
+        "txSubType": "WRAP_UNWRAP/CREATE_DEPOSIT_BROKER",
+      },
+    ],
+    "type": "MOCK___onStart",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "txHash": "0xef01",
+        "txStartTimestamp": 1528156800000,
+      },
+    ],
+    "type": "MOCK___onPending",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "value": "0xcdef",
+      },
+      true,
+    ],
+    "type": "MOCK___onCompleted",
+  },
+]
+`;

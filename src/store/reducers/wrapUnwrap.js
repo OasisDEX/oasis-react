@@ -46,7 +46,6 @@ const initialState = fromJS({
   activeTokenUnwrapStatus: null
 });
 
-const INIT = "WRAP_UNWRAP/INIT";
 const WRAP_ETHER = "WRAP_UNWRAP/WRAP_ETHER";
 const UNWRAP_ETHER = "WRAP_UNWRAP/UNWRAP_ETHER";
 
@@ -83,8 +82,6 @@ const getUnwrapAmount = rootState =>
     ETH_UNIT_ETHER
   );
 
-const init = createAction(INIT, () => null);
-
 const setActiveWrapUnwrappedToken = createAction(
   "WRAP_UNWRAP/SET_ACTIVE_UNWRAPPED_TOKEN",
   token => token
@@ -119,14 +116,17 @@ const createGNTDepositBroker = createAction(
 const createDepositBrokerEpic = (
   tokenName,
   withCallbacks,
-  nextTransaction
+  nextTransaction, {
+    doAddTransactionEpic = null,
+    doCreateGNTDepositBroker = createGNTDepositBroker,
+  } = {}
 ) => dispatch => {
   switch (tokenName) {
     case TOKEN_GOLEM:
       return handleTransaction({
         dispatch,
         callsNext: true,
-        transactionDispatcher: () => dispatch(createGNTDepositBroker()),
+        transactionDispatcher: () => dispatch(doCreateGNTDepositBroker()),
         transactionType: TX_WRAP,
         txMeta: {
           txSubType: WRAP_UNWRAP_CREATE_DEPOSIT_BROKER
@@ -134,7 +134,7 @@ const createDepositBrokerEpic = (
         withCallbacks,
         onCallNextTransaction: nextTransaction,
         nextTransactionDelay: 3000
-      });
+      }, doAddTransactionEpic ? {addTransactionEpic: doAddTransactionEpic} : {});
   }
 };
 
@@ -143,16 +143,19 @@ const wrapEther = createAction(WRAP_ETHER, ({ amountInWei }) =>
 );
 
 const wrapEther$ = createPromiseActions("WRAP_UNWRAP/WRAP_ETHER");
-const wrapETHTokenEpic = withCallbacks => (dispatch, getState) => {
+const wrapETHTokenEpic = (withCallbacks, {
+  doWrapEther = wrapEther,
+  doAddTransactionEpic = null,
+} = {}) => (dispatch, getState) => {
   dispatch(wrapEther$.pending());
   const wrapAmount = getWrapAmount(getState());
   return handleTransaction({
     dispatch,
     transactionDispatcher: () =>
-      dispatch(wrapEther({ amountInWei: wrapAmount })),
+      dispatch(doWrapEther({ amountInWei: wrapAmount })),
     transactionType: TX_WRAP,
     withCallbacks
-  });
+  }, doAddTransactionEpic ? {addTransactionEpic: doAddTransactionEpic} : {});
 };
 
 const unwrapEther = createAction(UNWRAP_ETHER, async (amountInWei, gas) =>
@@ -162,15 +165,18 @@ const unwrapEther = createAction(UNWRAP_ETHER, async (amountInWei, gas) =>
 );
 
 const unwrapEther$ = createPromiseActions("WRAP_UNWRAP/UNWRAP_ETHER");
-const unwrapEtherEpic = withCallbacks => (dispatch, getState) => {
+const unwrapEtherEpic = (withCallbacks, {
+  doUnwrapEther = unwrapEther,
+  doAddTransactionEpic = null,
+} = {}) => (dispatch, getState) => {
   dispatch(unwrapEther$.pending());
   return handleTransaction({
     dispatch,
     transactionDispatcher: () =>
-      dispatch(unwrapEther(getUnwrapAmount(getState()))),
+      dispatch(doUnwrapEther(getUnwrapAmount(getState()))),
     transactionType: TX_UNWRAP,
     withCallbacks
-  });
+  }, doAddTransactionEpic ? {addTransactionEpic: doAddTransactionEpic} : {});
 };
 
 const wrapGNTTokenAction = createAction(
@@ -182,13 +188,16 @@ const wrapGNTTokenAction = createAction(
 const wrapGNTToken = (
   { brokerAddress, amountInWei },
   withCallbacks,
-  nextTransaction
+  nextTransaction, {
+    doWrapGNTTokenAction = wrapGNTTokenAction,
+    doAddTransactionEpic = null,
+  } = {}
 ) => dispatch => {
   return handleTransaction({
     dispatch,
     callsNext: true,
     transactionDispatcher: () =>
-      dispatch(wrapGNTTokenAction({ brokerAddress, amountInWei })),
+      dispatch(doWrapGNTTokenAction({ brokerAddress, amountInWei })),
     transactionType: TX_WRAP,
     withCallbacks,
     txMeta: {
@@ -196,11 +205,15 @@ const wrapGNTToken = (
     },
     onCallNextTransaction: nextTransaction,
     nextTransactionDelay: 3000
-  });
+  }, doAddTransactionEpic ? {addTransactionEpic: doAddTransactionEpic} : {});
 };
 
 const wrapGNTToken$ = createPromiseActions("WRAP_UNWRAP/WRAP_GNT_TOKEN");
-const wrapGNTTokenEpic = withCallbacks => async (dispatch, getState) => {
+const wrapGNTTokenEpic = (withCallbacks, {
+  doWrapGNTTokenAction = null,
+  doAddTransactionEpic = null,
+  doCreateGNTDepositBroker = null,
+} = {}) => async (dispatch, getState) => {
   dispatch(wrapGNTToken$.pending());
   const depositBrokerAddress = wrapUnwrap.getBrokerAddress(
     getState(),
@@ -212,18 +225,18 @@ const wrapGNTTokenEpic = withCallbacks => async (dispatch, getState) => {
   }
 
   if (wrapUnwrap.hasTokenBroker(getState(), TOKEN_GOLEM)) {
-    dispatch(
+    return dispatch(
       wrapGNTToken(
         { brokerAddress: depositBrokerAddress, amountInWei: wrapAmount },
         withCallbacks,
         async () => {
           await dispatch(loadDepositBrokerContractEpic(TOKEN_GOLEM));
           dispatch(clearDepositBrokerEpic(TOKEN_GOLEM, withCallbacks));
-        }
+        }, Object.assign({doAddTransactionEpic}, doWrapGNTTokenAction ? {doWrapGNTTokenAction} : {}),
       )
     );
   } else {
-    dispatch(
+    return dispatch(
       createDepositBrokerEpic(TOKEN_GOLEM, withCallbacks, async () => {
         await dispatch(loadGNTBrokerAddressEpic());
         await dispatch(loadDepositBrokerContractEpic(TOKEN_GOLEM));
@@ -240,7 +253,7 @@ const wrapGNTTokenEpic = withCallbacks => async (dispatch, getState) => {
             }
           )
         );
-      })
+      }, Object.assign({doAddTransactionEpic}, doCreateGNTDepositBroker ? {doCreateGNTDepositBroker} : {}))
     );
   }
 };
@@ -293,15 +306,18 @@ const unwrapGNTToken = createAction(
 );
 
 const unwrapGNTToken$ = createPromiseActions("WRAP_UNWRAP/UNWRAP_GNT_TOKEN");
-const unwrapGNTTokenEpic = withCallbacks => (dispatch, getState) => {
+const unwrapGNTTokenEpic = (withCallbacks, {
+  doUnwrapGNTToken = unwrapGNTToken,
+  doAddTransactionEpic = null,
+} = {}) => (dispatch, getState) => {
   dispatch(unwrapGNTToken$.pending());
   return handleTransaction({
     dispatch,
     transactionDispatcher: () =>
-      dispatch(unwrapGNTToken({ amountInWei: getUnwrapAmount(getState()) })),
+      dispatch(doUnwrapGNTToken({ amountInWei: getUnwrapAmount(getState()) })),
     transactionType: TX_UNWRAP,
     withCallbacks
-  });
+  }, doAddTransactionEpic ? {addTransactionEpic: doAddTransactionEpic} : {});
 };
 
 const wrapTokenEpic = withCallbacks => (dispatch, getState) => {
@@ -373,7 +389,6 @@ const resetActiveWrapStatus = createAction("WRAP_UNWRAP/SET_WRAP_STATUS");
 const resetActiveUnwrapForm = () => reset("unwrapToken");
 
 const actions = {
-  init,
   loadGNTBrokerAddressEpic,
   wrapTokenEpic,
   unwrapTokenEpic,
@@ -382,6 +397,13 @@ const actions = {
   setUnwrapMax,
   resetActiveWrapForm,
   resetActiveUnwrapForm
+};
+
+const testActions = {
+  wrapETHTokenEpic,
+  unwrapEtherEpic,
+  wrapGNTTokenEpic,
+  unwrapGNTTokenEpic,
 };
 
 const reducer = handleActions(
@@ -406,5 +428,6 @@ const reducer = handleActions(
 
 export default {
   actions,
-  reducer
+  testActions,
+  reducer,
 };
