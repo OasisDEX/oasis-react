@@ -35,7 +35,6 @@ $color-cancel-order: #A8ACB9;
   background-color: #EEEEEE;
   border-radius: 5.5px;
 }
-
 /* MIXIN TABLE SCROLLING */
 @mixin quantity-query( $number, $comparison: 'equal' ) {
   $nth: '';
@@ -2699,3 +2698,6 @@ tbody.tbody-scrolling {
   width: 98% !important;
 }
 
+input[disabled] {
+  cursor: not-allowed;
+}
