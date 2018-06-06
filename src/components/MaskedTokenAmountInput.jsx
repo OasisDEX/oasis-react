@@ -28,7 +28,8 @@ class MaskedTokenAmountInput extends PureComponent {
         <MaskedInput
           autoComplete='off'
           mask={createNumberMask({ allowDecimal: true, decimalLimit: 5, prefix: '' })}
-          guide={false}
+          guide={true}
+          placeholderChar={' '}
           {...newProps }/>
     );
   }
