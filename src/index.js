@@ -55,6 +55,7 @@ const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
   dispatch(setLastNetworkCheckStartAt());
 
   if (isInitialHealthcheck) {
+    dispatch(platformReducer.actions.setGlobalFormLockEnabled());
     dispatch(networkReducer.actions.connecting());
   }
 

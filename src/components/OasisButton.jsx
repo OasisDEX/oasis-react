@@ -7,6 +7,13 @@ const propTypes = PropTypes && {
   children: PropTypes.node,
   caption: PropTypes.string,
   pendingstate: PropTypes.bool,
+  size: PropTypes.oneOf([
+    "xs__smaller_text",
+    "xs",
+    "sm",
+    "md",
+    "lg"
+  ])
 };
 
 const defaultProps = {

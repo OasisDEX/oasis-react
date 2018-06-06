@@ -1,7 +1,7 @@
 @import "./constants";
 
 @mixin text($size: 12px, $weight: 500) {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: $size;
   font-weight: $weight;
 }
@@ -15,7 +15,7 @@
 
 @mixin muted($size: 12px) {
   font-weight: 500;
-  color: #B1B1B3;
+  color: #b1b1b3;
   font-size: $size;
   line-height: $size*1.7;
 }
@@ -33,8 +33,9 @@
 @mixin currency {
   font-weight: 700;
   font-size: 10px;
-  color: #68686C;
+  color: #68686c;
   letter-spacing: 1px;
+  min-width: 58px;
   vertical-align: middle;
   text-align: left;
   padding-left: 10px;
@@ -48,7 +49,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 
 .textDanger {
   color: $danger-text;

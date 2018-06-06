@@ -36,6 +36,7 @@ Object {
   "activeQuoteTokenBalance": undefined,
   "activeTradingPairPrecision": 18,
   "currentFormValues": Object {},
+  "globalFormLock": undefined,
   "hasSufficientTokenAmount": false,
 }
 `;

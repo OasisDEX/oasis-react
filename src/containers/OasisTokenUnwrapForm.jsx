@@ -1,45 +1,50 @@
-import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { PureComponent } from "react";
+import { PropTypes } from "prop-types";
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Field, reduxForm } from 'redux-form/immutable'
-import wrapUnwrap from '../store/selectors/wrapUnwrap';
-import web3 from '../bootstrap/web3';
-import wrapUnwrapReducer from '../store/reducers/wrapUnwrap';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Field, reduxForm } from "redux-form/immutable";
+import wrapUnwrap from "../store/selectors/wrapUnwrap";
+import web3 from "../bootstrap/web3";
+import wrapUnwrapReducer from "../store/reducers/wrapUnwrap";
 import OasisButton from "../components/OasisButton";
 import tableStyles from "../styles/modules/_table.scss";
 import styles from "./OasisTokenWrapForm.scss";
-import CSSModules from 'react-css-modules';
-import OasisTransactionStatusWrapperInfoBox  from './OasisTransactionStatusInfoBox';
-import { TX_UNWRAP } from '../store/reducers/transactions';
-import { formatAmount } from '../utils/tokens/pair';
+import CSSModules from "react-css-modules";
+import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBox";
+import { TX_UNWRAP } from "../store/reducers/transactions";
+import { formatAmount } from "../utils/tokens/pair";
 import MaskedTokenAmountInput from "../components/MaskedTokenAmountInput";
+import platform from "../store/selectors/platform";
+import { SETMAXBTN_HIDE_DELAY_MS } from "../constants";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
   activeUnwrappedTokenBalance: PropTypes.string
 };
 
-
-
-const inputStyle = { textAlign:'right', width: '100%' };
+const inputStyle = { textAlign: "right", width: "100%" };
 
 export class OasisTokenUnwrapFormWrapper extends PureComponent {
-
   constructor(props) {
     super(props);
+
+    this.state = {
+      showMaxButton: false
+    };
+
     this.validate = this.validate.bind(this);
     this.setUnwrapMax = this.setUnwrapMax.bind(this);
-
+    this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
+    this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
   }
 
   validate(value) {
     const { activeWrappedTokenBalance } = this.props;
     if (!value || value == 0) {
-      return 'VALIDATE_ERROR/VALUE_IS_REQUIRED';
-    }else if (web3.fromWei(activeWrappedTokenBalance).lt(value)) {
-      return 'VALIDATE_ERROR/WRAP_AMOUNT_GREATER_THAN_TOKEN_BALANCE'
+      return "VALIDATE_ERROR/VALUE_IS_REQUIRED";
+    } else if (web3.fromWei(activeWrappedTokenBalance).lt(value)) {
+      return "VALIDATE_ERROR/WRAP_AMOUNT_GREATER_THAN_TOKEN_BALANCE";
     }
   }
 
@@ -61,34 +66,49 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
 
   renderTransactionStatus() {
     const { transactionState: { txStatus, txStartTimestamp } } = this.props;
-    return <OasisTransactionStatusWrapperInfoBox
-      txStatus={txStatus}
-      infoText={this.transactionInfoBlock()}
-      localStatus={txStatus}
-      txTimestamp={txStartTimestamp}
-      txType={TX_UNWRAP}
-    />;
+    return (
+      <OasisTransactionStatusWrapperInfoBox
+        txStatus={txStatus}
+        infoText={this.transactionInfoBlock()}
+        localStatus={txStatus}
+        txTimestamp={txStartTimestamp}
+        txType={TX_UNWRAP}
+      />
+    );
   }
 
   render() {
-    const { valid, handleSubmit, activeWrappedToken, disabled } = this.props;
+    const {
+      valid,
+      handleSubmit,
+      activeWrappedToken,
+      disabled,
+      globalFormLock
+    } = this.props;
     return (
       <form onSubmit={handleSubmit}>
-          <table className={tableStyles.table}>
-            <tbody>
-              <tr>
-                <th>Amount</th>
-                <td className={tableStyles.withInput}>
-                  <div className={tableStyles.inputGroup}>
+        <table className={tableStyles.table}>
+          <tbody>
+            <tr>
+              <th>Amount</th>
+              <td className={tableStyles.withInput}>
+                <div className={tableStyles.inputGroup}>
+                  {this.state.showMaxButton && (
                     <OasisButton
                       type="button"
                       size="xs"
                       className={tableStyles.inputBtn}
                       onClick={this.setUnwrapMax}
-                      disabled={disabled}
+                      disabled={disabled || globalFormLock}
                     >
                       unwrap max
                     </OasisButton>
+                  )}
+                  <div
+                    style={{ disabled: "inlineBlock" }}
+                    onFocus={this.onTotalFieldSectionFocus}
+                    onBlur={this.onTotalFieldSectionBlur}
+                  >
                     <Field
                       style={inputStyle}
                       required
@@ -98,29 +118,48 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
                       component={MaskedTokenAmountInput}
                       placeholder={0}
                       type="text"
-                      disabled={disabled}
+                      disabled={disabled || globalFormLock}
                     />
                   </div>
-                </td>
-                <td className={tableStyles.currency}>
-                  {activeWrappedToken}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                </div>
+              </td>
+              <td className={tableStyles.currency}>{activeWrappedToken}</td>
+            </tr>
+          </tbody>
+        </table>
         <div>{this.renderTransactionStatus()}</div>
-          <div className={styles.footer}>
-            <OasisButton type="submit" disabled={!valid || disabled}>Unwrap</OasisButton>
-          </div>
+        <div className={styles.footer}>
+          <OasisButton
+            type="submit"
+            disabled={!valid || disabled || globalFormLock}
+          >
+            Unwrap
+          </OasisButton>
+        </div>
       </form>
+    );
+  }
+
+  onTotalFieldSectionFocus() {
+    this.setState({ showMaxButton: true });
+  }
+
+  onTotalFieldSectionBlur() {
+    setTimeout(
+      () => this.setState({ showMaxButton: false }),
+      SETMAXBTN_HIDE_DELAY_MS
     );
   }
 }
 
 export function mapStateToProps(state) {
   return {
-    activeWrappedTokenBalance: wrapUnwrap.activeWrappedTokenBalance(state, true),
-    unwrapTokenAmount: wrapUnwrap.unwrapTokenAmount(state)
+    activeWrappedTokenBalance: wrapUnwrap.activeWrappedTokenBalance(
+      state,
+      true
+    ),
+    unwrapTokenAmount: wrapUnwrap.unwrapTokenAmount(state),
+    globalFormLock: platform.globalFormLock(state)
   };
 }
 export function mapDispatchToProps(dispatch) {
@@ -131,9 +170,15 @@ export function mapDispatchToProps(dispatch) {
 }
 
 OasisTokenUnwrapFormWrapper.propTypes = propTypes;
-OasisTokenUnwrapFormWrapper.displayName = 'OasisTokenUnwrapForm';
+OasisTokenUnwrapFormWrapper.displayName = "OasisTokenUnwrapForm";
 export default connect(mapStateToProps, mapDispatchToProps)(
   reduxForm({
-    form: 'unwrapToken',
-  })(CSSModules(OasisTokenUnwrapFormWrapper, {tableStyles, styles}, {allowMultiple: true}))
+    form: "unwrapToken"
+  })(
+    CSSModules(
+      OasisTokenUnwrapFormWrapper,
+      { tableStyles, styles },
+      { allowMultiple: true }
+    )
+  )
 );

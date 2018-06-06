@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisWelcomeMessage should render 1`] = `
+<OasisMessage
+  dismissible={true}
+  heading="Get started!"
+  onDismiss={[Function]}
+  type="MSGTYPE_INFO"
+>
+  <ul>
+    <li>
+      <span
+        styleName="Circle"
+      >
+        <span
+          styleName="Number"
+        >
+          1
+        </span>
+      </span>
+      <span
+        styleName="Text"
+      >
+        Go to wrap/unwrap and wrap ETH to turn it into W-ETH.
+      </span>
+    </li>
+    <li>
+      <span
+        styleName="Circle"
+      >
+        <span
+          styleName="Number"
+        >
+          2
+        </span>
+      </span>
+      <span
+        styleName="Text"
+      >
+        Go to Trade and place new orders or trade existing orders by clicking on an open order on the order book to buy/sell into it.
+      </span>
+    </li>
+    <li>
+      <span
+        styleName="Circle"
+      >
+        <span
+          styleName="Number"
+        >
+          3
+        </span>
+      </span>
+      <span
+        styleName="Text"
+      >
+        The first time you make a transaction you will be prompted to set your allowance.
+      </span>
+    </li>
+  </ul>
+</OasisMessage>
+`;
+
+exports[`(Container) OasisWelcomeMessage will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "dismissMessage": [Function],
+  },
+}
+`;

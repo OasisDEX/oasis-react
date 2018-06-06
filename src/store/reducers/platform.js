@@ -22,6 +22,8 @@ const initialState = fromJS(
     defaultPeriod: WEEK,
     activePeriod: WEEK,
     defaultUnit: ETH_UNIT_WEI,
+    globalFormLock: true,
+    isAppLoading: true
   });
 
 
@@ -74,6 +76,11 @@ const dismissMessage = (
   dispatch(dismissMessageAction(msgType));
 };
 
+
+const setGlobalFormLockEnabled = createAction('PLATFORM/SET_GLOBAL_FORM_LOCK_ENABLED');
+const setGlobalFormLockDisabled = createAction('PLATFORM/SET_GLOBAL_FORM_LOCK_DISABLED');
+const setIsAppLoadingLockEnabled = createAction('PLATFORM/IS_APP_LOADING_ENABLED');
+const setIsAppLoadingDisabled = createAction('PLATFORM/SET_IS_APP_LOADING_DISABLED');
 const actions = {
   platformInitEpic,
   web3Initialized,
@@ -90,6 +97,10 @@ const actions = {
   networkChanged,
   dismissMessage,
   changeRouteEpic,
+  setGlobalFormLockEnabled,
+  setGlobalFormLockDisabled,
+  setIsAppLoadingDisabled,
+  setIsAppLoadingLockEnabled
 };
 
 const reducer = handleActions({
@@ -99,6 +110,10 @@ const reducer = handleActions({
   [metamaskLocked]: (state) => state.set('metamaskLocked', true),
   [metamaskUnlocked]: (state) => state.set('metamaskLocked', false),
   [networkChanged]: (state) => state.set('lastNetworkSwitchAt', Date.now()),
+  [setGlobalFormLockEnabled]: state => state.set('globalFormLock', true),
+  [setGlobalFormLockDisabled]: state => state.set('globalFormLock', false),
+  [setIsAppLoadingLockEnabled]: state => state.set('isAppLoading', true),
+  [setIsAppLoadingDisabled]: state => state.set('isAppLoading', false)
 }, initialState);
 
 export default {

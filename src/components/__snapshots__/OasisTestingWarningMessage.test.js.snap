@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisTestingWarningMessage should render 1`] = `
+<OasisMessage
+  dismissible={false}
+  heading="Warning!"
+  type="MSGTYPE_WARNING"
+>
+  <div>
+    <ul>
+      <li>
+        <span
+          styleName="Circle Circle--Red"
+        >
+          <span
+            styleName="FilledCircle"
+          />
+        </span>
+        <span
+          styleName="Text"
+        >
+          Oasis is undergoing alpha testing: Any funds deposited on the exchange could be lost in the event of a security breach.
+        </span>
+      </li>
+    </ul>
+  </div>
+</OasisMessage>
+`;
