@@ -11,6 +11,7 @@ import { getTokenContractsList } from '../../../bootstrap/contracts';
 import balancesReducer from '../balances';
 import accounts from '../../selectors/accounts';
 import { clearAccountSpecificSubscriptions } from '../../../bootstrap/web3';
+import platformReducer from '../platform';
 
 export const setLastNetworkCheckStartAt = createAction(
   "NETWORK/SET_LAST_NETWORK_CHECK_START_AT",
@@ -72,6 +73,8 @@ export const onNetworkCheckEndEpic = (
         getTokenContractsList(),
         defaultAccount
       )
+    ).then(
+      () => dispatch(platformReducer.actions.setGlobalFormLockDisabled())
     );
     dispatch(
       balancesReducer.actions.subscribeTokenTransfersEventsEpic(

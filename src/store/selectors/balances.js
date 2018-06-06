@@ -60,7 +60,6 @@ const tokenAllowanceTrustStatus = createSelector(
   }
 );
 
-
 const tokenAllowanceStatusForActiveMarket = createSelector(
   (...args) => args,
   ([state, { tokenName }]) =>
@@ -77,6 +76,10 @@ const activeBaseTokenBalance = createSelector(
 );
 
 const ethBalance = createSelector(balances, s => s.get("ethBalance"));
+const isUserBalanceZero = createSelector(
+  ethBalance,
+  balance => parseInt(balance) === 0
+);
 
 const activeQuoteTokenBalance = createSelector(
   tokenBalances,
@@ -95,4 +98,5 @@ export default {
   activeBaseTokenBalance,
   activeQuoteTokenBalance,
   tokenAllowanceStatusForActiveMarket,
+  isUserBalanceZero
 };

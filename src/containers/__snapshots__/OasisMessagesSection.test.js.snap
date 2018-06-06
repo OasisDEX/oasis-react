@@ -14,9 +14,7 @@ exports[`(Container) OasisMessagesSection should render 1`] = `
 
 exports[`(Container) OasisMessagesSection will receive right actions 1`] = `
 Object {
-  "actions": Object {
-    "dismissMessage": [Function],
-  },
+  "actions": Object {},
 }
 `;
 

@@ -27,15 +27,26 @@ exports[`(Container) TokenTransferForm should render 1`] = `
             <OasisButton
               btnType="button"
               color="default"
+              hidden={true}
               onClick={[Function]}
               size="xs"
               type="button"
             >
               transfer max
             </OasisButton>
-            <Connect(TokenAmountInputField)
-              fieldName="tokenAmount"
-            />
+            <div
+              onBlur={[Function]}
+              onFocus={[Function]}
+              style={
+                Object {
+                  "display": "inlineBlock",
+                }
+              }
+            >
+              <Connect(TokenAmountInputField)
+                fieldName="tokenAmount"
+              />
+            </div>
             <Field
               component="input"
               disabled={true}
@@ -72,6 +83,7 @@ Object {
 
 exports[`(Container) TokenTransferForm will receive right props 1`] = `
 Object {
+  "globalFormLock": undefined,
   "selectedToken": "MKR",
 }
 `;

@@ -22,6 +22,7 @@ const initialState = fromJS(
     defaultPeriod: WEEK,
     activePeriod: WEEK,
     defaultUnit: ETH_UNIT_WEI,
+    globalFormLock: true
   });
 
 
@@ -74,6 +75,10 @@ const dismissMessage = (
   dispatch(dismissMessageAction(msgType));
 };
 
+
+const setGlobalFormLockEnabled = createAction('PLATFORM/SET_GLOBAL_FORM_LOCK_ENABLED');
+const setGlobalFormLockDisabled = createAction('PLATFORM/SET_GLOBAL_FORM_LOCK_DISABLED');
+
 const actions = {
   platformInitEpic,
   web3Initialized,
@@ -90,6 +95,8 @@ const actions = {
   networkChanged,
   dismissMessage,
   changeRouteEpic,
+  setGlobalFormLockEnabled,
+  setGlobalFormLockDisabled
 };
 
 const reducer = handleActions({
@@ -99,6 +106,8 @@ const reducer = handleActions({
   [metamaskLocked]: (state) => state.set('metamaskLocked', true),
   [metamaskUnlocked]: (state) => state.set('metamaskLocked', false),
   [networkChanged]: (state) => state.set('lastNetworkSwitchAt', Date.now()),
+  [setGlobalFormLockEnabled]: state => state.set('globalFormLock', true),
+  [setGlobalFormLockDisabled]: state => state.set('globalFormLock', false)
 }, initialState);
 
 export default {

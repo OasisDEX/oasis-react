@@ -5,7 +5,7 @@ import { ASK, BID } from "../../store/reducers/trades";
 
 export const PRICE_DECIMAL = 5;
 // export const VOLUME_DECIMAL = 5;
-// export const AMOUNT_DECIMAL = 5;
+export const AMOUNT_DECIMALS = 5;
 
 const format = (baseToken, quoteToken) => `${baseToken}/${quoteToken}`;
 
@@ -95,39 +95,40 @@ const formatPrice = (
   if (!fromWei) {
     return price
       ? new BigNumber(price)
-          .toFixed(12)
+          .toFixed(18)
           .toString()
           .replace(replacePattern, "$1.$2")
       : null;
   } else {
     return price
       ? new BigNumber(web3.fromWei(price, ETH_UNIT_ETHER))
-          .toFixed(12)
+          .toFixed(18)
           .toString()
           .replace(replacePattern, "$1.$2")
       : null;
   }
 };
 
-// eslint-disable-next-line no-unused-vars
+//eslint-disable-next-line no-unused-vars
 const formatAmount = (
   price,
   fromWei = false,
   // unit = ETH_UNIT_ETHER,
-  // decimalPlaces
+  // decimalPlaces = AMOUNT_DECIMALS
 ) => {
+  // const numberOfDecimalsToDisplay = decimalPlaces !== AMOUNT_DECIMALS ? decimalPlaces: AMOUNT_DECIMALS;
   if (!fromWei) {
     return price
       ? String(
           new BigNumber(price)
-            .toFixed(12)
+            .toFixed(18)
             .replace(replacePattern, "$1.$2")
         )
       : null;
   } else {
     return price
       ? String(
-          new BigNumber(web3.fromWei(price, ETH_UNIT_ETHER)).toFixed(12)
+          new BigNumber(web3.fromWei(price, ETH_UNIT_ETHER)).toFixed(18)
         ).replace(replacePattern, "$1.$2")
       : null;
   }

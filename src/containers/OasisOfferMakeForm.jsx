@@ -1,25 +1,30 @@
-import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { PureComponent } from "react";
+import { PropTypes } from "prop-types";
 // import throttle from 'lodash/throttle';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Field, reduxForm } from 'redux-form/immutable';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Field, reduxForm } from "redux-form/immutable";
 
-import offerMakes from '../store/selectors/offerMakes';
-import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from '../constants';
-import offerMakesReducer from '../store/reducers/offerMakes';
-import tokens from '../store/selectors/tokens';
-import balances from '../store/selectors/balances';
-import { formatValue, greaterThanZeroValidator, numericFormatValidator } from '../utils/forms/offers';
+import offerMakes from "../store/selectors/offerMakes";
+import { MAKE_BUY_OFFER, MAKE_SELL_OFFER, SETMAXBTN_HIDE_DELAY_MS } from '../constants';
+import offerMakesReducer from "../store/reducers/offerMakes";
+import tokens from "../store/selectors/tokens";
+import balances from "../store/selectors/balances";
+import {
+  formatValue,
+  greaterThanZeroValidator,
+  numericFormatValidator
+} from "../utils/forms/offers";
 
-import OasisButton from '../components/OasisButton';
+import OasisButton from "../components/OasisButton";
 
-import styles from './OasisOfferMakeForm.scss';
-import CSSModules from 'react-css-modules';
-import OasisVolumeIsGreaterThanUserBalance from '../components/OasisVolumeIsGreaterThanUserBalance';
+import styles from "./OasisOfferMakeForm.scss";
+import CSSModules from "react-css-modules";
+import OasisVolumeIsGreaterThanUserBalance from "../components/OasisVolumeIsGreaterThanUserBalance";
 // import { formatAmount, PRICE_DECIMAL } from '../utils/tokens/pair';
 // import isNumeric from '../utils/numbers/isNumeric';
-import MaskedTokenAmountInput from '../components/MaskedTokenAmountInput';
+import MaskedTokenAmountInput from "../components/MaskedTokenAmountInput";
+import platform from '../store/selectors/platform';
 
 const propTypes = PropTypes && {
   // activeOfferMakeOfferData: ImmutablePropTypes.map.isRequired,
@@ -42,7 +47,9 @@ export class OfferMakeForm extends PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      showMaxButton: false
+    };
 
     this.onVolumeFieldChange = this.onVolumeFieldChange.bind(this);
     this.onTotalFieldChange = this.onTotalFieldChange.bind(this);
@@ -78,14 +85,19 @@ export class OfferMakeForm extends PureComponent {
   }
 
   setMaxButton() {
-    const { currentFormValues = {}, disableForm } = this.props;
+    if (false === this.state.showMaxButton) {
+      return null;
+    }
+    const { currentFormValues = {}, disableForm, globalFormLock } = this.props;
     switch (this.props.offerMakeType) {
       case MAKE_BUY_OFFER:
         return (
           <OasisButton
             className={styles.setMaxBtn}
             disabled={
-              greaterThanZeroValidator(currentFormValues.price) || disableForm
+              greaterThanZeroValidator(currentFormValues.price) ||
+              disableForm ||
+              globalFormLock
             }
             type="button"
             color="success"
@@ -100,7 +112,9 @@ export class OfferMakeForm extends PureComponent {
           <OasisButton
             className={styles.setMaxBtn}
             disabled={
-              greaterThanZeroValidator(currentFormValues.price) || disableForm
+              greaterThanZeroValidator(currentFormValues.price) ||
+              disableForm ||
+              globalFormLock
             }
             type="button"
             color="danger"
@@ -119,31 +133,26 @@ export class OfferMakeForm extends PureComponent {
   }
 
   onTotalFieldSectionBlur() {
-    this.setState({ showMaxButton: false });
+    setTimeout(() => this.setState({ showMaxButton: false }), SETMAXBTN_HIDE_DELAY_MS);
   }
 
-  // formatField(value, fieldName) {
-  //   if (isNumeric(value)) {
-  //     return formatAmount(value, false, null, PRICE_DECIMAL);
-  //   }
-  // }
-
-  renderPriceField(disableForm) {
+  renderPriceField() {
+    const { disableForm, globalFormLock } = this.props;
     return (
       <Field
         autoComplete="off"
         name="price"
         component={MaskedTokenAmountInput}
         placeholder={0}
-        disabled={disableForm}
+        disabled={disableForm || globalFormLock}
         type="text"
         onChange={this.onPriceFieldChange}
       />
     );
   }
 
-  renderAmountField(disableForm) {
-    const { currentFormValues = {} } = this.props;
+  renderAmountField() {
+    const { currentFormValues = {}, disableForm, globalFormLock } = this.props;
     return (
       <Field
         autoComplete="off"
@@ -155,32 +164,40 @@ export class OfferMakeForm extends PureComponent {
         min={0}
         placeholder={0}
         disabled={
-          greaterThanZeroValidator(currentFormValues.price) || disableForm
+          greaterThanZeroValidator(currentFormValues.price) ||
+          disableForm ||
+          globalFormLock
         }
         onChange={this.onVolumeFieldChange}
       />
     );
   }
 
-  renderTotalField(disableForm) {
-    const { currentFormValues = {} } = this.props;
+  renderTotalField() {
+    const { currentFormValues = {}, disableForm, globalFormLock } = this.props;
     return (
-      <Field
-        autoComplete="off"
-        min={0}
-        onChange={this.onTotalFieldChange}
-        onBlur={formatValue}
-        name="total"
-        component={MaskedTokenAmountInput}
-        type="text"
-        validate={validateTotal}
-        placeholder={0}
-        disabled={
-          greaterThanZeroValidator(currentFormValues.price) ||
-          // greaterThanZeroValidator(currentFormValues.volume) ||
-          disableForm
-        }
-      />
+      <div
+        onFocus={this.onTotalFieldSectionFocus}
+        onBlur={this.onTotalFieldSectionBlur}
+      >
+        <Field
+          autoComplete="off"
+          min={0}
+          onChange={this.onTotalFieldChange}
+          onBlur={formatValue}
+          name="total"
+          component={MaskedTokenAmountInput}
+          type="text"
+          validate={validateTotal}
+          placeholder={0}
+          disabled={
+            greaterThanZeroValidator(currentFormValues.price) ||
+            // greaterThanZeroValidator(currentFormValues.volume) ||
+            disableForm ||
+            globalFormLock
+          }
+        />
+      </div>
     );
   }
 
@@ -189,8 +206,7 @@ export class OfferMakeForm extends PureComponent {
       baseToken,
       quoteToken,
       handleSubmit,
-      isUserTokenBalanceSufficient,
-      disableForm
+      isUserTokenBalanceSufficient
     } = this.props;
 
     return (
@@ -199,16 +215,12 @@ export class OfferMakeForm extends PureComponent {
           <tbody>
             <tr>
               <th>Price</th>
-              <td className={styles.amount}>
-                {this.renderPriceField(disableForm)}
-              </td>
+              <td className={styles.amount}>{this.renderPriceField()}</td>
               <td className={styles.currency}> {quoteToken}</td>
             </tr>
             <tr>
               <th>Amount</th>
-              <td className={styles.amount}>
-                {this.renderAmountField(disableForm)}
-              </td>
+              <td className={styles.amount}>{this.renderAmountField()}</td>
               <td className={styles.currency}>
                 {baseToken}
                 <div>
@@ -254,7 +266,8 @@ export function mapStateToProps(state, props) {
       props.offerMakeType
     ),
     activeBaseTokenBalance: balances.activeBaseTokenBalance(state),
-    activeQuoteTokenBalance: balances.activeQuoteTokenBalance(state)
+    activeQuoteTokenBalance: balances.activeQuoteTokenBalance(state),
+    globalFormLock: platform.globalFormLock(state)
   };
 }
 

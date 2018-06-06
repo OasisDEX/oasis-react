@@ -46,7 +46,8 @@ export class OasisMakeSellOfferWrapper extends React.Component {
     const {
       activeTradingPair: { baseToken, quoteToken },
       hasSufficientTokenAmount,
-      canMakeOffer
+      canMakeOffer,
+      globalFormLock
     } = this.props;
     const formProps = {
       baseToken,
@@ -78,7 +79,7 @@ export class OasisMakeSellOfferWrapper extends React.Component {
               />
             )}
             <InfoBox hidden={this.props.isPriceSet} noBorder>
-              Enter a price to unlock amount and total.
+              {!globalFormLock && "Enter a price to unlock amount and total."}
             </InfoBox>
           </div>
           <OasisButton
@@ -106,9 +107,9 @@ export class OasisMakeSellOfferWrapper extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return !this.props.isModalOpen || nextProps.isModalOpen === false ? (
-      this.state !== nextState || this.props !== nextProps
-    ) : false;
+    return !this.props.isModalOpen || nextProps.isModalOpen === false
+      ? this.state !== nextState || this.props !== nextProps
+      : false;
   }
 }
 
@@ -126,7 +127,8 @@ export function mapStateToProps(state) {
     activeTradingPair: tokens.activeTradingPair(state),
     contractsLoaded: platform.contractsLoaded(state),
     isPriceSet: offerMakes.isMakeSellOfferPriceSet(state),
-    isVolumeEmptyOrZero: isVolumeOrPriceEmptyOrZero(state, MAKE_SELL_OFFER)
+    isVolumeEmptyOrZero: isVolumeOrPriceEmptyOrZero(state, MAKE_SELL_OFFER),
+    globalFormLock: platform.globalFormLock(state)
   };
 }
 export function mapDispatchToProps(dispatch) {
