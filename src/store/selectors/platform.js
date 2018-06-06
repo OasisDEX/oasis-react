@@ -32,6 +32,12 @@ const globalFormLock = createSelector(
   s => s.get('globalFormLock')
 );
 
+const isAppLoading = createSelector(
+  platform,
+  s => s.get('isAppLoading')
+);
+
+
 export default {
   state: platform,
   isAccountLocked,
@@ -40,5 +46,6 @@ export default {
   defaultPeriodAvgBlockNumber,
   activePeriodAvgBlockNumber,
   contractsLoaded,
-  globalFormLock
+  globalFormLock,
+  isAppLoading
 };

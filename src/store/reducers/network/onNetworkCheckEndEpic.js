@@ -49,7 +49,9 @@ export const onNetworkCheckEndEpic = (
         const tradingPair =
           tokens.activeTradingPair(getState()) ||
           tokens.defaultTradingPair(getState()).toJSON();
-        dispatch(offersReducer.actions.syncOffersEpic(tradingPair));
+        dispatch(offersReducer.actions.syncOffersEpic(tradingPair)).then(
+          () => dispatch(platformReducer.actions.setIsAppLoadingDisabled())
+        );
         dispatch(tradesReducer.actions.initialMarketHistoryLoaded());
         dispatch(
           tradesReducer.actions.subscribeLogTakeEventsEpic(currentLatestBlock)
@@ -74,7 +76,9 @@ export const onNetworkCheckEndEpic = (
         defaultAccount
       )
     ).then(
-      () => dispatch(platformReducer.actions.setGlobalFormLockDisabled())
+      () => {
+        dispatch(platformReducer.actions.setGlobalFormLockDisabled());
+      }
     );
     dispatch(
       balancesReducer.actions.subscribeTokenTransfersEventsEpic(
