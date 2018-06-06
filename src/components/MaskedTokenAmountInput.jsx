@@ -12,7 +12,7 @@ class MaskedTokenAmountInput extends PureComponent {
   forwardEvent(callback) {
     return (event) => {
       const value = event.target.value;
-      // console.log("forwardEvent", value);
+      console.log("forwardEvent", value);
       callback(value.replace(/,/g, ''));
     };
   }
@@ -28,7 +28,8 @@ class MaskedTokenAmountInput extends PureComponent {
         <MaskedInput
           autoComplete='off'
           mask={createNumberMask({ allowDecimal: true, decimalLimit: 5, prefix: '' })}
-          guide={false}
+          guide={true}
+          placeholderChar={' '}
           {...newProps }/>
     );
   }
