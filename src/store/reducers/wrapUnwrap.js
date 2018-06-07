@@ -119,6 +119,7 @@ const createDepositBrokerEpic = (
   nextTransaction, {
     doAddTransactionEpic = null,
     doCreateGNTDepositBroker = createGNTDepositBroker,
+    nextTransactionDelay = 3000,
   } = {}
 ) => dispatch => {
   switch (tokenName) {
@@ -133,7 +134,7 @@ const createDepositBrokerEpic = (
         },
         withCallbacks,
         onCallNextTransaction: nextTransaction,
-        nextTransactionDelay: 3000
+        nextTransactionDelay,
       }, doAddTransactionEpic ? {addTransactionEpic: doAddTransactionEpic} : {});
   }
 };
@@ -191,6 +192,7 @@ const wrapGNTToken = (
   nextTransaction, {
     doWrapGNTTokenAction = wrapGNTTokenAction,
     doAddTransactionEpic = null,
+    nextTransactionDelay = 3000,
   } = {}
 ) => dispatch => {
   return handleTransaction({
@@ -204,7 +206,7 @@ const wrapGNTToken = (
       txSubType: "wrapGNT"
     },
     onCallNextTransaction: nextTransaction,
-    nextTransactionDelay: 3000
+    nextTransactionDelay,
   }, doAddTransactionEpic ? {addTransactionEpic: doAddTransactionEpic} : {});
 };
 
@@ -213,6 +215,11 @@ const wrapGNTTokenEpic = (withCallbacks, {
   doWrapGNTTokenAction = null,
   doAddTransactionEpic = null,
   doCreateGNTDepositBroker = null,
+  nextTransactionDelay = null,
+  doLoadDepositBrokerContractEpic = loadDepositBrokerContractEpic,
+  doClearDepositBrokerEpic = clearDepositBrokerEpic,
+  doLoadGNTBrokerAddressEpic = loadGNTBrokerAddressEpic,
+  nestedDispatch = (...args) => args[0](...args.slice(1)),
 } = {}) => async (dispatch, getState) => {
   dispatch(wrapGNTToken$.pending());
   const depositBrokerAddress = wrapUnwrap.getBrokerAddress(
@@ -230,30 +237,42 @@ const wrapGNTTokenEpic = (withCallbacks, {
         { brokerAddress: depositBrokerAddress, amountInWei: wrapAmount },
         withCallbacks,
         async () => {
-          await dispatch(loadDepositBrokerContractEpic(TOKEN_GOLEM));
-          dispatch(clearDepositBrokerEpic(TOKEN_GOLEM, withCallbacks));
-        }, Object.assign({doAddTransactionEpic}, doWrapGNTTokenAction ? {doWrapGNTTokenAction} : {}),
+          await dispatch(doLoadDepositBrokerContractEpic(TOKEN_GOLEM));
+          dispatch(doClearDepositBrokerEpic(TOKEN_GOLEM, withCallbacks));
+        }, Object.assign({},
+          doAddTransactionEpic ? {doAddTransactionEpic} : {},
+          doWrapGNTTokenAction ? {doWrapGNTTokenAction} : {},
+          nextTransactionDelay != null ? {nextTransactionDelay} : {},
+        ),
       )
     );
   } else {
     return dispatch(
       createDepositBrokerEpic(TOKEN_GOLEM, withCallbacks, async () => {
-        await dispatch(loadGNTBrokerAddressEpic());
-        await dispatch(loadDepositBrokerContractEpic(TOKEN_GOLEM));
-        dispatch(
+        await dispatch(doLoadGNTBrokerAddressEpic());
+        await dispatch(doLoadDepositBrokerContractEpic(TOKEN_GOLEM));
+        testActions.lastNestedWrapGNT = nestedDispatch(dispatch,
           wrapGNTToken(
             { brokerAddress: depositBrokerAddress, amountInWei: wrapAmount },
             withCallbacks,
             async () => {
               await dispatch(
-                clearDepositBrokerEpic(TOKEN_GOLEM, withCallbacks)
+                doClearDepositBrokerEpic(TOKEN_GOLEM, withCallbacks)
               );
               dispatch(wrapGNTToken$.fulfilled());
               dispatch(resetActiveWrapForm());
-            }
+            }, Object.assign({},
+              doAddTransactionEpic ? {doAddTransactionEpic} : {},
+              doWrapGNTTokenAction ? {doWrapGNTTokenAction} : {},
+              nextTransactionDelay != null ? {nextTransactionDelay} : {},
+            )
           )
         );
-      }, Object.assign({doAddTransactionEpic}, doCreateGNTDepositBroker ? {doCreateGNTDepositBroker} : {}))
+      }, Object.assign({},
+        doAddTransactionEpic ? {doAddTransactionEpic} : {},
+        doCreateGNTDepositBroker ? {doCreateGNTDepositBroker} : {},
+        nextTransactionDelay != null ? {nextTransactionDelay} : {},
+      ))
     );
   }
 };
@@ -404,6 +423,7 @@ const testActions = {
   unwrapEtherEpic,
   wrapGNTTokenEpic,
   unwrapGNTTokenEpic,
+  lastNestedWrapGNT: null,
 };
 
 const reducer = handleActions(

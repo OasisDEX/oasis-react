@@ -245,7 +245,9 @@ Immutable.Map {
 }
 `;
 
-exports[`wrapGNTTokenEpic with broker 3`] = `
+exports[`wrapGNTTokenEpic with broker 3`] = `null`;
+
+exports[`wrapGNTTokenEpic with broker 4`] = `
 Array [
   Object {
     "type": "WRAP_UNWRAP/WRAP_GNT_TOKEN_PENDING",
@@ -277,6 +279,25 @@ Array [
     ],
     "type": "MOCK___onCompleted",
   },
+  Object {
+    "payload": Array [
+      "GNT",
+    ],
+    "type": "MOCK___loadDepositBrokerContractEpic",
+  },
+  Object {
+    "payload": Array [
+      "GNT",
+      Object {
+        "onCancelCleanup": [Function],
+        "onCompleted": [Function],
+        "onPending": [Function],
+        "onRejected": [Function],
+        "onStart": [Function],
+      },
+    ],
+    "type": "MOCK___clearDepositBrokerEpic",
+  },
 ]
 `;
 
@@ -295,6 +316,14 @@ Immutable.Map {
 `;
 
 exports[`wrapGNTTokenEpic without broker 3`] = `
+Object {
+  "status": "TX/STATUS_CONFIRMED",
+  "transactionConfirmationPromise": Promise {},
+  "transactionHash": "0xabcd",
+}
+`;
+
+exports[`wrapGNTTokenEpic without broker 4`] = `
 Array [
   Object {
     "type": "WRAP_UNWRAP/WRAP_GNT_TOKEN_PENDING",
@@ -325,6 +354,69 @@ Array [
       true,
     ],
     "type": "MOCK___onCompleted",
+  },
+  Object {
+    "payload": Array [
+      undefined,
+    ],
+    "type": "MOCK___loadGNTBrokerAddressEpic",
+  },
+  Object {
+    "payload": Array [
+      "GNT",
+    ],
+    "type": "MOCK___loadDepositBrokerContractEpic",
+  },
+  Object {
+    "payload": Array [
+      1528243200000,
+      Object {
+        "txSubType": "wrapGNT",
+      },
+    ],
+    "type": "MOCK___onStart",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "txHash": "0xabcd",
+        "txStartTimestamp": 1528329600000,
+      },
+    ],
+    "type": "MOCK___onPending",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "value": "0xcdef",
+      },
+      true,
+    ],
+    "type": "MOCK___onCompleted",
+  },
+  Object {
+    "payload": Array [
+      "GNT",
+      Object {
+        "onCancelCleanup": [Function],
+        "onCompleted": [Function],
+        "onPending": [Function],
+        "onRejected": [Function],
+        "onStart": [Function],
+      },
+    ],
+    "type": "MOCK___clearDepositBrokerEpic",
+  },
+  Object {
+    "type": Array [
+      "WRAP_UNWRAP/WRAP_GNT_TOKEN_FULFILLED",
+    ],
+  },
+  Object {
+    "meta": Object {
+      "form": "wrapToken",
+    },
+    "type": "@@redux-form/RESET",
   },
 ]
 `;

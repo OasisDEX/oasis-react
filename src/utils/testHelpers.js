@@ -15,6 +15,8 @@ export function mockDate(date, block) {
 }
 
 export function mockDatePromise(date, promise) {
+  if (!promise)
+    return null;
   MockDate.set(date);
   moment.tz.setDefault('UTC');
   return promise.then((v) => {

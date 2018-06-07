@@ -3,7 +3,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import each from 'jest-each';
-import {wei, mockDate, mockDatePromise, dispatchMockAction} from '../../utils/testHelpers';
+import {wei, mockDate, mockDatePromise, mockAction, dispatchMockAction} from '../../utils/testHelpers';
 
 import {Map} from 'immutable';
 
@@ -169,6 +169,7 @@ each([
       }),
     }));
 
+    wrapUnwrap.testActions.lastNestedWrapGNT = null;
     const promise = mockDate('2018-06-05', () => store.dispatch(wrapUnwrap.testActions.wrapGNTTokenEpic({
       onCancelCleanup: dispatchMockAction('onCancelCleanup', store.dispatch),
       onStart: dispatchMockAction('onStart', store.dispatch),
@@ -179,14 +180,22 @@ each([
       doWrapGNTTokenAction: () => async () => ({value: '0xabcd'}),
       doAddTransactionEpic: () => async () => ({value: '0xcdef'}),
       doCreateGNTDepositBroker: () => async () => ({value: '0xef01'}),
+      nextTransactionDelay: 0,
+      doLoadDepositBrokerContractEpic: mockAction('loadDepositBrokerContractEpic'),
+      doClearDepositBrokerEpic: mockAction('clearDepositBrokerEpic'),
+      doLoadGNTBrokerAddressEpic: mockAction('loadGNTBrokerAddressEpic'),
+      nestedDispatch: (...args) => mockDate('2018-06-06', () => args[0](...args.slice(1))),
     })));
 
     const result = await mockDatePromise('2018-06-05', promise);
     const promise2 = result.transactionConfirmationPromise;
     const result2 = await promise2;
+    const promise3 = wrapUnwrap.testActions.lastNestedWrapGNT;
+    const result3 = await mockDatePromise('2018-06-07', promise3);
 
     expect(result).toMatchSnapshot();
     expect(result2).toMatchSnapshot();
+    expect(result3).toMatchSnapshot();
     expect(store.getActions()).toMatchSnapshot();
   });
 
