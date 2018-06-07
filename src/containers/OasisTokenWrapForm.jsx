@@ -18,7 +18,8 @@ import { formatAmount } from "../utils/tokens/pair";
 import { TX_WRAP } from "../store/reducers/transactions";
 import MaskedTokenAmountInput from "../components/MaskedTokenAmountInput";
 import platform from "../store/selectors/platform";
-import { SETMAXBTN_HIDE_DELAY_MS } from "../constants";
+import {SETMAXBTN_HIDE_DELAY_MS, TOKEN_ETHER} from "../constants";
+import OasisDontWrapAllEther from '../components/OasisDontWrapAllEther';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -99,6 +100,13 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
       />
     );
   }
+  renderDontWrapAllEtherWarning() {
+    const { activeUnwrappedToken, activeUnwrappedTokenBalance } = this.props;
+    if(activeUnwrappedToken === TOKEN_ETHER && activeUnwrappedTokenBalance && activeUnwrappedTokenBalance.gt(0)) {
+      return (<OasisDontWrapAllEther/>);
+    } else { return <div></div>; }
+  }
+
   render() {
     const {
       valid,
@@ -150,7 +158,8 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
         </table>
         <div>{this.renderTransactionStatus()}</div>
         <div className={styles.footer}>
-          <OasisButton type="submit" disabled={!valid || disabled}>
+          {this.renderDontWrapAllEtherWarning()}
+          <OasisButton type="submit" disabled={!valid || disabled} className={styles.footerBtn}>
             Wrap
           </OasisButton>
         </div>

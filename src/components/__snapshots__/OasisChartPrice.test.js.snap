@@ -42,7 +42,7 @@ exports[`(Component) OasisChartPrice should render 1`] = `
         "yAxes": Array [
           Object {
             "scaleLabel": Object {
-              "display": true,
+              "display": false,
               "labelString": "PRICE",
             },
           },

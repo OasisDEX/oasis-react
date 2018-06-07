@@ -16,7 +16,7 @@ const defaultProps = {};
 
 class OasisInlineTokenBalance extends PureComponent {
   render() {
-    const { balance, token, inWei } = this.props;
+    const { balance, token, inWei, fractionalZerosGrey } = this.props;
     if (!!balance && token) {
       return (
         <span>
@@ -24,6 +24,7 @@ class OasisInlineTokenBalance extends PureComponent {
             fullPrecisionUnit={ETH_UNIT_ETHER}
             fullPrecisionAmount={balance}
             amount={formatAmount(balance, inWei)}
+            fractionalZerosGrey={fractionalZerosGrey}
           />{" "}
           <b>{token}</b>
         </span>

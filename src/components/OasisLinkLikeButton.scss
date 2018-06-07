@@ -1,0 +1,12 @@
+.btn {
+  &,
+  &:hover,
+  &:active,
+  &:focus {
+    text-decoration: none;
+  }
+
+  &:visited {
+    color: inherit;
+  }
+}

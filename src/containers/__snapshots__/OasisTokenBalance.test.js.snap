@@ -5,16 +5,7 @@ exports[`(Container) OasisTokenBalance should render 1`] = `
   <span>
     0.000
   </span>
-  <span
-    style={
-      Object {
-        "fontSize": "10px",
-        "lineHeight": "18px",
-        "padding": "0 5px",
-        "verticalAlign": "middle",
-      }
-    }
-  >
+  <span>
     <b />
   </span>
 </div>

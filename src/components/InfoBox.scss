@@ -36,6 +36,12 @@
   color: #939194;
 }
 
+// very pale, for non important info
+.muted {
+  border-color: #E5E9EB;
+  color: #d4d4d4;
+}
+
 .danger {
   border-color: $danger-text;
   color: $danger-text;

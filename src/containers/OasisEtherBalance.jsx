@@ -26,12 +26,11 @@ export class OasisEtherBalanceWrapper extends PureComponent {
       );
     } else {
       return (
-        <div style={{ display: 'inline-block' }}>
+        <div className={styles.available}>
           <span className={styles["available-amount"]}>
           { formatAmount(balance, fromWei, balanceUnit ||  ETH_UNIT_ETHER, this.props.decimalPlaces) }
           </span>
-          <span className={styles["available-currency"]}
-                style={{ padding: '0 5px', fontSize: '10px', lineHeight: '18px', verticalAlign: 'middle' }}>
+          <span className={styles["available-currency"]}>
             <b>{TOKEN_ETHER}</b>
           </span>
         </div>

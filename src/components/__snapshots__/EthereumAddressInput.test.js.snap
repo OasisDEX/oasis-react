@@ -2,7 +2,7 @@
 
 exports[`(Component) EthereumAddressInput should render 1`] = `
 <input
-  placeholder="Ox"
+  placeholder="0x"
   style={
     Object {
       "textAlign": "right",

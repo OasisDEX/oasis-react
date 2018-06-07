@@ -62,7 +62,7 @@ exports[`(Component) OasisChartDepth should render 1`] = `
         "yAxes": Array [
           Object {
             "scaleLabel": Object {
-              "display": true,
+              "display": false,
               "labelString": "SUM(empty2)",
             },
             "ticks": Object {

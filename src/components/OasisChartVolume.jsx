@@ -78,7 +78,7 @@ export class OasisChartVolume extends PureComponent {
           scales: {
             yAxes: [{
               scaleLabel: {
-                display: true,
+                display: false,
                 labelString: 'VOLUME',
               },
               ticks: {

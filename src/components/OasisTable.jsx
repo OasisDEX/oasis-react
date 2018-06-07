@@ -10,7 +10,8 @@ import styles from './OasisTable.scss';
 const propTypes = PropTypes && {
   rows: PropTypes.any.isRequired,
   col: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onRowClick: PropTypes.func
+  onRowClick: PropTypes.func,
+  emptyFallback: PropTypes.node,
 };
 
 const defaultProps = {
@@ -120,6 +121,15 @@ export class OasisTable extends PureComponent {
           <tbody>
             {this.renderRows()}
             {this.renderCollapseRow()}
+            {!this.props.rows.length && this.props.emptyFallback && (
+              <tr className={styles.emptyFallback}>
+                <td colSpan={this.props.col.length}>
+                  {this.props.emptyFallback}
+                </td>
+              </tr>
+            ) }
+
+
           </tbody>
         </table>
       </div>

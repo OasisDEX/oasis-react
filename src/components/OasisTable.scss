@@ -1,6 +1,7 @@
 @import "../styles/modules/typography";
 
 $hover-border-color: #DCDDE0;
+$tbody-height: 160px;
 
 thead {
   @include text(10px, 700);
@@ -39,7 +40,10 @@ tr.active {
 
 td, th {
   padding: 5px 11px;
-  flex-basis: 100%;
+  flex-basis: 0;
+  flex-grow: 0;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
 
@@ -60,8 +64,17 @@ table.scrolling {
     overflow-y: auto;
     display: block;
     margin-top: 10px;
-    height: 160px;
+    height: $tbody-height;
 
+  }
+}
+
+@mixin singleColumnRow {
+  &:first-child:last-child {
+    flex-grow: 1;
+    flex-basis: 100%;
+    text-align: center;
+    font-weight: 500;
   }
 }
 
@@ -70,14 +83,23 @@ tr.collapseRow {
   border-top: 1px $hover-border-color solid;
   margin-bottom: 1px;
 
-  & > .collapseCell:first-child:last-child {
-    flex-grow: 1;
-    flex-basis: 100%;
-    text-align: center;
-    font-weight: 500;
+  & > .collapseCell {
+    @include singleColumnRow;
     font-size: 12px;
     color: #666669;
     text-transform: uppercase;
     padding: 5px 15px;
+  }
+}
+
+.scrolling tr.emptyFallback {
+
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > td {
+    @include singleColumnRow;
   }
 }

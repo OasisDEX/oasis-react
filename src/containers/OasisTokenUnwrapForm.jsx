@@ -132,6 +132,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
           <OasisButton
             type="submit"
             disabled={!valid || disabled || globalFormLock}
+            className={styles.footerBtn}
           >
             Unwrap
           </OasisButton>

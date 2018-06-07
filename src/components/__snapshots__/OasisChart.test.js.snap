@@ -22,16 +22,15 @@ exports[`(Component) OasisChart should render 1`] = `
       </option>
     </OasisSelect>
   }
+  spaceForContent={true}
 >
-  <div>
-    <Connect(OasisChartPrice)
-      tradingPair={
-        Object {
-          "baseToken": "MKR",
-          "quoteToken": "DAI",
-        }
+  <Connect(OasisChartPrice)
+    tradingPair={
+      Object {
+        "baseToken": "MKR",
+        "quoteToken": "DAI",
       }
-    />
-  </div>
+    }
+  />
 </OasisWidgetFrame>
 `;

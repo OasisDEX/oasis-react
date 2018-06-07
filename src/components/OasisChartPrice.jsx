@@ -75,7 +75,7 @@ export class OasisChartPrice extends PureComponent {
           scales: {
             yAxes: [{
               scaleLabel: {
-                display: true,
+                display: false,
                 labelString: 'PRICE',
               },
             }],

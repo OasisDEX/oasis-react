@@ -19,6 +19,7 @@ import styles from "./OasisMarketWidget.scss";
 import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
 import { ETH_UNIT_ETHER } from "../constants";
 import moment from "moment-timezone";
+import OasisLinkLikeButton from "./OasisLinkLikeButton";
 
 const periodHeading = {
   [DAY]: "daily",
@@ -29,8 +30,9 @@ const periodHeading = {
 const tradingPairPriceTemplate = row =>
   row.tradingPairPrice ? (
     <OasisSignificantDigitsWrapper
-      amount={row.tradingPairPrice}
+      fractionalZerosGrey={false}
       fullPrecisionAmount={row.tradingPairPriceFullPrecision}
+      amount={row.tradingPairPrice}
     />
   ) : (
     "N/A"
@@ -41,6 +43,7 @@ const volumeTemplate = row =>
       fullPrecisionUnit={ETH_UNIT_ETHER}
       fullPrecisionAmount={row.volumeFullPrecision}
       amount={row.volume}
+      fractionalZerosGrey={false}
     />
   ) : (
     "N/A"
@@ -134,8 +137,9 @@ class OasisMarketWidget extends PureComponent {
 
   render() {
     const { tradedTokens, defaultPeriod } = this.props;
+    const daiButton = <OasisLinkLikeButton href="https://dai.makerdao.com/" caption="CREATE DAI" target="_blank" className={styles.createDaiBtn}/>
     return (
-      <OasisWidgetFrame heading="MARKETS">
+      <OasisWidgetFrame heading="MARKETS" headingChildren={daiButton}>
         <OasisTable
           onRowClick={this.onTableRowClick}
           className={styles.marketTable}

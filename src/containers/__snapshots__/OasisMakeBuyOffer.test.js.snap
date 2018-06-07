@@ -28,7 +28,7 @@ exports[`(Container) OasisMakeBuyOffer should render 1`] = `
       />
       <InfoBox
         className=""
-        color="default"
+        color="muted"
         hidden={true}
         noBorder={true}
         size="md"

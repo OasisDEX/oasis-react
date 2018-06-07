@@ -199,21 +199,17 @@ class OasisMyOrders extends PureComponent {
       .sort((p, c) => (p.bid_price_sort < c.bid_price_sort ? 1 : -1))
       .map(myOrdersDisplayFormat);
 
-    if (myOpenOffers.count()) {
-      return (
-        <div>
-          <OasisTable
-            rows={myOpenOffers.toArray()}
-            col={openOrdersColsDefinition(baseToken, quoteToken, orderActions)}
-            className={styles.openOffers}
-          />
-        </div>
-      );
-    } else {
-      return (
-        <div className={styles.info}>You currently have no active offers</div>
-      );
-    }
+    const emptyTableFallback = <div className={styles.info}>You currently have no active offers</div>;
+    return (
+      <div>
+        <OasisTable
+          rows={myOpenOffers.toArray()}
+          col={openOrdersColsDefinition(baseToken, quoteToken, orderActions)}
+          className={styles.openOffers}
+          emptyFallback={emptyTableFallback}
+        />
+      </div>
+    );
   }
 
   renderTradesHistory() {
@@ -253,17 +249,14 @@ class OasisMyOrders extends PureComponent {
     const marketHistory = orderByTimestamp(myTrades.toJSON(), DESCENDING).map(
       toHistoricalTrades
     );
-    if (myTrades.count()) {
       return (
         <OasisTable
           rows={marketHistory}
           col={tradesHistoryColsDefinition(baseToken, quoteToken)}
           className={styles.tradesHistory}
+          emptyFallback={<div className={styles.info}>Your trades history is empty</div>}
         />
       );
-    } else {
-      return <div className={styles.info}>Your trades history is empty</div>;
-    }
   }
 
   renderContent() {

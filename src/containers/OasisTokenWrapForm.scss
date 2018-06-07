@@ -1,7 +1,11 @@
 
 .footer {
   display: flex;
-  margin-top: 1.2em;
+  margin-top: 97px;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
+}
+
+.footerBtn {
+  margin-left: auto;
 }

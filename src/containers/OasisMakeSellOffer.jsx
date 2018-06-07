@@ -78,7 +78,7 @@ export class OasisMakeSellOfferWrapper extends React.Component {
                 offerType={MAKE_SELL_OFFER}
               />
             )}
-            <InfoBox hidden={this.props.isPriceSet} noBorder>
+            <InfoBox hidden={this.props.isPriceSet} noBorder  color="muted">
               {!globalFormLock && "Enter a price to unlock amount and total."}
             </InfoBox>
           </div>

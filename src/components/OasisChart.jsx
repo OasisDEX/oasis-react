@@ -38,12 +38,10 @@ export class OasisChart extends PureComponent {
     );
 
     return (
-        <OasisWidgetFrame heading="Charts" headingChildren={select}>
-          <div>
+        <OasisWidgetFrame heading="Charts" headingChildren={select} spaceForContent={true}>
             { this.state.chart == "PRICE" && <OasisChartPrice tradingPair={this.props.activeTradingPair}/> }
             { this.state.chart == "VOLUME" && <OasisChartVolume tradingPair={this.props.activeTradingPair}/> }
             { this.state.chart == "DEPTH" && <OasisChartDepth tradingPair={this.props.activeTradingPair}/> }
-          </div>
         </OasisWidgetFrame>
     );
   }

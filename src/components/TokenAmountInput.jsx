@@ -21,9 +21,6 @@ class TokenAmountInput extends PureComponent {
     return (
         <div className={styles.inputGroup}>
           <MaskedTokenAmountInput className={styles.input} {...this.props}/>
-          <span className={`${styles.currency} `}>
-            {selectedToken}
-          </span>
           {insufficientAmount && errorMessage}
         </div>
     );

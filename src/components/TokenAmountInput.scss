@@ -13,13 +13,6 @@
   width: 100%;
 }
 
-.currency {
-  @include currency;
-  border-left: 1px solid $table-border;
-  display: flex;
-  align-items: center;
-}
-
 .errorMessage {
   position: absolute;
   right: 0;

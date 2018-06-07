@@ -54,7 +54,7 @@ exports[`(Component) OasisChartVolume should render 1`] = `
         "yAxes": Array [
           Object {
             "scaleLabel": Object {
-              "display": true,
+              "display": false,
               "labelString": "VOLUME",
             },
             "ticks": Object {

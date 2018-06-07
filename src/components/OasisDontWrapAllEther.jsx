@@ -4,7 +4,9 @@ import { PropTypes } from 'prop-types';
 
 // import styles from './OasisDontWrapAllEther.scss';
 import {InfoBox} from "./InfoBox";
-
+import {OasisIcon} from "./OasisIcon";
+import styles from "./OasisDontWrapAllEther.scss";
+import CSSModules from "react-css-modules/dist/index";
 
 const propTypes = PropTypes && {
 };
@@ -14,13 +16,9 @@ const defaultProps = {};
 class OasisDontWrapAllEther extends PureComponent {
   render() {
     return (
-      <InfoBox color='danger' {...this.props}>
-        <div style={{width: '100%'}}>
-          <span style={{ textDecoration:'underline' }}>Do not wrap all</span> of your <b>ETH</b>! <br/>
-          <div>
-            Otherwise you will not be able to pay for transactions.
-          </div>
-        </div>
+      <InfoBox color='danger' noBorder alignItems="center" {...this.props}>
+        <span>Do not wrap all of your <b>ETH</b>!</span>
+        <OasisIcon icon="warning" size="md" title="Otherwise you will not be able to pay for transactions." className={styles.warningIco} />
       </InfoBox>
     );
   }
@@ -29,4 +27,4 @@ class OasisDontWrapAllEther extends PureComponent {
 OasisDontWrapAllEther.displayName = 'OasisDontWrapAllEther';
 OasisDontWrapAllEther.propTypes = propTypes;
 OasisDontWrapAllEther.defaultProps = defaultProps;
-export default OasisDontWrapAllEther;
+export default CSSModules(OasisDontWrapAllEther, styles);

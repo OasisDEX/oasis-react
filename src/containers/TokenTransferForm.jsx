@@ -68,7 +68,6 @@ export class TokenTransferFormWrapper extends PureComponent {
                       transfer max
                     </OasisButton>
                   <div
-                    style={{ display: "inlineBlock" }}
                     onBlur={this.onTotalFieldSectionBlur}
                     onFocus={this.onTotalFieldSectionFocus}
                   >
@@ -86,6 +85,7 @@ export class TokenTransferFormWrapper extends PureComponent {
                   />
                 </div>
               </td>
+              <td className={styles.currency}>{this.props.selectedToken}</td>
             </tr>
           </tbody>
         </table>

@@ -5,7 +5,8 @@ import OasisWidgetFrame from "../containers/OasisWidgetFrame";
 import { OasisTable } from "./OasisTable";
 import OasisInlineTokenBalance from "./OasisInlineTokenBalance";
 import { fromJS } from 'immutable';
-
+import styles from "./OasisWrapUnwrapBalances.scss";
+import CSSModules from 'react-css-modules';
 /* eslint-disable react/prop-types */
 
 
@@ -19,6 +20,7 @@ const colDefinition = [
         inWei={true}
         token={unwrappedToken}
         balance={unwrappedBalance}
+        fractionalZerosGrey={false}
       />
     )
   },
@@ -30,6 +32,7 @@ const colDefinition = [
         inWei={true}
         token={wrapperToken}
         balance={wrappedBalance}
+        fractionalZerosGrey={false}
       />
     )
   }
@@ -78,6 +81,7 @@ class OasisWrapUnwrapBalances extends PureComponent {
           onRowClick={this.onTableRowClick}
           col={colDefinition}
           rows={wrapUnwrapBalances.toJSON().map(this.transformRow)}
+          className={styles.table}
         />
       </OasisWidgetFrame>
     );
@@ -87,4 +91,4 @@ class OasisWrapUnwrapBalances extends PureComponent {
 OasisWrapUnwrapBalances.displayName = "OasisWrapUnwrapBalances";
 OasisWrapUnwrapBalances.propTypes = propTypes;
 OasisWrapUnwrapBalances.defaultProps = defaultProps;
-export default OasisWrapUnwrapBalances;
+export default CSSModules(OasisWrapUnwrapBalances, styles);

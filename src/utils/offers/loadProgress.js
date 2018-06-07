@@ -26,6 +26,7 @@ const style = (loadedOffersList, offersTotalCount) => {
     borderRadius: "7%",
     width: "130px",
     textAlign: "center",
+    letterSpacing: "normal",
     position: "relative",
     top: '1px'
   };

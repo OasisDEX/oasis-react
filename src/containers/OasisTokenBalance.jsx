@@ -31,7 +31,7 @@ export class OasisTokenBalanceWrapper extends PureComponent {
           <span className={styles["available-amount"]}>
           { formatAmount(balance, fromWei, balanceUnit ||  ETH_UNIT_ETHER, this.props.decimalPlaces) }
           </span>
-          <span className={styles["available-currency"]} style={{ padding: '0 5px', fontSize: '10px', lineHeight: '18px', verticalAlign: 'middle' }}>
+          <span className={styles["available-currency"]}>
             <b>{tokenName}</b>
           </span>
         </div>

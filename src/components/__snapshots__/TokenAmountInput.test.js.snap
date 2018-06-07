@@ -6,10 +6,5 @@ exports[`(Component) TokenAmountInput should render 1`] = `
     meta={Object {}}
     selectedToken="MKR"
   />
-  <span
-    className="undefined "
-  >
-    MKR
-  </span>
 </div>
 `;

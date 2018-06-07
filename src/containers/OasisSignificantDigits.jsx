@@ -7,13 +7,21 @@ import { bindActionCreators } from "redux";
 import { Popper, Manager, Reference } from "react-popper";
 import web3 from '../bootstrap/web3';
 
+import styles from './OasisSignificantDigits.scss';
+import CSSModules from 'react-css-modules';
+
 const propTypes = PropTypes && {
   integralColor: PropTypes.string,
   fractionWithNumbersColor: PropTypes.string,
   fractionZeroesColor: PropTypes.string,
   amount: PropTypes.string.isRequired,
   fullPrecisionAmount: PropTypes.any,
+  fractionalZerosGrey: PropTypes.bool,
   fullPrecisionUnit: PropTypes.string
+};
+
+const defaultProps = {
+  fractionalZerosGrey: true
 };
 
 const splitPattern = /^(\d+[,\d]*\d*).(\d*[1-9]+|0)?(\d*)$/;
@@ -23,7 +31,7 @@ export class OasisSignificantDigitsWrapper extends PureComponent {
     this.state = {};
   }
   render() {
-    const { amount, fullPrecisionAmount, fullPrecisionUnit } = this.props;
+    const { amount, fullPrecisionAmount, fullPrecisionUnit, fractionalZerosGrey } = this.props;
     const matches = amount.toString().match(splitPattern);
     if (!matches) {
       console.log(amount);
@@ -48,7 +56,7 @@ export class OasisSignificantDigitsWrapper extends PureComponent {
               {fractionalPartWitOptionalLeadingZeroes ? (
                 <span>{fractionalPartWitOptionalLeadingZeroes}</span>
               ) : null}
-              <span style={{ opacity: 0.5 }}>{fractionalPartZeroes}</span>
+              <span className={fractionalZerosGrey ? styles.paleSignificantDigit : ''} >{fractionalPartZeroes}</span>
             </span>
           )}
         </Reference>
@@ -80,6 +88,7 @@ export function mapDispatchToProps(dispatch) {
 
 OasisSignificantDigitsWrapper.propTypes = propTypes;
 OasisSignificantDigitsWrapper.displayName = "OasisSignificantDigits";
+OasisSignificantDigitsWrapper.defaultProps = defaultProps;
 export default connect(mapStateToProps, mapDispatchToProps)(
-  OasisSignificantDigitsWrapper
+  CSSModules(OasisSignificantDigitsWrapper, styles)
 );

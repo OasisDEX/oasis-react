@@ -37,11 +37,6 @@ exports[`(Container) TokenTransferForm should render 1`] = `
             <div
               onBlur={[Function]}
               onFocus={[Function]}
-              style={
-                Object {
-                  "display": "inlineBlock",
-                }
-              }
             >
               <Connect(TokenAmountInputField)
                 fieldName="tokenAmount"
@@ -55,6 +50,9 @@ exports[`(Container) TokenTransferForm should render 1`] = `
               type="text"
             />
           </div>
+        </td>
+        <td>
+          MKR
         </td>
       </tr>
     </tbody>

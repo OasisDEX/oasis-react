@@ -122,7 +122,7 @@ export class OasisChartDepth extends PureComponent {
           scales: {
             yAxes: [{
               scaleLabel: {
-                display: true,
+                display: false,
                 labelString: `SUM(${this.props.tradingPair.quoteToken})`,
               },
               ticks: {

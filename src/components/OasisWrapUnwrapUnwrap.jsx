@@ -12,7 +12,6 @@ import {
 import OasisTokenBalanceSummary from "../containers/OasisTokenBalanceSummary";
 import styles from "./OasisWrapUnwrapUnwrap.scss";
 import CSSModules from "react-css-modules";
-import {TOKEN_WRAPPED_ETH} from "../constants";
 
 const propTypes = PropTypes && {
   activeWrappedToken: PropTypes.string.isRequired,
@@ -24,9 +23,8 @@ const defaultProps = {};
 class OasisWrapUnwrapUnwrap extends PureComponent {
   render() {
     const { activeWrappedToken, onSubmit, transactionState } = this.props;
-    const itsEther = (activeWrappedToken === TOKEN_WRAPPED_ETH);
     return (
-      <OasisWidgetFrame heading={"Unwrap"} spaceForContent={true} className={itsEther ? styles.etherWidgetFrame : '' }>
+      <OasisWidgetFrame heading={"Unwrap"} spaceForContent={true} >
         <OasisTokenBalanceSummary summary="Wrapped" className={styles.balance}>
           {
             <OasisTokenBalanceWrapper

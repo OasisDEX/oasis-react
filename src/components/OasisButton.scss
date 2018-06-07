@@ -8,11 +8,13 @@
   background-color: transparent;
   text-transform: uppercase;
   white-space: nowrap;
+  letter-spacing: normal;
 
   &:hover {
     cursor: pointer;
   }
-  &:hover[disabled] {
+  &:hover[disabled],
+  &:hover.disabled {
     cursor: default;
   }
 }
@@ -61,62 +63,57 @@
   border-radius: 100px;
 }
 // --------------- color -----------
-@mixin disabled {
+
+@mixin button($map) {
+
+  color: map-get($map, color);
+  border-color: map-get($map, border-color);
+  background-color: transparent;
+
+  &:hover:enabled:not(.disabled),
+  &:focus:enabled:not(.disabled),
+  &:active:enabled:not(.disabled) {
+    color: map-get($map, color-hover);
+    background-color: map-get($map, border-color-hover);
+    border-color: map-get($map, bg-hover);
+  }
+
   &[disabled]:hover,
-  &[disabled] {
-    color: #A8ACB9;
-    border-color: #A8ACB9;
-    background-color: transparent;
+  &[disabled],
+  &.disabled:hover,
+  &.disabled {
+    opacity: 0.5;
   }
 }
-
 
 
 .default {
-  color: #4F5362;
-  border-color: #A8ACB9;
-  background-color: transparent;
-
-  &:hover,
-  &:focus:enabled,
-  &:active:enabled {
-    color: white;
-    background-color: #A8ACB9;
-    border-color: #838690
-  }
-
-  @include disabled;
+  @include button((
+     color: #4F5362,
+      border-color: #A8ACB9,
+      color-hover: white,
+      border-color-hover: #838690,
+      bg-hover: #A8ACB9
+  ));
 }
 
 .success {
-  color: $success-text;
-  border-color: $success-text;
-  background-color: transparent;
-
-  &:hover,
-  &:focus:enabled,
-  &:active:enabled {
-    color: #FFFFFF;
-    background-color: lighten($success-text, 12%);
-    border-color: $success;
-  }
-
-  @include disabled;
+  @include button((
+          color: $success-text,
+          border-color: $success-text,
+          color-hover: white,
+          border-color-hover: $success,
+          bg-hover: lighten($success-text, 12%)
+  ));
 }
 
 
 .danger {
-  color: $danger-text;
-  border-color: $danger-text;
-  background-color: transparent;
-
-  &:hover,
-  &:focus:enabled,
-  &:active:enabled {
-    color: #FFFFFF;
-    background-color: lighten($danger-text, 12%);
-    border-color: $danger;
-  }
-
-  @include disabled;
+  @include button((
+          color: $danger-text,
+          border-color: $danger-text,
+          color-hover: white,
+          border-color-hover: $danger,
+          bg-hover: lighten($danger-text, 12%)
+  ));
 }

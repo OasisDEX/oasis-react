@@ -26,7 +26,43 @@ exports[`(Component) OasisMyOrders should render 1`] = `
 >
   <div>
     <div>
-      You currently have no active offers
+      <OasisTable
+        col={
+          Array [
+            Object {
+              "heading": "action",
+              "key": "tradeTypeEl",
+            },
+            Object {
+              "heading": "price",
+              "template": [Function],
+            },
+            Object {
+              "heading": "W-ETH",
+              "template": [Function],
+            },
+            Object {
+              "heading": "MKR",
+              "template": [Function],
+            },
+            Object {
+              "heading": "",
+              "template": [Function],
+            },
+          ]
+        }
+        collapseEnabled={false}
+        collapseInitial={false}
+        collapseRowNumber={4}
+        emptyFallback={
+          <div
+            className={undefined}
+          >
+            You currently have no active offers
+          </div>
+        }
+        rows={Array []}
+      />
     </div>
   </div>
 </OasisWidgetFrame>
