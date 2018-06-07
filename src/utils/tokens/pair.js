@@ -84,62 +84,40 @@ const getBaseAndQuoteAmount = (tradeHistoryEntry, baseToken, quoteToken) => {
   }
 };
 
-const replacePattern = /^(\d+)\.(\d{5})\d*$/;
+const replacePricePattern = /^(\d+)\.(\d{5})\d*$/;
 // eslint-disable-next-line no-unused-vars
 const formatPrice = (
   price,
   fromWei = false,
   // unit = ETH_UNIT_ETHER,
   // decimalPlaces = PRICE_DECIMAL
-) => {
-  if (!fromWei) {
-    return price
-      ? new BigNumber(price)
-          .toFixed(18)
-          .toString()
-          .replace(replacePattern, "$1.$2")
-      : null;
-  } else {
-    return price
-      ? new BigNumber(web3.fromWei(price, ETH_UNIT_ETHER))
-          .toFixed(18)
-          .toString()
-          .replace(replacePattern, "$1.$2")
-      : null;
-  }
-};
+) =>
+  price ?
+    new BigNumber(!fromWei ? price : web3.fromWei(price, ETH_UNIT_ETHER))
+        .toFixed(18)
+        .toString()
+        .replace(replacePricePattern, "$1.$2") :
+    null;
 
+const replaceAmountPattern = /^(\d+)\.(\d{3})\d*$/;
 //eslint-disable-next-line no-unused-vars
-const formatAmount = (
-  price,
-  fromWei = false,
-  // unit = ETH_UNIT_ETHER,
-  // decimalPlaces = AMOUNT_DECIMALS
-) => {
-  // const numberOfDecimalsToDisplay = decimalPlaces !== AMOUNT_DECIMALS ? decimalPlaces: AMOUNT_DECIMALS;
-  if (!fromWei) {
-    return price
-      ? String(
-          new BigNumber(price)
-            .toFixed(18)
-            .replace(replacePattern, "$1.$2")
-        )
-      : null;
-  } else {
-    return price
-      ? String(
-          new BigNumber(web3.fromWei(price, ETH_UNIT_ETHER)).toFixed(18)
-        ).replace(replacePattern, "$1.$2")
-      : null;
-  }
-};
+const formatAmount = (price, fromWei = false) =>
+  price ?
+    String(
+        new BigNumber(!fromWei ? price : web3.fromWei(price, ETH_UNIT_ETHER))
+          .round(3, 4)
+          .toFixed(18)
+          .replace(replaceAmountPattern, "$1.$2")
+    ) :
+    null;
 
+const replaceVolumePattern = /^(\d+)\.(\d{2})\d*$/;
 const formatVolume = tradingPairVolume =>
   web3
     .fromWei(tradingPairVolume, ETH_UNIT_ETHER)
-    .toFormat(4)
-    .toString()
-    .replace(replacePattern, "$1.$2");
+    .round(2, 4)
+    .toFixed(18)
+    .replace(replaceVolumePattern, "$1.$2");
 
 const tradeType = (order, baseCurrency) => {
   if (order.buyWhichToken === baseCurrency) {
