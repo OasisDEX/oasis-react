@@ -10,7 +10,7 @@ const defaultProps = {};
 
 class TokenAmountInput extends PureComponent {
   render() {
-    const { selectedToken, meta } = this.props;
+    const { meta } = this.props;
 
     const insufficientAmount = (meta.error && meta.error.includes(VALIDATION_ERROR__VALUE_GREATER_THAN_BALANCE));
 
