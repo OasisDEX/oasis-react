@@ -47,7 +47,8 @@ export class OasisMakeBuyOfferWrapper extends React.Component {
       activeTradingPair: { baseToken, quoteToken },
       hasSufficientTokenAmount,
       canMakeOffer,
-      isModalOpen
+      isModalOpen,
+      globalFormLock
     } = this.props;
 
     const formProps = {
@@ -76,7 +77,7 @@ export class OasisMakeBuyOfferWrapper extends React.Component {
               />
             )}
             <InfoBox hidden={this.props.isPriceSet} noBorder>
-              Enter a price to unlock amount and total.
+              {!globalFormLock && ("Enter a price to unlock amount and total.")}
             </InfoBox>
           </div>
           <OasisButton
@@ -94,9 +95,9 @@ export class OasisMakeBuyOfferWrapper extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return !this.props.isModalOpen || nextProps.isModalOpen === false ? (
-      this.state !== nextState || this.props !== nextProps
-    ) : false;
+    return !this.props.isModalOpen || nextProps.isModalOpen === false
+      ? this.state !== nextState || this.props !== nextProps
+      : false;
   }
 
   UNSAFE_componentWillUpdate(nextProps) {
@@ -124,7 +125,8 @@ export function mapStateToProps(state) {
     activeTradingPair: tokens.activeTradingPair(state),
     contractsLoaded: platform.contractsLoaded(state),
     isPriceSet: offerMakes.isMakeBuyOfferPriceSet(state),
-    isVolumeEmptyOrZero: isVolumeOrPriceEmptyOrZero(state, MAKE_BUY_OFFER)
+    isVolumeEmptyOrZero: isVolumeOrPriceEmptyOrZero(state, MAKE_BUY_OFFER),
+    globalFormLock: platform.globalFormLock(state)
   };
 }
 export function mapDispatchToProps(dispatch) {

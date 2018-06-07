@@ -66,6 +66,7 @@ Object {
   },
   "canMakeOffer": false,
   "contractsLoaded": true,
+  "globalFormLock": undefined,
   "hasSufficientTokenAmount": false,
   "isModalOpen": false,
   "isPriceSet": true,

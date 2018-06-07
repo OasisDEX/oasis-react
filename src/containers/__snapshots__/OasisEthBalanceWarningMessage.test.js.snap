@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisEthBalanceWarningMessage should render 1`] = `""`;
+
+exports[`(Container) OasisEthBalanceWarningMessage will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisEthBalanceWarningMessage will receive right props 1`] = `
+Object {
+  "isUserEthBalanceZero": false,
+}
+`;

@@ -10,30 +10,31 @@ exports[`(Container) OasisTokenUnwrapForm should render 1`] = `
         </th>
         <td>
           <div>
-            <OasisButton
-              btnType="button"
-              color="default"
-              onClick={[Function]}
-              size="xs"
-              type="button"
-            >
-              unwrap max
-            </OasisButton>
-            <Field
-              autoComplete="off"
-              component={[Function]}
-              name="amount"
-              placeholder={0}
-              required={true}
+            <div
+              onBlur={[Function]}
+              onFocus={[Function]}
               style={
                 Object {
-                  "textAlign": "right",
-                  "width": "100%",
+                  "disabled": "inlineBlock",
                 }
               }
-              type="text"
-              validate={[Function]}
-            />
+            >
+              <Field
+                autoComplete="off"
+                component={[Function]}
+                name="amount"
+                placeholder={0}
+                required={true}
+                style={
+                  Object {
+                    "textAlign": "right",
+                    "width": "100%",
+                  }
+                }
+                type="text"
+                validate={[Function]}
+              />
+            </div>
           </div>
         </td>
         <td />
@@ -82,6 +83,7 @@ Object {
 exports[`(Container) OasisTokenUnwrapForm will receive right props 1`] = `
 Object {
   "activeWrappedTokenBalance": "0",
+  "globalFormLock": undefined,
   "unwrapTokenAmount": undefined,
 }
 `;

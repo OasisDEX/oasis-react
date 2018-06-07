@@ -32,6 +32,7 @@ Object {
   "activeOfferTakeOfferData": undefined,
   "activeTradingPairPrecision": 18,
   "buyToken": undefined,
+  "globalFormLock": undefined,
   "offerTakeType": "OFFER_TAKES/TAKE_SELL_OFFER",
   "sellToken": undefined,
 }

@@ -25,6 +25,8 @@ import styles from "./OfferTakeForm.scss";
 import tableStyles from "../styles/modules/_table.scss";
 import CSSModules from "react-css-modules";
 import MaskedTokenAmountInput from "./MaskedTokenAmountInput";
+import { SETMAXBTN_HIDE_DELAY_MS } from "../constants";
+import platform from "../store/selectors/platform";
 /**
  * Remove this styling TODO
  */
@@ -49,10 +51,17 @@ const validateTotal = [greaterThanZeroValidator, numericFormatValidator];
 export class OfferTakeForm extends PureComponent {
   constructor(props) {
     super(props);
+
+    this.state = {
+      showMaxButton: false
+    };
+
     this.onVolumeFieldChange = this.onVolumeFieldChange.bind(this);
     this.onTotalFieldChange = this.onTotalFieldChange.bind(this);
     this.onSetBuyMax = this.onSetBuyMax.bind(this);
     this.onSetSellMax = this.onSetSellMax.bind(this);
+    this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
+    this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
     // this.estimateGas = throttle(this.props.estimateGas, 500);
   }
 
@@ -83,7 +92,11 @@ export class OfferTakeForm extends PureComponent {
   }
 
   setMaxButton() {
+    if (false === this.state.showMaxButton) {
+      return null;
+    }
     if (web3.toBigNumber(this.props.activeBaseTokenBalance).gt(0)) {
+      const { disableForm, globalFormLock } = this.props;
       switch (this.props.offerTakeType) {
         case TAKE_BUY_OFFER:
           return (
@@ -93,7 +106,7 @@ export class OfferTakeForm extends PureComponent {
               color="success"
               size="xs"
               onClick={this.onSetSellMax}
-              disabled={this.props.disableForm}
+              disabled={disableForm}
             >
               Sell max
             </OasisButton>
@@ -106,7 +119,7 @@ export class OfferTakeForm extends PureComponent {
               color="danger"
               size="xs"
               onClick={this.onSetBuyMax}
-              disabled={this.props.disableForm}
+              disabled={disableForm || globalFormLock}
             >
               Buy max
             </OasisButton>
@@ -140,8 +153,10 @@ export class OfferTakeForm extends PureComponent {
     );
   }
 
-  renderAmountField(disableForm) {
+  renderAmountField() {
     const { volumeToken } = this.getTokensByOfferTakeType();
+    const { disableForm, globalFormLock } = this.props;
+
     return (
       <tr>
         <th>Amount</th>
@@ -155,7 +170,7 @@ export class OfferTakeForm extends PureComponent {
             validate={validateVolume}
             min={0}
             placeholder={0}
-            disabled={disableForm}
+            disabled={disableForm || globalFormLock}
             onChange={this.onVolumeFieldChange}
           />
         </td>
@@ -166,24 +181,30 @@ export class OfferTakeForm extends PureComponent {
 
   renderTotalField(disableForm) {
     const { totalToken } = this.getTokensByOfferTakeType();
+    const { globalFormLock } = this.props;
     return (
       <tr>
         <th>Total</th>
         <td className={tableStyles.withInput}>
           <div className={tableStyles.inputGroup}>
             {this.setMaxButton()}
-            <Field
-              autoComplete="off"
-              style={fieldStyle}
-              min={0}
-              name="total"
-              component={MaskedTokenAmountInput}
-              type="text"
-              validate={validateTotal}
-              placeholder={0}
-              disabled={disableForm}
-              onChange={this.onTotalFieldChange}
-            />
+            <div
+              onFocus={this.onTotalFieldSectionFocus}
+              onBlur={this.onTotalFieldSectionBlur}
+            >
+              <Field
+                autoComplete="off"
+                style={fieldStyle}
+                min={0}
+                name="total"
+                component={MaskedTokenAmountInput}
+                type="text"
+                validate={validateTotal}
+                placeholder={0}
+                disabled={disableForm || globalFormLock}
+                onChange={this.onTotalFieldChange}
+              />
+            </div>
           </div>
         </td>
         <td className={tableStyles.currency}>{totalToken}</td>
@@ -216,17 +237,28 @@ export class OfferTakeForm extends PureComponent {
   }
 
   render() {
-    const { handleSubmit, disableForm } = this.props;
+    const { handleSubmit } = this.props;
     return (
       <form onSubmit={handleSubmit}>
         <table className={tableStyles.table}>
           <tbody>
-            {this.renderPriceField(disableForm)}
-            {this.renderAmountField(disableForm)}
-            {this.renderTotalField(disableForm)}
+            {this.renderPriceField()}
+            {this.renderAmountField()}
+            {this.renderTotalField()}
           </tbody>
         </table>
       </form>
+    );
+  }
+
+  onTotalFieldSectionFocus() {
+    this.setState({ showMaxButton: true });
+  }
+
+  onTotalFieldSectionBlur() {
+    setTimeout(
+      () => this.setState({ showMaxButton: false }),
+      SETMAXBTN_HIDE_DELAY_MS
     );
   }
 }
@@ -242,7 +274,8 @@ export function mapStateToProps(state) {
     sellToken: offerTakes.activeOfferTakeSellToken(state),
     offerTakeType: offerTakes.activeOfferTakeType(state),
     activeTradingPairPrecision: tokens.precision(state),
-    activeBaseTokenBalance: balances.activeBaseTokenBalance(state)
+    activeBaseTokenBalance: balances.activeBaseTokenBalance(state),
+    globalFormLock: platform.globalFormLock(state)
   };
 }
 

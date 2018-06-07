@@ -27,6 +27,17 @@ const defaultPeriodAvgBlockNumber = createSelector(platform, state =>
   period.avgBlockPer(state.get("defaultPeriod"))
 );
 
+const globalFormLock = createSelector(
+  platform,
+  s => s.get('globalFormLock')
+);
+
+const isAppLoading = createSelector(
+  platform,
+  s => s.get('isAppLoading')
+);
+
+
 export default {
   state: platform,
   isAccountLocked,
@@ -34,5 +45,7 @@ export default {
   activePeriod,
   defaultPeriodAvgBlockNumber,
   activePeriodAvgBlockNumber,
-  contractsLoaded
+  contractsLoaded,
+  globalFormLock,
+  isAppLoading
 };
