@@ -14,11 +14,17 @@ const marketAddress = (store) =>
   () => markets.activeMarketAddress(store.getState());
 
 const getTokenAllowance = (store) =>
-  (tokenName) =>
-    balances.actions.getDefaultAccountTokenAllowanceForAddress(tokenName, marketAddress(store)()).payload
+  (tokenName) => {
+    const x = balances
+      .actions
+      .getDefaultAccountTokenAllowanceForAddress(tokenName, marketAddress(store)())((a) => store.dispatch(a), () => store.getState());
+
+    return x
+      .then(({value}) => value)
       .then(fromWei)
       .then(toString)
       .then(print);
+  }
 
 const disableTokenTrust = (store) =>
   (tokenName) =>
