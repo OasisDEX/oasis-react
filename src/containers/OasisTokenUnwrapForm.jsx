@@ -20,7 +20,8 @@ import { SETMAXBTN_HIDE_DELAY_MS } from "../constants";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
-  activeUnwrappedTokenBalance: PropTypes.string
+  activeUnwrappedTokenBalance: PropTypes.string,
+  onFormChange: PropTypes.func
 };
 
 const inputStyle = { textAlign: "right", width: "100%" };
@@ -83,10 +84,11 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
       handleSubmit,
       activeWrappedToken,
       disabled,
-      globalFormLock
+      globalFormLock,
+      onFormChange
     } = this.props;
     return (
-      <form onSubmit={handleSubmit}>
+      <form onChange={onFormChange} onSubmit={handleSubmit}>
         <table className={tableStyles.table}>
           <tbody>
             <tr>

@@ -12,19 +12,44 @@ import {
 import OasisTokenBalanceSummary from "../containers/OasisTokenBalanceSummary";
 import styles from "./OasisWrapUnwrapUnwrap.scss";
 import CSSModules from "react-css-modules";
+import { TOKEN_WRAPPED_ETH } from "../constants";
+import { TX_STATUS_CANCELLED_BY_USER } from '../store/reducers/transactions';
 
 const propTypes = PropTypes && {
   activeWrappedToken: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  transactionState: PropTypes.object
+  transactionState: PropTypes.object,
+  onFormChange: PropTypes.func
 };
 const defaultProps = {};
 
 class OasisWrapUnwrapUnwrap extends PureComponent {
+
+
+  shouldDisableForm() {
+    const { transactionState: { txStatus } = {} } = this.props;
+    return txStatus && txStatus !== TX_STATUS_CANCELLED_BY_USER;
+  }
+
+  constructor(props) {
+    super(props);
+    this.onFormChange = this.onFormChange.bind(this);
+  }
+
+  onFormChange() {
+     const { onFormChange } = this.props;
+     onFormChange && onFormChange();
+  }
+
   render() {
-    const { activeWrappedToken, onSubmit, transactionState } = this.props;
+    const { activeWrappedToken, onSubmit, transactionState, onFormChange } = this.props;
+    const itsEther = activeWrappedToken === TOKEN_WRAPPED_ETH;
     return (
-      <OasisWidgetFrame heading={"Unwrap"} spaceForContent={true} >
+      <OasisWidgetFrame
+        heading={"Unwrap"}
+        spaceForContent={true}
+        className={itsEther ? styles.etherWidgetFrame : ""}
+      >
         <OasisTokenBalanceSummary summary="Wrapped" className={styles.balance}>
           {
             <OasisTokenBalanceWrapper
@@ -36,8 +61,9 @@ class OasisWrapUnwrapUnwrap extends PureComponent {
         <OasisTokenUnwrapFormWrapper
           transactionState={transactionState}
           onSubmit={onSubmit}
+          onFormChange={onFormChange}
           activeWrappedToken={activeWrappedToken}
-          disabled={!!transactionState.txStatus}
+          disabled={this.shouldDisableForm()}
         />
         <WrapUnwrapStatusWrapper type={WRAP_STATUS_VIEW_TYPE_UNWRAP} />
       </OasisWidgetFrame>

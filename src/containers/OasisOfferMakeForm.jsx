@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import { PropTypes } from "prop-types";
 // import throttle from 'lodash/throttle';
 import { connect } from "react-redux";
@@ -6,7 +6,11 @@ import { bindActionCreators } from "redux";
 import { Field, reduxForm } from "redux-form/immutable";
 
 import offerMakes from "../store/selectors/offerMakes";
-import { MAKE_BUY_OFFER, MAKE_SELL_OFFER, SETMAXBTN_HIDE_DELAY_MS } from '../constants';
+import {
+  MAKE_BUY_OFFER,
+  MAKE_SELL_OFFER,
+  SETMAXBTN_HIDE_DELAY_MS
+} from "../constants";
 import offerMakesReducer from "../store/reducers/offerMakes";
 import tokens from "../store/selectors/tokens";
 import balances from "../store/selectors/balances";
@@ -24,7 +28,7 @@ import OasisVolumeIsGreaterThanUserBalance from "../components/OasisVolumeIsGrea
 // import { formatAmount, PRICE_DECIMAL } from '../utils/tokens/pair';
 // import isNumeric from '../utils/numbers/isNumeric';
 import MaskedTokenAmountInput from "../components/MaskedTokenAmountInput";
-import platform from '../store/selectors/platform';
+import platform from "../store/selectors/platform";
 
 const propTypes = PropTypes && {
   // activeOfferMakeOfferData: ImmutablePropTypes.map.isRequired,
@@ -33,7 +37,8 @@ const propTypes = PropTypes && {
   activeBaseTokenBalance: PropTypes.string,
   activeQuoteTokenBalance: PropTypes.string,
   disableForm: PropTypes.bool,
-  shouldFormUpdate: PropTypes.bool.isRequired
+  shouldFormUpdate: PropTypes.bool.isRequired,
+  onFormChange: PropTypes.func
 };
 
 const defaultProps = {
@@ -43,7 +48,7 @@ const defaultProps = {
 const validateVolume = [greaterThanZeroValidator, numericFormatValidator];
 const validateTotal = [greaterThanZeroValidator, numericFormatValidator];
 
-export class OfferMakeForm extends PureComponent {
+export class OfferMakeForm extends React.Component {
   constructor(props) {
     super(props);
 
@@ -58,6 +63,7 @@ export class OfferMakeForm extends PureComponent {
     this.onPriceFieldChange = this.onPriceFieldChange.bind(this);
     this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
+    this.onFormChange = this.onFormChange.bind(this);
     // this.estimateGas = throttle(this.props.estimateGas || (() => null), 500);
   }
 
@@ -133,7 +139,12 @@ export class OfferMakeForm extends PureComponent {
   }
 
   onTotalFieldSectionBlur() {
-    setTimeout(() => this.setState({ showMaxButton: false }), SETMAXBTN_HIDE_DELAY_MS);
+    if (!this.isUnmounted) {
+      setTimeout(
+        () => this.setState({ showMaxButton: false }),
+        SETMAXBTN_HIDE_DELAY_MS
+      );
+    }
   }
 
   renderPriceField() {
@@ -201,6 +212,11 @@ export class OfferMakeForm extends PureComponent {
     );
   }
 
+  onFormChange() {
+    const { onFormChange } = this.props;
+    onFormChange && onFormChange();
+  }
+
   render() {
     const {
       baseToken,
@@ -210,7 +226,7 @@ export class OfferMakeForm extends PureComponent {
     } = this.props;
 
     return (
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onChange={this.onFormChange}>
         <table className={styles.table}>
           <tbody>
             <tr>
@@ -250,6 +266,18 @@ export class OfferMakeForm extends PureComponent {
         </table>
       </form>
     );
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.shouldFormUpdate && !nextProps.globalFormLock) {
+      return nextState !== this.state || nextProps !== this.props;
+    } else {
+      return false;
+    }
+  }
+
+  componentWillUnmount() {
+    this.isUnmounted = true;
   }
 }
 

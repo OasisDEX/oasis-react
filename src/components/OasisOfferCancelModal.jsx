@@ -12,6 +12,7 @@ import {
   TX_OFFER_CANCEL,
   TX_STATUS_AWAITING_CONFIRMATION,
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
+  TX_STATUS_CANCELLED_BY_USER,
   TX_STATUS_CONFIRMED
 } from "../store/reducers/transactions";
 import OasisTransactionStatusWrapperInfoBox from "../containers/OasisTransactionStatusInfoBox";
@@ -136,7 +137,10 @@ class OasisOfferCancelModal extends PureComponent {
               }
             />
             <OasisButton
-              disabled={localStatus || !canOfferBeCancelled}
+              disabled={
+                (localStatus && localStatus !== TX_STATUS_CANCELLED_BY_USER) ||
+                !canOfferBeCancelled
+              }
               onClick={this.onCancelOffer}
               caption="Cancel offer"
               color="danger"

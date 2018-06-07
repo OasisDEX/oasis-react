@@ -37,7 +37,7 @@ class TransactionStatus extends PureComponent {
           </div>
         );
       case TX_STATUS_CANCELLED_BY_USER:
-        return <div>Transaction cancelled by the user</div>;
+        return <div>Rejected</div>;
       case TX_STATUS_AWAITING_CONFIRMATION:
         return (
           <FlexBox alignItems="baseline">

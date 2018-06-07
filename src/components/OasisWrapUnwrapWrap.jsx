@@ -11,16 +11,24 @@ import { WRAP_STATUS_VIEW_TYPE_WRAP, WrapUnwrapStatusWrapper } from '../containe
 import OasisTokenBalanceSummary from '../containers/OasisTokenBalanceSummary';
 import styles from './OasisWrapUnwrapWrap.scss';
 import CSSModules from 'react-css-modules';
+import { TX_STATUS_CANCELLED_BY_USER } from '../store/reducers/transactions';
 
 const propTypes = PropTypes && {
   activeUnwrappedToken: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
   activeUnwrappedTokenBalance: PropTypes.object,
-  transactionState: PropTypes.object
+  transactionState: PropTypes.object,
+  onFormChange: PropTypes.func.isRequired
 };
 const defaultProps = {};
 
 class OasisWrapUnwrapWrap extends PureComponent {
+
+
+  constructor(props) {
+    super(props);
+    this.onFormChange = this.onFormChange.bind(this);
+  }
 
   getBalance() {
     const { activeUnwrappedToken } = this.props;
@@ -38,6 +46,17 @@ class OasisWrapUnwrapWrap extends PureComponent {
     }
   }
 
+
+  shouldDisableForm() {
+    const { transactionState: { txStatus } = {} } = this.props;
+    return txStatus && txStatus !== TX_STATUS_CANCELLED_BY_USER;
+  }
+
+  onFormChange() {
+   const { onFormChange } = this.props;
+    onFormChange && onFormChange();
+  }
+
   render() {
     const { activeUnwrappedToken, transactionState } = this.props;
     return (
@@ -46,10 +65,11 @@ class OasisWrapUnwrapWrap extends PureComponent {
           {this.getBalance()}
         </OasisTokenBalanceSummary>
         <OasisTokenWrapFormWrapper
+          onFormChange={this.onFormChange}
           transactionState={transactionState}
           activeUnwrappedToken={activeUnwrappedToken}
           onSubmit={this.props.onSubmit}
-          disabled={!!transactionState.txStatus}
+          disabled={this.shouldDisableForm()}
         />
         <WrapUnwrapStatusWrapper type={WRAP_STATUS_VIEW_TYPE_WRAP}/>
       </OasisWidgetFrame>

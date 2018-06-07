@@ -1,30 +1,31 @@
-import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { PureComponent } from "react";
+import { PropTypes } from "prop-types";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import OasisWrapUnwrapUnwrap from '../components/OasisWrapUnwrapUnwrap';
-import wrapUnwrap from '../store/selectors/wrapUnwrap';
-import wrapUnwrapReducer from '../store/reducers/wrapUnwrap';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import OasisWrapUnwrapUnwrap from "../components/OasisWrapUnwrapUnwrap";
+import wrapUnwrap from "../store/selectors/wrapUnwrap";
+import wrapUnwrapReducer from "../store/reducers/wrapUnwrap";
 import {
   TX_STATUS_AWAITING_CONFIRMATION,
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
+  TX_STATUS_CANCELLED_BY_USER,
   TX_STATUS_CONFIRMED,
-  TX_STATUS_REJECTED,
-} from '../store/reducers/transactions';
-import accounts from '../store/selectors/accounts';
+  TX_STATUS_REJECTED
+} from "../store/reducers/transactions";
+import accounts from "../store/selectors/accounts";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
 };
 
 export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
-
   constructor(props) {
     super(props);
     this.state = {};
     this.makeUnwrap = this.makeUnwrap.bind(this);
+    this.onFormChange = this.onFormChange.bind(this);
   }
 
   makeUnwrap() {
@@ -55,7 +56,7 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
 
   onTransactionCancelledByUser() {
     this.setState({
-      txStatus: undefined,
+      txStatus: TX_STATUS_CANCELLED_BY_USER,
       disableForm: false,
       lockCancelButton: false
     });
@@ -71,28 +72,26 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
     this.setState({
       txStatus: TX_STATUS_CONFIRMED
     });
-    setTimeout(
-      () => {
-        this.props.actions.resetActiveUnwrapForm();
-        this.setState({
-          txStatus: undefined,
-          txStartTimestamp: undefined,
-          disableForm: false
-        });
-      }, 2000
-    )
+    this.props.actions.resetActiveUnwrapForm();
+    this.setState({
+      disableForm: false
+    });
   }
 
   onTransactionRejected({ txHash }) {
     this.setState({
       txStatus: TX_STATUS_REJECTED,
       txHash,
-      disableForm: false,
+      disableForm: false
     });
   }
 
-
-
+  onFormChange() {
+    this.setState({
+      txStatus: undefined,
+      txStartTimestamp: undefined
+    });
+  }
 
   render() {
     const { activeWrappedToken, activeWrappedTokenBalance } = this.props;
@@ -101,6 +100,7 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
       <OasisWrapUnwrapUnwrap
         transactionState={{ txStatus, txStartTimestamp }}
         onSubmit={this.makeUnwrap}
+        onFormChange={this.onFormChange}
         activeWrappedToken={activeWrappedToken}
         activeWrappedTokenBalance={activeWrappedTokenBalance}
       />
@@ -118,12 +118,13 @@ export function mapStateToProps(state) {
 export function mapDispatchToProps(dispatch) {
   const actions = {
     unwrapToken: wrapUnwrapReducer.actions.unwrapTokenEpic,
-    resetActiveUnwrapForm: wrapUnwrapReducer.actions.resetActiveUnwrapForm,
-
+    resetActiveUnwrapForm: wrapUnwrapReducer.actions.resetActiveUnwrapForm
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }
 
 OasisWrapUnwrapUnwrapWrapper.propTypes = propTypes;
-OasisWrapUnwrapUnwrapWrapper.displayName = 'OasisWrapUnwrapUnwrap';
-export default connect(mapStateToProps, mapDispatchToProps)(OasisWrapUnwrapUnwrapWrapper);
+OasisWrapUnwrapUnwrapWrapper.displayName = "OasisWrapUnwrapUnwrap";
+export default connect(mapStateToProps, mapDispatchToProps)(
+  OasisWrapUnwrapUnwrapWrapper
+);

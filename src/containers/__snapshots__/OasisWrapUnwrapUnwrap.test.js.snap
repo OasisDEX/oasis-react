@@ -4,6 +4,7 @@ exports[`(Container) OasisWrapUnwrapUnwrap should render 1`] = `
 <OasisWrapUnwrapUnwrap
   activeWrappedToken="W-GNT"
   activeWrappedTokenBalance={"0"}
+  onFormChange={[Function]}
   onSubmit={[Function]}
   transactionState={
     Object {

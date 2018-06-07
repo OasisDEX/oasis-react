@@ -8,20 +8,23 @@ import CSSModules from "react-css-modules/dist/index";
 import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
 import OasisIcon from "./OasisIcon";
 
-const propTypes = PropTypes && {
-  sellToken: PropTypes.string.isRequired,
-  buyToken: PropTypes.string.isRequired,
-  amountSold: PropTypes.string.isRequired,
-  amountReceived: PropTypes.string.isRequired
-};
-const defaultProps = {};
-
-const TokenAmount = ({ tokenName, tokenAmount, icon, ...props }) => (
+const TokenAmount = ({
+  tokenName,
+  tokenAmount,
+  tokenAmountFullPrecision,
+  icon,
+  ...props
+}) => (
   <FlexBox alignItems="center" {...props}>
-    <OasisIcon icon={icon} size="md" className={styles.icon}/>
+    <OasisIcon icon={icon} size="md" className={styles.icon} />
     <span className={styles.baseText}>
-      { tokenAmount !== 'N/A' ? (
-        <OasisSignificantDigitsWrapper amount={tokenAmount.toString()} />
+      {tokenAmount !== "N/A" ? (
+        <span>
+          <OasisSignificantDigitsWrapper
+            fullPrecisionAmount={tokenAmountFullPrecision}
+            amount={tokenAmount.toString()}
+          />
+        </span>
       ) : (
         "N/A"
       )}&nbsp;
@@ -33,7 +36,8 @@ const TokenAmount = ({ tokenName, tokenAmount, icon, ...props }) => (
 TokenAmount.propTypes = {
   tokenName: PropTypes.string,
   tokenAmount: PropTypes.string,
-  icon: PropTypes.string
+  icon: PropTypes.string,
+  tokenAmountFullPrecision: PropTypes.string
 };
 
 const TokenReceivedAmount = ({ tokenName, tokenAmount, ...props }) => (
@@ -64,11 +68,22 @@ TokenSoldAmount.propTypes = {
   tokenAmount: PropTypes.string
 };
 
+const propTypes = PropTypes && {
+  sellToken: PropTypes.string.isRequired,
+  buyToken: PropTypes.string.isRequired,
+  amountSold: PropTypes.string.isRequired,
+  amountSoldFullPrecision: PropTypes.string,
+  amountReceivedFullPrecision: PropTypes.string
+};
+const defaultProps = {};
+
 export class OasisSoldReceivedAmounts extends PureComponent {
   render() {
     const {
       amountReceived,
+      amountReceivedFullPrecision,
       amountSold,
+      amountSoldFullPrecision,
       sellToken,
       buyToken,
       ...props
@@ -78,6 +93,7 @@ export class OasisSoldReceivedAmounts extends PureComponent {
         <FlexBox className={styles.buying}>
           <TokenReceivedAmount
             tokenAmount={amountReceived}
+            tokenAmountfullPrecision={amountReceivedFullPrecision}
             tokenName={buyToken}
             className={styles.detailsAmountCol}
           />
@@ -85,6 +101,7 @@ export class OasisSoldReceivedAmounts extends PureComponent {
         <FlexBox>
           <TokenSoldAmount
             tokenAmount={amountSold}
+            tokenAmountFullPrecision={amountSoldFullPrecision}
             tokenName={sellToken}
             className={styles.detailsAmountCol}
           />

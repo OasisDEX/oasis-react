@@ -31,6 +31,7 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
     <div>
       <Connect(ReduxForm)
         estimateGas={[Function]}
+        onFormChange={[Function]}
       />
     </div>
     <div

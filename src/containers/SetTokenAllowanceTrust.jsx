@@ -101,7 +101,6 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
   }
 
   onTransactionPending({ txStartTimestamp }) {
-    console.log("txStartTimestamp", txStartTimestamp);
     this.setState({
       txTimestamp: txStartTimestamp,
       txStatus: TX_STATUS_AWAITING_CONFIRMATION

@@ -15,13 +15,14 @@ import {
   TX__GROUP__TRANSFERS,
   TX_STATUS_AWAITING_CONFIRMATION,
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
+  TX_STATUS_CANCELLED_BY_USER,
   TX_STATUS_CONFIRMED,
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
-import { formatAmount } from '../utils/tokens/pair';
-import textStyles from '../styles/modules/_typography.scss';
+import { formatAmount } from "../utils/tokens/pair";
+import textStyles from "../styles/modules/_typography.scss";
 import CSSModules from "react-css-modules/dist/index";
-import {OasisTransactionStatusWrapperInfoBox} from "./OasisTransactionStatusInfoBox";
+import { OasisTransactionStatusWrapperInfoBox } from "./OasisTransactionStatusInfoBox";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -33,6 +34,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
     super(props);
     this.state = {};
     this.makeTransfer = this.makeTransfer.bind(this);
+    this.onFormChange = this.onFormChange.bind(this);
   }
 
   async makeTransfer() {
@@ -64,7 +66,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
   onTransactionCancelledByUser() {
     this.setState({ disableTransferButton: false });
     this.setState({
-      txStatus: undefined,
+      txStatus: TX_STATUS_CANCELLED_BY_USER,
       disableForm: false,
       lockCancelButton: false
     });
@@ -80,16 +82,14 @@ export class OasisTokenTransferWrapper extends PureComponent {
     this.setState({
       txStatus: TX_STATUS_CONFIRMED
     });
-    setTimeout(
-      () => {
-        this.props.actions.resetTransferForm();
-        this.setState({
-          txStatus: undefined,
-          txStartTimestamp: undefined,
-          disableForm: false
-        });
-      }, 2000
-    )
+    setTimeout(() => {
+      this.props.actions.resetTransferForm();
+      this.setState({
+        txStatus: undefined,
+        txStartTimestamp: undefined,
+        disableForm: false
+      });
+    }, 2000);
   }
 
   onTransactionRejected({ txHash }) {
@@ -101,22 +101,23 @@ export class OasisTokenTransferWrapper extends PureComponent {
     });
   }
 
-  shouldDisable() {
-    const { disableForm } = this.state;
-    return disableForm;
+  shouldDisableForm() {
+    const { disableForm, txStatus } = this.state;
+    return (
+      disableForm || (!!txStatus && txStatus !== TX_STATUS_CANCELLED_BY_USER)
+    );
   }
   selectedToken() {
     return (
       <OasisTokenSelectWrapper
-        onChange={ () =>  this.props.actions.resetTransferForm() }
-        disabled={this.shouldDisable()}
+        onChange={() => this.props.actions.resetTransferForm()}
+        disabled={this.shouldDisableForm()}
         name={"tokenTransfer"}
       />
     );
   }
 
-
-  static transferInfo({ transferFormValues: {tokenAmount  }, selectedToken }) {
+  static transferInfo({ transferFormValues: { tokenAmount }, selectedToken }) {
     return (
       <div>
         Transfer
@@ -130,18 +131,29 @@ export class OasisTokenTransferWrapper extends PureComponent {
   renderTransactionStatus() {
     const { selectedToken, transferFormValues } = this.props;
     const { txStatus, txStartTimestamp } = this.state;
-    return <OasisTransactionStatusWrapperInfoBox
-              txStatus={txStatus}
-              infoText={OasisTokenTransferWrapper.transferInfo({ selectedToken, transferFormValues })}
-              localStatus={txStatus}
-              txTimestamp={txStartTimestamp}
-              txType={TX__GROUP__TRANSFERS}
-          />;
+    return (
+      <OasisTransactionStatusWrapperInfoBox
+        txStatus={txStatus}
+        infoText={OasisTokenTransferWrapper.transferInfo({
+          selectedToken,
+          transferFormValues
+        })}
+        localStatus={txStatus}
+        txTimestamp={txStartTimestamp}
+        txType={TX__GROUP__TRANSFERS}
+      />
+    );
+  }
+
+  onFormChange() {
+    this.setState({
+      txStatus: undefined,
+      txStartTimestamp: undefined
+    });
   }
 
   render() {
     const { selectedToken } = this.props;
-    const { txStatus } = this.state;
     return (
       <OasisWidgetFrame
         heading="Transfer"
@@ -154,11 +166,11 @@ export class OasisTokenTransferWrapper extends PureComponent {
           decimalPlaces={5}
         />
         <TokenTransferFormWrapper
-          disabled={this.shouldDisable() || !!txStatus}
+          onFormChange={this.onFormChange}
+          disabled={this.shouldDisableForm()}
           onSubmit={this.makeTransfer}
           transferState={this.renderTransactionStatus()}
         />
-
       </OasisWidgetFrame>
     );
   }

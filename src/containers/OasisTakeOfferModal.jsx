@@ -27,6 +27,7 @@ import {
   TX_OFFER_TAKE,
   TX_STATUS_AWAITING_CONFIRMATION,
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
+  TX_STATUS_CANCELLED_BY_USER,
   TX_STATUS_CONFIRMED,
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
@@ -123,7 +124,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
   onTransactionCancelledByUser() {
     this.setState({ disableOfferTakeButton: false });
     this.setState({
-      txStatus: undefined,
+      txStatus: TX_STATUS_CANCELLED_BY_USER,
       disableForm: false,
       lockCancelButton: false
     });
@@ -235,13 +236,19 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     );
   }
 
+  onFormChange() {
+    this.setState({
+      txStatus: undefined,
+      txStartTimestamp: undefined
+    });
+  }
+
   render() {
     const {
       offerTakeType,
       sellToken,
       buyToken,
       isVolumeGreaterThanOfferMax,
-      canFulfillOffer,
       isTokenTradingEnabled,
       actions: { getTransactionGasCostEstimate }
     } = this.props;
@@ -264,12 +271,14 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
             <OfferTakeForm
               disableForm={this.state.disableForm}
               estimateGas={getTransactionGasCostEstimate}
+              onFormChange={this.onFormChange}
             />
           </div>
           <div className="statusSection">
             <div>{this.renderOfferSummary()}</div>
             <div>
-              {isTokenTradingEnabled && isVolumeGreaterThanOfferMax &&
+              {isTokenTradingEnabled &&
+                isVolumeGreaterThanOfferMax &&
                 !this.state.disableForm && (
                   <OasisVolumeIsOverTheOfferMax
                     tokenName={buyToken}
@@ -288,10 +297,10 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
               />
             ) : (
               <div>
-                {canFulfillOffer && <OasisOfferTakeWarningBox />}
                 <OasisNotTheBestOfferPriceWarningWrapper />
               </div>
             )}
+            {isTokenTradingEnabled && <OasisOfferTakeWarningBox />}
           </div>
           <div className={styles.footer}>
             <OasisButton

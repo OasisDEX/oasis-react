@@ -15,18 +15,18 @@ import {
 import textStyles from "../styles/modules/_typography.scss";
 import CSSModules from "react-css-modules";
 import InfoBox from "../components/InfoBox";
-import network from '../store/selectors/network';
+import network from "../store/selectors/network";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
   txTimestamp: PropTypes.number,
   txType: PropTypes.string,
   localStatus: PropTypes.string,
-  customBlock: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+  customBlock: PropTypes.oneOfType([PropTypes.node, PropTypes.func])
 };
 
 export class OasisTransactionStatusWrapper extends PureComponent {
-  hasTransactionFailed() {
+  hasTransactionFailedOrSignatureDenied() {
     return [TX_STATUS_CANCELLED_BY_USER, TX_STATUS_REJECTED].includes(
       this.props.transaction.get("txStatus")
     );
@@ -48,7 +48,7 @@ export class OasisTransactionStatusWrapper extends PureComponent {
    */
   renderTimer() {
     const { transaction } = this.props;
-    if (!this.hasTransactionFailed()) {
+    if (!this.hasTransactionFailedOrSignatureDenied()) {
       return <TransactionTimer transaction={transaction} />;
     } else {
       return null;
@@ -65,13 +65,17 @@ export class OasisTransactionStatusWrapper extends PureComponent {
         fullWidth
         noBorder={noBorder}
       >
-        <div>
+        <div style={{ padding: "7px 0" }}>
           {typeof infoText === "function"
             ? infoText(transaction.get("txMeta"))
             : infoText}
         </div>
         <div
-          className={this.hasTransactionFailed() ? textStyles.textDanger : ""}
+          className={
+            this.hasTransactionFailedOrSignatureDenied()
+              ? textStyles.textDanger
+              : ""
+          }
           style={{ display: "flex", alignContent: "space-between" }}
         >
           <TransactionStatus transaction={transaction} />

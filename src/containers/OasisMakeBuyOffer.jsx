@@ -62,7 +62,7 @@ export class OasisMakeBuyOfferWrapper extends React.Component {
         <OasisTokenBalanceSummary summary="Available" token={quoteToken} />
         <div>
           {this.getModal(formProps)}
-          <OfferMakeForm {...formProps} shouldFormUpdate={isModalOpen} />
+          <OfferMakeForm {...formProps} shouldFormUpdate={!isModalOpen} />
         </div>
         <div className={styles.footer}>
           <div className={styles.helpBlock}>

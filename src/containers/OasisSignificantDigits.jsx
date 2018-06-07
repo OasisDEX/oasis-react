@@ -5,7 +5,16 @@ import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Popper, Manager, Reference } from "react-popper";
-import web3 from '../bootstrap/web3';
+import web3 from "../bootstrap/web3";
+
+const splitPattern = /^(\d+[,\d]*\d*).(\d*[1-9]+|0)?(\d*)$/;
+const popperStyle = (style) => ({
+  ...style,
+  padding: "10px",
+  background: "#000",
+  color: "#fff",
+  zIndex: "100"
+});
 
 import styles from './OasisSignificantDigits.scss';
 import CSSModules from 'react-css-modules';
@@ -24,7 +33,6 @@ const defaultProps = {
   fractionalZerosGrey: true
 };
 
-const splitPattern = /^(\d+[,\d]*\d*).(\d*[1-9]+|0)?(\d*)$/;
 export class OasisSignificantDigitsWrapper extends PureComponent {
   constructor(props) {
     super(props);
@@ -40,7 +48,7 @@ export class OasisSignificantDigitsWrapper extends PureComponent {
       ,
       integralPart,
       fractionalPartWitOptionalLeadingZeroes,
-      fractionalPartZeroes
+      fractionalPartZeroes,
     ] = matches;
     return (
       <Manager>
@@ -65,10 +73,16 @@ export class OasisSignificantDigitsWrapper extends PureComponent {
             {({ ref, style, placement }) => (
               <div
                 ref={ref}
-                style={{ ...style, padding: "10px", background: "#000", color: '#fff', zIndex: '100' }}
+                style={popperStyle(style)}
                 data-placement={placement}
               >
-                {web3.toBigNumber( fullPrecisionUnit ? web3.fromWei(fullPrecisionAmount): fullPrecisionAmount ).toFixed()}
+                {web3
+                  .toBigNumber(
+                    fullPrecisionUnit
+                      ? web3.fromWei(fullPrecisionAmount)
+                      : amount
+                  )
+                  .toFixed()}
               </div>
             )}
           </Popper>

@@ -30,6 +30,7 @@ exports[`(Container) OasisMakeOfferModal should render 1`] = `
     <div>
       <Connect(ReduxForm)
         offerMakeType="OFFER_MAKES/MAKE_BUY_OFFER"
+        onFormChange={[Function]}
       />
       <Connect(OasisOfferSummary)
         disableBalanceWarning={true}

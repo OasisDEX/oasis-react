@@ -16,6 +16,7 @@ exports[`(Component) OasisWrapUnwrapWrap should render 1`] = `
   </OasisTokenBalance>
   <Connect(ReduxForm)
     disabled={true}
+    onFormChange={[Function]}
     onSubmit={[Function]}
     transactionState={
       Object {
