@@ -3,6 +3,7 @@ import web3, {web3p} from "../bootstrap/web3";
 import markets from "../store/selectors/markets";
 import {ETH_UNIT_ETHER} from "../constants";
 import { getMarketContractInstance } from '../bootstrap/contracts';
+import BigNumber from "bignumber.js";
 
 const fromWei = (x) =>  web3.fromWei(x, ETH_UNIT_ETHER);
 
@@ -67,6 +68,7 @@ export default (store) => {
     disableTokenTrust: disableTokenTrust(store),
     enableTokenTrust: enableTokenTrust(store),
     state: () => store.getState().toJS(),
-    logTake
+    logTake,
+    BigNumber: (n) => new BigNumber(n)
   };
 }

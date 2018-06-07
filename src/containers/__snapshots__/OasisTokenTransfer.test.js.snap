@@ -30,7 +30,7 @@ exports[`(Container) OasisTokenTransfer should render 1`] = `
             <strong
               className={undefined}
             >
-              1.00000
+              1.000
                
               MKR
             </strong>
