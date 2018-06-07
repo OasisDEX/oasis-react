@@ -12,10 +12,10 @@ import offersReducer, {
 } from "../store/reducers/offers";
 import {
   TX_STATUS_AWAITING_CONFIRMATION,
-  TX_STATUS_AWAITING_USER_ACCEPTANCE,
+  TX_STATUS_AWAITING_USER_ACCEPTANCE, TX_STATUS_CANCELLED_BY_USER,
   TX_STATUS_CONFIRMED,
-  TX_STATUS_REJECTED
-} from "../store/reducers/transactions";
+  TX_STATUS_REJECTED,
+} from '../store/reducers/transactions';
 import tokens from "../store/selectors/tokens";
 import offers from '../store/selectors/offers';
 import network from '../store/selectors/network';
@@ -61,8 +61,7 @@ export class OasisOfferCancelModalWrapper extends PureComponent {
 
   onTransactionCancelledByUser() {
     this.setState({
-      txStatus: undefined,
-      disableForm: false,
+      txStatus: TX_STATUS_CANCELLED_BY_USER,
       lockCancelButton: false
     });
   }
@@ -89,8 +88,8 @@ export class OasisOfferCancelModalWrapper extends PureComponent {
   }
 
   onModalClose() {
-    const { actions, activeTradingPair } = this.props;
-    const { offer } = this.state;
+    // const { actions, activeTradingPair } = this.props;
+    // const { offer } = this.state;
     this.setState({
       modalOpen: false,
       txStartTimestamp: undefined,
@@ -98,13 +97,13 @@ export class OasisOfferCancelModalWrapper extends PureComponent {
     });
     this.props.onModalClose();
 
-    if (this.state.txStatus === TX_STATUS_CONFIRMED) {
-      actions.removeOrderCancelledByTheOwner({
-        offerType: offer.get("offerType"),
-        offerId: offer.get("id"),
-        tradingPair: activeTradingPair
-      });
-    }
+    // if (this.state.txStatus === TX_STATUS_CONFIRMED) {
+      // actions.removeOrderCancelledByTheOwner({
+      //   offerType: offer.get("offerType"),
+      //   offerId: offer.get("id"),
+      //   tradingPair: activeTradingPair
+      // });
+    // }
   }
 
   cancelIsAwaitingAcceptanceOrPending() {

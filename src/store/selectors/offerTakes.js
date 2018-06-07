@@ -163,7 +163,8 @@ const canFulfillOffer = createSelector(
   markets.isBuyEnabled,
   rootState => {
     return balances.tokenAllowanceStatusForActiveMarket(rootState, {
-      tokenName: tokenToBeAllowed(rootState)});
+      tokenName: tokenToBeAllowed(rootState)
+    });
   },
   isVolumeEmptyOrZero,
   isVolumeGreaterThanOfferMax,
@@ -180,7 +181,7 @@ const canFulfillOffer = createSelector(
       !isOfferActive ||
       isVolumeZero ||
       isVolumeGreaterThanOfferMax ||
-      !canSendTransaction ||
+      // !canSendTransaction ||
       !isBuyEnabled ||
       [false, null].includes(istTokenEnabled)
     ) {
@@ -227,14 +228,13 @@ const isActiveOfferTakeBestOffer = createSelector(
   }
 );
 
-const getBuyAmount = (getState) => {
-
+const getBuyAmount = getState => {
   const offerType = activeOfferTakeType(getState());
 
-  if(offerType === TAKE_BUY_OFFER) {
-    return takeFormValuesSelector(getState(), 'total');
+  if (offerType === TAKE_BUY_OFFER) {
+    return takeFormValuesSelector(getState(), "total");
   } else {
-    return takeFormValuesSelector(getState(), 'volume');
+    return takeFormValuesSelector(getState(), "volume");
   }
 };
 

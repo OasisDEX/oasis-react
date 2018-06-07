@@ -250,7 +250,7 @@ const canMakeOffer = createSelector(
     if (
       isVolumeOrPriceEmptyOrZero ||
       !hasSufficientTokenAmount ||
-      !canSendTransaction ||
+      // !canSendTransaction ||
       !isBuyEnabled ||
       !isTokenEnabled ||
       isBelowLimit

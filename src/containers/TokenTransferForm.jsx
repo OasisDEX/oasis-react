@@ -38,10 +38,11 @@ export class TokenTransferFormWrapper extends PureComponent {
       disabled,
       actions,
       transferState,
-      globalFormLock
+      globalFormLock,
+      onFormChange
     } = this.props;
     return (
-      <form method="POST" onSubmit={handleSubmit}>
+      <form method="POST" onSubmit={handleSubmit} onChange={onFormChange}>
         <table className={styles.table}>
           <tbody>
             <tr>

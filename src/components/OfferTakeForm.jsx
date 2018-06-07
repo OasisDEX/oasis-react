@@ -27,11 +27,7 @@ import CSSModules from "react-css-modules";
 import MaskedTokenAmountInput from "./MaskedTokenAmountInput";
 import { SETMAXBTN_HIDE_DELAY_MS } from "../constants";
 import platform from "../store/selectors/platform";
-/**
- * Remove this styling TODO
- */
-// const box = { border: '1px solid black', padding: 20, marginTop: 20 };
-// const label = { width: '30%', display: 'inline-block' };
+
 const fieldStyle = { textAlign: "right" };
 
 const propTypes = PropTypes && {
@@ -40,7 +36,8 @@ const propTypes = PropTypes && {
   sellToken: PropTypes.string.isRequired,
   offerTakeType: PropTypes.string.isRequired,
   activeTradingPairPrecision: PropTypes.number.isRequired,
-  activeBaseTokenBalance: PropTypes.string.isRequired
+  activeBaseTokenBalance: PropTypes.string.isRequired,
+  onFormChange: PropTypes.func
 };
 
 const defaultProps = {};
@@ -56,6 +53,7 @@ export class OfferTakeForm extends PureComponent {
       showMaxButton: false
     };
 
+    this.onFormChange = this.onFormChange.bind(this);
     this.onVolumeFieldChange = this.onVolumeFieldChange.bind(this);
     this.onTotalFieldChange = this.onTotalFieldChange.bind(this);
     this.onSetBuyMax = this.onSetBuyMax.bind(this);
@@ -179,9 +177,9 @@ export class OfferTakeForm extends PureComponent {
     );
   }
 
-  renderTotalField(disableForm) {
+  renderTotalField() {
     const { totalToken } = this.getTokensByOfferTakeType();
-    const { globalFormLock } = this.props;
+    const { globalFormLock, disableForm } = this.props;
     return (
       <tr>
         <th>Total</th>
@@ -234,6 +232,11 @@ export class OfferTakeForm extends PureComponent {
         break;
     }
     return { priceToken, volumeToken, totalToken };
+  }
+
+  onFormChange() {
+    const { onFormChange } = this.props;
+    onFormChange && onFormChange();
   }
 
   render() {

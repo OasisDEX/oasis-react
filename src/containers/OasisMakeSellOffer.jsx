@@ -47,7 +47,8 @@ export class OasisMakeSellOfferWrapper extends React.Component {
       activeTradingPair: { baseToken, quoteToken },
       hasSufficientTokenAmount,
       canMakeOffer,
-      globalFormLock
+      globalFormLock,
+      isModalOpen
     } = this.props;
     const formProps = {
       baseToken,
@@ -61,7 +62,7 @@ export class OasisMakeSellOfferWrapper extends React.Component {
         <OasisTokenBalanceSummary summary="Available" token={baseToken} />
         <div>
           {this.getModal(formProps)}
-          <OfferMakeForm {...formProps} />
+          <OfferMakeForm {...formProps} shouldFormUpdate={!isModalOpen}/>
         </div>
         <div className={styles.footer}>
           <div className={styles.helpBlock}>

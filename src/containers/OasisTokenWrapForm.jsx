@@ -23,7 +23,8 @@ import OasisDontWrapAllEther from '../components/OasisDontWrapAllEther';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
-  wrapTokenAmount: PropTypes.string
+  wrapTokenAmount: PropTypes.string,
+  onFormChange: PropTypes.func
 };
 
 const inputStyle = { textAlign: "right", width: "100%" };
@@ -113,10 +114,11 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
       handleSubmit,
       activeUnwrappedToken,
       disabled,
-      globalFormLock
+      globalFormLock,
+      onFormChange
     } = this.props;
     return (
-      <form onSubmit={handleSubmit}>
+      <form onChange={onFormChange} onSubmit={handleSubmit}>
         <table className={tableStyles.table}>
           <tbody>
             <tr>

@@ -22,6 +22,7 @@ import {
   TX_OFFER_MAKE,
   TX_STATUS_AWAITING_CONFIRMATION,
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
+  TX_STATUS_CANCELLED_BY_USER,
   TX_STATUS_CONFIRMED,
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
@@ -71,6 +72,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
+    this.onFormChange = this.onFormChange.bind(this);
     this.onBuyOffer = this.onBuyOffer.bind(this);
     this.onCancel = this.onCancel.bind(this);
   }
@@ -108,7 +110,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
   onTransactionCancelledByUser() {
     this.setState({ disableOfferMakeButton: false });
     this.setState({
-      txStatus: undefined,
+      txStatus: TX_STATUS_CANCELLED_BY_USER,
       disableForm: false,
       lockCancelButton: false
     });
@@ -138,6 +140,13 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
       disableForm: true,
       lockCancelButton: false,
       disableOfferMakeButton: false
+    });
+  }
+
+  onFormChange() {
+    this.setState({
+      txStatus: undefined,
+      txStartTimestamp: undefined
     });
   }
 
@@ -182,6 +191,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
           offerMakeType={offerMakeType}
           form={form}
           disableForm={this.state.disableForm}
+          onFormChange={this.onFormChange}
         />
         <OasisOfferSummary
           disableBalanceWarning={
