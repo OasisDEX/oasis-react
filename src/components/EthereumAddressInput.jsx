@@ -6,7 +6,7 @@ const propTypes = PropTypes && {};
 const defaultProps = {};
 
 
-const inputStyle = { textAlign:'right', width: '100%' };
+const inputStyle = { textAlign:'right' };
 
 
 class EthereumAddressInput extends PureComponent {

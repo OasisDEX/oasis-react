@@ -6,7 +6,6 @@ exports[`(Component) EthereumAddressInput should render 1`] = `
   style={
     Object {
       "textAlign": "right",
-      "width": "100%",
     }
   }
   type="text"

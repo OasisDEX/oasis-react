@@ -19,7 +19,7 @@ class TokenAmountInput extends PureComponent {
     </div>;
 
     return (
-        <div className={styles.inputGroup}>
+        <div>
           <MaskedTokenAmountInput className={styles.input} {...this.props}/>
           {insufficientAmount && errorMessage}
         </div>

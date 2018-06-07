@@ -1,6 +1,9 @@
 @import "../styles/modules/typography";
 
+$widget-vertical-space: 30px;
+
 .OasisWidgetFrame {
+  position: relative;
   display: inline-block;
   opacity: 0.89;
   background: white;
@@ -14,18 +17,25 @@
 
   .Heading {
     @include heading;
-    margin-left: 30px;
-    margin-right: 30px;
+    margin-left: $widget-vertical-space;
+    margin-right: $widget-vertical-space;
     margin-bottom: 18px;
   }
 }
 
 .OasisWidgetContent {
-  padding: 0 30px;
+  padding: 0 $widget-vertical-space;
 }
 
 .WidgetFloatRightButton {
   float: right;
   position: relative;
   top: -1px;
+}
+
+.OasisWidgetFooter {
+  position: absolute;
+  bottom: 30px;
+  left: $widget-vertical-space;
+  right: $widget-vertical-space;
 }

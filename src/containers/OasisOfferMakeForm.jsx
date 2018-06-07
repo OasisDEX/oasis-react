@@ -23,6 +23,7 @@ import {
 import OasisButton from "../components/OasisButton";
 
 import styles from "./OasisOfferMakeForm.scss";
+import tableStyles from "../styles/modules/_table.scss";
 import CSSModules from "react-css-modules";
 import OasisVolumeIsGreaterThanUserBalance from "../components/OasisVolumeIsGreaterThanUserBalance";
 // import { formatAmount, PRICE_DECIMAL } from '../utils/tokens/pair';
@@ -99,7 +100,7 @@ export class OfferMakeForm extends React.Component {
       case MAKE_BUY_OFFER:
         return (
           <OasisButton
-            className={styles.setMaxBtn}
+            className={tableStyles.inputBtn}
             disabled={
               greaterThanZeroValidator(currentFormValues.price) ||
               disableForm ||
@@ -116,7 +117,7 @@ export class OfferMakeForm extends React.Component {
       case MAKE_SELL_OFFER:
         return (
           <OasisButton
-            className={styles.setMaxBtn}
+            className={tableStyles.inputBtn}
             disabled={
               greaterThanZeroValidator(currentFormValues.price) ||
               disableForm ||
@@ -188,6 +189,7 @@ export class OfferMakeForm extends React.Component {
     const { currentFormValues = {}, disableForm, globalFormLock } = this.props;
     return (
       <div
+        className={tableStyles.inputGroupEventHandlerChild}
         onFocus={this.onTotalFieldSectionFocus}
         onBlur={this.onTotalFieldSectionBlur}
       >
@@ -227,17 +229,17 @@ export class OfferMakeForm extends React.Component {
 
     return (
       <form onSubmit={handleSubmit} onChange={this.onFormChange}>
-        <table className={styles.table}>
+        <table className={tableStyles.table}>
           <tbody>
             <tr>
               <th>Price</th>
-              <td className={styles.amount}>{this.renderPriceField()}</td>
-              <td className={styles.currency}> {quoteToken}</td>
+              <td className={tableStyles.withInput}>{this.renderPriceField()}</td>
+              <td className={tableStyles.currency}> {quoteToken}</td>
             </tr>
             <tr>
               <th>Amount</th>
-              <td className={styles.amount}>{this.renderAmountField()}</td>
-              <td className={styles.currency}>
+              <td className={tableStyles.withInput}>{this.renderAmountField()}</td>
+              <td className={tableStyles.currency}>
                 {baseToken}
                 <div>
                   {isUserTokenBalanceSufficient && (
@@ -251,16 +253,16 @@ export class OfferMakeForm extends React.Component {
             <tr>
               <th>Total</th>
               <td
-                className={styles.amount}
+                className={tableStyles.withInput}
                 onBlur={this.onTotalFieldSectionBlur}
                 onFocus={this.onTotalFieldSectionFocus}
               >
-                <div className={styles.inputGroup}>
+                <div className={tableStyles.inputGroup}>
                   {this.setMaxButton()}
                   {this.renderTotalField()}
                 </div>
               </td>
-              <td className={styles.currency}>{quoteToken}</td>
+              <td className={tableStyles.currency}>{quoteToken}</td>
             </tr>
           </tbody>
         </table>
@@ -313,5 +315,5 @@ export function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  reduxForm({})(CSSModules(OfferMakeForm, styles))
+  reduxForm({})(CSSModules(OfferMakeForm, { styles, tableStyles }, { allowMultiple: true }))
 );

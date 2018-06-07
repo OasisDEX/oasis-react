@@ -5,7 +5,16 @@ exports[`(Container) TokenTransferForm should render 1`] = `
   method="POST"
   onChange={[Function]}
 >
-  <table>
+  <table
+    className="undefined undefined"
+  >
+    <thead>
+      <tr>
+        <td />
+        <td />
+        <td />
+      </tr>
+    </thead>
     <tbody>
       <tr>
         <th>
@@ -23,7 +32,9 @@ exports[`(Container) TokenTransferForm should render 1`] = `
         <th>
           Amount
         </th>
-        <td>
+        <td
+          className="undefined undefined"
+        >
           <div>
             <OasisButton
               btnType="button"
@@ -59,7 +70,7 @@ exports[`(Container) TokenTransferForm should render 1`] = `
     </tbody>
   </table>
   <div
-    className="undefined "
+    className="undefined undefined"
   >
     <OasisButton
       btnType="button"

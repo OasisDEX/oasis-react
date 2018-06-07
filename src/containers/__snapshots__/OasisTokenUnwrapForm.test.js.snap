@@ -13,11 +13,6 @@ exports[`(Container) OasisTokenUnwrapForm should render 1`] = `
             <div
               onBlur={[Function]}
               onFocus={[Function]}
-              style={
-                Object {
-                  "disabled": "inlineBlock",
-                }
-              }
             >
               <Field
                 autoComplete="off"

@@ -13,10 +13,26 @@
   @include currency;
 }
 
+// input group in tables
 .inputGroup {
   display: flex;
 }
 
+// dummy div for onBlur and onFocus,
+// placed directly inside inputGroup, next to button, containing input
+// The structure should look like this:
+// td.withInput
+//     div.inputGroup
+//         button.inputBtn
+//         div.inputGroupEventHandlerChild
+//             input
+.inputGroupEventHandlerChild {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
 .inputBtn {
-  margin: 6px;
+  margin: 5px;
 }

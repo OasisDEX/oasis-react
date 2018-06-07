@@ -1,34 +1,29 @@
-@import "../styles/modules/verticalForm";
-@import "../styles/modules/typography";
-
-.table {
-  @include verticalFormTable;
-  margin-bottom: 2em;
-}
-
-.withInput {
-  @include tdWithInput;
-}
-
-.formGroup {
-  display: flex;
-}
-
-.setMaxBtn {
-  margin: 6px;
-}
-
-.currency {
-  @include currency;
-  width: 50px;
-}
 
 .footer {
-  float: right;
-  margin-top: 28px;
+  display: flex;
+  justify-content: flex-end;
+}
 
-  &.txBoxMargin {
-    margin-top: 10px;
-    margin-bottom: 20px;
+.transferTable {
+  th,
+  .thHeader {
+    width: 100px;
   }
+
+  .thCurrency {
+    width: 70px;
+  }
+  // this head is only to make sure the columns are the right wide
+  thead {
+    td {
+      padding: 0;
+      border: 0;
+    }
+
+  }
+}
+
+.tdWithErrorMessages {
+  overflow: visible;
+  position: relative;
 }

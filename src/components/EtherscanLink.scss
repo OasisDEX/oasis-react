@@ -1,2 +1,6 @@
-.base {
+@import "../styles/modules/typography";
+
+.link {
+  @include ellipsis(150px);
+  font-weight: 600;
 }

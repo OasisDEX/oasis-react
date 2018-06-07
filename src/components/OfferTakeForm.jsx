@@ -187,6 +187,7 @@ export class OfferTakeForm extends PureComponent {
           <div className={tableStyles.inputGroup}>
             {this.setMaxButton()}
             <div
+              className={tableStyles.inputGroupEventHandlerChild}
               onFocus={this.onTotalFieldSectionFocus}
               onBlur={this.onTotalFieldSectionBlur}
             >

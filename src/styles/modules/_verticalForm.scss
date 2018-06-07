@@ -5,8 +5,10 @@
   border-spacing: 0;
   border: solid #EFEFEF 1px;
   border-radius: 6px;
+  table-layout: fixed;
 
   th {
+    width: 80px;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     opacity: 0.68;
@@ -41,11 +43,13 @@
   padding:0;
 
   input {
-    width: 100%;
+    width: calc(100% - 2px);
+    margin-left: 1px;
+    margin-right: 1px;
     font-family: 'Roboto', sans-serif;
-    font-size: 21px;
-    font-weight: bold;
-    color: #ABABAD;
+    font-size: 19px;
+    font-weight: 500;
+    color: #68686C;
     border: none;
     text-align: right;
     padding-right: 10px;
@@ -53,7 +57,19 @@
     background: none;
 
     &::placeholder {
-      color: #DDD;
+      color: rgba(104,104,108,0.4);
     }
   }
+}
+
+
+@mixin tdWithInputGroup {
+  @include tdWithInput;
+
+  //& > div {
+  //  display: flex;
+  //  align-items: center;
+  //  justify-content: center;
+  //  width: 100%;
+  //}
 }

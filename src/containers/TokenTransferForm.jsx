@@ -11,9 +11,12 @@ import TokenAmountInputFieldWrapper from "./TokenAmountInputField";
 import transfers from "../store/selectors/transfers";
 import transfersReducer from "../store/reducers/transfers";
 import styles from "./TokenTransferForm.scss";
+import tableStyles from "../styles/modules/_table.scss";
+import widgetStyles from "./OasisWidgetFrame.scss";
 import OasisButton from "../components/OasisButton";
 import { SETMAXBTN_HIDE_DELAY_MS } from "../constants";
 import platform from "../store/selectors/platform";
+import CSSModules from "react-css-modules";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -47,16 +50,16 @@ export class TokenTransferFormWrapper extends PureComponent {
       disabled,
       actions,
       transferState,
-      txStatus,
       globalFormLock
     } = this.props;
     return (
       <form method="POST" onSubmit={handleSubmit} onChange={this.onFormChange}>
-        <table className={styles.table}>
+        <table className={`${tableStyles.table} ${styles.transferTable}`}>
+          <thead><tr><td className={styles.thHeader}></td><td></td><td className={styles.thCurrency}></td></tr></thead>
           <tbody>
             <tr>
               <th>Recipient</th>
-              <td colSpan="2" className={styles.withInput}>
+              <td colSpan="2" className={tableStyles.withInput}>
                 <EthereumAddressInputFieldWrapper
                   disabled={disabled || globalFormLock}
                   fieldName={"recipient"}
@@ -65,19 +68,20 @@ export class TokenTransferFormWrapper extends PureComponent {
             </tr>
             <tr>
               <th>Amount</th>
-              <td className={styles.withInput}>
-                <div className={styles.formGroup}>
+              <td className={`${tableStyles.withInput} ${styles.tdWithErrorMessages}`}>
+                <div className={tableStyles.inputGroup}>
                   <OasisButton
                     hidden={!this.state.showMaxButton}
                     type="button"
                     onClick={actions.transferMax}
                     size="xs"
-                    className={styles.setMaxBtn}
+                    className={tableStyles.inputBtn}
                     disabled={disabled || globalFormLock}
                   >
                     transfer max
                   </OasisButton>
                   <div
+                    className={tableStyles.inputGroupEventHandlerChild}
                     onBlur={this.onTotalFieldSectionBlur}
                     onFocus={this.onTotalFieldSectionFocus}
                   >
@@ -95,13 +99,13 @@ export class TokenTransferFormWrapper extends PureComponent {
                   />
                 </div>
               </td>
-              <td className={styles.currency}>{this.props.selectedToken}</td>
+              <td className={tableStyles.currency}>{this.props.selectedToken}</td>
             </tr>
           </tbody>
         </table>
         {transferState}
         <div
-          className={`${styles.footer} ${txStatus ? styles.txBoxMargin : ""}`}
+          className={`${widgetStyles.OasisWidgetFooter} ${styles.footer}`}
         >
           <OasisButton
             type="submit"
@@ -151,5 +155,5 @@ TokenTransferFormWrapper.displayName = "TokenTransferForm";
 export default connect(mapStateToProps, mapDispatchToProps)(
   reduxForm({
     form: "tokenTransfer"
-  })(TokenTransferFormWrapper)
+  })(CSSModules(TokenTransferFormWrapper,  { styles, tableStyles, widgetStyles }, { allowMultiple: true }))
 );

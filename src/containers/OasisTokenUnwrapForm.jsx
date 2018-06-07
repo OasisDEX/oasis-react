@@ -10,6 +10,7 @@ import wrapUnwrapReducer from "../store/reducers/wrapUnwrap";
 import OasisButton from "../components/OasisButton";
 import tableStyles from "../styles/modules/_table.scss";
 import styles from "./OasisTokenUnwrapForm.scss";
+import widgetStyles from "./OasisWidgetFrame.scss";
 import CSSModules from "react-css-modules";
 import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBox";
 import { TX_UNWRAP } from "../store/reducers/transactions";
@@ -88,8 +89,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
       activeWrappedToken,
       disabled,
       globalFormLock,
-      onFormChange,
-      transactionState: { txStatus }
+      onFormChange
     } = this.props;
     return (
       <form onChange={onFormChange} onSubmit={handleSubmit}>
@@ -111,7 +111,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
                     </OasisButton>
                   )}
                   <div
-                    style={{ disabled: "inlineBlock" }}
+                    className={tableStyles.inputGroupEventHandlerChild}
                     onFocus={this.onTotalFieldSectionFocus}
                     onBlur={this.onTotalFieldSectionBlur}
                   >
@@ -134,9 +134,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
           </tbody>
         </table>
         <div>{this.renderTransactionStatus()}</div>
-        <div
-          className={`${styles.footer} ${txStatus ? styles.txBoxMargin : ""}`}
-        >
+        <div className={`${styles.footer} ${widgetStyles.OasisWidgetFooter}`}>
           <OasisButton
             type="submit"
             disabled={!valid || disabled || globalFormLock || initialized}
@@ -192,7 +190,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(
   })(
     CSSModules(
       OasisTokenUnwrapFormWrapper,
-      { tableStyles, styles },
+      { tableStyles, styles, widgetStyles },
       { allowMultiple: true }
     )
   )
