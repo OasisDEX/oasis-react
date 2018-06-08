@@ -35,7 +35,7 @@ exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
               "top": "1px",
             }
           }
-          title={false}
+          title=""
         >
           <Connect(OasisTransactionStatus)
             localStatus={undefined}
