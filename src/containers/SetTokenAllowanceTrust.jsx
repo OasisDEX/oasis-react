@@ -234,7 +234,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
       this.state.txStatus
     )
       ? "click to dismiss"
-      : false;
+      : "";
   }
 
   renderAccordionHeading() {
