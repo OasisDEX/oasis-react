@@ -6,6 +6,8 @@ import * as BigNumber from "bignumber.js";
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import { fulfilled } from "../../utils/store";
 import {
+  DEFAULT_GAS_LIMIT,
+  DEFAULT_GAS_PRICE,
   ETH_UNIT_ETHER,
   ETH_UNIT_WEI,
   TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED,
@@ -188,22 +190,31 @@ const subscribeTokenTransfersEventsEpic = (
 
 const setAllowance = createAction(
   "BALANCES/SET_ALLOWANCE",
-  (tokenName, spenderAddress, newAllowance) =>
-    getTokenContractInstance(tokenName).approve(spenderAddress, newAllowance)
+  (tokenName, spenderAddress, newAllowance, gasLimit = DEFAULT_GAS_LIMIT, gasPrice = DEFAULT_GAS_PRICE) =>
+    getTokenContractInstance(tokenName).approve(spenderAddress, newAllowance, {
+      gasPrice,
+      gas: gasLimit
+    })
 );
 
 const setTokenTrustAddressEnabled = createAction(
   "BALANCES/SET_TOKEN_TRUST_ADDRESS_ENABLED",
-  (tokenName, allowanceSubjectAddress) =>
-    getTokenContractInstance(tokenName).approve(allowanceSubjectAddress, -1)
+  (tokenName, spenderAddress, gasLimit = DEFAULT_GAS_LIMIT, gasPrice = DEFAULT_GAS_PRICE) =>
+    getTokenContractInstance(tokenName).approve(spenderAddress, -1, {
+      gasPrice,
+      gas: gasLimit
+    })
 );
 
 const setTokenTrustAddressDisabled = createAction(
   "BALANCES/SET_TOKEN_TRUST_ADDRESS_DISABLED",
-  (tokenName, spenderAddress) =>
+  (tokenName, spenderAddress, gasLimit = DEFAULT_GAS_LIMIT, gasPrice = DEFAULT_GAS_PRICE) =>
     getTokenContractInstance(tokenName).approve(
       spenderAddress,
-      TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED_MIN_MAX
+      TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED_MIN_MAX, {
+        gasPrice,
+        gas: gasLimit
+      }
     )
 );
 

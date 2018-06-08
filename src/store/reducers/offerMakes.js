@@ -3,7 +3,7 @@ import { fromJS } from "immutable";
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import offerMakes from "../selectors/offerMakes";
 import { change, formValueSelector, initialize } from "redux-form/immutable";
-import { DEFAULT_GAS_LIMIT, TX_OFFER_MAKE } from "./transactions";
+import { TX_OFFER_MAKE } from "./transactions";
 import web3 from "../../bootstrap/web3";
 import balances from "../selectors/balances";
 import { fulfilled, pending, rejected } from "../../utils/store";
@@ -15,7 +15,12 @@ import { defer } from "../deferredThunk";
 
 import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from "constants";
 import { handleTransaction } from "../../utils/transactions/handleTransaction";
-import { getMarketContractInstance, getMarketNoProxyContractInstance } from '../../bootstrap/contracts';
+import {
+  getMarketContractInstance,
+  getMarketNoProxyContractInstance
+} from "../../bootstrap/contracts";
+import { DEFAULT_GAS_LIMIT, DEFAULT_GAS_PRICE } from "../../constants";
+import transactions from '../selectors/transactions';
 
 const initialState = fromJS({
   makeBuyOffer: {
@@ -75,10 +80,25 @@ const sellMaxEpic = (
 //TODO: window? why not direct call?
 const makeOfferTransaction = createAction(
   "OFFER_MAKES/MAKE_OFFER_TRANSACTION",
-  ({ payAmount, payToken, buyAmount, buyToken, gasLimit }) =>
-    getMarketContractInstance().offer(payAmount, payToken, buyAmount, buyToken, 0, {
-      gasLimit: gasLimit || DEFAULT_GAS_LIMIT
-    })
+  ({
+    payAmount,
+    payToken,
+    buyAmount,
+    buyToken,
+    gasLimit = DEFAULT_GAS_LIMIT,
+    gasPrice = DEFAULT_GAS_PRICE
+  }) =>
+    getMarketContractInstance().offer(
+      payAmount,
+      payToken,
+      buyAmount,
+      buyToken,
+      0,
+      {
+        gas: gasLimit,
+        gasPrice
+      }
+    )
 );
 
 const makeOffer = createPromiseActions("OFFER_MAKES/MAKE_OFFER");
@@ -250,15 +270,11 @@ const totalFieldValueChangedEpic = (
           .toString()
       )
     );
-    dispatch(defer(updateTransactionGasCostEstimateEpicThrottled, offerMakeType));
-  } else {
     dispatch(
-      localChange(
-        offerMakeType,
-        "volume",
-        "0"
-      )
+      defer(updateTransactionGasCostEstimateEpicThrottled, offerMakeType)
     );
+  } else {
+    dispatch(localChange(offerMakeType, "volume", "0"));
   }
 };
 
@@ -298,6 +314,13 @@ const getTransactionGasEstimate = createAction(
     })
 );
 
+const setGasExceedsTheLimitEnabled = createAction(
+  "OFFER_MAKES/GAS_EXCEEDS_THE_LIMIT_ENABLED"
+);
+const setGasExceedsTheLimitDisabled = createAction(
+  "OFFER_MAKES/GAS_EXCEEDS_THE_LIMIT_DISABLED"
+);
+
 const updateTransactionGasCostEstimateEpic = (
   offerMakeType,
   {
@@ -320,8 +343,8 @@ const updateTransactionGasCostEstimateEpic = (
     buyAmount = offerMake.getIn(["offerData", "buyAmount"]),
     buyToken = offerMake.get("buyTokenAddress"),
     toAddress = getMarketContractInstance().address;
-  if(payAmount > 0 && buyAmount > 0) {
-    dispatch(
+  if (payAmount > 0 && buyAmount > 0) {
+    const transactionGasCostEstimate = (await dispatch(
       defer(
         getTransactionGasEstimate,
         payAmount,
@@ -330,9 +353,19 @@ const updateTransactionGasCostEstimateEpic = (
         buyToken,
         toAddress
       )
-    );
-  }
+    )).value;
 
+    const gasLimitInWeiBN = web3.toBigNumber(
+      transactions.defaultGasLimit(getState())
+    );
+    if (gasLimitInWeiBN.lt(transactionGasCostEstimate)) {
+      dispatch(setGasExceedsTheLimitEnabled());
+    } else {
+      dispatch(setGasExceedsTheLimitDisabled());
+    }
+    return transactionGasCostEstimate;
+
+  }
 };
 
 const updateTransactionGasCostEstimateEpicThrottled = throttle(
@@ -379,7 +412,11 @@ const reducer = handleActions(
       state
         .set("transactionGasCostEstimate", null)
         .set("transactionGasCostEstimateError", null)
-        .set("transactionGasCostEstimatePending", null)
+        .set("transactionGasCostEstimatePending", null),
+    [setGasExceedsTheLimitEnabled]: state =>
+      state.set("exceededGasLimit", true),
+    [setGasExceedsTheLimitDisabled]: state =>
+      state.set("exceededGasLimit", false)
   },
   initialState
 );

@@ -3,6 +3,8 @@ import { fromJS } from "immutable";
 import { reset, formValueSelector, change } from "redux-form/immutable";
 
 import {
+  DEFAULT_GAS_LIMIT,
+  DEFAULT_GAS_PRICE,
   ETH_UNIT_ETHER,
   TOKEN_ETHER,
   TOKEN_GOLEM,
@@ -13,15 +15,16 @@ import wrapUnwrap from "../selectors/wrapUnwrap";
 import accounts from "../selectors/accounts";
 import { fulfilled } from "../../utils/store";
 import web3 from "../../bootstrap/web3";
-import { DEFAULT_GAS_PRICE, TX_UNWRAP, TX_WRAP } from "./transactions";
+import { TX_UNWRAP, TX_WRAP } from "./transactions";
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import balances from "../selectors/balances";
 import { handleTransaction } from "../../utils/transactions/handleTransaction";
 import {
   getDepositBrokerContractInstance,
   getTokenContractInstance,
-  getTokenNoProxyContractInstance, initDepositBrokerContract,
-} from '../../bootstrap/contracts';
+  getTokenNoProxyContractInstance,
+  initDepositBrokerContract
+} from "../../bootstrap/contracts";
 
 export const WRAP_UNWRAP_CREATE_DEPOSIT_BROKER =
   "WRAP_UNWRAP/CREATE_DEPOSIT_BROKER";
@@ -92,136 +95,180 @@ const loadGNTBrokerAddress = createAction(
   "WRAP_UNWRAP/LOAD_GNT_TOKEN_ADDRESS",
   address =>
     new Promise((resolve, reject) =>
-      getTokenNoProxyContractInstance(TOKEN_WRAPPED_GNT).getBroker.call(address, (e, address) => {
-        if (e) {
-          reject(e);
-        } else {
-          resolve(address);
+      getTokenNoProxyContractInstance(TOKEN_WRAPPED_GNT).getBroker.call(
+        address,
+        (e, address) => {
+          if (e) {
+            reject(e);
+          } else {
+            resolve(address);
+          }
         }
-      })
-    ), address => address
+      )
+    ),
+  address => address
 );
 const loadGNTBrokerAddressEpic = () => async (dispatch, getState) =>
-  dispatch(
-    loadGNTBrokerAddress(
-      accounts.defaultAccount(getState())
-    )
-  ).then(
+  dispatch(loadGNTBrokerAddress(accounts.defaultAccount(getState()))).then(
     ({ value }) => value
   );
 
 const createGNTDepositBroker = createAction(
   "WRAP_UNWRAP/CREATE_DEPOSIT_BROKER",
-  () => getTokenContractInstance(TOKEN_WRAPPED_GNT).createBroker()
+  ({ gasLimit = DEFAULT_GAS_LIMIT, gasPrice = DEFAULT_GAS_PRICE }) =>
+    getTokenContractInstance(TOKEN_WRAPPED_GNT).createBroker({
+      gas: gasLimit,
+      gasPrice
+    })
 );
 const createDepositBrokerEpic = (
   tokenName,
   withCallbacks,
-  nextTransaction, {
+  nextTransaction,
+  {
     doAddTransactionEpic = null,
     doCreateGNTDepositBroker = createGNTDepositBroker,
-    nextTransactionDelay = WRAP_TOKEN_WRAPPER_NEXT_TRANSACTION_DELAY_MS,
+    nextTransactionDelay = WRAP_TOKEN_WRAPPER_NEXT_TRANSACTION_DELAY_MS
   } = {}
 ) => dispatch => {
   switch (tokenName) {
     case TOKEN_GOLEM:
-      return handleTransaction({
-        dispatch,
-        callsNext: true,
-        transactionDispatcher: () => dispatch(doCreateGNTDepositBroker()),
-        transactionType: TX_WRAP,
-        txMeta: {
-          txSubType: WRAP_UNWRAP_CREATE_DEPOSIT_BROKER
+      return handleTransaction(
+        {
+          dispatch,
+          callsNext: true,
+          transactionDispatcher: () => dispatch(doCreateGNTDepositBroker()),
+          transactionType: TX_WRAP,
+          txMeta: {
+            txSubType: WRAP_UNWRAP_CREATE_DEPOSIT_BROKER
+          },
+          withCallbacks,
+          onCallNextTransaction: nextTransaction,
+          nextTransactionDelay
         },
-        withCallbacks,
-        onCallNextTransaction: nextTransaction,
-        nextTransactionDelay,
-      }, doAddTransactionEpic ? {addTransactionEpic: doAddTransactionEpic} : {});
+        doAddTransactionEpic ? { addTransactionEpic: doAddTransactionEpic } : {}
+      );
   }
 };
 
-const wrapEther = createAction(WRAP_ETHER, ({ amountInWei }) =>
-  getTokenContractInstance(TOKEN_WRAPPED_ETH).deposit({ value: amountInWei })
+const wrapEther = createAction(
+  WRAP_ETHER,
+  ({
+    amountInWei,
+    gasLimit = DEFAULT_GAS_LIMIT,
+    gasPrice = DEFAULT_GAS_PRICE
+  }) =>
+    getTokenContractInstance(TOKEN_WRAPPED_ETH).deposit(
+      { value: amountInWei },
+      { gas: gasLimit, gasPrice }
+    )
 );
 
 const wrapEther$ = createPromiseActions("WRAP_UNWRAP/WRAP_ETHER");
-const wrapETHTokenEpic = (withCallbacks, {
-  doWrapEther = wrapEther,
-  doAddTransactionEpic = null,
-} = {}) => (dispatch, getState) => {
+const wrapETHTokenEpic = (
+  withCallbacks,
+  { doWrapEther = wrapEther, doAddTransactionEpic = null } = {}
+) => (dispatch, getState) => {
   dispatch(wrapEther$.pending());
   const wrapAmount = getWrapAmount(getState());
-  return handleTransaction({
-    dispatch,
-    transactionDispatcher: () =>
-      dispatch(doWrapEther({ amountInWei: wrapAmount })),
-    transactionType: TX_WRAP,
-    withCallbacks
-  }, doAddTransactionEpic ? {addTransactionEpic: doAddTransactionEpic} : {});
+  return handleTransaction(
+    {
+      dispatch,
+      transactionDispatcher: () =>
+        dispatch(doWrapEther({ amountInWei: wrapAmount })),
+      transactionType: TX_WRAP,
+      withCallbacks
+    },
+    doAddTransactionEpic ? { addTransactionEpic: doAddTransactionEpic } : {}
+  );
 };
 
-const unwrapEther = createAction(UNWRAP_ETHER, async (amountInWei, gas) =>
-  getTokenContractInstance(TOKEN_WRAPPED_ETH).withdraw(amountInWei, {
-    gas: gas
-  })
+const unwrapEther = createAction(
+  UNWRAP_ETHER,
+  async (
+    amountInWei,
+    { gasLimit = DEFAULT_GAS_LIMIT, gasPrice = DEFAULT_GAS_LIMIT }
+  ) =>
+    getTokenContractInstance(TOKEN_WRAPPED_ETH).withdraw(amountInWei, {
+      gas: gasLimit,
+      gasPrice
+    })
 );
 
 const unwrapEther$ = createPromiseActions("WRAP_UNWRAP/UNWRAP_ETHER");
-const unwrapEtherEpic = (withCallbacks, {
-  doUnwrapEther = unwrapEther,
-  doAddTransactionEpic = null,
-} = {}) => (dispatch, getState) => {
+const unwrapEtherEpic = (
+  withCallbacks,
+  { doUnwrapEther = unwrapEther, doAddTransactionEpic = null } = {}
+) => (dispatch, getState) => {
   dispatch(unwrapEther$.pending());
-  return handleTransaction({
-    dispatch,
-    transactionDispatcher: () =>
-      dispatch(doUnwrapEther(getUnwrapAmount(getState()))),
-    transactionType: TX_UNWRAP,
-    withCallbacks
-  }, doAddTransactionEpic ? {addTransactionEpic: doAddTransactionEpic} : {});
+  return handleTransaction(
+    {
+      dispatch,
+      transactionDispatcher: () =>
+        dispatch(doUnwrapEther(getUnwrapAmount(getState()))),
+      transactionType: TX_UNWRAP,
+      withCallbacks
+    },
+    doAddTransactionEpic ? { addTransactionEpic: doAddTransactionEpic } : {}
+  );
 };
 
 const wrapGNTTokenAction = createAction(
   WRAP_GNT_TOKEN,
-  async ({ brokerAddress, amountInWei }) =>
-    getTokenContractInstance(TOKEN_GOLEM).transfer(brokerAddress, amountInWei)
+  async ({
+    brokerAddress,
+    amountInWei,
+    gasLimit = DEFAULT_GAS_LIMIT,
+    gasPrice = DEFAULT_GAS_PRICE
+  }) =>
+    getTokenContractInstance(TOKEN_GOLEM).transfer(brokerAddress, amountInWei, {
+      gas: gasLimit,
+      gasPrice
+    })
 );
 
 const wrapGNTToken = (
   { brokerAddress, amountInWei },
   withCallbacks,
-  nextTransaction, {
+  nextTransaction,
+  {
     doWrapGNTTokenAction = wrapGNTTokenAction,
     doAddTransactionEpic = null,
-    nextTransactionDelay = 3000,
+    nextTransactionDelay = 3000
   } = {}
 ) => dispatch => {
-  return handleTransaction({
-    dispatch,
-    callsNext: true,
-    transactionDispatcher: () =>
-      dispatch(doWrapGNTTokenAction({ brokerAddress, amountInWei })),
-    transactionType: TX_WRAP,
-    withCallbacks,
-    txMeta: {
-      txSubType: "wrapGNT"
+  return handleTransaction(
+    {
+      dispatch,
+      callsNext: true,
+      transactionDispatcher: () =>
+        dispatch(doWrapGNTTokenAction({ brokerAddress, amountInWei })),
+      transactionType: TX_WRAP,
+      withCallbacks,
+      txMeta: {
+        txSubType: "wrapGNT"
+      },
+      onCallNextTransaction: nextTransaction,
+      nextTransactionDelay
     },
-    onCallNextTransaction: nextTransaction,
-    nextTransactionDelay,
-  }, doAddTransactionEpic ? {addTransactionEpic: doAddTransactionEpic} : {});
+    doAddTransactionEpic ? { addTransactionEpic: doAddTransactionEpic } : {}
+  );
 };
 
 const wrapGNTToken$ = createPromiseActions("WRAP_UNWRAP/WRAP_GNT_TOKEN");
-const wrapGNTTokenEpic = (withCallbacks, {
-  doWrapGNTTokenAction = null,
-  doAddTransactionEpic = null,
-  doCreateGNTDepositBroker = null,
-  nextTransactionDelay = null,
-  doLoadDepositBrokerContractEpic = loadDepositBrokerContractEpic,
-  doClearDepositBrokerEpic = clearDepositBrokerEpic,
-  doLoadGNTBrokerAddressEpic = loadGNTBrokerAddressEpic,
-  nestedDispatch = (...args) => args[0](...args.slice(1)),
-} = {}) => async (dispatch, getState) => {
+const wrapGNTTokenEpic = (
+  withCallbacks,
+  {
+    doWrapGNTTokenAction = null,
+    doAddTransactionEpic = null,
+    doCreateGNTDepositBroker = null,
+    nextTransactionDelay = null,
+    doLoadDepositBrokerContractEpic = loadDepositBrokerContractEpic,
+    doClearDepositBrokerEpic = clearDepositBrokerEpic,
+    doLoadGNTBrokerAddressEpic = loadGNTBrokerAddressEpic,
+    nestedDispatch = (...args) => args[0](...args.slice(1))
+  } = {}
+) => async (dispatch, getState) => {
   dispatch(wrapGNTToken$.pending());
   const depositBrokerAddress = wrapUnwrap.getBrokerAddress(
     getState(),
@@ -240,40 +287,51 @@ const wrapGNTTokenEpic = (withCallbacks, {
         async () => {
           await dispatch(doLoadDepositBrokerContractEpic(TOKEN_GOLEM));
           dispatch(doClearDepositBrokerEpic(TOKEN_GOLEM, withCallbacks));
-        }, Object.assign({},
-          doAddTransactionEpic ? {doAddTransactionEpic} : {},
-          doWrapGNTTokenAction ? {doWrapGNTTokenAction} : {},
-          nextTransactionDelay != null ? {nextTransactionDelay} : {},
-        ),
+        },
+        Object.assign(
+          {},
+          doAddTransactionEpic ? { doAddTransactionEpic } : {},
+          doWrapGNTTokenAction ? { doWrapGNTTokenAction } : {},
+          nextTransactionDelay != null ? { nextTransactionDelay } : {}
+        )
       )
     );
   } else {
     return dispatch(
-      createDepositBrokerEpic(TOKEN_GOLEM, withCallbacks, async () => {
-        await dispatch(doLoadGNTBrokerAddressEpic());
-        await dispatch(doLoadDepositBrokerContractEpic(TOKEN_GOLEM));
-        testActions.lastNestedWrapGNT = nestedDispatch(dispatch,
-          wrapGNTToken(
-            { brokerAddress: depositBrokerAddress, amountInWei: wrapAmount },
-            withCallbacks,
-            async () => {
-              await dispatch(
-                doClearDepositBrokerEpic(TOKEN_GOLEM, withCallbacks)
-              );
-              dispatch(wrapGNTToken$.fulfilled());
-              dispatch(resetActiveWrapForm());
-            }, Object.assign({},
-              doAddTransactionEpic ? {doAddTransactionEpic} : {},
-              doWrapGNTTokenAction ? {doWrapGNTTokenAction} : {},
-              nextTransactionDelay != null ? {nextTransactionDelay} : {},
+      createDepositBrokerEpic(
+        TOKEN_GOLEM,
+        withCallbacks,
+        async () => {
+          await dispatch(doLoadGNTBrokerAddressEpic());
+          await dispatch(doLoadDepositBrokerContractEpic(TOKEN_GOLEM));
+          testActions.lastNestedWrapGNT = nestedDispatch(
+            dispatch,
+            wrapGNTToken(
+              { brokerAddress: depositBrokerAddress, amountInWei: wrapAmount },
+              withCallbacks,
+              async () => {
+                await dispatch(
+                  doClearDepositBrokerEpic(TOKEN_GOLEM, withCallbacks)
+                );
+                dispatch(wrapGNTToken$.fulfilled());
+                dispatch(resetActiveWrapForm());
+              },
+              Object.assign(
+                {},
+                doAddTransactionEpic ? { doAddTransactionEpic } : {},
+                doWrapGNTTokenAction ? { doWrapGNTTokenAction } : {},
+                nextTransactionDelay != null ? { nextTransactionDelay } : {}
+              )
             )
-          )
-        );
-      }, Object.assign({},
-        doAddTransactionEpic ? {doAddTransactionEpic} : {},
-        doCreateGNTDepositBroker ? {doCreateGNTDepositBroker} : {},
-        nextTransactionDelay != null ? {nextTransactionDelay} : {},
-      ))
+          );
+        },
+        Object.assign(
+          {},
+          doAddTransactionEpic ? { doAddTransactionEpic } : {},
+          doCreateGNTDepositBroker ? { doCreateGNTDepositBroker } : {},
+          nextTransactionDelay != null ? { nextTransactionDelay } : {}
+        )
+      )
     );
   }
 };
@@ -300,8 +358,11 @@ const loadDepositBrokerContractEpic = (tokenName = TOKEN_GOLEM) => (
 
 const clearDepositBroker = createAction(
   "WRAP_UNWRAP/CLEAR_DEPOSIT_BROKER",
-  tokenName =>
-    getDepositBrokerContractInstance(tokenName).clear()
+  (tokenName, { gasPrice = DEFAULT_GAS_PRICE, gasLimit = DEFAULT_GAS_LIMIT }) =>
+    getDepositBrokerContractInstance(tokenName).clear({
+      gas: gasLimit,
+      gasPrice
+    })
 );
 
 const clearDepositBrokerEpic = (tokenName, withCallbacks) => dispatch => {
@@ -319,25 +380,35 @@ const clearDepositBrokerEpic = (tokenName, withCallbacks) => dispatch => {
 
 const unwrapGNTToken = createAction(
   UNWRAP_GNT_TOKEN,
-  async ({ gas, amountInWei }) =>
+  async ({
+    gasLimit = DEFAULT_GAS_LIMIT,
+    gasPrice = DEFAULT_GAS_PRICE,
+    amountInWei
+  }) =>
     getTokenContractInstance(TOKEN_WRAPPED_GNT).withdraw(amountInWei, {
-      gas: gas || DEFAULT_GAS_PRICE
+      gas: gasLimit,
+      gasPrice
     })
 );
 
 const unwrapGNTToken$ = createPromiseActions("WRAP_UNWRAP/UNWRAP_GNT_TOKEN");
-const unwrapGNTTokenEpic = (withCallbacks, {
-  doUnwrapGNTToken = unwrapGNTToken,
-  doAddTransactionEpic = null,
-} = {}) => (dispatch, getState) => {
+const unwrapGNTTokenEpic = (
+  withCallbacks,
+  { doUnwrapGNTToken = unwrapGNTToken, doAddTransactionEpic = null } = {}
+) => (dispatch, getState) => {
   dispatch(unwrapGNTToken$.pending());
-  return handleTransaction({
-    dispatch,
-    transactionDispatcher: () =>
-      dispatch(doUnwrapGNTToken({ amountInWei: getUnwrapAmount(getState()) })),
-    transactionType: TX_UNWRAP,
-    withCallbacks
-  }, doAddTransactionEpic ? {addTransactionEpic: doAddTransactionEpic} : {});
+  return handleTransaction(
+    {
+      dispatch,
+      transactionDispatcher: () =>
+        dispatch(
+          doUnwrapGNTToken({ amountInWei: getUnwrapAmount(getState()) })
+        ),
+      transactionType: TX_UNWRAP,
+      withCallbacks
+    },
+    doAddTransactionEpic ? { addTransactionEpic: doAddTransactionEpic } : {}
+  );
 };
 
 const wrapTokenEpic = withCallbacks => (dispatch, getState) => {
@@ -424,7 +495,7 @@ const testActions = {
   unwrapEtherEpic,
   wrapGNTTokenEpic,
   unwrapGNTTokenEpic,
-  lastNestedWrapGNT: null,
+  lastNestedWrapGNT: null
 };
 
 const reducer = handleActions(
@@ -450,5 +521,5 @@ const reducer = handleActions(
 export default {
   actions,
   testActions,
-  reducer,
+  reducer
 };

@@ -146,6 +146,11 @@ const isVolumeGreaterThanOfferMax = createSelector(
   }
 );
 
+const hasExceededGasLimit = createSelector(
+  offerTakes,
+  s => Boolean(s.get('exceededGasLimit'))
+);
+
 const tokenToBeAllowed = createSelector(
   activeOfferTakeType,
   activeOfferTakeSellToken,
@@ -191,6 +196,7 @@ const canFulfillOffer = createSelector(
     }
   }
 );
+
 
 const transactionGasCostEstimate = createSelector(offerTakes, s =>
   s.get("transactionGasCostEstimate")
@@ -261,5 +267,6 @@ export default {
   getActiveOfferTakeAllowanceStatus,
   isActiveOfferTakeBestOffer,
   tokenToBeAllowed,
-  getBuyAmount
+  getBuyAmount,
+  hasExceededGasLimit
 };

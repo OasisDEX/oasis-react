@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisOrderExceedsGasLimitInfo should render 1`] = `""`;
+
+exports[`(Container) OasisOrderExceedsGasLimitInfo will NOT SHOW WARNING when estimated gas cost is less than gas limit 1`] = `""`;
+
+exports[`(Container) OasisOrderExceedsGasLimitInfo will SHOW WARNING when estimated gas cost is higher than gas limit 1`] = `
+<InfoBoxWithIco
+  alignItems="center"
+  color="danger"
+  icon="warning"
+>
+  <div
+    className="exceededGasLimit"
+  >
+    Your order
+     
+    <span
+      style={
+        Object {
+          "textDecoration": "underline",
+        }
+      }
+    >
+      exceeds gas limit of
+    </span>
+     
+    <b
+      style={
+        Object {
+          "marginLeft": "10px",
+        }
+      }
+    >
+      10,000,000
+       GAS
+    </b>
+  </div>
+</InfoBoxWithIco>
+`;
+
+exports[`(Container) OasisOrderExceedsGasLimitInfo will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisOrderExceedsGasLimitInfo will receive right props 1`] = `
+Object {
+  "gasLimit": "10000000",
+}
+`;

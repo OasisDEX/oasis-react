@@ -104,6 +104,7 @@ exports[`(Container) OasisMakeOfferModal will receive right props 1`] = `
 Object {
   "buyToken": "MKR",
   "canMakeOffer": false,
+  "hasExceededGasLimit": false,
   "isPriceSet": true,
   "isTokenTradingEnabled": false,
   "marketAddress": "0x8cf1cab422a0b6b554077a361f8419cdf122a9f9",

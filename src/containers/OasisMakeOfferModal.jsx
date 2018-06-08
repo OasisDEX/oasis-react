@@ -234,8 +234,15 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
     );
   }
 
+  shouldDisabledOfferMakeButton() {
+    const { canMakeOffer, hasExceededGasLimit } = this.props;
+    return (
+      !canMakeOffer || this.state.disableOfferMakeButton || hasExceededGasLimit
+    );
+  }
+
   render() {
-    const { baseToken, offerMakeType, canMakeOffer, sellToken } = this.props;
+    const { baseToken, offerMakeType, sellToken } = this.props;
 
     return (
       <ReactModal
@@ -277,7 +284,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
               {this.askForConfirmationBeforeModalClose() ? "Close" : "Cancel"}
             </OasisButton>
             <OasisButton
-              disabled={!canMakeOffer || this.state.disableOfferMakeButton}
+              disabled={this.shouldDisabledOfferMakeButton()}
               onClick={this.onBuyOffer}
               color={getBtnColor(offerMakeType)}
             >
@@ -303,7 +310,11 @@ export function mapStateToProps(state, props) {
     canMakeOffer: offerMakes.canMakeOffer(state, props.offerMakeType),
     buyToken: offerMakes.activeOfferMakeBuyToken(state, props.form),
     sellToken: offerMakes.activeOfferMakeSellToken(state, props.form),
-    isPriceSet: isPriceSet(state, props.offerMakeType)
+    isPriceSet: isPriceSet(state, props.offerMakeType),
+    hasExceededGasLimit: offerMakes.hasExceededGasLimit(
+      state,
+      props.offerMakeType
+    )
   };
 }
 
