@@ -96,6 +96,12 @@ export const SYNC_STATUS_ERROR =     'SYNC_STATUS_ERROR';
 
 export const SETMAXBTN_HIDE_DELAY_MS = 100;
 
+/**
+ *  GAS and GAS_PRICE default values
+ */
+export const DEFAULT_GAS_LIMIT = '1000000'; // 1M GAS
+export const DEFAULT_GAS_PRICE = '6000000000'; // 6 GWEI
+
 
 
 

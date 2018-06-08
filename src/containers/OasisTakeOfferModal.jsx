@@ -194,9 +194,9 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
   }
 
   shouldDisableTakeOfferButton() {
-    const { isCurrentOfferActive, canFulfillOffer } = this.props;
+    const { isCurrentOfferActive, canFulfillOffer, hasExceededGasLimit } = this.props;
     const { disableOfferTakeButton } = this.state;
-    return !isCurrentOfferActive || !canFulfillOffer || disableOfferTakeButton;
+    return !isCurrentOfferActive || !canFulfillOffer || disableOfferTakeButton || hasExceededGasLimit;
   }
 
   isTakeInProgressOrOfferTaken() {
@@ -348,7 +348,8 @@ export function mapStateToProps(state) {
     isTokenTradingEnabled: getActiveOfferAllowanceStatus(
       state,
       offerTakes.activeOfferTakeType(state)
-    )
+    ),
+    hasExceededGasLimit: offerTakes.hasExceededGasLimit(state)
   };
 }
 

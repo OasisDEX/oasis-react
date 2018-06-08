@@ -42,6 +42,12 @@ const selector = createSelector(
   })
 );
 
+const hasExceededGasLimit = createSelector(
+  offerMakes,
+  s => Boolean(s.get('exceededGasLimit'))
+);
+
+
 const activeOfferMakePure = createSelector(
   (...args) => args[1], //provides original selector argument
   tokens.activeTradingPair,
@@ -320,5 +326,6 @@ export default {
   getActiveOfferMakeAllowanceStatus,
   isMakeBuyOfferPriceSet,
   isMakeSellOfferPriceSet,
-  isOfferBelowLimit
+  isOfferBelowLimit,
+  hasExceededGasLimit
 };

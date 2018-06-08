@@ -1,27 +1,40 @@
 import { createAction, handleActions } from "redux-actions";
-import Immutable from "immutable";
+import { fromJS } from "immutable";
 import web3 from "../../bootstrap/web3";
 import { change } from "redux-form/immutable";
-import { reset } from 'redux-form/immutable';
+import { reset } from "redux-form/immutable";
 
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import transfers from "../selectors/transfers";
-import { ETH_UNIT_ETHER } from "../../constants";
+import {
+  DEFAULT_GAS_LIMIT,
+  DEFAULT_GAS_PRICE,
+  ETH_UNIT_ETHER
+} from "../../constants";
 import { TX__GROUP__TRANSFERS } from "./transactions";
 import balances from "../selectors/balances";
 import { handleTransaction } from "../../utils/transactions/handleTransaction";
-import { getTokenContractInstance } from '../../bootstrap/contracts';
+import { getTokenContractInstance } from "../../bootstrap/contracts";
 
-const initialState = Immutable.fromJS({});
+const initialState = fromJS({});
 
-const Init = createAction('TRANSFERS/INIT', () => null);
+const Init = createAction("TRANSFERS/INIT", () => null);
 
 const transferTransaction = createAction(
-  'TRANSFERS/TRANSFER_TRANSACTION',
-  (tokenName, recipientAddress, tokenAmountInEther) => {
+  "TRANSFERS/TRANSFER_TRANSACTION",
+  (
+    tokenName,
+    recipientAddress,
+    tokenAmountInEther,
+    gasLimit = DEFAULT_GAS_LIMIT,
+    gasPrice = DEFAULT_GAS_PRICE
+  ) => {
     const contractInstance = getTokenContractInstance(tokenName);
     const tokenAmountWei = web3.toWei(tokenAmountInEther, ETH_UNIT_ETHER);
-    return contractInstance.transfer(recipientAddress, tokenAmountWei);
+    return contractInstance.transfer(recipientAddress, tokenAmountWei, {
+      gas: gasLimit,
+      gasPrice
+    });
   }
 );
 
@@ -51,13 +64,14 @@ const setTransferMax = () => (dispatch, getState) => {
     tokenName: transfers.selectedToken(getState())
   });
   if (maxTransferValueInEther) {
-    dispatch(change("tokenTransfer", "tokenAmount", maxTransferValueInEther.toString()));
+    dispatch(
+      change("tokenTransfer", "tokenAmount", maxTransferValueInEther.toString())
+    );
   }
 };
 
-
 const resetTransferForm = () => dispatch => {
-  dispatch(reset('tokenTransfer'));
+  dispatch(reset("tokenTransfer"));
 };
 
 const actions = {

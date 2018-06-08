@@ -17,6 +17,7 @@ import OasisInsufficientAmountOfToken from "../components/OasisInsufficientAmoun
 import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from "../store/reducers/offerTakes";
 import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from "../constants";
 import isVolumeOrPriceEmptyOrZero from "../store/selectors/isVolumeOrPriceEmptyOrZero";
+import OasisOrderExceedsGasLimitInfoWrapper from "./OasisOrderExceedsGasLimitInfo";
 
 const propTypes = PropTypes && {
   offerType: PropTypes.oneOf([
@@ -50,6 +51,13 @@ export class OasisOfferSummaryWrapper extends PureComponent {
     } = this.props;
     return (
       <div>
+        {gasEstimateInfo && (
+          <OasisOrderExceedsGasLimitInfoWrapper
+            gasEstimateInfo={gasEstimateInfo}
+            onTransactionGasLimitExceeded={() => { alert('onTransactionGasLimitExceeded'); }}
+            onTransactionGasBelowLimit={() => { alert('onTransactionGasBelowLimit'); }}
+          />
+        )}
         <OasisOfferSummary
           isVolumeOrPriceEmptyOrZero={isVolumeOrPriceEmptyOrZero}
           gasEstimateInfo={gasEstimateInfo}

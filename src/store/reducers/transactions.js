@@ -8,9 +8,9 @@ import web3 from '../../bootstrap/web3';
 import accounts from '../selectors/accounts';
 import { getTimestamp } from '../../utils/time';
 import transactions from '../selectors/transactions';
+import { DEFAULT_GAS_LIMIT, DEFAULT_GAS_PRICE } from '../../constants';
 
-export const DEFAULT_GAS_LIMIT = '10000000';
-export const DEFAULT_GAS_PRICE = '1000000';
+const TRANSACTION_CHECK_INTERVAL_MS = 1000;
 
 const initialState = fromJS({
   txList: [],
@@ -20,7 +20,7 @@ const initialState = fromJS({
   activeGasPrice: DEFAULT_GAS_PRICE,
   currentGasPriceInWei: null,
   txNonce: null,
-  transactionCheckIntervalMs: 1000
+  transactionCheckIntervalMs: TRANSACTION_CHECK_INTERVAL_MS
 });
 
 export const TX__GROUP__OFFERS = 'TRANSACTIONS/GROUP__OFFERS/';
