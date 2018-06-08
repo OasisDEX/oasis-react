@@ -58,8 +58,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
   onTransactionStart() {
     this.setState({
       txStatus: TX_STATUS_AWAITING_USER_ACCEPTANCE,
-      disableForm: true,
-      lockCancelButton: true
+      disableForm: true
     });
   }
 
@@ -67,8 +66,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
     this.setState({ disableTransferButton: false });
     this.setState({
       txStatus: TX_STATUS_CANCELLED_BY_USER,
-      disableForm: false,
-      lockCancelButton: false
+      disableForm: false
     });
   }
   onTransactionPending({ txStartTimestamp }) {
@@ -80,33 +78,25 @@ export class OasisTokenTransferWrapper extends PureComponent {
 
   onTransactionCompleted() {
     this.setState({
-      txStatus: TX_STATUS_CONFIRMED
+      txStatus: TX_STATUS_CONFIRMED,
+      disableForm: false
     });
-    setTimeout(() => {
-      this.props.actions.resetTransferForm();
-      this.setState({
-        txStatus: undefined,
-        txStartTimestamp: undefined,
-        disableForm: false
-      });
-    }, 2000);
+    this.props.actions.resetTransferForm();
   }
 
   onTransactionRejected({ txHash }) {
     this.setState({
       txStatus: TX_STATUS_REJECTED,
       txHash,
-      disableForm: false,
-      disableTransferButton: false
+      disableForm: false
     });
   }
 
   shouldDisableForm() {
-    const { disableForm, txStatus } = this.state;
-    return (
-      disableForm || (!!txStatus && txStatus !== TX_STATUS_CANCELLED_BY_USER)
-    );
+    const { disableForm } = this.state;
+    return disableForm;
   }
+
   selectedToken() {
     return (
       <OasisTokenSelectWrapper
@@ -131,28 +121,36 @@ export class OasisTokenTransferWrapper extends PureComponent {
   renderTransactionStatus() {
     const { selectedToken, transferFormValues } = this.props;
     const { txStatus, txStartTimestamp } = this.state;
+    if (transferFormValues && transferFormValues.tokenAmount) {
+      this.transferFormValues = Object.create(transferFormValues);
+    }
     return (
-      <OasisTransactionStatusWrapperInfoBox
-        txStatus={txStatus}
-        infoText={OasisTokenTransferWrapper.transferInfo({
-          selectedToken,
-          transferFormValues
-        })}
-        localStatus={txStatus}
-        txTimestamp={txStartTimestamp}
-        txType={TX__GROUP__TRANSFERS}
-      />
+      this.transferFormValues && (
+        <OasisTransactionStatusWrapperInfoBox
+          txStatus={txStatus}
+          infoText={OasisTokenTransferWrapper.transferInfo({
+            selectedToken,
+            transferFormValues: this.transferFormValues
+          })}
+          localStatus={txStatus}
+          txTimestamp={txStartTimestamp}
+          txType={TX__GROUP__TRANSFERS}
+        />
+      )
     );
   }
 
-  onFormChange() {
-    this.setState({
-      txStatus: undefined,
-      txStartTimestamp: undefined
-    });
+  onFormChange(isFormTouched) {
+    if (isFormTouched) {
+      this.setState({
+        txStatus: undefined,
+        txStartTimestamp: undefined
+      });
+    }
   }
 
   render() {
+    const { txStatus } = this.state;
     const { selectedToken } = this.props;
     return (
       <OasisWidgetFrame
@@ -166,6 +164,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
           decimalPlaces={5}
         />
         <TokenTransferFormWrapper
+          txStatus={txStatus}
           onFormChange={this.onFormChange}
           disabled={this.shouldDisableForm()}
           onSubmit={this.makeTransfer}

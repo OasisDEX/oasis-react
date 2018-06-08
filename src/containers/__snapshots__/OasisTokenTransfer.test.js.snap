@@ -6,7 +6,7 @@ exports[`(Container) OasisTokenTransfer should render 1`] = `
   heading="Transfer"
   headingChildren={
     <Connect(OasisTokenSelect)
-      disabled={false}
+      disabled={undefined}
       name="tokenTransfer"
       onChange={[Function]}
     />
@@ -20,7 +20,6 @@ exports[`(Container) OasisTokenTransfer should render 1`] = `
     token="MKR"
   />
   <Connect(ReduxForm)
-    disabled={false}
     onFormChange={[Function]}
     onSubmit={[Function]}
     transferState={

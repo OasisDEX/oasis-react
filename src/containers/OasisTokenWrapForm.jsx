@@ -34,7 +34,9 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
     super(props);
 
     this.state = {
-      showMaxButton: false
+      showMaxButton: false,
+      txState: undefined,
+      txStartTimestamp: undefined
     };
 
     this.validate = this.validate.bind(this);
@@ -175,10 +177,16 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
   }
 
   onTotalFieldSectionBlur() {
-    setTimeout(
-      () => this.setState({ showMaxButton: false }),
-      SETMAXBTN_HIDE_DELAY_MS
-    );
+    if (!this.isUnmounted) {
+      setTimeout(
+        () => this.setState({ showMaxButton: false }),
+        SETMAXBTN_HIDE_DELAY_MS
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    this.isUnmounted = true;
   }
 }
 

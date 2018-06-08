@@ -95,17 +95,29 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
 
   render() {
     const { activeWrappedToken, activeWrappedTokenBalance } = this.props;
-    const { txStatus, txStartTimestamp } = this.state;
+    const { txStatus, txStartTimestamp, disableForm } = this.state;
     return (
       <OasisWrapUnwrapUnwrap
         transactionState={{ txStatus, txStartTimestamp }}
         onSubmit={this.makeUnwrap}
         onFormChange={this.onFormChange}
+        disableForm={disableForm}
         activeWrappedToken={activeWrappedToken}
         activeWrappedTokenBalance={activeWrappedTokenBalance}
       />
     );
   }
+  componentDidUpdate(prevProps) {
+    if (this.props.activeWrappedToken && this.props.activeWrappedToken !== prevProps.activeWrappedToken){
+      this.props.actions.resetActiveUnwrapForm();
+      if (![TX_STATUS_AWAITING_CONFIRMATION].includes(this.state.txStatus))
+        this.setState({
+          txStatus: undefined,
+          txStartTimestamp: undefined
+        })
+    }
+  }
+
 }
 
 export function mapStateToProps(state) {

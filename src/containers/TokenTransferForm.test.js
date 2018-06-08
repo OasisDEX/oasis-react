@@ -17,6 +17,7 @@ describe('(Container) TokenTransferForm', () => {
   const props = {
     ...initialActions,
     ...initialProps,
+    onFormChange: jest.fn,
     onSubmit: jest.fn
   };
 

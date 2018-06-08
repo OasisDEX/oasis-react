@@ -1,30 +1,31 @@
-import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { PureComponent } from "react";
+import { PropTypes } from "prop-types";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import OasisTokenWrapFormWrapper from '../containers/OasisTokenWrapForm';
-import OasisTokenBalanceWrapper  from '../containers/OasisTokenBalance';
-import { TOKEN_ETHER } from '../constants';
+import OasisTokenWrapFormWrapper from "../containers/OasisTokenWrapForm";
+import OasisTokenBalanceWrapper from "../containers/OasisTokenBalance";
+import { TOKEN_ETHER } from "../constants";
 import OasisWidgetFrame from "../containers/OasisWidgetFrame";
-import OasisEtherBalanceWrapper  from '../containers/OasisEtherBalance';
-import { WRAP_STATUS_VIEW_TYPE_WRAP, WrapUnwrapStatusWrapper } from '../containers/WrapUnwrapStatus';
-import OasisTokenBalanceSummary from '../containers/OasisTokenBalanceSummary';
-import styles from './OasisWrapUnwrapWrap.scss';
-import CSSModules from 'react-css-modules';
-import { TX_STATUS_CANCELLED_BY_USER } from '../store/reducers/transactions';
+import OasisEtherBalanceWrapper from "../containers/OasisEtherBalance";
+import {
+  WRAP_STATUS_VIEW_TYPE_WRAP,
+  WrapUnwrapStatusWrapper
+} from "../containers/WrapUnwrapStatus";
+import OasisTokenBalanceSummary from "../containers/OasisTokenBalanceSummary";
+import styles from "./OasisWrapUnwrapWrap.scss";
+import CSSModules from "react-css-modules";
 
 const propTypes = PropTypes && {
   activeUnwrappedToken: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
   activeUnwrappedTokenBalance: PropTypes.object,
   transactionState: PropTypes.object,
-  onFormChange: PropTypes.func.isRequired
+  onFormChange: PropTypes.func.isRequired,
+  disableForm: PropTypes.bool
 };
 const defaultProps = {};
 
 class OasisWrapUnwrapWrap extends PureComponent {
-
-
   constructor(props) {
     super(props);
     this.onFormChange = this.onFormChange.bind(this);
@@ -33,9 +34,7 @@ class OasisWrapUnwrapWrap extends PureComponent {
   getBalance() {
     const { activeUnwrappedToken } = this.props;
     if (activeUnwrappedToken === TOKEN_ETHER) {
-      return (
-        <OasisEtherBalanceWrapper decimalPlaces={5} fromWei/>
-      );
+      return <OasisEtherBalanceWrapper decimalPlaces={5} fromWei />;
     } else {
       return (
         <OasisTokenBalanceWrapper
@@ -46,21 +45,20 @@ class OasisWrapUnwrapWrap extends PureComponent {
     }
   }
 
-
   shouldDisableForm() {
-    const { transactionState: { txStatus } = {} } = this.props;
-    return txStatus && txStatus !== TX_STATUS_CANCELLED_BY_USER;
+    const { disableForm } = this.props;
+    return disableForm;
   }
 
   onFormChange() {
-   const { onFormChange } = this.props;
-    onFormChange && onFormChange();
+    const { onFormChange, anyTouched } = this.props;
+    onFormChange && onFormChange(anyTouched);
   }
 
   render() {
     const { activeUnwrappedToken, transactionState } = this.props;
     return (
-      <OasisWidgetFrame heading={'Wrap'} spaceForContent={true}>
+      <OasisWidgetFrame heading={"Wrap"} spaceForContent={true}>
         <OasisTokenBalanceSummary summary="Wallet">
           {this.getBalance()}
         </OasisTokenBalanceSummary>
@@ -71,13 +69,13 @@ class OasisWrapUnwrapWrap extends PureComponent {
           onSubmit={this.props.onSubmit}
           disabled={this.shouldDisableForm()}
         />
-        <WrapUnwrapStatusWrapper type={WRAP_STATUS_VIEW_TYPE_WRAP}/>
+        <WrapUnwrapStatusWrapper type={WRAP_STATUS_VIEW_TYPE_WRAP} />
       </OasisWidgetFrame>
     );
   }
 }
 
-OasisWrapUnwrapWrap.displayName = 'OasisWrapUnwrapWrap';
+OasisWrapUnwrapWrap.displayName = "OasisWrapUnwrapWrap";
 OasisWrapUnwrapWrap.propTypes = propTypes;
 OasisWrapUnwrapWrap.defaultProps = defaultProps;
 export default CSSModules(OasisWrapUnwrapWrap, styles);

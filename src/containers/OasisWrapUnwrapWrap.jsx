@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import wrapUnwrap from "../store/selectors/wrapUnwrap";
 import OasisWrapUnwrapWrap from "../components/OasisWrapUnwrapWrap";
-import wrapUnwrapReducer from "../store/reducers/wrapUnwrap";
+import wrapUnwrapReducer, { WRAP_TOKEN_WRAPPER_NEXT_TRANSACTION_DELAY_MS } from '../store/reducers/wrapUnwrap';
 import {
   TX_STATUS_AWAITING_CONFIRMATION,
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
@@ -74,15 +74,16 @@ export class OasisWrapUnwrapWrapWrapper extends PureComponent {
     this.setState({
       txStatus: TX_STATUS_CONFIRMED
     });
-
     if (hasNextTransaction) {
+      this.hasNextTransaction = true;
       setTimeout(() => {
         this.setState({
           txStatus: undefined,
           txStartTimestamp: undefined
-        });
-      }, 5000);
+        })
+      }, WRAP_TOKEN_WRAPPER_NEXT_TRANSACTION_DELAY_MS - 1);
     } else {
+      this.hasNextTransaction = false;
       this.props.actions.resetActiveWrapForm();
       this.setState({
         disableForm: false
@@ -99,24 +100,38 @@ export class OasisWrapUnwrapWrapWrapper extends PureComponent {
   }
 
   onFormChange() {
-    this.setState({
-      txStatus: undefined,
-      txStartTimestamp: undefined
-    });
+    if (!this.hasNextTransaction) {
+      this.setState({
+        txStatus: undefined,
+        txStartTimestamp: undefined
+      });
+    }
   }
 
   render() {
     const { activeUnwrappedToken, activeUnwrappedTokenBalance } = this.props;
-    const { txStatus, txStartTimestamp, txStartMeta } = this.state;
+    const { txStatus, txStartTimestamp, txStartMeta, disableForm } = this.state;
     return (
       <OasisWrapUnwrapWrap
         transactionState={{ txStatus, txStartTimestamp, txStartMeta }}
         onSubmit={this.makeWrap}
         onFormChange={this.onFormChange}
+        disableForm={disableForm}
         activeUnwrappedToken={activeUnwrappedToken}
         activeUnwrappedTokenBalance={activeUnwrappedTokenBalance}
       />
     );
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.activeUnwrappedToken && this.props.activeUnwrappedToken !== prevProps.activeUnwrappedToken){
+      this.props.actions.resetActiveWrapForm();
+      if (![TX_STATUS_AWAITING_CONFIRMATION].includes(this.state.txStatus))
+      this.setState({
+        txStatus: undefined,
+        txStartTimestamp: undefined
+      })
+    }
   }
 }
 

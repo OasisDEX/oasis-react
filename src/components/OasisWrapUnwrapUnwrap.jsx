@@ -13,13 +13,13 @@ import OasisTokenBalanceSummary from "../containers/OasisTokenBalanceSummary";
 import styles from "./OasisWrapUnwrapUnwrap.scss";
 import CSSModules from "react-css-modules";
 import { TOKEN_WRAPPED_ETH } from "../constants";
-import { TX_STATUS_CANCELLED_BY_USER } from '../store/reducers/transactions';
 
 const propTypes = PropTypes && {
   activeWrappedToken: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
   transactionState: PropTypes.object,
-  onFormChange: PropTypes.func
+  onFormChange: PropTypes.func,
+  disableForm: PropTypes.bool
 };
 const defaultProps = {};
 
@@ -27,8 +27,8 @@ class OasisWrapUnwrapUnwrap extends PureComponent {
 
 
   shouldDisableForm() {
-    const { transactionState: { txStatus } = {} } = this.props;
-    return txStatus && txStatus !== TX_STATUS_CANCELLED_BY_USER;
+    const { disableForm } = this.props;
+    return disableForm;
   }
 
   constructor(props) {

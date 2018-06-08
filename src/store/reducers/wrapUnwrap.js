@@ -48,6 +48,7 @@ const initialState = fromJS({
 
 const WRAP_ETHER = "WRAP_UNWRAP/WRAP_ETHER";
 const UNWRAP_ETHER = "WRAP_UNWRAP/UNWRAP_ETHER";
+export const WRAP_TOKEN_WRAPPER_NEXT_TRANSACTION_DELAY_MS = 3000;
 
 const WRAP_GNT_TOKEN = "WRAP_UNWRAP/WRAP_GNT_TOKEN";
 const UNWRAP_GNT_TOKEN = "WRAP_UNWRAP/UNWRAP_GNT_TOKEN";
@@ -119,7 +120,7 @@ const createDepositBrokerEpic = (
   nextTransaction, {
     doAddTransactionEpic = null,
     doCreateGNTDepositBroker = createGNTDepositBroker,
-    nextTransactionDelay = 3000,
+    nextTransactionDelay = WRAP_TOKEN_WRAPPER_NEXT_TRANSACTION_DELAY_MS,
   } = {}
 ) => dispatch => {
   switch (tokenName) {

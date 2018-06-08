@@ -31,7 +31,9 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
     super(props);
 
     this.state = {
-      showMaxButton: false
+      showMaxButton: false,
+      txStatus: undefined,
+      txStartTimestamp: undefined
     };
 
     this.validate = this.validate.bind(this);
@@ -82,6 +84,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
     const {
       valid,
       handleSubmit,
+      initialized,
       activeWrappedToken,
       disabled,
       globalFormLock,
@@ -131,10 +134,12 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
           </tbody>
         </table>
         <div>{this.renderTransactionStatus()}</div>
-        <div className={`${styles.footer} ${txStatus ? styles.txBoxMargin : ''}`}>
+        <div
+          className={`${styles.footer} ${txStatus ? styles.txBoxMargin : ""}`}
+        >
           <OasisButton
             type="submit"
-            disabled={!valid || disabled || globalFormLock}
+            disabled={!valid || disabled || globalFormLock || initialized}
             className={styles.footerBtn}
           >
             Unwrap
@@ -149,10 +154,16 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
   }
 
   onTotalFieldSectionBlur() {
-    setTimeout(
-      () => this.setState({ showMaxButton: false }),
-      SETMAXBTN_HIDE_DELAY_MS
-    );
+    if (!this.isUnmounted) {
+      setTimeout(
+        () => this.setState({ showMaxButton: false }),
+        SETMAXBTN_HIDE_DELAY_MS
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    this.isUnmounted = true;
   }
 }
 

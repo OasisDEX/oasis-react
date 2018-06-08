@@ -18,14 +18,17 @@
   margin: 6px;
 }
 
-
 .currency {
   @include currency;
   width: 50px;
 }
 
-
 .footer {
   float: right;
   margin-top: 28px;
+
+  &.txBoxMargin {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
 }

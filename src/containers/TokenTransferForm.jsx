@@ -18,7 +18,9 @@ import platform from "../store/selectors/platform";
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  onFormChange: PropTypes.func.isRequired,
+  txStatus: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
 };
 
 export class TokenTransferFormWrapper extends PureComponent {
@@ -27,9 +29,16 @@ export class TokenTransferFormWrapper extends PureComponent {
     this.state = {
       showMaxButton: false
     };
+    this.onFormChange = this.onFormChange.bind(this);
     this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
   }
+
+  onFormChange() {
+    const { onFormChange, anyTouched } = this.props;
+    onFormChange && onFormChange(anyTouched);
+  }
+
   render() {
     const {
       handleSubmit,
@@ -38,11 +47,11 @@ export class TokenTransferFormWrapper extends PureComponent {
       disabled,
       actions,
       transferState,
-      globalFormLock,
-      onFormChange
+      txStatus,
+      globalFormLock
     } = this.props;
     return (
-      <form method="POST" onSubmit={handleSubmit} onChange={onFormChange}>
+      <form method="POST" onSubmit={handleSubmit} onChange={this.onFormChange}>
         <table className={styles.table}>
           <tbody>
             <tr>
@@ -58,16 +67,16 @@ export class TokenTransferFormWrapper extends PureComponent {
               <th>Amount</th>
               <td className={styles.withInput}>
                 <div className={styles.formGroup}>
-                    <OasisButton
-                      hidden={!this.state.showMaxButton}
-                      type="button"
-                      onClick={actions.transferMax}
-                      size="xs"
-                      className={styles.setMaxBtn}
-                      disabled={disabled || globalFormLock}
-                    >
-                      transfer max
-                    </OasisButton>
+                  <OasisButton
+                    hidden={!this.state.showMaxButton}
+                    type="button"
+                    onClick={actions.transferMax}
+                    size="xs"
+                    className={styles.setMaxBtn}
+                    disabled={disabled || globalFormLock}
+                  >
+                    transfer max
+                  </OasisButton>
                   <div
                     onBlur={this.onTotalFieldSectionBlur}
                     onFocus={this.onTotalFieldSectionFocus}
@@ -91,7 +100,9 @@ export class TokenTransferFormWrapper extends PureComponent {
           </tbody>
         </table>
         {transferState}
-        <div className={styles.footer}>
+        <div
+          className={`${styles.footer} ${txStatus ? styles.txBoxMargin : ""}`}
+        >
           <OasisButton
             type="submit"
             onClick={makeTransfer}

@@ -4,7 +4,6 @@ const createEtherscanTransactionLink = ({
   activeNetworkName,
   transactionHash
 }) => {
-  console.log({ transactionHash, activeNetworkName });
   switch (activeNetworkName) {
     case KOVAN:
       return `https://${activeNetworkName}.etherscan.io/tx/${transactionHash}`;
