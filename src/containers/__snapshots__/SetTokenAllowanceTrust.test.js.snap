@@ -9,7 +9,7 @@ exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
     heading={
       <FlexBox
         alignContent="stretch"
-        alignItems="baseline"
+        alignItems="center"
         className=""
         justifyContent="space-between"
         vertical={false}
@@ -23,7 +23,28 @@ exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
           </b>
            for trading
         </div>
-        <div />
+        <div
+          onClick={[Function]}
+          style={
+            Object {
+              "alignItems": "center",
+              "cursor": "default",
+              "display": "flex",
+              "minHeight": "24px",
+              "postion": "relative",
+              "top": "1px",
+            }
+          }
+          title={false}
+        >
+          <Connect(OasisTransactionStatus)
+            localStatus={undefined}
+            noBorder={true}
+            noPadding={true}
+            txTimestamp={undefined}
+            txType="TX/GROUP__LIMITS/TX/ALLOWANCE_TRUST_TOGGLE"
+          />
+        </div>
         <div
           hidden={undefined}
         >

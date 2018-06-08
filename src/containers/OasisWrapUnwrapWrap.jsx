@@ -9,10 +9,11 @@ import OasisWrapUnwrapWrap from "../components/OasisWrapUnwrapWrap";
 import wrapUnwrapReducer from "../store/reducers/wrapUnwrap";
 import {
   TX_STATUS_AWAITING_CONFIRMATION,
-  TX_STATUS_AWAITING_USER_ACCEPTANCE, TX_STATUS_CANCELLED_BY_USER,
+  TX_STATUS_AWAITING_USER_ACCEPTANCE,
+  TX_STATUS_CANCELLED_BY_USER,
   TX_STATUS_CONFIRMED,
-  TX_STATUS_REJECTED,
-} from '../store/reducers/transactions';
+  TX_STATUS_REJECTED
+} from "../store/reducers/transactions";
 import accounts from "../store/selectors/accounts";
 
 const propTypes = PropTypes && {
@@ -80,7 +81,7 @@ export class OasisWrapUnwrapWrapWrapper extends PureComponent {
           txStatus: undefined,
           txStartTimestamp: undefined
         });
-      }, 3000);
+      }, 5000);
     } else {
       this.props.actions.resetActiveWrapForm();
       this.setState({

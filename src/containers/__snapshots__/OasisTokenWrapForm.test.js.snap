@@ -49,7 +49,9 @@ exports[`(Container) OasisTokenWrapForm should render 1`] = `
       txType="TX/GROUP__WRAP_UNWRAP/WRAP"
     />
   </div>
-  <div>
+  <div
+    className="undefined undefined"
+  >
     <div />
     <OasisButton
       btnType="button"

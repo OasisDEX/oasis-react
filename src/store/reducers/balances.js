@@ -126,14 +126,11 @@ const syncTokenBalances = (tokensContractsList = [], address) => (
 
   Object.entries(tokensContractsList).forEach(([tokenName, tokenContract]) => {
     tokenContract.balanceOf(address).then(tokenBalance => {
-      if (
-        !tokenBalance.eq(
-          balances.tokenBalance(getState(), {
-            tokenName,
-            balanceUnit: ETH_UNIT_WEI
-          })
-        )
-      ) {
+      const oldBalance = balances.tokenBalance(getState(), {
+        tokenName,
+        balanceUnit: ETH_UNIT_WEI
+      });
+      if (oldBalance !== null && !tokenBalance.eq(oldBalance)) {
         dispatch(
           updateTokenBalance({
             tokenName,

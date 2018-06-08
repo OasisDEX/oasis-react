@@ -16,6 +16,7 @@ import {
   TX_ALLOWANCE_TRUST_TOGGLE,
   TX_STATUS_AWAITING_CONFIRMATION,
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
+  TX_STATUS_CANCELLED_BY_USER,
   TX_STATUS_CONFIRMED,
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
@@ -23,9 +24,10 @@ import network from "../store/selectors/network";
 import FlexBox from "../components/FlexBox";
 import {
   TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED,
-  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED, TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN,
-  TOKEN_ALLOWANCE_TRUST_STATUS_LOADING,
-} from '../constants';
+  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED,
+  TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN,
+  TOKEN_ALLOWANCE_TRUST_STATUS_LOADING
+} from "../constants";
 
 import OasisIcon from "../components/OasisIcon";
 import OasisYourTransactionFailed from "../components/OasisYourTransactionFailed";
@@ -49,6 +51,10 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
       isToggleAllowanceTxPending: false
     };
 
+    this.onRejectedByUserOrFailedDismissMsg = this.onRejectedByUserOrFailedDismissMsg.bind(
+      this
+    );
+
     this.toggleTokenAllowanceTrustStatus = this.toggleTokenAllowanceTrustStatus.bind(
       this
     );
@@ -61,9 +67,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
       tokenName,
       allowanceSubjectAddress
     } = this.props;
-    if (
-      this.props.contractsLoaded
-    ) {
+    if (this.props.contractsLoaded) {
       return getDefaultAccountTokenAllowanceForAddress(
         tokenName,
         allowanceSubjectAddress
@@ -109,12 +113,21 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
   }
 
   async onTransactionCompleted() {
+    const { subjectTrustStatus } = this.props;
     this.setState({ disableActionDispatchButton: false });
     this.setState({
       txStatus: TX_STATUS_CONFIRMED
     });
-    const newAllowanceStatus = (await this.getAllowanceStatus()).value.gt(TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN);
-    this.props.onTransactionCompleted(newAllowanceStatus);
+
+    if (subjectTrustStatus === TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED) {
+      this.props.onTransactionCompleted(false);
+    } else if (subjectTrustStatus === TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED) {
+      this.props.onTransactionCompleted(false);
+    }
+
+    (await this.getAllowanceStatus()).value.gt(
+      TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED_MIN
+    );
   }
 
   onTransactionRejected() {
@@ -126,7 +139,10 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
   }
 
   onUserCancel() {
-    this.setState({ disableActionDispatchButton: false, txStatus: undefined });
+    this.setState({
+      disableActionDispatchButton: false,
+      txStatus: TX_STATUS_CANCELLED_BY_USER
+    });
     this.props.onCancelCleanup();
   }
 
@@ -151,7 +167,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
 
   renderTransactionInfo() {
     const { txTimestamp, txStatus } = this.state;
-    return txStatus && txStatus !== TX_STATUS_REJECTED ? (
+    return (
       <OasisTransactionStatusWrapper
         txTimestamp={txTimestamp}
         localStatus={txStatus}
@@ -159,7 +175,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
         noBorder
         noPadding
       />
-    ) : null;
+    );
   }
 
   isAllowanceEnabled() {
@@ -178,12 +194,18 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
   shouldDisplay() {
     return this.isAllowanceLoading()
       ? false
-      : this.props.isToggleEnabled ? true : !this.isAllowanceEnabled();
+      : this.props.isToggleEnabled
+        ? true
+        : !this.isAllowanceEnabled() || this.state.txStatus;
   }
 
   mainInfoBoxContent() {
     return (
-      <OasisAccordion isOpen={false} heading={this.renderAccordionHeading()} className={styles.smallAccordion}>
+      <OasisAccordion
+        isOpen={false}
+        heading={this.renderAccordionHeading()}
+        className={styles.smallAccordion}
+      >
         {this.renderAccordionContent()}
       </OasisAccordion>
     );
@@ -197,6 +219,24 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
       : isToggleEnabled ? false : this.isAllowanceEnabled();
   }
 
+  onRejectedByUserOrFailedDismissMsg() {
+    if (
+      [TX_STATUS_CANCELLED_BY_USER, TX_STATUS_REJECTED].includes(
+        this.state.txStatus
+      )
+    ) {
+      this.setState({ txStatus: undefined });
+    }
+  }
+
+  transactionTooltip() {
+    return [TX_STATUS_CANCELLED_BY_USER, TX_STATUS_REJECTED].includes(
+      this.state.txStatus
+    )
+      ? "click to dismiss"
+      : false;
+  }
+
   renderAccordionHeading() {
     const { txStatus } = this.state;
     const isAllowanceEnabled = this.isAllowanceEnabled();
@@ -204,11 +244,28 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
       ? "Enable"
       : isAllowanceEnabled ? "Disable" : "Enable";
     return (
-      <FlexBox justifyContent="space-between" alignItems="baseline" className={styles.accordionHeading}>
+      <FlexBox
+        justifyContent="space-between"
+        alignItems="center"
+        className={styles.accordionHeading}
+      >
         <div>
           {prefix} <b>{this.props.tokenName}</b> for trading
         </div>
-        <div>{this.renderTransactionInfo()}</div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            minHeight: "24px",
+            postion: "relative",
+            top: "1px",
+            cursor: this.transactionTooltip() ? "pointer" : "default"
+          }}
+          title={this.transactionTooltip()}
+          onClick={this.onRejectedByUserOrFailedDismissMsg}
+        >
+          {this.renderTransactionInfo()}
+        </div>
         <div hidden={txStatus}>
           <OasisButton
             onClick={this.toggleTokenAllowanceTrustStatus}
@@ -234,7 +291,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
   }
 
   renderAccordionContent() {
-    return !this.state.txStatus ? (
+    return (
       <FlexBox alignItems="center" hidden={this.isAllowanceEnabled()}>
         <OasisIcon icon="idle" />
         <div className={styles.accordingText}>
@@ -243,7 +300,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
           funds page.
         </div>
       </FlexBox>
-    ) : null;
+    );
   }
 
   render() {

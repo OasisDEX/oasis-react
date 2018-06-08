@@ -101,11 +101,11 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
       />
     );
   }
-  renderDontWrapAllEtherWarning() {
+  renderDoNotWrapAllEtherWarning() {
     const { activeUnwrappedToken, activeUnwrappedTokenBalance } = this.props;
     if(activeUnwrappedToken === TOKEN_ETHER && activeUnwrappedTokenBalance && activeUnwrappedTokenBalance.gt(0)) {
       return (<OasisDontWrapAllEther/>);
-    } else { return <div></div>; }
+    } else { return <div/>; }
   }
 
   render() {
@@ -115,7 +115,8 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
       activeUnwrappedToken,
       disabled,
       globalFormLock,
-      onFormChange
+      onFormChange,
+      transactionState: { txStatus }
     } = this.props;
     return (
       <form onChange={onFormChange} onSubmit={handleSubmit}>
@@ -159,8 +160,8 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
           </tbody>
         </table>
         <div>{this.renderTransactionStatus()}</div>
-        <div className={styles.footer}>
-          {this.renderDontWrapAllEtherWarning()}
+        <div className={`${styles.footer} ${txStatus ? styles.txBoxMargin : ''}`}>
+          {this.renderDoNotWrapAllEtherWarning()}
           <OasisButton type="submit" disabled={!valid || disabled} className={styles.footerBtn}>
             Wrap
           </OasisButton>

@@ -9,7 +9,7 @@ import web3 from "../bootstrap/web3";
 import wrapUnwrapReducer from "../store/reducers/wrapUnwrap";
 import OasisButton from "../components/OasisButton";
 import tableStyles from "../styles/modules/_table.scss";
-import styles from "./OasisTokenWrapForm.scss";
+import styles from "./OasisTokenUnwrapForm.scss";
 import CSSModules from "react-css-modules";
 import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBox";
 import { TX_UNWRAP } from "../store/reducers/transactions";
@@ -85,7 +85,8 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
       activeWrappedToken,
       disabled,
       globalFormLock,
-      onFormChange
+      onFormChange,
+      transactionState: { txStatus }
     } = this.props;
     return (
       <form onChange={onFormChange} onSubmit={handleSubmit}>
@@ -130,7 +131,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
           </tbody>
         </table>
         <div>{this.renderTransactionStatus()}</div>
-        <div className={styles.footer}>
+        <div className={`${styles.footer} ${txStatus ? styles.txBoxMargin : ''}`}>
           <OasisButton
             type="submit"
             disabled={!valid || disabled || globalFormLock}
