@@ -46,28 +46,7 @@ export class OasisChartPrice extends PureComponent {
             enabled: false,
             mode: 'index',
             position: 'nearest',
-            custom: (tooltip) => {
-              const tooltipEl = tooltipContainer(tooltip, document.getElementsByClassName("chartjs-render-monitor")[0]);
-              if (tooltipEl && tooltip.body) {
-                const ts = this.props.priceChartLabels[tooltip.dataPoints[0].index];
-                const date = moment.unix(ts).format('ll');
-                const time = moment.unix(ts).format('LT');
-                tooltipEl.innerHTML =
-                  `<div class="row-custom-tooltip">
-                    <span class="left">Date</span>
-                    <span class="right">${date}</span>
-                  </div>
-                  <div class="row-custom-tooltip middle">
-                    <span class="left">Time</span>
-                    <span class="right">${time}</span>
-                  </div>
-                  <div class="row-custom-tooltip middle">
-                    <span class="left">Price</span>
-                    <span class="right">${tooltip.dataPoints[0].yLabel}</span>
-                  </div>`;
-                tooltipEl.style.opacity = 1;
-              }
-            },
+            custom: this.showTooltip.bind(this),
           },
           legend: {
             display: false,
@@ -90,6 +69,29 @@ export class OasisChartPrice extends PureComponent {
         }}
       />
     );
+  }
+
+  showTooltip(tooltip) {
+    const tooltipEl = tooltipContainer(tooltip, document.getElementsByClassName("chartjs-render-monitor")[0]);
+    if (tooltipEl && tooltip.body) {
+      const ts = this.props.priceChartLabels[tooltip.dataPoints[0].index];
+      const date = moment.unix(ts).format('ll');
+      const time = moment.unix(ts).format('LT');
+      tooltipEl.innerHTML =
+        `<div class="row-custom-tooltip">
+          <span class="left">Date</span>
+          <span class="right">${date}</span>
+        </div>
+        <div class="row-custom-tooltip middle">
+          <span class="left">Time</span>
+          <span class="right">${time}</span>
+        </div>
+        <div class="row-custom-tooltip middle">
+          <span class="left">Price</span>
+          <span class="right">${tooltip.dataPoints[0].yLabel}</span>
+        </div>`;
+      tooltipEl.style.opacity = 1;
+    }
   }
 }
 

@@ -48,29 +48,7 @@ export class OasisChartVolume extends PureComponent {
             enabled: false,
             mode: 'index',
             position: 'nearest',
-            custom: (tooltip) => {
-              const tooltipEl = tooltipContainer(tooltip, document.getElementsByClassName("chartjs-render-monitor")[0]);
-              if (tooltipEl && tooltip.body) {
-                const ts = this.props.volumeChartLabels[tooltip.dataPoints[0].index];
-                const date = moment.unix(ts).format('ll');
-                let quoteAmount = this.props.volumeChartTooltips.quote[ts];
-                let baseAmount = this.props.volumeChartTooltips.base[ts];
-                tooltipEl.innerHTML =
-                  `<div class="row-custom-tooltip">
-                    <span class="left">Date</span>
-                    <span class="right">${date}</span>
-                  </div>
-                  <div class="row-custom-tooltip middle">
-                    <span class="left">SUM(${this.props.tradingPair.quoteToken})</span>
-                    <span class="right">${quoteAmount}</span>
-                  </div>
-                  <div class="row-custom-tooltip">
-                    <span class="left">SUM(${this.props.tradingPair.baseToken})</span>
-                    <span class="right">${baseAmount}</span>
-                  </div>`;
-                tooltipEl.style.opacity = 1;
-              }
-            },
+            custom: this.showTooltip.bind(this),
           },
           legend: {
             display: false,
@@ -95,6 +73,30 @@ export class OasisChartVolume extends PureComponent {
         }}
       />
     );
+  }
+
+  showTooltip(tooltip) {
+    const tooltipEl = tooltipContainer(tooltip, document.getElementsByClassName("chartjs-render-monitor")[0]);
+    if (tooltipEl && tooltip.body) {
+      const ts = this.props.volumeChartLabels[tooltip.dataPoints[0].index];
+      const date = moment.unix(ts).format('ll');
+      let quoteAmount = this.props.volumeChartTooltips.quote[ts];
+      let baseAmount = this.props.volumeChartTooltips.base[ts];
+      tooltipEl.innerHTML =
+        `<div class="row-custom-tooltip">
+          <span class="left">Date</span>
+          <span class="right">${date}</span>
+        </div>
+        <div class="row-custom-tooltip middle">
+          <span class="left">SUM(${this.props.tradingPair.quoteToken})</span>
+          <span class="right">${quoteAmount}</span>
+        </div>
+        <div class="row-custom-tooltip">
+          <span class="left">SUM(${this.props.tradingPair.baseToken})</span>
+          <span class="right">${baseAmount}</span>
+        </div>`;
+      tooltipEl.style.opacity = 1;
+    }
   }
 }
 
