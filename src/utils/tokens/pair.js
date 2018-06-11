@@ -105,9 +105,10 @@ const formatAmount = (price, fromWei = false) =>
   price ?
     String(
         new BigNumber(!fromWei ? price : web3.fromWei(price, ETH_UNIT_ETHER))
-          .round(3, 4)
-          .toFixed(18)
-          .replace(replaceAmountPattern, "$1.$2")
+          .toFormat(3, 4)
+          // .round(3, 4)
+          // .toFixed(18)
+          // .replace(replaceAmountPattern, "$1.$2")
     ) :
     null;
 
@@ -115,9 +116,10 @@ const replaceVolumePattern = /^(\d+)\.(\d{2})\d*$/;
 const formatVolume = tradingPairVolume =>
   web3
     .fromWei(tradingPairVolume, ETH_UNIT_ETHER)
-    .round(2, 4)
-    .toFixed(18)
-    .replace(replaceVolumePattern, "$1.$2");
+    .toFormat(2, 4);
+    // .round(2, 4)
+    // .toFixed(18)
+    // .replace(replaceVolumePattern, "$1.$2");
 
 const tradeType = (order, baseCurrency) => {
   if (order.buyWhichToken === baseCurrency) {
