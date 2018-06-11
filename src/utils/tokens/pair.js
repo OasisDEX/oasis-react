@@ -99,7 +99,7 @@ const formatPrice = (
         .replace(replacePricePattern, "$1.$2") :
     null;
 
-const replaceAmountPattern = /^(\d+)\.(\d{3})\d*$/;
+// const replaceAmountPattern = /^(\d+)\.(\d{3})\d*$/;
 //eslint-disable-next-line no-unused-vars
 const formatAmount = (price, fromWei = false) =>
   price ?
@@ -112,7 +112,7 @@ const formatAmount = (price, fromWei = false) =>
     ) :
     null;
 
-const replaceVolumePattern = /^(\d+)\.(\d{2})\d*$/;
+// const replaceVolumePattern = /^(\d+)\.(\d{2})\d*$/;
 const formatVolume = tradingPairVolume =>
   web3
     .fromWei(tradingPairVolume, ETH_UNIT_ETHER)
