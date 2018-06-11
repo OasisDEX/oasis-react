@@ -1,9 +1,11 @@
 @import "../styles/modules/typography";
 
-.table {
+table.table {
 
   td, th {
     text-align: right;
+    margin-left: 8px;
+    margin-right: 8px;
   }
 
   td {
@@ -12,7 +14,7 @@
 
   th:first-child,
   td:first-child {
-    flex-basis: 78px;
+    flex-basis: 72px;
     text-align: right;
   }
 
@@ -23,19 +25,19 @@
 
   th:nth-child(2),
   td:nth-child(2) {
-    flex-basis: 48px;
+    flex-basis: 41px;
     text-align: right;
   }
 
   th:nth-child(3),
   td:nth-child(3) {
-    flex-basis: 78px;
+    flex-basis: 82px;
     text-align: right;
   }
 
   th:nth-child(4),
   td:nth-child(4) {
-    flex-basis: 55px;
+    flex-basis: 82px;
     text-align: right;
   }
 

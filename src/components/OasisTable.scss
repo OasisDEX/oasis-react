@@ -53,16 +53,16 @@ td, th {
 
 table.scrolling {
 
-  tbody > tr,
-  thead > tr {
+  tr {
     display: flex;
-    > th,
-    > td {
-      max-width: 100%;
-      display: block;
-      padding: 0;
-      margin: $td-space;
-    }
+  }
+
+  th,
+  td {
+    max-width: 100%;
+    display: block;
+    padding: 0;
+    margin: $td-space;
   }
 
   tbody {
@@ -94,7 +94,7 @@ tr.collapseRow {
     font-size: 12px;
     color: #666669;
     text-transform: uppercase;
-    padding: 5px 15px;
+    //padding: 5px 15px;
   }
 }
 
