@@ -2,6 +2,7 @@
 
 $hover-border-color: #DCDDE0;
 $tbody-height: 160px;
+$td-space: 5px 11px; // margin/padding
 
 thead {
   @include text(10px, 700);
@@ -38,12 +39,15 @@ tr.active {
   cursor: pointer
 }
 
+
 td, th {
-  padding: 5px 11px;
+  padding: $td-space;
+  margin: 0;
   flex-basis: 0;
   flex-grow: 0;
   flex-shrink: 0;
   overflow: hidden;
+  box-sizing: content-box;
 }
 
 
@@ -56,6 +60,8 @@ table.scrolling {
     > td {
       max-width: 100%;
       display: block;
+      padding: 0;
+      margin: $td-space;
     }
   }
 
