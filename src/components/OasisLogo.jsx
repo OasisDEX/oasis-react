@@ -11,7 +11,7 @@ const defaultProps = {};
 class OasisLogo extends PureComponent {
   render() {
     return (
-      <a styleName='OasisLogoWrapper' href="http://oasisdex.com">
+      <a rel="noopener noreferrer" styleName='OasisLogoWrapper' href="http://oasisdex.com">
         <div styleName='OasisLogo'/>
       </a>
     );

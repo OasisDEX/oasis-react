@@ -65,7 +65,7 @@ export class OasisFooterWrapper extends PureComponent {
                 <h4 styleName="Heading">{section.header}</h4>
                 {
                   section.links.map((link, index) =>
-                    <a styleName="Link" key={index} href={link.url} target="_blank">{link.label}</a>
+                    <a rel="noopener noreferrer" styleName="Link" key={index} href={link.url} target="_blank">{link.label}</a>
                   )
                 }
               </div>

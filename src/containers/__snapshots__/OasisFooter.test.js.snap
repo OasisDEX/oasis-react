@@ -22,6 +22,7 @@ exports[`(Container) OasisFooter should render 1`] = `
         <a
           href="https://github.com/MakerDAO/maker-market/wiki"
           key="0"
+          rel="noopener noreferrer"
           styleName="Link"
           target="_blank"
         >
@@ -30,6 +31,7 @@ exports[`(Container) OasisFooter should render 1`] = `
         <a
           href="https://makerdao.github.io/markets/"
           key="1"
+          rel="noopener noreferrer"
           styleName="Link"
           target="_blank"
         >
@@ -55,6 +57,7 @@ exports[`(Container) OasisFooter should render 1`] = `
         <a
           href="https://chat.makerdao.com/channel/maker-market"
           key="0"
+          rel="noopener noreferrer"
           styleName="Link"
           target="_blank"
         >
@@ -63,6 +66,7 @@ exports[`(Container) OasisFooter should render 1`] = `
         <a
           href="https://www.reddit.com/r/MakerDAO/"
           key="1"
+          rel="noopener noreferrer"
           styleName="Link"
           target="_blank"
         >
@@ -88,6 +92,7 @@ exports[`(Container) OasisFooter should render 1`] = `
         <a
           href="https://github.com/OasisDEX/oasis/issues/new"
           key="0"
+          rel="noopener noreferrer"
           styleName="Link"
           target="_blank"
         >
@@ -96,6 +101,7 @@ exports[`(Container) OasisFooter should render 1`] = `
         <a
           href="https://github.com/OasisDEX/oasis/projects/1"
           key="1"
+          rel="noopener noreferrer"
           styleName="Link"
           target="_blank"
         >

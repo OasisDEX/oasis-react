@@ -1,6 +1,5 @@
 import network from "../../selectors/network";
 import balancesReducer from "../balances";
-import { getTokenContractsList } from "../../../bootstrap/contracts";
 import contractsBootstrap from "../../../bootstrap/contracts";
 import marketBootstrap from "../../../bootstrap/market";
 import tokens from "../../selectors/tokens";
@@ -10,6 +9,7 @@ import accounts from "../../selectors/accounts";
 import offersReducer from "../offers";
 import { CheckNetworkAction } from "./CheckNetworkAction";
 import { onNetworkCheckEndEpic } from "./onNetworkCheckEndEpic";
+import platform from "../../selectors/platform";
 
 export const checkNetworkInitialEpic = () => async (dispatch, getState) => {
   dispatch(CheckNetworkAction.pending());
@@ -43,14 +43,14 @@ export const checkNetworkInitialEpic = () => async (dispatch, getState) => {
         platformReducer.actions.marketInitialized(
           marketBootstrap.init(dispatch, currentNetworkName)
         )
-      ),
-      dispatch(
-        balancesReducer.actions.getAllTradedTokensBalances(
-          getTokenContractsList(),
-          accounts.defaultAccount(getState())
-        )
       )
-    ]).then(onNetworkCheckEndEpic(dispatch, getState, true));
+    ]).then(
+      onNetworkCheckEndEpic(
+        dispatch,
+        getState,
+        !platform.allInitialSubscriptionsRegistered(getState())
+      )
+    );
   } catch (e) {
     console.warn("Can't fetch network data!", e);
   }

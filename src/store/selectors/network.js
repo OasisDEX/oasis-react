@@ -30,6 +30,11 @@ const activeNetworkProviderType = createSelector(
 
 const status = createSelector(network, state => state.get("status"));
 
+const latestBlock = createSelector(network, state =>
+  state.get("latestBlock")
+);
+
+
 const latestBlockNumber = createSelector(network, state =>
   state.get("latestBlockNumber")
 );
@@ -73,6 +78,10 @@ const noProviderConnected = createSelector(
   s => s.get("noProviderConnected")
 );
 
+const isNodeSyncing = createSelector(
+  network,
+  s => s.getIn(["sync", "isPending"])
+);
 
 export default {
   state: network,
@@ -89,5 +98,7 @@ export default {
   lastNetworkCheckAt,
   hasDefaultAccountChanged,
   lastCheckTotalTimeMs,
-  noProviderConnected
+  noProviderConnected,
+  isNodeSyncing,
+  latestBlock
 };

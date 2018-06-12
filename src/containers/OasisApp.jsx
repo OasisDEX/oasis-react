@@ -19,6 +19,7 @@ import CSSModules from "react-css-modules";
 
 import version from "../version";
 import network from "../store/selectors/network";
+import OasisYourNodeIsSyncingWrapper from "./OasisYourNodeIsSyncing";
 
 const propTypes = PropTypes && {};
 
@@ -33,6 +34,10 @@ export class OasisAppWrapper extends PureComponent {
     this.props.actions.platformInitEpic();
   }
 
+  static renderNodeIsSyncing() {
+    return <OasisYourNodeIsSyncingWrapper />;
+  }
+
   accountLocked() {
     const { isAccountLocked } = this.props;
     return isAccountLocked ? (
@@ -41,6 +46,32 @@ export class OasisAppWrapper extends PureComponent {
         <Locked />{" "}
       </div>
     ) : null;
+  }
+
+  mainContent() {
+    const { isNodeSyncing } = this.props;
+    if (isNodeSyncing) {
+      return OasisAppWrapper.renderNodeIsSyncing();
+    } else {
+      return (
+        <div styleName="container" className="container">
+          <OasisHeaderWrapper />
+          <OasisMessagesSectionWrapper />
+          <OasisMainContentWrapper />
+          <hr styleName="FooterSeparator" />
+          <OasisFooterWrapper />
+        </div>
+      );
+    }
+  }
+
+  static versionInfo() {
+    return (
+      <div style={{ textAlign: "center" }}>
+        version: {version.version}, branch: {version.branch}, hash:{" "}
+        {version.hash}, build date: {version.buildDate.toUTCString()}
+      </div>
+    );
   }
 
   render() {
@@ -52,19 +83,8 @@ export class OasisAppWrapper extends PureComponent {
     return (
       this.accountLocked() || (
         <div className={classes({ isAppLoading, globalFormLock })}>
-          <BrowserRouter>
-            <div styleName="container" className="container">
-              <OasisHeaderWrapper />
-              <OasisMessagesSectionWrapper />
-              <OasisMainContentWrapper />
-              <hr styleName="FooterSeparator" />
-              <OasisFooterWrapper />
-            </div>
-          </BrowserRouter>
-          <div style={{ textAlign: "center" }}>
-            version: {version.version}, branch: {version.branch}, hash:{" "}
-            {version.hash}, build date: {version.buildDate.toUTCString()}
-          </div>
+          <BrowserRouter>{this.mainContent()}</BrowserRouter>
+          <div>{OasisAppWrapper.versionInfo()}</div>
         </div>
       )
     );
@@ -76,7 +96,8 @@ export function mapStateToProps(state) {
     isAppLoading: platform.isAppLoading(state),
     isAccountLocked: platform.isAccountLocked(state),
     noProviderConnected: network.noProviderConnected(state),
-    globalFormLock: platform.globalFormLock(state)
+    globalFormLock: platform.globalFormLock(state),
+    isNodeSyncing: network.isNodeSyncing(state)
   };
 }
 

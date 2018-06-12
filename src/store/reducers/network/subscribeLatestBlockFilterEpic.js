@@ -9,6 +9,7 @@ import tokensReducer from "../tokens";
 import offersReducer from "../offers";
 import { createAction } from "redux-actions";
 import { getTimestamp } from "../../../utils/time";
+import { checkIfOutOfSyncEpic } from './checkIfOutOfSync';
 
 export const fetchEthereumPrice = createAction(
   "NETWORK/FETCH_ETHEREUM_PRICE",
@@ -22,22 +23,35 @@ export const fetchEthereumPrice = createAction(
  * @dev We get latest mined block number
  */
 export const getLatestBlockNumber = createAction(
-  "NETWORK_GET_LATEST_BLOCK_NUMBER",
+  "NETWORK/GET_LATEST_BLOCK_NUMBER",
   async () =>
-    web3p.eth
-      .getBlockNumber()
-      .then(latestBlockNumber => ({
-        latestBlockNumber,
-        latestBlockReceivedAt: getTimestamp()
-      }))
+    web3p.eth.getBlockNumber().then(latestBlockNumber => ({
+      latestBlockNumber,
+      latestBlockReceivedAt: getTimestamp()
+    }))
+);
+
+/**
+ * @dev We get latest mined block number
+ */
+export const setLatestBlockNumber = createAction(
+  "NETWORK/SET_LATEST_BLOCK_NUMBER",
+  latestBlockNumber => ({
+    latestBlockNumber,
+    latestBlockReceivedAt: getTimestamp()
+  })
 );
 
 export const getBlock = createAction(
-  "NETWORK_GET_LATEST_BLOCK",
-  async blockNumber => web3p.eth.getBlock(blockNumber)
+  "NETWORK_GET_BLOCK",
+  async blockNumberLatestOrPending =>
+    web3p.eth.getBlock(blockNumberLatestOrPending)
 );
 
-export const getLatestBlock = () => getBlock("latest");
+export const getLatestBlock = createAction(
+  "NETWORK_GET_LATEST_BLOCK",
+  async () => web3p.eth.getBlock("latest")
+);
 
 /**
  * @dev Here we create 3 actions for checking the network status
@@ -53,7 +67,7 @@ export const subscribeLatestBlockFilterEpic = () => async (
   dispatch(subscribeLatestBlockFilter.pending());
 
   const update = () => {
-    dispatch(getLatestBlockNumber());
+    dispatch(checkIfOutOfSyncEpic());
     dispatch(fetchEthereumPrice());
     dispatch(transactionsReducer.actions.getCurrentTxNonceEpic());
     dispatch(transactionsReducer.actions.getCurrentGasPrice());

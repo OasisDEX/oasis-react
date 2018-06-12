@@ -7,14 +7,13 @@ import { ConnectedRouter } from "react-router-redux";
 import "./index.css";
 import OasisAppWrapper from "./containers/OasisApp";
 
-
 import * as web3 from "./bootstrap/web3";
 import * as Network from "./bootstrap/network";
 import configureStore from "./store";
 import platformReducer from "./store/reducers/platform";
 import networkReducer from "./store/reducers/network";
 import accountsReducer from "./store/reducers/accounts";
-import { HAS_ACCOUNTS } from "./constants";
+import { HAS_ACCOUNTS, SUBSCRIPTIONS_GROUP_GLOBAL_INITIAL, SUBSCRIPTIONS_LATEST_BLOCK } from './constants';
 import { Session } from "./utils/session";
 import accounts from "./store/selectors/accounts";
 import period from "./utils/period";
@@ -30,9 +29,12 @@ import {
   setLastNetworkCheckEndAt,
   setLastNetworkCheckStartAt
 } from "./store/reducers/network/onNetworkCheckEndEpic";
+import { subscribeLatestBlockFilterEpic } from "./store/reducers/network/subscribeLatestBlockFilterEpic";
+import { checkIfOutOfSyncEpic } from "./store/reducers/network/checkIfOutOfSync";
+import { registerSubscription } from "./utils/subscriptions/registerSubscription";
 
 //sentry.io configuration
-if (version.env === "production" && version.branch !== 'master') {
+if (version.env === "production" && version.branch !== "master") {
   console.log("sentry.io configured!");
   Raven.config("https://8ca5cb1ed0e04a57bb36c7720e235754@sentry.io/1208618", {
     release: version.hash,
@@ -66,6 +68,7 @@ const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
       );
 
       if (isInitialHealthcheck) {
+        await dispatch(checkIfOutOfSyncEpic());
         // console.log("connectedTo:", network.activeNetworkMeta(getState()).get('name'));
         Raven.setTagsContext({
           network: network.activeNetworkMeta(getState()).get("name")
@@ -80,6 +83,14 @@ const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
            * to get notified on new block resolved
            */
           dispatch(networkReducer.actions.getLatestBlockNumber());
+          registerSubscription(
+            SUBSCRIPTIONS_LATEST_BLOCK,
+            () => {
+              dispatch(subscribeLatestBlockFilterEpic());
+            },
+            { dispatch, getState },
+            SUBSCRIPTIONS_GROUP_GLOBAL_INITIAL
+          );
         }
         const previousDefaultAccount = accounts.defaultAccount(getState());
         if (
@@ -166,14 +177,13 @@ Raven.context(function() {
     try {
       await bootstrap();
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
     ReactDOM.render(
       <Provider store={store}>
         <ConnectedRouter history={history}>
           <OasisAppWrapper />
         </ConnectedRouter>
-
       </Provider>,
       document.getElementById("root")
     );

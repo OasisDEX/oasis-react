@@ -1,0 +1,99 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisYourNodeIsSyncing should render 1`] = `
+<section>
+  <div>
+    <div
+      style={
+        Object {
+          "textAlign": "center",
+        }
+      }
+    >
+      <img
+        alt=""
+        src="icon-syncing.svg"
+        style={
+          Object {
+            "position": "relative",
+            "width": "400px",
+          }
+        }
+      />
+    </div>
+    <div>
+      <img
+        alt="Oasis Logo"
+        src="logo-oasis-hover.png"
+        style={
+          Object {
+            "bottom": "250px",
+            "position": "relative",
+          }
+        }
+      />
+    </div>
+  </div>
+  <hr />
+  <h1>
+    Your node this syncing
+  </h1>
+  <hr />
+  <p>
+    <span
+      style={
+        Object {
+          "background": "white",
+          "border": "1px solid #6f727d",
+          "borderRadius": "10px 0 0 10px",
+          "color": "#6f727d",
+          "padding": "10px",
+        }
+      }
+    >
+      Network
+    </span>
+    <span
+      style={
+        Object {
+          "background": "#6f727d",
+          "borderRadius": "0 10px 10px 0",
+          "color": "white",
+          "padding": "10px",
+        }
+      }
+    />
+  </p>
+  <p>
+    <span
+      style={
+        Object {
+          "background": "white",
+          "border": "1px solid #6f727d",
+          "borderRadius": "10px 0 0 10px",
+          "color": "#6f727d",
+          "padding": "10px",
+        }
+      }
+    >
+      Current block
+    </span>
+    <span
+      style={
+        Object {
+          "background": "#6f727d",
+          "borderRadius": "0 10px 10px 0",
+          "color": "white",
+          "padding": "10px",
+        }
+      }
+    >
+      0
+       @ 
+      Invalid date
+    </span>
+  </p>
+  <hr />
+  <Connect(OasisFooterWrapper) />
+</section>
+`;
