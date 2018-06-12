@@ -313,6 +313,7 @@ global.storeMock = {
       percent_change_7d: '-16.34',
       last_updated: '1522866553'
     },
+    latestBlock: {},
     latestBlockNumber: 6716998,
     status: 'NETWORK/ONLINE',
     activeNetworkName: 'kovan',

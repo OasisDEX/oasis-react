@@ -17,8 +17,8 @@ import {
   fetchEthereumPrice,
   getBlock,
   getLatestBlock,
-  getLatestBlockNumber
-} from "./network/subscribeLatestBlockFilterEpic";
+  getLatestBlockNumber, setLatestBlockNumber,
+} from './network/subscribeLatestBlockFilterEpic';
 import { checkNetworkInitialEpic } from "./network/checkNetworkInitialEpic";
 import {
   checkNetworkEpic,
@@ -41,16 +41,16 @@ const initialState = fromJS({
   isNetworkCheckPending: null,
   lastNetworkCheckAt: { start: null, end: null },
   latestBlockReceivedAt: null,
-  noProviderConnected: true
+  noProviderConnected: true,
+  latestBlock: null
 });
 
-const syncNetwork = createPromiseActions("NETWORK/SYNC_NETWORK");
+export const syncNetwork = createPromiseActions("NETWORK/SYNC_NETWORK");
 const connected = createAction("NETWORK/CONNECTED");
 const connecting = createAction("NETWORK/CONNECTING");
 const disconnected = createAction("NETWORK/DISCONNECTED");
 
 const setNoProviderConnected = createAction("NETWORK/NO_PROVIDER_CONNECTED");
-
 
 const actions = {
   connected,
@@ -63,12 +63,13 @@ const actions = {
   getLatestBlockNumber,
   getConnectedNetworkId,
   fetchEthereumPrice,
-  setNoProviderConnected,
+  setNoProviderConnected
 };
 
 const reducer = handleActions(
   {
-    [setNoProviderConnected]: (state, { payload }) => state.set("noProviderConnected", payload),
+    [setNoProviderConnected]: (state, { payload }) =>
+      state.set("noProviderConnected", payload),
     [setLastNetworkCheckStartAt]: (state, { payload }) =>
       state.setIn(["lastNetworkCheckAt", "start"], payload),
     [setLastNetworkCheckEndAt]: (state, { payload }) =>
@@ -94,7 +95,7 @@ const reducer = handleActions(
     [syncNetwork.pending]: state =>
       state.setIn(["sync", "isPending"], true).set("status", OUT_OF_SYNC),
     [syncNetwork.fulfilled]: state =>
-      state.setIn(["sync", "isPending"], ONLINE),
+      state.setIn(["sync", "isPending"], false).set("status", ONLINE),
     [fulfilled(getConnectedNetworkId)]: (state, { payload }) =>
       state.update(
         "activeNetworkId",
@@ -107,8 +108,16 @@ const reducer = handleActions(
       state
         .update("latestBlockNumber", () => latestBlockNumber)
         .set("latestBlockReceivedAt", latestBlockReceivedAt),
+    [setLatestBlockNumber]: (
+      state,
+      { payload: { latestBlockNumber, latestBlockReceivedAt } }
+    ) =>
+      state
+        .update("latestBlockNumber", () => latestBlockNumber)
+        .set("latestBlockReceivedAt", latestBlockReceivedAt),
     [fulfilled(fetchEthereumPrice)]: (state, { payload }) =>
-      state.set("latestEthereumPrice", payload[0])
+      state.set("latestEthereumPrice", payload[0]),
+    [fulfilled(getLatestBlock)]: (state, { payload }) => state.set("latestBlock", payload)
   },
   initialState
 );

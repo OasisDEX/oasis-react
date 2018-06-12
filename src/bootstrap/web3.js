@@ -1,5 +1,7 @@
 import Web3 from "web3";
 import { fromJS } from "immutable";
+import platformReducer from '../store/reducers/platform';
+import { SUBSCRIPTIONS_TOKEN_TRANSFER_EVENTS, SUBSCRIPTIONS_TOKEN_TRANSFER_HISTORY_EVENTS } from '../constants';
 
 const web3 = new Web3();
 
@@ -63,9 +65,13 @@ const registerAccountSpecificSubscriptions = ({
 
 const getSubscriptions = () => subscriptions;
 
-const clearAccountSpecificSubscriptions = () => {
+const clearAccountSpecificSubscriptions = ({ dispatch }) => {
   subscriptions.tokenTransferEventSubs.valueSeq().forEach(sub => sub.stopWatching());
+  dispatch(platformReducer.actions.unregisterSubscriptionByType(SUBSCRIPTIONS_TOKEN_TRANSFER_EVENTS));
+
   subscriptions.transferHistoryEventSubs.valueSeq().forEach(sub => sub.stopWatching());
+  dispatch(platformReducer.actions.unregisterSubscriptionByType(SUBSCRIPTIONS_TOKEN_TRANSFER_HISTORY_EVENTS));
+
   subscriptions.wrapUnwrapHistoryEventSubs.valueSeq().forEach(sub => sub.stopWatching());
   subscriptions.ethBalanceChangeEventSub.stopWatching();
   subscriptions.tokenTransferEventSubs = fromJS({});

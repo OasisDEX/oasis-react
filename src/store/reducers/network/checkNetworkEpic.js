@@ -15,9 +15,13 @@ export const getConnectedNetworkId = createAction(
   () => web3p.version.getNetwork()
 );
 
-export const checkNetworkEpic = (hasAccountChanged) => async (dispatch, getState) => {
-
-  if (network.isNetworkCheckPending(getState()) === true) { return; }
+export const checkNetworkEpic = hasAccountChanged => async (
+  dispatch,
+  getState
+) => {
+  if (network.isNetworkCheckPending(getState()) === true) {
+    return;
+  }
 
   dispatch(CheckNetworkAction.pending());
   const previousNetworkId = network.activeNetworkId(getState());

@@ -3,6 +3,7 @@
 exports[`(Component) OasisLogo should render 1`] = `
 <a
   href="http://oasisdex.com"
+  rel="noopener noreferrer"
   styleName="OasisLogoWrapper"
 >
   <div

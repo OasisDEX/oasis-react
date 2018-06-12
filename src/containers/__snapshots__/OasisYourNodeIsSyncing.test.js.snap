@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisYourNodeIsSyncing should render 1`] = `
+<OasisYourNodeIsSyncing
+  latestBlock={
+    Immutable.Map {
+    }
+  }
+  networkId="42"
+/>
+`;
+
+exports[`(Container) OasisYourNodeIsSyncing will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisYourNodeIsSyncing will receive right props 1`] = `
+Object {
+  "latestBlock": Immutable.Map {
+},
+  "networkId": "42",
+}
+`;

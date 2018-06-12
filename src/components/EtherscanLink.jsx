@@ -40,7 +40,7 @@ class EtherscanLink extends PureComponent {
       }
       case ETHERSCAN_LINK_TYPE_ADDRESS: {
         return (
-          <a target="_blank" className={styles.link} href={url} {...props}>
+          <a rel="noopener noreferrer" target="_blank" className={styles.link} href={url} {...props}>
             <span>{label || address}</span>
           </a>
         );
