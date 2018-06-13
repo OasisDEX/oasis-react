@@ -30,6 +30,7 @@ class MaskedTokenAmountInput extends PureComponent {
           mask={createNumberMask({ allowDecimal: true, integerLimit: 15, decimalLimit: 5, prefix: '' })}
           guide={true}
           placeholderChar={' '}
+          placeholder={'0'}
           {...newProps }/>
     );
   }
