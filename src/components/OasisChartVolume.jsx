@@ -13,8 +13,8 @@ const propTypes = PropTypes && {
   volumeChartLabels: PropTypes.array.isRequired,
   volumeChartValues: PropTypes.array.isRequired,
   volumeChartTooltips: PropTypes.shape({
-    base: PropTypes.object.isRequired,
-    quote: PropTypes.object.isRequired,
+    base: PropTypes.array.isRequired,
+    quote: PropTypes.array.isRequired,
   }).isRequired,
   tradingPair: PropTypes.shape({
     baseToken: PropTypes.string.isRequired,
@@ -80,8 +80,8 @@ export class OasisChartVolume extends PureComponent {
     if (tooltipEl && tooltip.body) {
       const ts = this.props.volumeChartLabels[tooltip.dataPoints[0].index];
       const date = moment.unix(ts).format('ll');
-      let quoteAmount = this.props.volumeChartTooltips.quote[ts];
-      let baseAmount = this.props.volumeChartTooltips.base[ts];
+      let quoteAmount = this.props.volumeChartTooltips.quote[tooltip.dataPoints[0].index];
+      let baseAmount = this.props.volumeChartTooltips.base[tooltip.dataPoints[0].index];
       tooltipEl.innerHTML =
         `<div class="row-custom-tooltip">
           <span class="left">Date</span>

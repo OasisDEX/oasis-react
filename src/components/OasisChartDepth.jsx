@@ -16,8 +16,8 @@ const propTypes = PropTypes && {
     sell: PropTypes.array.isRequired,
   }).isRequired,
   depthChartTooltips: PropTypes.shape({
-    buy: PropTypes.object.isRequired,
-    sell: PropTypes.object.isRequired,
+    buy: PropTypes.array.isRequired,
+    sell: PropTypes.array.isRequired,
   }).isRequired,
   tradingPair: PropTypes.shape({
     baseToken: PropTypes.string.isRequired,
@@ -118,11 +118,11 @@ export class OasisChartDepth extends PureComponent {
       });
       [type, quoteAmount] = tooltip.body[typeIndex].lines[0].split(': ');
       if (type === 'Sell') {
-        quoteAmount = this.props.depthChartTooltips.sell[price].quote;
-        baseAmount = this.props.depthChartTooltips.sell[price].base;
+        quoteAmount = this.props.depthChartTooltips.sell[tooltip.dataPoints[0].index].quote;
+        baseAmount = this.props.depthChartTooltips.sell[tooltip.dataPoints[0].index].base;
       } else {
-        quoteAmount = this.props.depthChartTooltips.buy[price].quote;
-        baseAmount = this.props.depthChartTooltips.buy[price].base;
+        quoteAmount = this.props.depthChartTooltips.buy[tooltip.dataPoints[0].index].quote;
+        baseAmount = this.props.depthChartTooltips.buy[tooltip.dataPoints[0].index].base;
       }
 
       tooltipEl.innerHTML =

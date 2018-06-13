@@ -113,8 +113,8 @@ const volumeChartValues = createSelector(
 const volumeChartTooltips = createSelector(
   volumeChartData,
   (volumeChartData) => ({
-    base: _.mapValues(volumeChartData.base, (v) => web3.fromWei(v).toFormat(2)),
-    quote: _.mapValues(volumeChartData.quote, (v) => web3.fromWei(v).toFormat(2)),
+    base: Object.values(volumeChartData.base).map(v => web3.fromWei(v).toFormat(2)),
+    quote: Object.values(volumeChartData.quote).map(v => web3.fromWei(v).toFormat(2)),
   })
 )
 
@@ -164,6 +164,13 @@ function groupBy(array, by = _.identity) {
   return result;
 }
 
+function mapWithPreviousResult(array, mapper = _.identity) {
+  return array.reduce((a, e) => {
+    const res = mapper(e, a[0]);
+    return [res, a[1].concat([res])];
+  }, [null, []])[1];
+}
+
 const depthChartData = createSelector(
   offersBids,
   offersAsks,
@@ -182,65 +189,59 @@ const depthChartData = createSelector(
       base: downSum(bidGroups.map(group => bigSum(group.map(bid => bid.buyHowMuch.toString())))),
     };
 
-    // All price values (bids & asks)
     const vals = _.uniq(bidPrices.concat(askPrices).sort((a, b) => new BigNumber(a.toString()).lt(new BigNumber(b.toString())) ? -1 : 1));
 
-    // Preparing arrays for graph
-    const askAmountsGraph = [];
-    const bidAmountsGraph = [];
-    const askAmountsTooltip = {};
-    const bidAmountsTooltip = {};
-    let index = null;
-    let amount = null;
-    let amountTool = { quote: null, base: null };
-
-    vals.forEach((val, i, all) => {
-      const prevVal = all[i-1];
-      index = askPrices.indexOf(val);
+    const askAmountsData = mapWithPreviousResult(vals, (val, prevResult) => {
+      const index = askPrices.indexOf(val);
       if (index !== -1) {
         // If there is a specific value for the price in asks, we add it
-        amount = web3.fromWei(askAmounts.quote[index]).toFixed(3);
-        amountTool.quote = askAmounts.quote[index];
-        amountTool.base = askAmounts.base[index];
+        return {
+          graph: {x: val, y: web3.fromWei(askAmounts.quote[index]).toFixed(3)},
+          tooltip: {quote: askAmounts.quote[index], base: askAmounts.base[index]},
+        };
       } else if (askPrices.length === 0 ||
         (new BigNumber(val.toString())).lt((new BigNumber(askPrices[0].toString()))) ||
         (new BigNumber(val.toString())).gt((new BigNumber(askPrices[askPrices.length - 1].toString())))) {
         // If the price is lower or higher than the asks range there is not value to print in the graph
-        amount = null;
-        amountTool.quote = amountTool.base = null;
+        return {
+          graph: {x: val, y: null},
+          tooltip: {quote: null, base: null},
+        };
       } else {
         // If there is not an ask amount for this price, we need to add the previous amount
-        amount = askAmountsGraph[askAmountsGraph.length - 1].y;
-        amountTool = { ...askAmountsTooltip[prevVal] };
+        return {
+          graph: {x: val, y: prevResult.graph.y},
+          tooltip: prevResult.tooltip,
+        };
       }
-      askAmountsGraph.push({ x: val, y: amount });
-      askAmountsTooltip[val] = { ...amountTool };
     });
 
-    vals.slice().reverse().forEach((val, i, all) => {
-      const prevVal = all[i-1];
-      index = bidPrices.indexOf(val);
+    const bidAmountsData = mapWithPreviousResult(vals.slice().reverse(), (val, prevResult) => {
+      const index = bidPrices.indexOf(val);
       if (index !== -1) {
         // If there is a specific value for the price in bids, we add it
-        amount = web3.fromWei(bidAmounts.quote[index]).toFixed(3);
-        amountTool.quote = bidAmounts.quote[index];
-        amountTool.base = bidAmounts.base[index];
+        return {
+          graph: {x: val, y: web3.fromWei(bidAmounts.quote[index]).toFixed(3)},
+          tooltip: {quote: bidAmounts.quote[index], base: bidAmounts.base[index]},
+        };
       } else if (bidPrices.length === 0 ||
         (new BigNumber(val.toString())).lt((new BigNumber(bidPrices[0].toString()))) ||
         (new BigNumber(val.toString())).gt((new BigNumber(bidPrices[bidPrices.length - 1].toString())))) {
         // If the price is lower or higher than the bids range there is not value to print in the graph
-        amount = null;
-        amountTool.quote = amountTool.base = null;
+        return {
+          graph: {x: val, y: null},
+          tooltip: {quote: null, base: null},
+        };
       } else {
         // If there is not a bid amount for this price, we need to add the next available amount
-        amount = bidAmountsGraph[bidAmountsGraph.length - 1].y;
-        amountTool = { ...bidAmountsTooltip[prevVal] };
+        return {
+          graph: {x: val, y: prevResult.graph.y},
+          tooltip: prevResult.tooltip,
+        };
       }
-      bidAmountsGraph.push({ x: val, y: amount });
-      bidAmountsTooltip[val] = { ...amountTool };
     });
 
-    return {vals, bidAmountsGraph: bidAmountsGraph.reverse(), askAmountsGraph, bidAmountsTooltip, askAmountsTooltip}
+    return {vals, askAmountsData, bidAmountsData: bidAmountsData.reverse()}
   }
 )
 
@@ -252,21 +253,21 @@ const depthChartLabels = createSelector(
 const depthChartValues = createSelector(
   depthChartData,
   (depthChartData) => ({
-    buy: depthChartData.bidAmountsGraph,
-    sell: depthChartData.askAmountsGraph,
+    buy: depthChartData.bidAmountsData.map(d => d.graph),
+    sell: depthChartData.askAmountsData.map(d => d.graph),
   })
 )
 
 const depthChartTooltips = createSelector(
   depthChartData,
   (depthChartData) => ({
-    buy: _.mapValues(depthChartData.bidAmountsTooltip, v => ({
-      base: new BigNumber(web3.fromWei(v.base)).toFormat(2),
-      quote: new BigNumber(web3.fromWei(v.quote)).toFormat(2),
+    buy: depthChartData.bidAmountsData.map(v => ({
+      base: new BigNumber(web3.fromWei(v.tooltip.base)).toFormat(2),
+      quote: new BigNumber(web3.fromWei(v.tooltip.quote)).toFormat(2),
     })),
-    sell: _.mapValues(depthChartData.askAmountsTooltip, v => ({
-      base: new BigNumber(web3.fromWei(v.base)).toFormat(2),
-      quote: new BigNumber(web3.fromWei(v.quote)).toFormat(2),
+    sell: depthChartData.askAmountsData.map(v => ({
+      base: new BigNumber(web3.fromWei(v.tooltip.base)).toFormat(2),
+      quote: new BigNumber(web3.fromWei(v.tooltip.quote)).toFormat(2),
     })),
   })
 )
