@@ -74,6 +74,19 @@ const activeTradingPairOffersInitiallyLoaded = createSelector(
   (state, activeTradingPair) => state.getIn(['offers', Map(activeTradingPair), 'initialSyncStatus']) === SYNC_STATUS_COMPLETED
 );
 
+const activeTradingPairOffersData = createSelector(
+  offers,
+  tokens.activeTradingPair,
+  (state, activeTradingPair) => state.getIn(['offers', Map(activeTradingPair)])
+);
+
+const tradingPairOffersData = createSelector(
+  offers,
+  reselect.getProps,
+  (state, tradingPair) => state.getIn(['offers', Map(tradingPair)])
+);
+
+
 const offersInitialized = createSelector(
   offers,
   state => state.get('offersInitialized')
@@ -125,6 +138,11 @@ const canOfferBeCancelled = createSelector(
   canCancel => Boolean(canCancel)
 );
 
+const reSyncOffersSet = createSelector(
+  offers,
+  s => s.get('reSyncOffersSet')
+);
+
 export default {
   state: offers,
   offersInitialized,
@@ -137,10 +155,13 @@ export default {
   activeTradingPairOffersInitialLoadPending,
   activeTradingPairOffersInitiallyLoaded,
   activeTradingPairOffersInitialLoadStatus,
+  activeTradingPairOffersData,
+  tradingPairOffersData,
   tradingPairOffersInitialLoadStatus,
   allOffers,
   activeTradingPairBestBuyOfferId,
   activeTradingPairBestSellOfferId,
   activeTradingPairOffersLoadProgress,
-  canOfferBeCancelled
+  canOfferBeCancelled,
+  reSyncOffersSet
 }

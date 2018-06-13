@@ -1,22 +1,20 @@
-import getOfferTradingPairAndType from '../../../utils/offers/getOfferTradingPairAndType';
-import { getTradingPairOfferCount } from './getTradingPairOffersCount';
-import { OFFER_SYNC_TYPE_INITIAL, OFFER_SYNC_TYPE_UPDATE } from '../offers';
-import { setOfferEpic } from './setOfferEpic';
-import { createAction } from 'redux-actions';
-import getTokenByAddress from '../../../utils/tokens/getTokenByAddress';
-import {getMarketContractInstance} from '../../../bootstrap/contracts';
-import {fulfilled, pending} from '../../../utils/store';
+import getOfferTradingPairAndType from "../../../utils/offers/getOfferTradingPairAndType";
+import { getTradingPairOfferCount } from "./getTradingPairOffersCount";
+import { OFFER_SYNC_TYPE_INITIAL, OFFER_SYNC_TYPE_UPDATE } from "../offers";
+import { setOfferEpic } from "./setOfferEpic";
+import { createAction } from "redux-actions";
+import getTokenByAddress from "../../../utils/tokens/getTokenByAddress";
+import { getMarketContractInstance } from "../../../bootstrap/contracts";
+import { fulfilled, pending } from "../../../utils/store";
 
 const attemptToSyncRemovedOffer = createAction(
   "OFFERS/ATTEMPT_TO_SYNC_REMOVED_OFFER",
   syncOfferParams => syncOfferParams
 );
 
-export const loadOffer = createAction(
-  'OFFERS/LOAD_OFFER',
-  async (offerId) => getMarketContractInstance().offers(offerId),
+export const loadOffer = createAction("OFFERS/LOAD_OFFER", async offerId =>
+  getMarketContractInstance().offers(offerId)
 );
-
 
 export const syncOffer = (
   offerId,
@@ -47,7 +45,6 @@ export const syncOffer = (
       { buyWhichTokenAddress, sellWhichTokenAddress, syncType },
       getState()
     );
-
     const id = offerId.toString();
     try {
       await dispatch(doGetTradingPairOfferCount(baseToken, quoteToken));
@@ -105,5 +102,5 @@ export const syncOffer = (
 
 export const reducer = {
   [pending(loadOffer)]: state => state,
-  [fulfilled(loadOffer)]: state => state,
-}
+  [fulfilled(loadOffer)]: state => state
+};
