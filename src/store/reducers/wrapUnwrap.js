@@ -159,8 +159,7 @@ const wrapEther = createAction(
     gasPrice = DEFAULT_GAS_PRICE
   }) =>
     getTokenContractInstance(TOKEN_WRAPPED_ETH).deposit(
-      { value: amountInWei },
-      { gas: gasLimit, gasPrice }
+      { value: amountInWei, gas: gasLimit, gasPrice }
     )
 );
 

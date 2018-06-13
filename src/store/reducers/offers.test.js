@@ -25,6 +25,7 @@ each([
 
   test(description, async () => {
     const store = configureMockStore([thunk])(Map({
+      network: Map({ latestBlockNumber: 1}),
       tokens: Map({
         precision: 18,
         tokenSpecs: Map({
@@ -64,6 +65,7 @@ each([
 
   test(description, async () => {
     const store = configureMockStore([thunk])(Map({
+      network: Map({ latestBlockNumber: 1}),
       tokens: Map({
         precision: 18,
         tokenSpecs: Map({
@@ -119,7 +121,9 @@ each([
 ]).describe('load(Buy/Sell)OffersEpic', (description, action, offerIds) => {
 
   test(description, async () => {
-    const store = configureMockStore([thunk])({});
+    const store = configureMockStore([thunk])({
+      network: Map({ latestBlockNumber: 1})
+    });
 
     const getOfferIds = offerIds.reduce((a, id) => a.mockReturnValueOnce(id), jest.fn()).mockReturnValue(0);
     const promise = store.dispatch(action({buyOfferCount: 100, sellOfferCount: 100}, "MKR", "W-ETH", {
@@ -140,6 +144,7 @@ describe('syncOffersEpic', () => {
 
   test('main', async () => {
     const store = configureMockStore([thunk])(Map({
+      network: Map({ latestBlockNumber: 1}),
       tokens: Map({
         activeTradingPair: Map({
           baseToken: "MKR",

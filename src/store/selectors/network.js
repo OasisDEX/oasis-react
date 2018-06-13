@@ -30,10 +30,7 @@ const activeNetworkProviderType = createSelector(
 
 const status = createSelector(network, state => state.get("status"));
 
-const latestBlock = createSelector(network, state =>
-  state.get("latestBlock")
-);
-
+const latestBlock = createSelector(network, state => state.get("latestBlock"));
 
 const latestBlockNumber = createSelector(network, state =>
   state.get("latestBlockNumber")
@@ -65,22 +62,23 @@ const hasDefaultAccountChanged = createSelector(
   network,
   accounts.state,
   (s, accountsState) =>
-    parseInt(s.getIn("lastNetworkCheckAt", "start")) < parseInt(accountsState.get("lastAccountSwitchAt"))
+    parseInt(s.getIn("lastNetworkCheckAt", "start")) <
+    parseInt(accountsState.get("lastAccountSwitchAt"))
 );
 
 const lastCheckTotalTimeMs = createSelector(
   network,
-  s => parseInt(s.getIn("lastNetworkCheckAt", "end"))  - parseInt(s.getIn("lastNetworkCheckAt", "start"))
+  s =>
+    parseInt(s.getIn("lastNetworkCheckAt", "end")) -
+    parseInt(s.getIn("lastNetworkCheckAt", "start"))
 );
 
-const noProviderConnected = createSelector(
-  network,
-  s => s.get("noProviderConnected")
+const noProviderConnected = createSelector(network, s =>
+  s.get("noProviderConnected")
 );
 
-const isNodeSyncing = createSelector(
-  network,
-  s => s.getIn(["sync", "isPending"])
+const isNodeSyncing = createSelector(network, s =>
+  s.getIn(["sync", "isPending"])
 );
 
 export default {

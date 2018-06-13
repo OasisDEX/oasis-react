@@ -1,52 +1,88 @@
-import {OFFER_SYNC_TYPE_INITIAL, OFFER_SYNC_TYPE_NEW_OFFER, OFFER_SYNC_TYPE_UPDATE} from '../offers';
-import {convertTo18Precision} from '../../../utils/conversion';
-import findOffer from '../../../utils/offers/findOffer';
-import getTokenByAddress from '../../../utils/tokens/getTokenByAddress';
-import tokens from '../../selectors/tokens';
-import {createAction} from 'redux-actions';
-import BigNumber from 'bignumber.js';
-import {Map} from 'immutable';
-import {TYPE_BUY_OFFER, TYPE_SELL_OFFER} from '../offers';
+import {
+  OFFER_SYNC_TYPE_INITIAL,
+  OFFER_SYNC_TYPE_NEW_OFFER,
+  OFFER_SYNC_TYPE_UPDATE
+} from "../offers";
+import { convertTo18Precision } from "../../../utils/conversion";
+import findOffer from "../../../utils/offers/findOffer";
+import getTokenByAddress from "../../../utils/tokens/getTokenByAddress";
+import tokens from "../../selectors/tokens";
+import { createAction } from "redux-actions";
+import BigNumber from "bignumber.js";
+import { Map } from "immutable";
+import { TYPE_BUY_OFFER, TYPE_SELL_OFFER } from "../offers";
 
 export const setOffer = createAction(
-  'OFFERS/SET_OFFER',
-  ({ offer, baseToken, quoteToken, offerType }) => ({ offer, baseToken, quoteToken, offerType }),
+  "OFFERS/SET_OFFER",
+  ({ offer, baseToken, quoteToken, offerType }) => ({
+    offer,
+    baseToken,
+    quoteToken,
+    offerType
+  })
 );
-
 
 export const offerPartiallyFilledIn = createAction(
-  'OFFERS/OFFER_PARTIALLY_FILLED_IN',
-  ({ offerId, baseToken, quoteToken, offerType, updatedOffer, previousOfferState }) =>
-    ({ offerId, baseToken, quoteToken, offerType, updatedOffer, previousOfferState }),
+  "OFFERS/OFFER_PARTIALLY_FILLED_IN",
+  ({
+    offerId,
+    baseToken,
+    quoteToken,
+    offerType,
+    updatedOffer,
+    previousOfferState
+  }) => ({
+    offerId,
+    baseToken,
+    quoteToken,
+    offerType,
+    updatedOffer,
+    previousOfferState
+  })
 );
 export const offerCompletelyFilledIn = createAction(
-  'OFFERS/OFFER_COMPLETELY_FILLED_IN',
-  ({ offerId, baseToken, quoteToken, offerType, updatedOffer, previousOfferState }) =>
-    ({ offerId, baseToken, quoteToken, offerType, updatedOffer, previousOfferState }),
+  "OFFERS/OFFER_COMPLETELY_FILLED_IN",
+  ({
+    offerId,
+    baseToken,
+    quoteToken,
+    offerType,
+    updatedOffer,
+    previousOfferState
+  }) => ({
+    offerId,
+    baseToken,
+    quoteToken,
+    offerType,
+    updatedOffer,
+    previousOfferState
+  })
 );
-
 
 export const updateOffer = createAction(
-  'OFFERS/UPDATE_OFFER',
-  ({ offer, baseToken, quoteToken, offerType, previousOfferState }) =>
-    ({ offer, baseToken, quoteToken, offerType, previousOfferState }),
+  "OFFERS/UPDATE_OFFER",
+  ({ offer, baseToken, quoteToken, offerType, previousOfferState }) => ({
+    offer,
+    baseToken,
+    quoteToken,
+    offerType,
+    previousOfferState
+  })
 );
 
-
 export const setOfferEpic = ({
-                        id = null,
-                        sellHowMuch,
-                        sellWhichTokenAddress,
-                        buyHowMuch,
-                        buyWhichTokenAddress,
-                        owner,
-                        status,
-                        offerType,
-                        syncType = OFFER_SYNC_TYPE_INITIAL,
-                        tradingPair: { baseToken, quoteToken },
-                        previousOfferState,
-                      }) => async (dispatch, getState) => {
-
+  id = null,
+  sellHowMuch,
+  sellWhichTokenAddress,
+  buyHowMuch,
+  buyWhichTokenAddress,
+  owner,
+  status,
+  offerType,
+  syncType = OFFER_SYNC_TYPE_INITIAL,
+  tradingPair: { baseToken, quoteToken },
+  previousOfferState
+}) => async (dispatch, getState) => {
   const sellToken = getTokenByAddress(sellWhichTokenAddress);
   const buyToken = getTokenByAddress(buyWhichTokenAddress);
 
@@ -83,11 +119,17 @@ export const setOfferEpic = ({
     ask_price: buyHowMuchValue.div(sellHowMuchValue).valueOf(),
     bid_price: sellHowMuchValue.div(buyHowMuchValue).valueOf(),
     ask_price_sort: new BigNumber(
-      buyHowMuchValue.div(sellHowMuchValue).toFixed(precision < 5 ? 5 : precision, 6), 10,
+      buyHowMuchValue
+        .div(sellHowMuchValue)
+        .toFixed(precision < 5 ? 5 : precision, 6),
+      10
     ).toNumber(),
     bid_price_sort: new BigNumber(
-      sellHowMuchValue.div(buyHowMuchValue).toFixed(precision < 5 ? 5 : precision, 6), 10,
-    ).toNumber(),
+      sellHowMuchValue
+        .div(buyHowMuchValue)
+        .toFixed(precision < 5 ? 5 : precision, 6),
+      10
+    ).toNumber()
   };
 
   switch (syncType) {
@@ -108,7 +150,7 @@ export const setOfferEpic = ({
       break;
     case OFFER_SYNC_TYPE_UPDATE:
       if (sellHowMuchValue.eq(0) || buyHowMuchValue.eq(0)) {
-        console.log('COMPLETE FILLED_IN',{
+        console.log("COMPLETE FILLED_IN", {
           sellHowMuch,
           sellWhichTokenAddress,
           buyHowMuch,
@@ -117,19 +159,29 @@ export const setOfferEpic = ({
           status,
           offerType,
           tradingPair: { baseToken, quoteToken },
-          previousOfferState,
-        })
+          previousOfferState
+        });
         dispatch(
-          offerCompletelyFilledIn(
-            { baseToken, quoteToken, offerType, offerId: id, updatedOffer: offer, previousOfferState },
-          ),
+          offerCompletelyFilledIn({
+            baseToken,
+            quoteToken,
+            offerType,
+            offerId: id,
+            updatedOffer: offer,
+            previousOfferState
+          })
         );
       } else {
         dispatch(updateOffer({ offer, baseToken, quoteToken, offerType }));
         dispatch(
-          offerPartiallyFilledIn(
-            { baseToken, quoteToken, offerType, offerId: id, updatedOffer: offer, previousOfferState },
-          ),
+          offerPartiallyFilledIn({
+            baseToken,
+            quoteToken,
+            offerType,
+            offerId: id,
+            updatedOffer: offer,
+            previousOfferState
+          })
         );
       }
       break;
@@ -137,59 +189,77 @@ export const setOfferEpic = ({
 };
 
 export const reducer = {
-  [setOffer]: (state, { payload: { offer, baseToken, quoteToken, offerType } }) => {
+  [setOffer]: (
+    state,
+    { payload: { offer, baseToken, quoteToken, offerType } }
+  ) => {
     return state.updateIn(
-      ['offers', Map({ baseToken, quoteToken })], tradingPairOffers => {
+      ["offers", Map({ baseToken, quoteToken })],
+      tradingPairOffers => {
         switch (offerType) {
           case TYPE_BUY_OFFER:
-            return tradingPairOffers.updateIn(['buyOffers'], buyOffers => buyOffers.push(offer));
-          case TYPE_SELL_OFFER:
-            return tradingPairOffers.updateIn(['sellOffers'], sellOffers => sellOffers.push(offer));
-          default: {
-            console.log(
-              'this should never happen !!!', { offer, baseToken, quoteToken, offerType },
+            return tradingPairOffers.updateIn(["buyOffers"], buyOffers =>
+              buyOffers.push(offer)
             );
+          case TYPE_SELL_OFFER:
+            return tradingPairOffers.updateIn(["sellOffers"], sellOffers =>
+              sellOffers.push(offer)
+            );
+          default: {
+            console.log("this should never happen !!!", {
+              offer,
+              baseToken,
+              quoteToken,
+              offerType
+            });
             return tradingPairOffers;
           }
         }
-      },
+      }
     );
   },
-  [updateOffer]: (state, { payload: { offer, baseToken, quoteToken, offerType } }) =>
+  [updateOffer]: (
+    state,
+    { payload: { offer, baseToken, quoteToken, offerType } }
+  ) =>
     state.updateIn(
-      ['offers', Map({ baseToken, quoteToken })], tradingPairOffers => {
+      ["offers", Map({ baseToken, quoteToken })],
+      tradingPairOffers => {
         switch (offerType) {
-          case TYPE_BUY_OFFER :
-            return tradingPairOffers.updateIn(['buyOffers'], buyOffers =>
-              buyOffers.update(buyOffers.findIndex(
-                buyOffer => buyOffer.id == offer.id), () => offer,
-              ),
+          case TYPE_BUY_OFFER:
+            return tradingPairOffers.updateIn(["buyOffers"], buyOffers =>
+              buyOffers.update(
+                buyOffers.findIndex(buyOffer => buyOffer.id == offer.id),
+                () => offer
+              )
             );
           case TYPE_SELL_OFFER:
-            return tradingPairOffers.updateIn(['sellOffers'], sellOffers =>
-              sellOffers.update(sellOffers.findIndex(
-                sellOffer => sellOffer.id == offer.id), () => offer,
-              ),
+            return tradingPairOffers.updateIn(["sellOffers"], sellOffers =>
+              sellOffers.update(
+                sellOffers.findIndex(sellOffer => sellOffer.id == offer.id),
+                () => offer
+              )
             );
         }
-      },
+      }
     ),
   // [offerPartiallyFilledIn]:
   //   (state, { payload: { offerId, tradingPair, offerType, updatedOffer, previousOfferState } }) => state,
-  [offerCompletelyFilledIn]:
-    (state, { payload: { offerId, tradingPair, offerType } }) => {
-      switch (offerType) {
-        case TYPE_BUY_OFFER:
-          return state
-            .updateIn(['offers', Map(tradingPair), 'buyOffers'],
-              buyOfferList => buyOfferList.filter(offer => offer.id !== offerId),
-            );
-        case TYPE_SELL_OFFER:
-          return state
-            .updateIn(['offers', Map(tradingPair), 'sellOffers'],
-              sellOfferList => sellOfferList.filter(offer => offer.id !== offerId),
-            );
-
-      }
-    },
+  [offerCompletelyFilledIn]: (
+    state,
+    { payload: { offerId, tradingPair, offerType } }
+  ) => {
+    switch (offerType) {
+      case TYPE_BUY_OFFER:
+        return state.updateIn(
+          ["offers", Map(tradingPair), "buyOffers"],
+          buyOfferList => buyOfferList.filter(offer => offer.id !== offerId)
+        );
+      case TYPE_SELL_OFFER:
+        return state.updateIn(
+          ["offers", Map(tradingPair), "sellOffers"],
+          sellOfferList => sellOfferList.filter(offer => offer.id !== offerId)
+        );
+    }
+  }
 };
