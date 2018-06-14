@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import textStyles from "../styles/modules/_typography.scss";
+// import textStyles from "../styles/modules/_typography.scss";
 import { InfoBoxWithIco } from "./InfoBoxWithIco";
 
 const propTypes = PropTypes && {
