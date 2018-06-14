@@ -16,9 +16,7 @@ class OasisInsufficientAmountOfToken extends PureComponent {
     const { noBorder, tokenName, ...props } = this.props;
     const content = (
       <span>
-        {" "}
-        You do not have enough{" "}
-        <strong className={textStyles.spaceBoth}>{tokenName}</strong> tokens.
+        You do not have enough <strong>{tokenName}</strong> tokens.
       </span>
     );
     return (
