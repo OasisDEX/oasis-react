@@ -24,7 +24,7 @@ after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 before_deploy:
-  - if [ $TRAVIS_BRANCH = 'mk/gp-test' ]; export PUBLIC_URL="https://oasisdex.github.io/oasis-react"; fi
+  - if [ $TRAVIS_BRANCH = 'mk/gp-test' ]; then export PUBLIC_URL="https://oasisdex.github.io/oasis-react"; fi
   - echo $PUBLIC_URL
   - yarn build
 
