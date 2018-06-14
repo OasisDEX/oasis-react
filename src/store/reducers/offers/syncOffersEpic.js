@@ -74,7 +74,6 @@ export const syncOffersEpic = (
     return dispatch(tradingPairOffersAlreadyLoaded({ baseToken, quoteToken }));
   }
 
-  console.log('22', getState())
   dispatch(
     syncOffers.pending({
       tradingPair: { baseToken, quoteToken },

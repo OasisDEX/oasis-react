@@ -23,6 +23,7 @@ import {
   getMarketNoProxyContractInstance
 } from "../../bootstrap/contracts";
 import transactions from "../selectors/transactions";
+import isNumericAndGreaterThanZero from "../../utils/numbers/isNumericAndGreaterThanZero";
 
 export const TAKE_BUY_OFFER = "OFFER_TAKES/TAKE_BUY_OFFER";
 export const TAKE_SELL_OFFER = "OFFER_TAKES/TAKE_SELL_OFFER";
@@ -357,9 +358,17 @@ const getTransactionGasCostEstimateEpic = (
   } = {}
 ) => async (dispatch, getState) => {
   const offerId = activeOfferTakeOfferId(getState());
-  const volume = takeFormValuesSelector(getState(), "volume");
+  const { volume, total } = takeFormValuesSelector(
+    getState(),
+    "volume",
+    "total"
+  );
 
-  if (!canFulfillOffer(getState()) || !volume) {
+  if (
+    !isNumericAndGreaterThanZero(volume) ||
+    !isNumericAndGreaterThanZero(total) ||
+    !canFulfillOffer(getState())
+  ) {
     return null;
   }
 
