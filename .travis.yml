@@ -24,6 +24,8 @@ after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 before_deploy:
+  - export PUBLIC_URL="https://oasisdex.github.io/oasis-react"
+  - echo $PUBLIC_URL
   - yarn build
 
 deploy:
