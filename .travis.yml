@@ -24,7 +24,7 @@ after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 before_deploy:
-  - export PROD_BRANCH="mk/gp-tests"
+  - export PROD_BRANCH="mk/gp-test"
   - echo $PROD_BRANCH
   - echo $TRAVIS_BRANCH
   # for testing
