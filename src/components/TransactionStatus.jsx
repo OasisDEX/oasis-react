@@ -74,11 +74,13 @@ class TransactionStatus extends PureComponent {
               className={styles.imgLeft}
             />
             Your transaction
-            <EtherscanLinkWrapper
-              className={styles.spaceBoth}
-              type={ETHERSCAN_LINK_TYPE_TRANSACTION}
-              txHash={transaction.get("txHash")}
-            />{" "}
+            <span style={styles.transactionFailedHash}>
+              <EtherscanLinkWrapper
+                className={styles.spaceBoth}
+                type={ETHERSCAN_LINK_TYPE_TRANSACTION}
+                txHash={transaction.get("txHash")}
+              />{" "}
+            </span>
             failed
           </FlexBox>
         );
