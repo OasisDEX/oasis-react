@@ -30,6 +30,7 @@ exports[`(Container) OasisOfferMakeForm will receive right props 1`] = `
 Object {
   "activeBaseTokenBalance": undefined,
   "activeOfferTakeOfferData": undefined,
+  "activeQuoteTokenBalance": undefined,
   "activeTradingPairPrecision": 18,
   "buyToken": undefined,
   "globalFormLock": undefined,

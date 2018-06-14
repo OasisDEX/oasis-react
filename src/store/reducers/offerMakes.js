@@ -20,7 +20,8 @@ import {
   getMarketNoProxyContractInstance
 } from "../../bootstrap/contracts";
 import { DEFAULT_GAS_LIMIT, DEFAULT_GAS_PRICE } from "../../constants";
-import transactions from '../selectors/transactions';
+import transactions from "../selectors/transactions";
+import isNumericAndGreaterThanZero from "../../utils/numbers/isNumericAndGreaterThanZero";
 
 const initialState = fromJS({
   makeBuyOffer: {
@@ -343,7 +344,10 @@ const updateTransactionGasCostEstimateEpic = (
     buyAmount = offerMake.getIn(["offerData", "buyAmount"]),
     buyToken = offerMake.get("buyTokenAddress"),
     toAddress = getMarketContractInstance().address;
-  if (payAmount > 0 && buyAmount > 0) {
+  if (
+    isNumericAndGreaterThanZero(payAmount) &&
+    isNumericAndGreaterThanZero(buyAmount)
+  ) {
     const transactionGasCostEstimate = (await dispatch(
       defer(
         getTransactionGasEstimate,
@@ -364,7 +368,6 @@ const updateTransactionGasCostEstimateEpic = (
       dispatch(setGasExceedsTheLimitDisabled());
     }
     return transactionGasCostEstimate;
-
   }
 };
 

@@ -30,6 +30,7 @@ import OasisVolumeIsGreaterThanUserBalance from "../components/OasisVolumeIsGrea
 // import isNumeric from '../utils/numbers/isNumeric';
 import MaskedTokenAmountInput from "../components/MaskedTokenAmountInput";
 import platform from "../store/selectors/platform";
+import isNumericAndGreaterThanZero from "../utils/numbers/isNumericAndGreaterThanZero";
 
 const propTypes = PropTypes && {
   // activeOfferMakeOfferData: ImmutablePropTypes.map.isRequired,
@@ -95,7 +96,13 @@ export class OfferMakeForm extends React.Component {
     if (false === this.state.showMaxButton) {
       return null;
     }
-    const { currentFormValues = {}, disableForm, globalFormLock } = this.props;
+    const {
+      currentFormValues = {},
+      disableForm,
+      globalFormLock,
+      activeBaseTokenBalance,
+      activeQuoteTokenBalance
+    } = this.props;
     switch (this.props.offerMakeType) {
       case MAKE_BUY_OFFER:
         return (
@@ -104,7 +111,8 @@ export class OfferMakeForm extends React.Component {
             disabled={
               greaterThanZeroValidator(currentFormValues.price) ||
               disableForm ||
-              globalFormLock
+              globalFormLock ||
+              !isNumericAndGreaterThanZero(activeQuoteTokenBalance)
             }
             type="button"
             color="success"
@@ -121,7 +129,8 @@ export class OfferMakeForm extends React.Component {
             disabled={
               greaterThanZeroValidator(currentFormValues.price) ||
               disableForm ||
-              globalFormLock
+              globalFormLock ||
+              !isNumericAndGreaterThanZero(activeBaseTokenBalance)
             }
             type="button"
             color="danger"
@@ -136,11 +145,13 @@ export class OfferMakeForm extends React.Component {
   }
 
   onTotalFieldSectionFocus() {
-    this.setState({ showMaxButton: true });
+    if (!this.componentUnmounted) {
+      this.setState({ showMaxButton: true });
+    }
   }
 
   onTotalFieldSectionBlur() {
-    if (!this.isUnmounted) {
+    if (!this.componentIsUnmounted) {
       setTimeout(
         () => this.setState({ showMaxButton: false }),
         SETMAXBTN_HIDE_DELAY_MS
@@ -216,7 +227,9 @@ export class OfferMakeForm extends React.Component {
 
   onFormChange() {
     const { onFormChange } = this.props;
-    onFormChange && onFormChange();
+    if(!this.componentUnmounted) {
+      onFormChange && onFormChange();
+    }
   }
 
   render() {
@@ -233,12 +246,16 @@ export class OfferMakeForm extends React.Component {
           <tbody>
             <tr>
               <th>Price</th>
-              <td className={tableStyles.withInput}>{this.renderPriceField()}</td>
+              <td className={tableStyles.withInput}>
+                {this.renderPriceField()}
+              </td>
               <td className={tableStyles.currency}> {quoteToken}</td>
             </tr>
             <tr>
               <th>Amount</th>
-              <td className={tableStyles.withInput}>{this.renderAmountField()}</td>
+              <td className={tableStyles.withInput}>
+                {this.renderAmountField()}
+              </td>
               <td className={tableStyles.currency}>
                 {baseToken}
                 <div>
@@ -279,7 +296,7 @@ export class OfferMakeForm extends React.Component {
   }
 
   componentWillUnmount() {
-    this.isUnmounted = true;
+    this.componentIsUnmounted = true;
   }
 }
 
@@ -315,5 +332,7 @@ export function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  reduxForm({})(CSSModules(OfferMakeForm, { styles, tableStyles }, { allowMultiple: true }))
+  reduxForm({})(
+    CSSModules(OfferMakeForm, { styles, tableStyles }, { allowMultiple: true })
+  )
 );

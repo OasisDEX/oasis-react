@@ -27,6 +27,7 @@ import CSSModules from "react-css-modules";
 import MaskedTokenAmountInput from "./MaskedTokenAmountInput";
 import { SETMAXBTN_HIDE_DELAY_MS } from "../constants";
 import platform from "../store/selectors/platform";
+import isNumericAndGreaterThanZero from "../utils/numbers/isNumericAndGreaterThanZero";
 
 const fieldStyle = { textAlign: "right" };
 
@@ -73,20 +74,17 @@ export class OfferTakeForm extends PureComponent {
   }
 
   onVolumeFieldChange(event, newValue) {
-    console.log("onVolumeFieldChange", newValue);
     const { volumeFieldValueChanged } = this.props.actions;
-    // if (newValue.toString() !== previousValue.toString()) {
-    setTimeout(() => volumeFieldValueChanged(newValue), 0);
-    // }
+    if (!this.componentUnmounted) {
+      setTimeout(() => volumeFieldValueChanged(newValue), 0);
+    }
   }
 
   onTotalFieldChange(event, newValue) {
-    // console.log("onTotalFieldChange", newValue, previousValue);
-    console.log("onTotalFieldChange", newValue);
     const { totalFieldValueChanged } = this.props.actions;
-    // if (newValue.toString() !== previousValue.toString()) {
-    setTimeout(() => totalFieldValueChanged(newValue), 0);
-    // }
+    if (!this.componentUnmounted) {
+      setTimeout(() => totalFieldValueChanged(newValue), 0);
+    }
   }
 
   setMaxButton() {
@@ -94,7 +92,12 @@ export class OfferTakeForm extends PureComponent {
       return null;
     }
     if (web3.toBigNumber(this.props.activeBaseTokenBalance).gt(0)) {
-      const { disableForm, globalFormLock } = this.props;
+      const {
+        disableForm,
+        globalFormLock,
+        activeBaseTokenBalance,
+        activeQuoteTokenBalance
+      } = this.props;
       switch (this.props.offerTakeType) {
         case TAKE_BUY_OFFER:
           return (
@@ -104,7 +107,11 @@ export class OfferTakeForm extends PureComponent {
               color="success"
               size="xs"
               onClick={this.onSetSellMax}
-              disabled={disableForm}
+              disabled={
+                disableForm ||
+                globalFormLock ||
+                !isNumericAndGreaterThanZero(activeBaseTokenBalance)
+              }
             >
               Sell max
             </OasisButton>
@@ -117,7 +124,11 @@ export class OfferTakeForm extends PureComponent {
               color="danger"
               size="xs"
               onClick={this.onSetBuyMax}
-              disabled={disableForm || globalFormLock}
+              disabled={
+                disableForm ||
+                globalFormLock ||
+                !isNumericAndGreaterThanZero(activeQuoteTokenBalance)
+              }
             >
               Buy max
             </OasisButton>
@@ -256,14 +267,22 @@ export class OfferTakeForm extends PureComponent {
   }
 
   onTotalFieldSectionFocus() {
-    this.setState({ showMaxButton: true });
+    if (!this.componentUnmounted) {
+      this.setState({ showMaxButton: true });
+    }
   }
 
   onTotalFieldSectionBlur() {
-    setTimeout(
-      () => this.setState({ showMaxButton: false }),
-      SETMAXBTN_HIDE_DELAY_MS
-    );
+    if (!this.componentUnmounted) {
+      setTimeout(
+        () => this.setState({ showMaxButton: false }),
+        SETMAXBTN_HIDE_DELAY_MS
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    this.componentUnmounted = true;
   }
 }
 
@@ -279,6 +298,7 @@ export function mapStateToProps(state) {
     offerTakeType: offerTakes.activeOfferTakeType(state),
     activeTradingPairPrecision: tokens.precision(state),
     activeBaseTokenBalance: balances.activeBaseTokenBalance(state),
+    activeQuoteTokenBalance: balances.activeQuoteTokenBalance(state),
     globalFormLock: platform.globalFormLock(state)
   };
 }

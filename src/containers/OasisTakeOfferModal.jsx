@@ -237,10 +237,12 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
   }
 
   onFormChange() {
-    this.setState({
-      txStatus: undefined,
-      txStartTimestamp: undefined
-    });
+    if (!this.componentUnmounted) {
+      this.setState({
+        txStatus: undefined,
+        txStartTimestamp: undefined
+      });
+    }
   }
 
   render() {
@@ -332,6 +334,10 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     if (prevBlockNumber !== currentBlockNumber) {
       this.props.actions.checkIfOfferIsActive();
     }
+  }
+
+  componentWillUnmount() {
+    this.componentUnmounted = true;
   }
 }
 
