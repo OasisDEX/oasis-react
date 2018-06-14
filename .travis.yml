@@ -37,3 +37,10 @@ deploy:
     project: ./build/
     domain: oasisdex-staging.surge.sh
     skip_cleanup: true
+  - on: mk/gp-test
+    provider: pages
+    target-branch: gh-pages
+    local-dir: build/
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN  # Set in travis-ci.org dashboard, marked secure
+    keep-history: true
