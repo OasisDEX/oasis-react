@@ -17,16 +17,14 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 
-#script:
-#  - yarn test --coverage
+script:
+  - yarn test --coverage
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 before_deploy:
   - export PROD_BRANCH="mk/gp-test"
-  - echo $PROD_BRANCH
-  - echo $TRAVIS_BRANCH
   # for testing
   - if [ $TRAVIS_BRANCH == $PROD_BRANCH ] && [ $TRAVIS_BRANCH != "master" ]; then export PUBLIC_URL="https://oasisdex.github.io/oasis-react"; fi
   - yarn build
