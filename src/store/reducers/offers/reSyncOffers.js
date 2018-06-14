@@ -35,7 +35,6 @@ export const reSyncOffersEpic = tradingPair => async (dispatch, getState) => {
         logUpdateList.forEach(({ args: { id } }) =>
           dispatch(syncOffer(id.toString()))
         );
-        console.log(logUpdateList);
       });
   } catch (e) {
     dispatch(reSyncOffers.rejected(e));
