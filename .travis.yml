@@ -26,7 +26,7 @@ after_script:
 before_deploy:
   - export PROD_BRANCH="mk/gp-tests"
   # for testing
-  - if [ $TRAVIS_BRANCH = $PROD_BRANCH ] && [ $TRAVIS_BRANCH != "master" ]; then export PUBLIC_URL="https://oasisdex.github.io/oasis-react"; fi
+  - if [ $TRAVIS_BRANCH == $PROD_BRANCH ] && [ $TRAVIS_BRANCH != "master" ]; then export PUBLIC_URL="https://oasisdex.github.io/oasis-react"; fi
   - yarn build
   # to make gp work with client side routing
   - if [ $TRAVIS_BRANCH = $PROD_BRANCH ]; then cp build/200.html build/404.html ; fi
