@@ -24,7 +24,7 @@ after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 before_deploy:
-  - export PUBLIC_URL="https://oasisdex.github.io/oasis-react"
+  - if [ $TRAVIS_BRANCH = 'mk/gp-test' ]; export PUBLIC_URL="https://oasisdex.github.io/oasis-react"; fi
   - echo $PUBLIC_URL
   - yarn build
 
@@ -44,5 +44,5 @@ deploy:
     target-branch: gh-pages
     local-dir: build/
     skip-cleanup: true
-    github-token: $GITHUB_TOKEN  # Set in travis-ci.org dashboard, marked secure
+    github-token: $GITHUB_TOKEN
     keep-history: true
