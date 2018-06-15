@@ -66,7 +66,6 @@ exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
       alignContent="stretch"
       alignItems="center"
       className=""
-      hidden={false}
       justifyContent="normal"
       vertical={false}
       wrap={false}

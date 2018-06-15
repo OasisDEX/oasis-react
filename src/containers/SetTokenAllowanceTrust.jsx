@@ -116,7 +116,8 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
     const { subjectTrustStatus } = this.props;
     this.setState({ disableActionDispatchButton: false });
     this.setState({
-      txStatus: TX_STATUS_CONFIRMED
+      txStatus: TX_STATUS_CONFIRMED,
+      collapseAccordion: true
     });
 
     if (subjectTrustStatus === TOKEN_ALLOWANCE_TRUST_STATUS_ENABLED) {
@@ -292,7 +293,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
 
   renderAccordionContent() {
     return (
-      <FlexBox alignItems="center" hidden={this.isAllowanceEnabled()}>
+      <FlexBox alignItems="center">
         <OasisIcon icon="idle" />
         <div className={styles.accordingText}>
           You need first grant access to withdraw from your personal account. To
