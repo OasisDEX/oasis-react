@@ -4,10 +4,10 @@ import React from 'react';
 import { fromJS } from 'immutable';
 
 import {
-  OasisWrapUnwrapUnwrapWrapper,
+  OasisWrapUnwrapUnwrapEther,
   mapStateToProps,
   mapDispatchToProps
-} from './OasisWrapUnwrapUnwrap';
+} from './OasisWrapUnwrapUnwrapEther';
 import { shallow } from 'enzyme';
 
 describe('(Container) OasisWrapUnwrapUnwrap', () => {
@@ -16,7 +16,8 @@ describe('(Container) OasisWrapUnwrapUnwrap', () => {
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,
-    ...initialProps
+    ...initialProps,
+    hidden: false
   };
 
   it('will receive right props', () => {
@@ -30,7 +31,7 @@ describe('(Container) OasisWrapUnwrapUnwrap', () => {
 
   it('should render', () => {
     const wrapper = shallow(
-      <OasisWrapUnwrapUnwrapWrapper {...props}/>
+      <OasisWrapUnwrapUnwrapEther {...props}/>
     );
     expect(wrapper).toMatchSnapshot();
   });

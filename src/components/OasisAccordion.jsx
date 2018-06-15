@@ -11,12 +11,13 @@ import InfoBox from "./InfoBox";
 const propTypes = PropTypes && {
   heading: PropTypes.node.isRequired,
   children: PropTypes.node,
-  isOpen: PropTypes.bool
+  isOpen: PropTypes.bool,
+  disabled: PropTypes.bool
 };
 const defaultProps = {
-  infoBoxSize: 'md',
-  className: '',
-  children: (<div/>)
+  infoBoxSize: "md",
+  className: "",
+  children: <div />
 };
 
 class OasisAccordion extends PureComponent {
@@ -38,16 +39,29 @@ class OasisAccordion extends PureComponent {
     );
   }
 
-
   render() {
-    const { infoBoxSize, heading, children, className, ...props } = this.props;
-    let childrenDiv = <div
-        className={`${styles.content} ${styles[infoBoxSize]}`}>
-      {children}</div>;
+    const {
+      disabled,
+      infoBoxSize,
+      heading,
+      children,
+      className,
+      ...props
+    } = this.props;
+    let childrenDiv = (
+      <div className={`${styles.content} ${styles[infoBoxSize]}`}>
+        {children}
+      </div>
+    );
     return (
-      <InfoBox className={`${styles.accordion} ${className ? className : ''}`} vertical={true} size={infoBoxSize} {...props}>
+      <InfoBox
+        className={`${styles.accordion} ${className ? className : ""}`}
+        vertical={true}
+        size={infoBoxSize}
+        {...props}
+      >
         <FlexBox justifyContent="normal" alignItems="baseline">
-          {this.toggleSection()}
+          {!disabled ? this.toggleSection() : null}
           {heading}
         </FlexBox>
         {this.state.isOpen && children && childrenDiv}
@@ -56,6 +70,9 @@ class OasisAccordion extends PureComponent {
   }
 
   UNSAFE_componentWillUpdate(nextProps) {
+    if (nextProps.disabled) {
+      this.setState({ isOpen: false });
+    }
     if (this.props.isOpen !== nextProps.isOpen) {
       this.setState({ isOpen: nextProps.isOpen });
     }

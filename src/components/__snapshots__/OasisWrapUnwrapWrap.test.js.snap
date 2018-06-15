@@ -4,6 +4,7 @@ exports[`(Component) OasisWrapUnwrapWrap should render 1`] = `
 <OasisWidgetFrame
   className=""
   heading="Wrap"
+  hidden={false}
   spaceForContent={true}
 >
   <OasisTokenBalance

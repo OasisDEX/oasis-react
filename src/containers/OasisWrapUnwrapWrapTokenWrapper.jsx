@@ -5,14 +5,17 @@ import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import wrapUnwrap from "../store/selectors/wrapUnwrap";
-import OasisWrapUnwrapWrap from "../components/OasisWrapUnwrapWrap";
-import wrapUnwrapReducer, { WRAP_TOKEN_WRAPPER_NEXT_TRANSACTION_DELAY_MS } from '../store/reducers/wrapUnwrap';
+import OasisWrapUnwrapWrapTokenWrapper from "../components/OasisWrapUnwrapWrap";
+import wrapUnwrapReducer, {
+  WRAP_TOKEN_WRAPPER_NEXT_TRANSACTION_DELAY_MS
+} from "../store/reducers/wrapUnwrap";
 import {
   TX_STATUS_AWAITING_CONFIRMATION,
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
   TX_STATUS_CANCELLED_BY_USER,
   TX_STATUS_CONFIRMED,
-  TX_STATUS_REJECTED
+  TX_STATUS_REJECTED,
+  TX_WRAP_TOKEN_WRAPPER
 } from "../store/reducers/transactions";
 import accounts from "../store/selectors/accounts";
 
@@ -20,7 +23,7 @@ const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
 };
 
-export class OasisWrapUnwrapWrapWrapper extends PureComponent {
+export class OasisWrapUnwrapWrapTokenWrapperWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
@@ -80,7 +83,7 @@ export class OasisWrapUnwrapWrapWrapper extends PureComponent {
         this.setState({
           txStatus: undefined,
           txStartTimestamp: undefined
-        })
+        });
       }, WRAP_TOKEN_WRAPPER_NEXT_TRANSACTION_DELAY_MS - 1);
     } else {
       this.hasNextTransaction = false;
@@ -109,10 +112,13 @@ export class OasisWrapUnwrapWrapWrapper extends PureComponent {
   }
 
   render() {
-    const { activeUnwrappedToken, activeUnwrappedTokenBalance } = this.props;
+    const { hidden, activeUnwrappedToken, activeUnwrappedTokenBalance } = this.props;
     const { txStatus, txStartTimestamp, txStartMeta, disableForm } = this.state;
     return (
-      <OasisWrapUnwrapWrap
+      <OasisWrapUnwrapWrapTokenWrapper
+        hidden={hidden}
+        txType={TX_WRAP_TOKEN_WRAPPER}
+        form={"wrapTokenWrapper"}
         transactionState={{ txStatus, txStartTimestamp, txStartMeta }}
         onSubmit={this.makeWrap}
         onFormChange={this.onFormChange}
@@ -123,15 +129,15 @@ export class OasisWrapUnwrapWrapWrapper extends PureComponent {
     );
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.activeUnwrappedToken && this.props.activeUnwrappedToken !== prevProps.activeUnwrappedToken){
-      this.props.actions.resetActiveWrapForm();
-      if (![TX_STATUS_AWAITING_CONFIRMATION].includes(this.state.txStatus))
-      this.setState({
-        txStatus: undefined,
-        txStartTimestamp: undefined
-      })
-    }
+  componentDidUpdate() {
+    // if (this.props.activeUnwrappedToken && this.props.activeUnwrappedToken !== prevProps.activeUnwrappedToken){
+    //   this.props.actions.resetActiveWrapForm();
+    //   if (![TX_STATUS_AWAITING_CONFIRMATION].includes(this.state.txStatus))
+    //   this.setState({
+    //     txStatus: undefined,
+    //     txStartTimestamp: undefined
+    //   })
+    // }
   }
 }
 
@@ -150,8 +156,9 @@ export function mapDispatchToProps(dispatch) {
   return { actions: bindActionCreators(actions, dispatch) };
 }
 
-OasisWrapUnwrapWrapWrapper.propTypes = propTypes;
-OasisWrapUnwrapWrapWrapper.displayName = "OasisWrapUnwrapWrap";
+OasisWrapUnwrapWrapTokenWrapperWrapper.propTypes = propTypes;
+OasisWrapUnwrapWrapTokenWrapperWrapper.displayName =
+  "OasisWrapUnwrapWrapTokenWrapper";
 export default connect(mapStateToProps, mapDispatchToProps)(
-  OasisWrapUnwrapWrapWrapper
+  OasisWrapUnwrapWrapTokenWrapperWrapper
 );

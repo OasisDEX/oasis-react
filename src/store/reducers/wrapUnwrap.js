@@ -15,7 +15,12 @@ import wrapUnwrap from "../selectors/wrapUnwrap";
 import accounts from "../selectors/accounts";
 import { fulfilled } from "../../utils/store";
 import web3 from "../../bootstrap/web3";
-import { TX_UNWRAP, TX_WRAP } from "./transactions";
+import {
+  TX_UNWRAP_ETHER,
+  TX_UNWRAP_TOKEN_WRAPPER,
+  TX_WRAP_ETHER,
+  TX_WRAP_TOKEN_WRAPPER
+} from "./transactions";
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import balances from "../selectors/balances";
 import { handleTransaction } from "../../utils/transactions/handleTransaction";
@@ -49,12 +54,12 @@ const initialState = fromJS({
   activeTokenUnwrapStatus: null
 });
 
-const WRAP_ETHER = "WRAP_UNWRAP/WRAP_ETHER";
-const UNWRAP_ETHER = "WRAP_UNWRAP/UNWRAP_ETHER";
+export const WRAP_ETHER = "WRAP_UNWRAP/WRAP_ETHER";
+export const UNWRAP_ETHER = "WRAP_UNWRAP/UNWRAP_ETHER";
 export const WRAP_TOKEN_WRAPPER_NEXT_TRANSACTION_DELAY_MS = 3000;
 
-const WRAP_GNT_TOKEN = "WRAP_UNWRAP/WRAP_GNT_TOKEN";
-const UNWRAP_GNT_TOKEN = "WRAP_UNWRAP/UNWRAP_GNT_TOKEN";
+export const WRAP_GNT_TOKEN = "WRAP_UNWRAP/WRAP_GNT_TOKEN";
+export const UNWRAP_GNT_TOKEN = "WRAP_UNWRAP/UNWRAP_GNT_TOKEN";
 
 export const TOKEN_WRAP_STATUS_AWAITING_TRANSFER_TO_BROKER_APPROVAL =
   "TOKEN_WRAP_STATUS_AWAITING_TRANSFER_TO_BROKER_APPROVAL";
@@ -74,15 +79,19 @@ export const TOKEN_UNWRAP_STATUS_UNWRAP_PENDING =
 export const TOKEN_UNWRAP_STATUS_UNWRAP_COMPLETE =
   "TOKEN_UNWRAP_STATUS_UNWRAP_COMPLETE";
 
-const getWrapAmount = rootState =>
+const getWrapAmount = (rootState, wrapType) =>
   web3.toWei(
-    formValueSelector("wrapToken")(rootState, "amount"),
+    formValueSelector(
+      wrapType === WRAP_ETHER ? "wrapEther" : "wrapTokenWrapper"
+    )(rootState, "amount"),
     ETH_UNIT_ETHER
   );
 
-const getUnwrapAmount = rootState =>
+const getUnwrapAmount = (rootState, unwrapToken) =>
   web3.toWei(
-    formValueSelector("unwrapToken")(rootState, "amount"),
+    formValueSelector(
+      unwrapToken === UNWRAP_ETHER ? "unwrapEther" : "unwrapTokenWrapper"
+    )(rootState, "amount"),
     ETH_UNIT_ETHER
   );
 
@@ -115,7 +124,7 @@ const loadGNTBrokerAddressEpic = () => async (dispatch, getState) =>
 
 const createGNTDepositBroker = createAction(
   "WRAP_UNWRAP/CREATE_DEPOSIT_BROKER",
-  ({ gasLimit = DEFAULT_GAS_LIMIT, gasPrice = DEFAULT_GAS_PRICE }) =>
+  ({ gasLimit = DEFAULT_GAS_LIMIT, gasPrice = DEFAULT_GAS_PRICE } = {}) =>
     getTokenContractInstance(TOKEN_WRAPPED_GNT).createBroker({
       gas: gasLimit,
       gasPrice
@@ -138,7 +147,7 @@ const createDepositBrokerEpic = (
           dispatch,
           callsNext: true,
           transactionDispatcher: () => dispatch(doCreateGNTDepositBroker()),
-          transactionType: TX_WRAP,
+          transactionType: TX_WRAP_TOKEN_WRAPPER,
           txMeta: {
             txSubType: WRAP_UNWRAP_CREATE_DEPOSIT_BROKER
           },
@@ -158,9 +167,11 @@ const wrapEther = createAction(
     gasLimit = DEFAULT_GAS_LIMIT,
     gasPrice = DEFAULT_GAS_PRICE
   }) =>
-    getTokenContractInstance(TOKEN_WRAPPED_ETH).deposit(
-      { value: amountInWei, gas: gasLimit, gasPrice }
-    )
+    getTokenContractInstance(TOKEN_WRAPPED_ETH).deposit({
+      value: amountInWei,
+      gas: gasLimit,
+      gasPrice
+    })
 );
 
 const wrapEther$ = createPromiseActions("WRAP_UNWRAP/WRAP_ETHER");
@@ -169,13 +180,13 @@ const wrapETHTokenEpic = (
   { doWrapEther = wrapEther, doAddTransactionEpic = null } = {}
 ) => (dispatch, getState) => {
   dispatch(wrapEther$.pending());
-  const wrapAmount = getWrapAmount(getState());
+  const wrapAmount = getWrapAmount(getState(), WRAP_ETHER);
   return handleTransaction(
     {
       dispatch,
       transactionDispatcher: () =>
         dispatch(doWrapEther({ amountInWei: wrapAmount })),
-      transactionType: TX_WRAP,
+      transactionType: TX_WRAP_ETHER,
       withCallbacks
     },
     doAddTransactionEpic ? { addTransactionEpic: doAddTransactionEpic } : {}
@@ -204,8 +215,8 @@ const unwrapEtherEpic = (
     {
       dispatch,
       transactionDispatcher: () =>
-        dispatch(doUnwrapEther(getUnwrapAmount(getState()))),
-      transactionType: TX_UNWRAP,
+        dispatch(doUnwrapEther(getUnwrapAmount(getState(), UNWRAP_ETHER))),
+      transactionType: TX_UNWRAP_ETHER,
       withCallbacks
     },
     doAddTransactionEpic ? { addTransactionEpic: doAddTransactionEpic } : {}
@@ -242,7 +253,7 @@ const wrapGNTToken = (
       callsNext: true,
       transactionDispatcher: () =>
         dispatch(doWrapGNTTokenAction({ brokerAddress, amountInWei })),
-      transactionType: TX_WRAP,
+      transactionType: TX_WRAP_TOKEN_WRAPPER,
       withCallbacks,
       txMeta: {
         txSubType: "wrapGNT"
@@ -273,7 +284,7 @@ const wrapGNTTokenEpic = (
     getState(),
     TOKEN_GOLEM
   );
-  const wrapAmount = getWrapAmount(getState());
+  const wrapAmount = getWrapAmount(getState(), WRAP_GNT_TOKEN);
   if (!wrapUnwrap.isTokenBrokerInitiallyLoaded(getState(), TOKEN_GOLEM)) {
     await dispatch(loadGNTBrokerAddressEpic());
   }
@@ -313,7 +324,7 @@ const wrapGNTTokenEpic = (
                   doClearDepositBrokerEpic(TOKEN_GOLEM, withCallbacks)
                 );
                 dispatch(wrapGNTToken$.fulfilled());
-                dispatch(resetActiveWrapForm());
+                dispatch(resetActiveWrapForm(TX_WRAP_TOKEN_WRAPPER));
               },
               Object.assign(
                 {},
@@ -357,7 +368,10 @@ const loadDepositBrokerContractEpic = (tokenName = TOKEN_GOLEM) => (
 
 const clearDepositBroker = createAction(
   "WRAP_UNWRAP/CLEAR_DEPOSIT_BROKER",
-  (tokenName, { gasPrice = DEFAULT_GAS_PRICE, gasLimit = DEFAULT_GAS_LIMIT }) =>
+  (
+    tokenName,
+    { gasPrice = DEFAULT_GAS_PRICE, gasLimit = DEFAULT_GAS_LIMIT } = {}
+  ) =>
     getDepositBrokerContractInstance(tokenName).clear({
       gas: gasLimit,
       gasPrice
@@ -368,7 +382,7 @@ const clearDepositBrokerEpic = (tokenName, withCallbacks) => dispatch => {
   return handleTransaction({
     dispatch,
     transactionDispatcher: () => dispatch(clearDepositBroker(tokenName)),
-    transactionType: TX_WRAP,
+    transactionType: TX_WRAP_TOKEN_WRAPPER,
     txMeta: {
       txSubType: WRAP_UNWRAP_CLEAR_DEPOSIT_BROKER,
       tokenName
@@ -401,9 +415,11 @@ const unwrapGNTTokenEpic = (
       dispatch,
       transactionDispatcher: () =>
         dispatch(
-          doUnwrapGNTToken({ amountInWei: getUnwrapAmount(getState()) })
+          doUnwrapGNTToken({
+            amountInWei: getUnwrapAmount(getState(), UNWRAP_GNT_TOKEN)
+          })
         ),
-      transactionType: TX_UNWRAP,
+      transactionType: TX_UNWRAP_TOKEN_WRAPPER,
       withCallbacks
     },
     doAddTransactionEpic ? { addTransactionEpic: doAddTransactionEpic } : {}
@@ -447,7 +463,13 @@ const setWrapMax = () => (dispatch, getState) => {
       ? web3.fromWei(balances.ethBalance(getState()))
       : balances.tokenBalance(getState(), { tokenName: activeUnwrappedToken });
   if (maxWrapValueInEther) {
-    dispatch(change("wrapToken", "amount", maxWrapValueInEther.toString()));
+    dispatch(
+      change(
+        activeUnwrappedToken === TOKEN_ETHER ? "wrapEther" : "wrapTokenWrapper",
+        "amount",
+        maxWrapValueInEther.toString()
+      )
+    );
   }
 };
 
@@ -458,11 +480,20 @@ const setUnwrapMax = () => (dispatch, getState) => {
       ? web3.fromWei(balances.ethBalance(getState()))
       : balances.tokenBalance(getState(), { tokenName: activeWrappedToken });
   if (maxUnwrapValueInEther) {
-    dispatch(change("unwrapToken", "amount", maxUnwrapValueInEther.toString()));
+    dispatch(
+      change(
+        activeWrappedToken === TOKEN_WRAPPED_ETH
+          ? "unwrapEther"
+          : "unwrapTokenWrapper",
+        "amount",
+        maxUnwrapValueInEther.toString()
+      )
+    );
   }
 };
 
-const resetActiveWrapForm = () => reset("wrapToken");
+const resetActiveWrapForm = wrapType =>
+  reset(wrapType === WRAP_ETHER ? "wrapEther" : "wrapTokenWrapper");
 
 const setActiveUnwrapStatus = createAction(
   "WRAP_UNWRAP/SET_UNWRAP_STATUS",
@@ -476,7 +507,8 @@ const setActiveWrapStatus = createAction(
 );
 const resetActiveWrapStatus = createAction("WRAP_UNWRAP/SET_WRAP_STATUS");
 
-const resetActiveUnwrapForm = () => reset("unwrapToken");
+const resetActiveUnwrapForm = unwrapType =>
+  reset(unwrapType === UNWRAP_ETHER ? "unwrapEther" : "unwrapTokenWrapper");
 
 const actions = {
   loadGNTBrokerAddressEpic,
