@@ -34,7 +34,7 @@ exports[`(Component) OasisChartVolume should render 1`] = `
       ],
     }
   }
-  height="180px"
+  height={180}
   options={
     Object {
       "layout": Object {
