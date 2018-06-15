@@ -67,6 +67,7 @@ class TransactionStatus extends PureComponent {
         );
 
       case TX_STATUS_REJECTED:
+        console.log("TX_STATUS_REJECTED", styles.transactionFailedHash, styles);
         return (
           <FlexBox alignItems="baseline">
             <StatusPictogram
@@ -74,7 +75,7 @@ class TransactionStatus extends PureComponent {
               className={styles.imgLeft}
             />
             Your transaction
-            <span style={styles.transactionFailedHash}>
+            <span className={styles.transactionFailedHash}>
               <EtherscanLinkWrapper
                 className={styles.spaceBoth}
                 type={ETHERSCAN_LINK_TYPE_TRANSACTION}
