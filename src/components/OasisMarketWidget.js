@@ -74,7 +74,10 @@ class OasisMarketWidget extends PureComponent {
     this.transformRow = this.transformRow.bind(this);
     this.onTableRowClick = this.onTableRowClick.bind(this);
     this.now = Date.now() / 1000;
-    this.weekAgo = moment(Date.now()).startOf('day').subtract(6, 'days').unix()
+    this.weekAgo = moment(Date.now())
+      .startOf("day")
+      .subtract(6, "days")
+      .unix();
   }
 
   transformRow(row) {
@@ -87,15 +90,17 @@ class OasisMarketWidget extends PureComponent {
       </span>
     );
     if (marketData) {
+      const weeklyTradingPairTrades = trades(
+        marketData,
+        baseToken,
+        quoteToken
+      ).filter(marketHistoryEntry => {
+        const { timestamp } = marketHistoryEntry;
 
-      const weeklyTradingPairTrades = trades(marketData, baseToken, quoteToken)
-        .filter((marketHistoryEntry) => {
-          const {timestamp} = marketHistoryEntry;
-
-          if(timestamp > this.weekAgo) {
-            return marketHistoryEntry;
-          }
-        });
+        if (timestamp > this.weekAgo) {
+          return marketHistoryEntry;
+        }
+      });
 
       const tradingPairVolume = volume(
         weeklyTradingPairTrades,
@@ -137,7 +142,14 @@ class OasisMarketWidget extends PureComponent {
 
   render() {
     const { tradedTokens, defaultPeriod } = this.props;
-    const daiButton = <OasisLinkLikeButton href="https://dai.makerdao.com/" caption="CREATE DAI" target="_blank" className={styles.createDaiBtn}/>
+    const daiButton = (
+      <OasisLinkLikeButton
+        href="https://dai.makerdao.com/"
+        caption="CREATE DAI"
+        target="_blank"
+        className={styles.createDaiBtn}
+      />
+    );
     return (
       <OasisWidgetFrame heading="MARKETS" headingChildren={daiButton}>
         <OasisTable
