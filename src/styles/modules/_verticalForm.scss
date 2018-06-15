@@ -1,4 +1,5 @@
 @import "./constants";
+@import "./typography";
 
 @mixin verticalFormTable {
   border-collapse: separate !important;
@@ -11,13 +12,13 @@
     width: 80px;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
-    opacity: 0.68;
     font-size: 13px;
     background-color: $table-header-bg;
     padding: 10px;
     text-align: center;
     border-top: 1px $table-border solid;
     border-left: 1px $table-border solid;
+    color: #818181;
 
     text-transform: uppercase;
   }
@@ -46,15 +47,16 @@
     width: calc(100% - 2px);
     margin-left: 1px;
     margin-right: 1px;
-    font-family: 'Roboto', sans-serif;
-    font-size: 19px;
-    font-weight: 500;
-    color: #68686C;
+    @include mainInput;
+    //font-family: 'Roboto', sans-serif;
+    //font-size: 19px;
+    //font-weight: 500;
+    //color: #68686C;
     border: none;
-    text-align: right;
-    padding-right: 10px;
+    //text-align: right;
+    //padding-right: 10px;
     max-width: 100%;
-    background: none;
+    //background: none;
 
     &::placeholder {
       color: rgba(104,104,108,0.4);

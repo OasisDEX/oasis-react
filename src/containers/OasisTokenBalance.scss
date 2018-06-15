@@ -6,21 +6,12 @@
 }
 
 .available-amount {
-  font-family: Roboto, sans-serif;
-  font-size: 19px;
-  text-align: right;
+  @include mainInput;
   display: inline-block;
-  padding-right: 10px;
 }
 
 .available-currency {
   @include currency;
-  box-sizing: content-box;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-align: left;
-  //padding-left: 13px;
   display: inline-block;
 }
 

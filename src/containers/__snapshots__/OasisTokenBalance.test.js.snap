@@ -5,9 +5,7 @@ exports[`(Container) OasisTokenBalance should render 1`] = `
   <span>
     0.000
   </span>
-  <span>
-    <b />
-  </span>
+  <span />
 </div>
 `;
 

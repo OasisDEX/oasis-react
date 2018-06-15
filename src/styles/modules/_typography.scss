@@ -30,18 +30,31 @@
   color: $danger-text;
 }
 
+
+// input and amount data
+@mixin mainInput {
+  background: none;
+  border: none;
+  color: #68686C;
+  font-family: 'Roboto', sans-serif;
+  font-size: 19px;
+  font-weight: 500;
+  padding-right: 10px;
+  text-align: right;
+}
+
 @mixin currency {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 700;
-  font-size: 10px;
+  box-sizing: border-box;
   color: #68686c;
+  font-family: "Montserrat", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
   letter-spacing: 1px;
-  vertical-align: middle;
-  text-align: left;
   padding: $table-padding-vertical $table-padding-horizontal;
-  //padding-left: 10px;
+  text-align: left;
   text-transform: uppercase;
-  width: 43px;
+  width: 70px;
+  vertical-align: middle;
 }
 
 @mixin ellipsis($max-width: auto) {
