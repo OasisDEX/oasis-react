@@ -27,6 +27,7 @@ export class OasisChartVolume extends PureComponent {
   render() {
     return (
       <Line
+        height={'180px'}
         data={{
           labels: this.props.volumeChartLabels,
           datasets: [{
