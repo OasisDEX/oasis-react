@@ -12,19 +12,23 @@ import {
 import OasisTokenBalanceSummary from "../containers/OasisTokenBalanceSummary";
 import styles from "./OasisWrapUnwrapUnwrap.scss";
 import CSSModules from "react-css-modules";
+import { TX_UNWRAP_ETHER, TX_UNWRAP_TOKEN_WRAPPER } from '../store/reducers/transactions';
 
 const propTypes = PropTypes && {
   activeWrappedToken: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
   transactionState: PropTypes.object,
   onFormChange: PropTypes.func,
-  disableForm: PropTypes.bool
+  disableForm: PropTypes.bool,
+  hidden: PropTypes.bool.isRequired,
+  txType: PropTypes.oneOf([
+    TX_UNWRAP_ETHER,
+    TX_UNWRAP_TOKEN_WRAPPER
+  ])
 };
 const defaultProps = {};
 
 class OasisWrapUnwrapUnwrap extends PureComponent {
-
-
   shouldDisableForm() {
     const { disableForm } = this.props;
     return disableForm;
@@ -36,17 +40,22 @@ class OasisWrapUnwrapUnwrap extends PureComponent {
   }
 
   onFormChange() {
-     const { onFormChange } = this.props;
-     onFormChange && onFormChange();
+    const { onFormChange } = this.props;
+    onFormChange && onFormChange();
   }
 
   render() {
-    const { activeWrappedToken, onSubmit, transactionState, onFormChange } = this.props;
+    const {
+      activeWrappedToken,
+      txType,
+      form,
+      onSubmit,
+      transactionState,
+      onFormChange,
+      hidden
+    } = this.props;
     return (
-      <OasisWidgetFrame
-        heading={"Unwrap"}
-        spaceForContent={true}
-      >
+      <OasisWidgetFrame hidden={hidden} heading={"Unwrap"} spaceForContent={true}>
         <OasisTokenBalanceSummary summary="Wrapped" className={styles.balance}>
           {
             <OasisTokenBalanceWrapper
@@ -56,6 +65,8 @@ class OasisWrapUnwrapUnwrap extends PureComponent {
           }
         </OasisTokenBalanceSummary>
         <OasisTokenUnwrapFormWrapper
+          form={form}
+          txType={txType}
           transactionState={transactionState}
           onSubmit={onSubmit}
           onFormChange={onFormChange}

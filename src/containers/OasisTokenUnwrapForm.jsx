@@ -13,11 +13,12 @@ import styles from "./OasisTokenUnwrapForm.scss";
 import widgetStyles from "./OasisWidgetFrame.scss";
 import CSSModules from "react-css-modules";
 import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBox";
-import { TX_UNWRAP } from "../store/reducers/transactions";
 import { formatAmount } from "../utils/tokens/pair";
 import MaskedTokenAmountInput from "../components/MaskedTokenAmountInput";
 import platform from "../store/selectors/platform";
 import { SETMAXBTN_HIDE_DELAY_MS } from "../constants";
+import isNumericAndGreaterThanZero from "../utils/numbers/isNumericAndGreaterThanZero";
+import OasisInsufficientAmountOfToken from "../components/OasisInsufficientAmountOfToken";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -69,14 +70,17 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
   }
 
   renderTransactionStatus() {
-    const { transactionState: { txStatus, txStartTimestamp } } = this.props;
+    const {
+      txType,
+      transactionState: { txStatus, txStartTimestamp }
+    } = this.props;
     return (
       <OasisTransactionStatusWrapperInfoBox
         txStatus={txStatus}
         infoText={this.transactionInfoBlock()}
         localStatus={txStatus}
         txTimestamp={txStartTimestamp}
-        txType={TX_UNWRAP}
+        txType={txType}
       />
     );
   }
@@ -89,7 +93,9 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
       activeWrappedToken,
       disabled,
       globalFormLock,
-      onFormChange
+      onFormChange,
+      unwrapTokenAmount,
+      activeWrappedTokenBalance
     } = this.props;
     return (
       <form onChange={onFormChange} onSubmit={handleSubmit}>
@@ -105,9 +111,13 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
                       size="xs"
                       className={tableStyles.inputBtn}
                       onClick={this.setUnwrapMax}
-                      disabled={disabled || globalFormLock}
+                      disabled={
+                        disabled ||
+                        globalFormLock ||
+                        !isNumericAndGreaterThanZero(activeWrappedTokenBalance)
+                      }
                     >
-                      unwrap max
+                      <span style={{ fontSize: "10px" }}>unwrap max</span>
                     </OasisButton>
                   )}
                   <div
@@ -134,10 +144,21 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
           </tbody>
         </table>
         <div>{this.renderTransactionStatus()}</div>
+        <div>
+          {activeWrappedTokenBalance < unwrapTokenAmount && (
+            <OasisInsufficientAmountOfToken tokenName={activeWrappedToken} />
+          )}
+        </div>
         <div className={`${styles.footer} ${widgetStyles.OasisWidgetFooter}`}>
           <OasisButton
             type="submit"
-            disabled={!valid || disabled || globalFormLock || initialized}
+            disabled={
+              !valid ||
+              disabled ||
+              globalFormLock ||
+              initialized ||
+              !isNumericAndGreaterThanZero(unwrapTokenAmount)
+            }
             className={styles.footerBtn}
           >
             Unwrap
@@ -165,13 +186,13 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
   }
 }
 
-export function mapStateToProps(state) {
+export function mapStateToProps(state, { form }) {
   return {
     activeWrappedTokenBalance: wrapUnwrap.activeWrappedTokenBalance(
       state,
       true
     ),
-    unwrapTokenAmount: wrapUnwrap.unwrapTokenAmount(state),
+    unwrapTokenAmount: wrapUnwrap.unwrapTokenAmount(state, form),
     globalFormLock: platform.globalFormLock(state)
   };
 }
@@ -185,9 +206,7 @@ export function mapDispatchToProps(dispatch) {
 OasisTokenUnwrapFormWrapper.propTypes = propTypes;
 OasisTokenUnwrapFormWrapper.displayName = "OasisTokenUnwrapForm";
 export default connect(mapStateToProps, mapDispatchToProps)(
-  reduxForm({
-    form: "unwrapToken"
-  })(
+  reduxForm({})(
     CSSModules(
       OasisTokenUnwrapFormWrapper,
       { tableStyles, styles, widgetStyles },

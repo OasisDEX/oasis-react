@@ -13,7 +13,7 @@ import { TX_STATUS_AWAITING_CONFIRMATION } from '../store/reducers/transactions'
 
 describe('(Container) OasisTokenUnwrapForm', () => {
   const state = fromJS(global.storeMock);
-  const initialProps = mapStateToProps(state);
+  const initialProps = mapStateToProps(state, { form: "unwrapEther" });
   const initialActions = mapDispatchToProps(x => x);
   const props = {
     ...initialActions,
@@ -21,7 +21,7 @@ describe('(Container) OasisTokenUnwrapForm', () => {
     transactionState: {
       txStatus: TX_STATUS_AWAITING_CONFIRMATION,
       txStartTimestamp: 1
-    }
+    },
   };
 
   it('will receive right props', () => {

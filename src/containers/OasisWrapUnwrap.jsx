@@ -1,24 +1,31 @@
-import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { PureComponent } from "react";
+import { PropTypes } from "prop-types";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import OasisWrapUnwrapBalancesWrapper  from './OasisWrapUnwrapBalances';
-import OasisWrapUnwrapHistoryWrapper from './OasisWrapUnwrapHistory';
-import OasisWrapUnwrapUnwrapWrapper from './OasisWrapUnwrapUnwrap';
-import OasisWrapUnwrapWrapWrapper  from './OasisWrapUnwrapWrap';
-import wrapUnwrapReducer from '../store/reducers/wrapUnwrap';
-import { TOKEN_ETHER } from '../constants';
-import platformReducer from '../store/reducers/platform';
-import {FlexBox} from "../components/FlexBox";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import OasisWrapUnwrapBalancesWrapper from "./OasisWrapUnwrapBalances";
+import OasisWrapUnwrapHistoryWrapper from "./OasisWrapUnwrapHistory";
+import OasisWrapUnwrapUnwrapEtherWrapper from "./OasisWrapUnwrapUnwrapEther";
+import OasisWrapUnwrapUnwrapTokenWrapperWrapper from "./OasisWrapUnwrapUnwrapTokenWrapper";
+import OasisWrapUnwrapWrapEtherWrapper from "./OasisWrapUnwrapWrapEther";
+import wrapUnwrapReducer, {
+  UNWRAP_ETHER,
+  UNWRAP_GNT_TOKEN,
+  WRAP_ETHER,
+  WRAP_GNT_TOKEN
+} from "../store/reducers/wrapUnwrap";
+import { TOKEN_ETHER } from "../constants";
+import platformReducer from "../store/reducers/platform";
+import { FlexBox } from "../components/FlexBox";
+import OasisWrapUnwrapWrapTokenWrapperWrapper from "./OasisWrapUnwrapWrapTokenWrapper";
+import wrapUnwrap from "../store/selectors/wrapUnwrap";
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired
 };
 
 export class OasisWrapUnwrapWrapper extends PureComponent {
-
   constructor(props) {
     super(props);
     const { match: { params: { token }, url } } = this.props;
@@ -26,9 +33,14 @@ export class OasisWrapUnwrapWrapper extends PureComponent {
       return this.props.actions.changeRoute(`${url}/${TOKEN_ETHER}`);
     }
     this.props.actions.setActiveWrapUnwrappedToken(token);
-    this.props.actions.resetActiveWrapForm();
-    this.props.actions.resetActiveUnwrapForm();
+
+    this.props.actions.resetActiveWrapForm(WRAP_ETHER);
+    this.props.actions.resetActiveWrapForm(WRAP_GNT_TOKEN);
+
+    this.props.actions.resetActiveUnwrapForm(UNWRAP_ETHER);
+    this.props.actions.resetActiveUnwrapForm(UNWRAP_GNT_TOKEN);
   }
+
   render() {
     const { activeUnwrappedToken } = this.props;
     return (
@@ -36,28 +48,44 @@ export class OasisWrapUnwrapWrapper extends PureComponent {
         <OasisWrapUnwrapBalancesWrapper
           activeUnwrappedToken={activeUnwrappedToken}
         />
-        <OasisWrapUnwrapHistoryWrapper/>
-        <OasisWrapUnwrapWrapWrapper/>
-        <OasisWrapUnwrapUnwrapWrapper/>
+        <OasisWrapUnwrapHistoryWrapper />
+
+        <OasisWrapUnwrapWrapEtherWrapper
+          hidden={activeUnwrappedToken !== TOKEN_ETHER}
+        />
+        <OasisWrapUnwrapUnwrapEtherWrapper
+          hidden={activeUnwrappedToken !== TOKEN_ETHER}
+        />
+        <OasisWrapUnwrapWrapTokenWrapperWrapper
+          hidden={activeUnwrappedToken === TOKEN_ETHER}
+        />
+        <OasisWrapUnwrapUnwrapTokenWrapperWrapper
+          hidden={activeUnwrappedToken === TOKEN_ETHER}
+        />
       </FlexBox>
     );
   }
 }
 
-export function mapStateToProps() {
-  return {};
+export function mapStateToProps(state) {
+  return {
+    activeUnwrappedToken: wrapUnwrap.activeUnwrappedToken(state)
+  };
 }
 
 export function mapDispatchToProps(dispatch) {
   const actions = {
-    setActiveWrapUnwrappedToken: wrapUnwrapReducer.actions.setActiveWrapUnwrappedToken,
+    setActiveWrapUnwrappedToken:
+      wrapUnwrapReducer.actions.setActiveWrapUnwrappedToken,
     changeRoute: platformReducer.actions.changeRouteEpic,
     resetActiveWrapForm: wrapUnwrapReducer.actions.resetActiveWrapForm,
-    resetActiveUnwrapForm: wrapUnwrapReducer.actions.resetActiveUnwrapForm,
+    resetActiveUnwrapForm: wrapUnwrapReducer.actions.resetActiveUnwrapForm
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }
 
 OasisWrapUnwrapWrapper.propTypes = propTypes;
-OasisWrapUnwrapWrapper.displayName = 'OasisWrapUnwrap';
-export default connect(mapStateToProps, mapDispatchToProps)(OasisWrapUnwrapWrapper);
+OasisWrapUnwrapWrapper.displayName = "OasisWrapUnwrap";
+export default connect(mapStateToProps, mapDispatchToProps)(
+  OasisWrapUnwrapWrapper
+);

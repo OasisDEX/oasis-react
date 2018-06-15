@@ -14,6 +14,10 @@ import {
 import OasisTokenBalanceSummary from "../containers/OasisTokenBalanceSummary";
 import styles from "./OasisWrapUnwrapWrap.scss";
 import CSSModules from "react-css-modules";
+import {
+  TX_WRAP_ETHER,
+  TX_WRAP_TOKEN_WRAPPER
+} from "../store/reducers/transactions";
 
 const propTypes = PropTypes && {
   activeUnwrappedToken: PropTypes.string,
@@ -21,7 +25,9 @@ const propTypes = PropTypes && {
   activeUnwrappedTokenBalance: PropTypes.object,
   transactionState: PropTypes.object,
   onFormChange: PropTypes.func.isRequired,
-  disableForm: PropTypes.bool
+  disableForm: PropTypes.bool,
+  hidden: PropTypes.bool.isRequired,
+  txType: PropTypes.oneOf([TX_WRAP_ETHER, TX_WRAP_TOKEN_WRAPPER])
 };
 const defaultProps = {};
 
@@ -56,13 +62,21 @@ class OasisWrapUnwrapWrap extends PureComponent {
   }
 
   render() {
-    const { activeUnwrappedToken, transactionState } = this.props;
+    const {
+      activeUnwrappedToken,
+      hidden,
+      txType,
+      form,
+      transactionState
+    } = this.props;
     return (
-      <OasisWidgetFrame heading={"Wrap"} spaceForContent={true}>
+      <OasisWidgetFrame hidden={hidden} heading={"Wrap"} spaceForContent={true}>
         <OasisTokenBalanceSummary summary="Wallet">
           {this.getBalance()}
         </OasisTokenBalanceSummary>
         <OasisTokenWrapFormWrapper
+          form={form}
+          txType={txType}
           onFormChange={this.onFormChange}
           transactionState={transactionState}
           activeUnwrappedToken={activeUnwrappedToken}

@@ -12,7 +12,8 @@ import {
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
   TX_STATUS_CANCELLED_BY_USER,
   TX_STATUS_CONFIRMED,
-  TX_STATUS_REJECTED
+  TX_STATUS_REJECTED,
+  TX_UNWRAP_TOKEN_WRAPPER
 } from "../store/reducers/transactions";
 import accounts from "../store/selectors/accounts";
 
@@ -94,10 +95,13 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
   }
 
   render() {
-    const { activeWrappedToken, activeWrappedTokenBalance } = this.props;
+    const { hidden, activeWrappedToken, activeWrappedTokenBalance } = this.props;
     const { txStatus, txStartTimestamp, disableForm } = this.state;
     return (
       <OasisWrapUnwrapUnwrap
+        hidden={hidden}
+        txType={TX_UNWRAP_TOKEN_WRAPPER}
+        form={"unwrapTokenWrapper"}
         transactionState={{ txStatus, txStartTimestamp }}
         onSubmit={this.makeUnwrap}
         onFormChange={this.onFormChange}
@@ -107,17 +111,16 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
       />
     );
   }
-  componentDidUpdate(prevProps) {
-    if (this.props.activeWrappedToken && this.props.activeWrappedToken !== prevProps.activeWrappedToken){
-      this.props.actions.resetActiveUnwrapForm();
-      if (![TX_STATUS_AWAITING_CONFIRMATION].includes(this.state.txStatus))
-        this.setState({
-          txStatus: undefined,
-          txStartTimestamp: undefined
-        })
-    }
+  componentDidUpdate() {
+    // if (this.props.activeWrappedToken && this.props.activeWrappedToken !== prevProps.activeWrappedToken){
+    //   this.props.actions.resetActiveUnwrapForm();
+    //   if (![TX_STATUS_AWAITING_CONFIRMATION].includes(this.state.txStatus))
+    //     this.setState({
+    //       txStatus: undefined,
+    //       txStartTimestamp: undefined
+    //     })
+    // }
   }
-
 }
 
 export function mapStateToProps(state) {

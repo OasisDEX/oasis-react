@@ -11,7 +11,8 @@ describe('(Component) OasisWrapUnwrapWrap', () => {
       onSubmit: jest.fn,
       onFormChange: jest.fn,
       activeUnwrappedTokenBalance: new BigNumber(100),
-      transactionState: { txStatus: true }
+      transactionState: { txStatus: true },
+      hidden: false
     };
     const wrapper = shallow(
       <OasisWrapUnwrapWrap {...props}/>,
