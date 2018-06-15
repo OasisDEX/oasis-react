@@ -23,7 +23,7 @@ export class OasisChartPrice extends PureComponent {
   render() {
     return (
       <Line
-        height={'180px'}
+        height={180}
         data={{
           labels: this.props.priceChartLabels,
           datasets: [{

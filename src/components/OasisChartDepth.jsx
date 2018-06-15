@@ -30,7 +30,7 @@ export class OasisChartDepth extends PureComponent {
   render() {
     return (
       <Line
-        height={'180px'}
+        height={180}
         data={{
           labels: this.props.depthChartLabels,
           datasets: [{
