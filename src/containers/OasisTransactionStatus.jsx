@@ -56,7 +56,7 @@ export class OasisTransactionStatusWrapper extends PureComponent {
   }
 
   render() {
-    const { transaction, infoText, noBorder } = this.props;
+    const { transaction, infoText, noBorder, ...props } = this.props;
     return (
       <InfoBox
         justifyContent="space-between"
@@ -64,6 +64,7 @@ export class OasisTransactionStatusWrapper extends PureComponent {
         size="sm"
         fullWidth
         noBorder={noBorder}
+        {...props}
       >
         <div style={{ padding: "7px 0" }}>
           {typeof infoText === "function"

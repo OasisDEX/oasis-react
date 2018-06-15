@@ -2,12 +2,15 @@
 
 exports[`(Container) OasisTransactionStatus should render 1`] = `
 <InfoBox
+  actions={Object {}}
   alignItems="baseline"
   className=""
   color="default"
   fullWidth={true}
   justifyContent="space-between"
+  networkName="kovan"
   size="sm"
+  txTimestamp={1}
 >
   <div
     style={

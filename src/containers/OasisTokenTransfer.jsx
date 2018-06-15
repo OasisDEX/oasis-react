@@ -8,6 +8,7 @@ import OasisTokenSelectWrapper from "./OasisTokenSelect";
 import TokenTransferFormWrapper from "./TokenTransferForm";
 import OasisTokenBalanceSummary from "./OasisTokenBalanceSummary";
 import OasisWidgetFrame from "../containers/OasisWidgetFrame";
+import styles from "./OasisTokenTransfer.scss"
 
 import transfersReducer from "../store/reducers/transfers";
 import transfers from "../store/selectors/transfers";
@@ -135,6 +136,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
           localStatus={txStatus}
           txTimestamp={txStartTimestamp}
           txType={TX__GROUP__TRANSFERS}
+          className={styles.transactionStatusShorter}
         />
       )
     );
@@ -162,6 +164,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
           summary="Wallet"
           token={selectedToken}
           decimalPlaces={5}
+          className={styles.tokenBalanceSummaryShorter}
         />
         <TokenTransferFormWrapper
           txStatus={txStatus}

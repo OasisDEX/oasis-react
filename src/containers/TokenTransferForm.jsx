@@ -50,7 +50,8 @@ export class TokenTransferFormWrapper extends PureComponent {
       disabled,
       actions,
       transferState,
-      globalFormLock
+      globalFormLock,
+      selectedToken
     } = this.props;
     return (
       <form method="POST" onSubmit={handleSubmit} onChange={this.onFormChange}>
@@ -99,7 +100,7 @@ export class TokenTransferFormWrapper extends PureComponent {
                   />
                 </div>
               </td>
-              <td className={tableStyles.currency}>{this.props.selectedToken}</td>
+              <td className={tableStyles.currency}>{selectedToken}</td>
             </tr>
           </tbody>
         </table>
