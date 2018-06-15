@@ -43,7 +43,7 @@ export class OasisWrapUnwrapHistory extends PureComponent {
       activeNetworkName,
       transactionHash
     });
-    window.open(url, "_blank");
+    window.open(url, "_blank", "noopener");
     window.focus();
   }
 

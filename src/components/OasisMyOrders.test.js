@@ -10,7 +10,8 @@ describe('(Component) OasisMyOrders', () => {
     const props = {
       activeTradingPair: { baseToken: "MKR", quoteToken: "W-ETH" },
       sellOffers: fromJS([]),
-      buyOffers: fromJS([])
+      buyOffers: fromJS([]),
+      fetchAndSubscribeUserTradesHistory: jest.fn()
     };
     const wrapper = shallow(
       <OasisMyOrders {...props}/>,

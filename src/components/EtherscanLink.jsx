@@ -33,7 +33,7 @@ class EtherscanLink extends PureComponent {
     switch (this.props.type) {
       case ETHERSCAN_LINK_TYPE_TRANSACTION: {
         return (
-          <a target="_blank" className={styles.link} href={url} {...props}>
+          <a target="_blank" rel="noreferrer noopener" className={styles.link} href={url} {...props}>
             <span>{label || txHash}</span>
           </a>
         );

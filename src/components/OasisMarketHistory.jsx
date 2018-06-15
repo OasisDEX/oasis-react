@@ -58,7 +58,8 @@ class OasisMarketHistory extends PureComponent {
   static onRowClick({ transactionHash }, { activeNetworkName }) {
     window.open(
       createEtherscanTransactionLink({ activeNetworkName, transactionHash }),
-      "_blank"
+      "_blank",
+      "noopener"
     );
     window.focus();
   }

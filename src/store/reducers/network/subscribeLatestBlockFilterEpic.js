@@ -1,5 +1,5 @@
 import balancesReducer from "../balances";
-import { getTokenContractsList } from "../../../bootstrap/contracts";
+import { areContractsInitialized, getTokenContractsList } from '../../../bootstrap/contracts';
 import { HEALTHCHECK_INTERVAL_MS } from "../../../index";
 import { createPromiseActions } from "../../../utils/createPromiseActions";
 import transactionsReducer from "../transactions";
@@ -71,12 +71,14 @@ export const subscribeLatestBlockFilterEpic = () => async (
     dispatch(fetchEthereumPrice());
     dispatch(transactionsReducer.actions.getCurrentTxNonceEpic());
     dispatch(transactionsReducer.actions.getCurrentGasPrice());
-    dispatch(
-      balancesReducer.actions.syncTokenBalances(
-        getTokenContractsList(),
-        accounts.defaultAccount(getState())
+    if (areContractsInitialized) {
+      dispatch(
+        balancesReducer.actions.syncTokenBalances(
+          getTokenContractsList(),
+          accounts.defaultAccount(getState())
+        )
       )
-    );
+    }
     dispatch(offersReducer.actions.getBestOfferIdsForActiveTradingPairEpic());
     dispatch(tokensReducer.actions.getActiveTradingPairAllowanceStatus());
   };
