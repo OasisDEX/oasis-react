@@ -21,7 +21,7 @@ const propTypes = PropTypes && {
   hidden: PropTypes.bool.isRequired
 };
 
-export class OasisWrapUnwrapWrapEther extends PureComponent {
+export class OasisWrapUnwrapUnwrapEther extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
@@ -139,8 +139,8 @@ export function mapDispatchToProps(dispatch) {
   return { actions: bindActionCreators(actions, dispatch) };
 }
 
-OasisWrapUnwrapWrapEther.propTypes = propTypes;
-OasisWrapUnwrapWrapEther.displayName = "OasisWrapUnwrapUnwrap";
+OasisWrapUnwrapUnwrapEther.propTypes = propTypes;
+OasisWrapUnwrapUnwrapEther.displayName = "OasisWrapUnwrapUnwrap";
 export default connect(mapStateToProps, mapDispatchToProps)(
-  OasisWrapUnwrapWrapEther
+  OasisWrapUnwrapUnwrapEther
 );

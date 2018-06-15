@@ -16,10 +16,6 @@ import widgetStyles from "./OasisWidgetFrame.scss";
 import CSSModules from "react-css-modules";
 import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBox";
 import { formatAmount } from "../utils/tokens/pair";
-import {
-  TX_WRAP_ETHER,
-  TX_WRAP_TOKEN_WRAPPER
-} from "../store/reducers/transactions";
 import MaskedTokenAmountInput from "../components/MaskedTokenAmountInput";
 import platform from "../store/selectors/platform";
 import { SETMAXBTN_HIDE_DELAY_MS, TOKEN_ETHER } from "../constants";
