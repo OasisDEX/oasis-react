@@ -53,6 +53,7 @@ const validateTotal = [greaterThanZeroValidator, numericFormatValidator];
 export class OfferMakeForm extends React.Component {
   constructor(props) {
     super(props);
+    this.componentIsUnmounted = false;
 
     this.state = {
       showMaxButton: false
@@ -145,15 +146,19 @@ export class OfferMakeForm extends React.Component {
   }
 
   onTotalFieldSectionFocus() {
-    if (!this.componentUnmounted) {
+    if (this.componentIsUnmounted === false) {
       this.setState({ showMaxButton: true });
     }
   }
 
   onTotalFieldSectionBlur() {
-    if (!this.componentIsUnmounted) {
+    if (this.componentIsUnmounted === false) {
       setTimeout(
-        () => this.setState({ showMaxButton: false }),
+        () => {
+          if (this.componentIsUnmounted === false) {
+            this.setState({ showMaxButton: false });
+          }
+        },
         SETMAXBTN_HIDE_DELAY_MS
       );
     }
@@ -227,7 +232,7 @@ export class OfferMakeForm extends React.Component {
 
   onFormChange() {
     const { onFormChange } = this.props;
-    if(!this.componentUnmounted) {
+    if(this.componentIsUnmounted === false) {
       onFormChange && onFormChange();
     }
   }
@@ -294,7 +299,6 @@ export class OfferMakeForm extends React.Component {
       return false;
     }
   }
-
   componentWillUnmount() {
     this.componentIsUnmounted = true;
   }

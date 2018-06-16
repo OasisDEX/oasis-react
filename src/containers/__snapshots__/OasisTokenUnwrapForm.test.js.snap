@@ -52,7 +52,6 @@ exports[`(Container) OasisTokenUnwrapForm should render 1`] = `
       txTimestamp={1}
     />
   </div>
-  <div />
   <div
     className="undefined undefined"
   >

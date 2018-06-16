@@ -34,6 +34,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
+    this.componentIsUnmounted = false;
     this.makeTransfer = this.makeTransfer.bind(this);
     this.onFormChange = this.onFormChange.bind(this);
   }
@@ -143,7 +144,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
   }
 
   onFormChange(isFormTouched) {
-    if (isFormTouched) {
+    if (isFormTouched && this.componentIsUnmounted === false) {
       this.setState({
         txStatus: undefined,
         txStartTimestamp: undefined
@@ -176,6 +177,11 @@ export class OasisTokenTransferWrapper extends PureComponent {
       </OasisWidgetFrame>
     );
   }
+
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
+  }
+
 }
 
 export function mapStateToProps(state) {

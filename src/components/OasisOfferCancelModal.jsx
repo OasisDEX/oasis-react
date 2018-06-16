@@ -128,13 +128,7 @@ class OasisOfferCancelModal extends PureComponent {
             <OasisButton
               disabled={this.isTransactionPendingOrAwaitingAcceptance()}
               onClick={this.onCloseModal}
-              caption={
-                this.askForConfirmToClose() ||
-                this.cancelTransactionConfirmed() ||
-                !canOfferBeCancelled
-                  ? "Close"
-                  : "Cancel"
-              }
+              caption={"Close"}
             />
             <OasisButton
               disabled={

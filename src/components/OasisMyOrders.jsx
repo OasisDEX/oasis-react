@@ -78,12 +78,27 @@ const myOpenOffersFilter = entry => {
 // };
 
 let actionsColumnTemplate = function(offer) {
-  const { offerToCancel } = this.state;
+  const { offerToCancel, lastCancelledOfferId } = this.state;
+  const { activeTradingPair } = this.props;
+  if (
+    offer.id.toString() === lastCancelledOfferId &&
+    String(lastCancelledOfferId)
+  ) {
+    this.props.removeOrderCancelledByTheOwner({
+      offerType: offer.offerType,
+      offerId: offer.id,
+      tradingPair: activeTradingPair
+    });
+  }
   return isOfferOwner(offer) ? (
     <div>
       <OasisButton
         size="xs"
-        disabled={offerToCancel}
+        disabled={
+          offerToCancel ||
+          (offer.id.toString() === lastCancelledOfferId &&
+            String(lastCancelledOfferId))
+        }
         onClick={() => this.setState({ offerToCancel: offer })}
       >
         Cancel
@@ -163,7 +178,10 @@ const openOrdersColsDefinition = (baseToken, quoteToken, orderActions) => [
 const propTypes = PropTypes && {
   trades: ImmutablePropTypes.list,
   fetchAndSubscribeUserTradesHistory: PropTypes.func.isRequired,
-  activeNetworkName: PropTypes.string
+  activeNetworkName: PropTypes.string,
+  removeOrderCancelledByTheOwner: PropTypes.func,
+  initialMarketHistoryLoaded: PropTypes.bool,
+  loadingUserMarketHistory: PropTypes.bool
 };
 const defaultProps = {};
 
@@ -173,15 +191,18 @@ const VIEW_TYPE_MARKET_HISTORY = "Closed";
 class OasisMyOrders extends PureComponent {
   constructor(props) {
     super(props);
+    this.componentIsUnmounted = false;
     this.state = { viewType: VIEW_TYPE_OPEN_OFFERS };
     this.onViewTypeChange = this.onViewTypeChange.bind(this);
     actionsColumnTemplate = actionsColumnTemplate.bind(this);
   }
 
   onViewTypeChange({ target: { value } }) {
-    this.setState({
-      viewType: value
-    });
+    if (this.componentIsUnmounted === false) {
+      this.setState({
+        viewType: value
+      });
+    }
   }
 
   static onRowClick({ transactionHash }, { activeNetworkName }) {
@@ -289,7 +310,6 @@ class OasisMyOrders extends PureComponent {
     const marketHistory = orderByTimestamp(myTrades.toJSON(), DESCENDING).map(
       toHistoricalTrades
     );
-    console.log('e3', this.props.loadingUserMarketHistory)
     return (
       <OasisTable
         metadata={{ activeNetworkName }}
@@ -342,13 +362,24 @@ class OasisMyOrders extends PureComponent {
       >
         {offerToCancel && (
           <OasisOfferCancelModalWrapper
-            onModalClose={() => this.setState({ offerToCancel: undefined })}
+            onCancelledSuccesfully={lastCancelledOfferId => {
+              this.setState({ lastCancelledOfferId });
+            }}
+            onModalClose={() => {
+              if (this.componentIsUnmounted === false) {
+                this.setState({ offerToCancel: undefined });
+              }
+            }}
             offer={fromJS(offerToCancel)}
           />
         )}
         <div>{this.renderContent()}</div>
       </OasisWidgetFrame>
     );
+  }
+
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
   }
 
   // componentDidUpdate(prevProps, { viewType }) {

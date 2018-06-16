@@ -38,6 +38,8 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
       txStartTimestamp: undefined
     };
 
+    this.componentIsUnmounted = false;
+
     this.validate = this.validate.bind(this);
     this.setUnwrapMax = this.setUnwrapMax.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
@@ -85,6 +87,23 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
     );
   }
 
+  renderInsufficientBalanceWarning() {
+    const {
+      activeWrappedTokenBalance,
+      unwrapTokenAmount,
+      activeWrappedToken,
+      transactionState: { txStatus }
+    } = this.props;
+    return !txStatus ? (
+      <div>
+        {isNumericAndGreaterThanZero(unwrapTokenAmount) &&
+          web3.fromWei(activeWrappedTokenBalance).lt(unwrapTokenAmount) && (
+            <OasisInsufficientAmountOfToken tokenName={activeWrappedToken} />
+          )}
+      </div>
+    ) : null;
+  }
+
   render() {
     const {
       valid,
@@ -97,6 +116,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
       unwrapTokenAmount,
       activeWrappedTokenBalance
     } = this.props;
+
     return (
       <form onChange={onFormChange} onSubmit={handleSubmit}>
         <table className={tableStyles.table}>
@@ -144,11 +164,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
           </tbody>
         </table>
         <div>{this.renderTransactionStatus()}</div>
-        <div>
-          {activeWrappedTokenBalance < unwrapTokenAmount && (
-            <OasisInsufficientAmountOfToken tokenName={activeWrappedToken} />
-          )}
-        </div>
+        {this.renderInsufficientBalanceWarning()}
         <div className={`${styles.footer} ${widgetStyles.OasisWidgetFooter}`}>
           <OasisButton
             type="submit"
@@ -169,11 +185,13 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
   }
 
   onTotalFieldSectionFocus() {
-    this.setState({ showMaxButton: true });
+    if (this.componentIsUnmounted === false) {
+      this.setState({ showMaxButton: true });
+    }
   }
 
   onTotalFieldSectionBlur() {
-    if (!this.isUnmounted) {
+    if (this.componentIsUnmounted === false) {
       setTimeout(
         () => this.setState({ showMaxButton: false }),
         SETMAXBTN_HIDE_DELAY_MS
@@ -182,7 +200,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
   }
 
   componentWillUnmount() {
-    this.isUnmounted = true;
+    this.componentIsUnmounted = true;
   }
 }
 

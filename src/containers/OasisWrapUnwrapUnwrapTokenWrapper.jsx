@@ -25,6 +25,7 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
+    this.componentIsUnmounted = false;
     this.makeUnwrap = this.makeUnwrap.bind(this);
     this.onFormChange = this.onFormChange.bind(this);
   }
@@ -88,10 +89,12 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
   }
 
   onFormChange() {
-    this.setState({
-      txStatus: undefined,
-      txStartTimestamp: undefined
-    });
+    if (this.componentIsUnmounted === false) {
+      this.setState({
+        txStatus: undefined,
+        txStartTimestamp: undefined
+      });
+    }
   }
 
   render() {
@@ -120,6 +123,10 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
     //       txStartTimestamp: undefined
     //     })
     // }
+  }
+
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
   }
 }
 

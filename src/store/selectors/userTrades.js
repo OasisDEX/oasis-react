@@ -16,7 +16,6 @@ const marketsData = createSelector(
   marketHistory,
   (s, initialMarketHistoryLoaded, marketHistory) => {
     if (initialMarketHistoryLoaded) {
-      console.log({ marketHistory });
       return marketHistory;
     }
   }

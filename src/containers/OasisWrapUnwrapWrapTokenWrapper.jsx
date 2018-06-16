@@ -29,6 +29,7 @@ export class OasisWrapUnwrapWrapTokenWrapperWrapper extends PureComponent {
     this.state = {};
     this.makeWrap = this.makeWrap.bind(this);
     this.onFormChange = this.onFormChange.bind(this);
+    this.componentIsUnmounted = false;
   }
 
   makeWrap() {
@@ -103,7 +104,7 @@ export class OasisWrapUnwrapWrapTokenWrapperWrapper extends PureComponent {
   }
 
   onFormChange() {
-    if (!this.hasNextTransaction) {
+    if (!this.hasNextTransaction &&  this.componentIsUnmounted === false) {
       this.setState({
         txStatus: undefined,
         txStartTimestamp: undefined
@@ -139,6 +140,10 @@ export class OasisWrapUnwrapWrapTokenWrapperWrapper extends PureComponent {
     //   })
     // }
   }
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
+  }
+
 }
 
 export function mapStateToProps(state) {

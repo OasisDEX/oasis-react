@@ -21,6 +21,7 @@ import {
 } from "../../../constants";
 import { registerSubscription } from "../../../utils/subscriptions/registerSubscription";
 import userTradesReducer from "../userTrades";
+import userTrades from '../../selectors/userTrades';
 
 export const setLastNetworkCheckStartAt = createAction(
   "NETWORK/SET_LAST_NETWORK_CHECK_START_AT",
@@ -76,9 +77,11 @@ export const onNetworkCheckEndEpic = (
 
       dispatch(offersReducer.actions.syncOffersEpic(tradingPair)).then(() => {
         if (setInitialSubscriptions || accountChanged) {
-          dispatch(
-            userTradesReducer.actions.fetchAndSubscribeUserTradesHistoryEpic()
-          );
+          if (userTrades.marketsData(getState()) === null) {
+            dispatch(
+              userTradesReducer.actions.fetchAndSubscribeUserTradesHistoryEpic()
+            );
+          }
           dispatch(platformReducer.actions.setIsAppLoadingDisabled());
         }
       });
@@ -121,11 +124,9 @@ export const onNetworkCheckEndEpic = (
       )
     ).then(() => {
       dispatch(platformReducer.actions.setGlobalFormLockDisabled());
-      if (!setInitialSubscriptions) {
         dispatch(
           userTradesReducer.actions.fetchAndSubscribeUserTradesHistoryEpic()
         );
-      }
     });
 
     registerSubscription(

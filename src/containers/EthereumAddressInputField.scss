@@ -1,0 +1,15 @@
+@import "../styles/modules/grid";
+
+.EthereumAddressInputField {
+  input {
+    background-color: #ffffff !important;
+    &::placeholder {
+      //font-size: 16px;
+    }
+    //font-size: 0.83em !important;
+    padding-left: 3px;
+    &:focus {
+      color: #68686c !important;
+    }
+  }
+}

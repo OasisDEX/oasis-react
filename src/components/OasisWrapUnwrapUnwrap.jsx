@@ -37,11 +37,14 @@ class OasisWrapUnwrapUnwrap extends PureComponent {
   constructor(props) {
     super(props);
     this.onFormChange = this.onFormChange.bind(this);
+    this.componentIsUnmounted = false;
   }
 
   onFormChange() {
     const { onFormChange } = this.props;
-    onFormChange && onFormChange();
+    if (this.componentIsUnmounted === false) {
+      onFormChange && onFormChange();
+    }
   }
 
   render() {
@@ -76,6 +79,9 @@ class OasisWrapUnwrapUnwrap extends PureComponent {
         <WrapUnwrapStatusWrapper type={WRAP_STATUS_VIEW_TYPE_UNWRAP} />
       </OasisWidgetFrame>
     );
+  }
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
   }
 }
 
