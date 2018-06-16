@@ -87,6 +87,17 @@ const activeQuoteTokenBalance = createSelector(
   (tokenBalances, quoteToken) => tokenBalances.get(quoteToken)
 );
 
+const latestBalancesSyncBlockNumber = createSelector(
+  balances,
+  s => s.get('latestBalancesSyncBlockNumber')
+);
+
+const latestBalancesSyncTimestamp = createSelector(
+  balances,
+  s => s.get('latestBalancesSyncTimestamp')
+);
+
+
 export default {
   state: balances,
   tokenAllowances,
@@ -98,5 +109,7 @@ export default {
   activeBaseTokenBalance,
   activeQuoteTokenBalance,
   tokenAllowanceStatusForActiveMarket,
-  isUserBalanceZero
+  isUserBalanceZero,
+  latestBalancesSyncBlockNumber,
+  latestBalancesSyncTimestamp
 };
