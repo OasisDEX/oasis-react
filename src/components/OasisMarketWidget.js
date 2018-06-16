@@ -17,7 +17,7 @@ import {
 import CSSModules from "react-css-modules";
 import styles from "./OasisMarketWidget.scss";
 import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
-import { ETH_UNIT_ETHER } from "../constants";
+import { ETH_UNIT_ETHER, TOKEN_DAI } from '../constants';
 import moment from "moment-timezone";
 import OasisLinkLikeButton from "./OasisLinkLikeButton";
 
@@ -141,7 +141,7 @@ class OasisMarketWidget extends PureComponent {
   }
 
   render() {
-    const { tradedTokens, defaultPeriod } = this.props;
+    const { activeTradingPair, tradedTokens, defaultPeriod } = this.props;
     const daiButton = (
       <OasisLinkLikeButton
         href="https://dai.makerdao.com/"
@@ -150,8 +150,15 @@ class OasisMarketWidget extends PureComponent {
         className={styles.createDaiBtn}
       />
     );
+
+    const activeTradingPairIncludesDAI = (
+      activeTradingPair &&
+      [activeTradingPair.baseToken, activeTradingPair.quoteToken].includes(TOKEN_DAI)
+    );
     return (
-      <OasisWidgetFrame heading="MARKETS" headingChildren={daiButton}>
+      <OasisWidgetFrame
+        heading="MARKETS"
+        headingChildren={activeTradingPairIncludesDAI ? daiButton : null}>
         <OasisTable
           onRowClick={this.onTableRowClick}
           className={styles.marketTable}
