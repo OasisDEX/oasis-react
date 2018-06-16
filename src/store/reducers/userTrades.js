@@ -264,7 +264,6 @@ const fetchAndSubscribeUserTradesHistoryEpic = perActiveTradingPair => (
     return;
   }
   dispatch(loadingUserMarketHistory(true));
-
   if (perActiveTradingPair) {
     const { baseToken, quoteToken } = tokens.activeTradingPair(getState());
     if (

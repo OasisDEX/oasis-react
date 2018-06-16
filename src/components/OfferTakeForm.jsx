@@ -49,10 +49,10 @@ const validateTotal = [greaterThanZeroValidator, numericFormatValidator];
 export class OfferTakeForm extends PureComponent {
   constructor(props) {
     super(props);
-
     this.state = {
       showMaxButton: false
     };
+    this.componentIsUnmounted = false;
 
     this.onFormChange = this.onFormChange.bind(this);
     this.onVolumeFieldChange = this.onVolumeFieldChange.bind(this);
@@ -75,14 +75,14 @@ export class OfferTakeForm extends PureComponent {
 
   onVolumeFieldChange(event, newValue) {
     const { volumeFieldValueChanged } = this.props.actions;
-    if (!this.componentUnmounted) {
+    if (this.componentIsUnmounted === false) {
       setTimeout(() => volumeFieldValueChanged(newValue), 0);
     }
   }
 
   onTotalFieldChange(event, newValue) {
     const { totalFieldValueChanged } = this.props.actions;
-    if (!this.componentUnmounted) {
+    if (this.componentIsUnmounted === false) {
       setTimeout(() => totalFieldValueChanged(newValue), 0);
     }
   }
@@ -248,7 +248,9 @@ export class OfferTakeForm extends PureComponent {
 
   onFormChange() {
     const { onFormChange } = this.props;
-    onFormChange && onFormChange();
+    if (this.componentIsUnmounted === false) {
+      onFormChange && onFormChange();
+    }
   }
 
   render() {
@@ -267,13 +269,13 @@ export class OfferTakeForm extends PureComponent {
   }
 
   onTotalFieldSectionFocus() {
-    if (!this.componentUnmounted) {
+    if (this.componentIsUnmounted === false) {
       this.setState({ showMaxButton: true });
     }
   }
 
   onTotalFieldSectionBlur() {
-    if (!this.componentUnmounted) {
+    if (this.componentIsUnmounted === false) {
       setTimeout(
         () => this.setState({ showMaxButton: false }),
         SETMAXBTN_HIDE_DELAY_MS
@@ -282,7 +284,7 @@ export class OfferTakeForm extends PureComponent {
   }
 
   componentWillUnmount() {
-    this.componentUnmounted = true;
+    this.componentIsUnmounted = true;
   }
 }
 

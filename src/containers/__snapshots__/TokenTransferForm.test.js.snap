@@ -42,6 +42,11 @@ exports[`(Container) TokenTransferForm should render 1`] = `
               hidden={true}
               onClick={[Function]}
               size="xs"
+              style={
+                Object {
+                  "fontSize": "10px",
+                }
+              }
               type="button"
             >
               transfer max

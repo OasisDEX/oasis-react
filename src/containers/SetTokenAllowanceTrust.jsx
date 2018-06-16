@@ -258,7 +258,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
             display: "flex",
             alignItems: "center",
             minHeight: "24px",
-            postion: "relative",
+            position: "relative",
             top: "1px",
             cursor: this.transactionTooltip() ? "pointer" : "default"
           }}

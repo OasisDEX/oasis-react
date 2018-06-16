@@ -21,7 +21,7 @@ import platform from "../store/selectors/platform";
 import { SETMAXBTN_HIDE_DELAY_MS, TOKEN_ETHER } from "../constants";
 import OasisDontWrapAllEther from "../components/OasisDontWrapAllEther";
 import isNumericAndGreaterThanZero from "../utils/numbers/isNumericAndGreaterThanZero";
-import OasisInsufficientAmountOfToken from '../components/OasisInsufficientAmountOfToken';
+import OasisInsufficientAmountOfToken from "../components/OasisInsufficientAmountOfToken";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -40,6 +40,8 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
       txState: undefined,
       txStartTimestamp: undefined
     };
+
+    this.componentIsUnmounted = false;
 
     this.validate = this.validate.bind(this);
     this.setWrapMax = this.setWrapMax.bind(this);
@@ -122,6 +124,22 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
     }
   }
 
+  renderInsufficientBalanceWarning() {
+    const {
+      activeUnwrappedTokenBalance,
+      wrapTokenAmount,
+      activeUnwrappedToken,
+      transactionState: { txStatus }
+    } = this.props;
+
+    return !txStatus
+      ? isNumericAndGreaterThanZero(wrapTokenAmount) &&
+          web3.fromWei(activeUnwrappedTokenBalance).lt(wrapTokenAmount) && (
+            <OasisInsufficientAmountOfToken tokenName={activeUnwrappedToken} />
+          )
+      : null;
+  }
+
   render() {
     const {
       valid,
@@ -147,7 +165,13 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
                       size="xs"
                       className={tableStyles.inputBtn}
                       onClick={this.setWrapMax}
-                      disabled={disabled || globalFormLock || !isNumericAndGreaterThanZero(activeUnwrappedTokenBalance)}
+                      disabled={
+                        disabled ||
+                        globalFormLock ||
+                        !isNumericAndGreaterThanZero(
+                          activeUnwrappedTokenBalance
+                        )
+                      }
                     >
                       <span style={{ fontSize: "10px" }}>wrap max</span>
                     </OasisButton>
@@ -175,11 +199,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
           </tbody>
         </table>
         <div>{this.renderTransactionStatus()}</div>
-        <div>
-          {activeUnwrappedTokenBalance < wrapTokenAmount && (
-            <OasisInsufficientAmountOfToken tokenName={activeUnwrappedToken} />
-          )}
-        </div>
+        <div>{this.renderInsufficientBalanceWarning()}</div>
         <div className={`${styles.footer} ${widgetStyles.OasisWidgetFooter}`}>
           {this.renderDoNotWrapAllEtherWarning()}
           <OasisButton
@@ -203,16 +223,17 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
   }
 
   onTotalFieldSectionBlur() {
-    if (!this.isUnmounted) {
-      setTimeout(
-        () => this.setState({ showMaxButton: false }),
-        SETMAXBTN_HIDE_DELAY_MS
-      );
+    if (this.componentIsUnmounted === false) {
+      setTimeout(() => {
+        if (this.componentIsUnmounted === false) {
+          this.setState({ showMaxButton: false });
+        }
+      }, SETMAXBTN_HIDE_DELAY_MS);
     }
   }
 
   componentWillUnmount() {
-    this.isUnmounted = true;
+    this.componentIsUnmounted = true;
   }
 }
 

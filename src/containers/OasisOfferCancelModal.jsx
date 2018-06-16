@@ -1,8 +1,6 @@
 import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
 import ImmutablePropTypes from "react-immutable-proptypes";
-import { Map } from "immutable";
-
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import OasisOfferCancelModal from "../components/OasisOfferCancelModal";
@@ -12,13 +10,14 @@ import offersReducer, {
 } from "../store/reducers/offers";
 import {
   TX_STATUS_AWAITING_CONFIRMATION,
-  TX_STATUS_AWAITING_USER_ACCEPTANCE, TX_STATUS_CANCELLED_BY_USER,
+  TX_STATUS_AWAITING_USER_ACCEPTANCE,
+  TX_STATUS_CANCELLED_BY_USER,
   TX_STATUS_CONFIRMED,
-  TX_STATUS_REJECTED,
-} from '../store/reducers/transactions';
+  TX_STATUS_REJECTED
+} from "../store/reducers/transactions";
 import tokens from "../store/selectors/tokens";
-import offers from '../store/selectors/offers';
-import network from '../store/selectors/network';
+import offers from "../store/selectors/offers";
+import network from "../store/selectors/network";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -30,14 +29,14 @@ export class OasisOfferCancelModalWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
+    this.componentIsUnmounted = false;
     this.onModalClose = this.onModalClose.bind(this);
     this.onCancelOffer = this.onCancelOffer.bind(this);
   }
 
   componentDidMount() {
-    this.setState(
-      { offer: Map(this.props.offer) },
-      () => this.setState({ modalOpen: true })
+    this.setState({ offer: this.props.offer }, () =>
+      this.setState({ modalOpen: true })
     );
   }
 
@@ -76,6 +75,7 @@ export class OasisOfferCancelModalWrapper extends PureComponent {
     this.setState({
       txStatus: TX_STATUS_CONFIRMED
     });
+    this.props.onCancelledSuccesfully(this.state.offer.get("id"));
   }
 
   onTransactionRejected({ txHash }) {
@@ -90,19 +90,23 @@ export class OasisOfferCancelModalWrapper extends PureComponent {
   onModalClose() {
     // const { actions, activeTradingPair } = this.props;
     // const { offer } = this.state;
-    this.setState({
-      modalOpen: false,
-      txStartTimestamp: undefined,
-      txStatus: undefined
-    });
-    this.props.onModalClose();
+    if (this.componentIsUnmounted === false) {
+      this.setState(
+        {
+          modalOpen: false,
+          txStartTimestamp: undefined,
+          txStatus: undefined
+        },
+        () => this.props.onModalClose()
+      );
+    }
 
     // if (this.state.txStatus === TX_STATUS_CONFIRMED) {
-      // actions.removeOrderCancelledByTheOwner({
-      //   offerType: offer.get("offerType"),
-      //   offerId: offer.get("id"),
-      //   tradingPair: activeTradingPair
-      // });
+    //   actions.markOfferAsInactive({
+    //     offerType: offer.get("offerType"),
+    //     offerId: offer.get("id"),
+    //     tradingPair: activeTradingPair
+    //   });
     // }
   }
 
@@ -143,20 +147,25 @@ export class OasisOfferCancelModalWrapper extends PureComponent {
       </div>
     );
   }
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
+  }
 }
 
 export function mapStateToProps(state, props) {
   return {
     latestBlockNumber: network.latestBlockNumber(state),
     activeTradingPair: tokens.activeTradingPair(state),
-    canOfferBeCancelled: offers.canOfferBeCancelled(state, props.offer ? props.offer.get('id'): null)
+    canOfferBeCancelled: offers.canOfferBeCancelled(
+      state,
+      props.offer ? props.offer.get("id") : null
+    )
   };
 }
 export function mapDispatchToProps(dispatch) {
   const actions = {
     cancelOffer: offersReducer.actions.cancelOfferEpic,
-    removeOrderCancelledByTheOwner:
-      offersReducer.actions.removeOrderCancelledByTheOwner
+    markOfferAsInactive: offersReducer.actions.markOfferAsInactive
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

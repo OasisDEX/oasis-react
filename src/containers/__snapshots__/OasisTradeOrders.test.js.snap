@@ -66,6 +66,7 @@ exports[`(Container) OasisTradeOrders should render 1`] = `
     fetchAndSubscribeUserTradesHistory={[Function]}
     initialMarketHistoryLoaded={true}
     loadingUserMarketHistory={false}
+    removeOrderCancelledByTheOwner={[Function]}
     sellOffers={
       Immutable.List [
       ]
@@ -98,6 +99,7 @@ Object {
     "cancelOffer": [Function],
     "checkOfferIsActive": [Function],
     "fetchAndSubscribeUserTradesHistory": [Function],
+    "removeOrderCancelledByTheOwner": [Function],
     "resetCompletedOfferCheck": [Function],
     "setActiveOfferTakeOfferId": [Function],
     "setOfferTakeModalOpen": [Function],

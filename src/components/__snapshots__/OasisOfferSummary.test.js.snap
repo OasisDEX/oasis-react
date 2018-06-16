@@ -14,9 +14,29 @@ exports[`(Component) OasisOfferSummary should render 1`] = `
       sellToken="MKR"
     />
     <div>
-      <Connect(OasisIsTokenTradingEnabledByUser)
-        tokenName="MKR"
-      />
+      <div
+        style={
+          Object {
+            "marginBottom": "4px",
+          }
+        }
+      >
+        <OasisIcon
+          className=""
+          icon="loading"
+          size="lg"
+        />
+        <span
+          style={
+            Object {
+              "display": "inline-block",
+              "marginLeft": "5px",
+            }
+          }
+        >
+          Loading market contracts...
+        </span>
+      </div>
       <Connect(OasisGasPrice) />
     </div>
   </InfoBox>

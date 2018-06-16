@@ -61,7 +61,8 @@ export class OasisTradeOrdersWrapper extends PureComponent {
         setActiveOfferTakeOfferId,
         checkOfferIsActive,
         resetCompletedOfferCheck,
-        fetchAndSubscribeUserTradesHistory
+        fetchAndSubscribeUserTradesHistory,
+        removeOrderCancelledByTheOwner
       }
     } = this.props;
 
@@ -107,6 +108,8 @@ export class OasisTradeOrdersWrapper extends PureComponent {
             fetchAndSubscribeUserTradesHistory
           }
           loadingUserMarketHistory={loadingUserMarketHistory}
+          removeOrderCancelledByTheOwner={removeOrderCancelledByTheOwner}
+
         />
         <OasisMarketHistory
           trades={tradesList}
@@ -153,7 +156,8 @@ export function mapDispatchToProps(dispatch) {
     resetCompletedOfferCheck:
       offerTakesReducer.actions.resetCompletedOfferCheck,
     fetchAndSubscribeUserTradesHistory:
-      userTradesReducer.actions.fetchAndSubscribeUserTradesHistoryEpic
+      userTradesReducer.actions.fetchAndSubscribeUserTradesHistoryEpic,
+    removeOrderCancelledByTheOwner: offersReducer.actions.removeOrderCancelledByTheOwner
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

@@ -1,12 +1,14 @@
-import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { PureComponent } from "react";
+import { PropTypes } from "prop-types";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import EthereumAddressInput from '../components/EthereumAddressInput';
-import { Field } from 'redux-form/immutable';
-import web3 from '../bootstrap/web3';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import EthereumAddressInput from "../components/EthereumAddressInput";
+import { Field } from "redux-form/immutable";
+import web3 from "../bootstrap/web3";
+import CSSModule from 'react-css-modules'
+import style from  './EthereumAddressInputField.scss'
 
 const propTypes = PropTypes && {
   fieldName: PropTypes.string.isRequired,
@@ -14,10 +16,10 @@ const propTypes = PropTypes && {
   disabled: PropTypes.bool
 };
 
+export const VALIDATION_ERROR__NOT_ETHEREUM_ADDRESS_FORMAT =
+  "VALIDATION_ERROR/NOT_ETHEREUM_ADDRESS_FORMAT";
 
-export const VALIDATION_ERROR__NOT_ETHEREUM_ADDRESS_FORMAT = 'VALIDATION_ERROR/NOT_ETHEREUM_ADDRESS_FORMAT';
-
-const validateEthereumAddress = (value) => {
+const validateEthereumAddress = value => {
   if (!web3.isAddress(value)) {
     return VALIDATION_ERROR__NOT_ETHEREUM_ADDRESS_FORMAT;
   }
@@ -27,13 +29,15 @@ export class EthereumAddressInputFieldWrapper extends PureComponent {
   render() {
     const { fieldName, disabled } = this.props;
     return (
-      <Field
-        disabled={disabled}
-        required
-        validate={validateEthereumAddress}
-        component={EthereumAddressInput}
-        name={fieldName}
-      />
+      <div className={style.EthereumAddressInputField}>
+        <Field
+          disabled={disabled}
+          required
+          validate={validateEthereumAddress}
+          component={EthereumAddressInput}
+          name={fieldName}
+        />
+      </div>
     );
   }
 }
@@ -47,5 +51,7 @@ export function mapDispatchToProps(dispatch) {
 }
 
 EthereumAddressInputFieldWrapper.propTypes = propTypes;
-EthereumAddressInputFieldWrapper.displayName = 'EthereumAddressInputField';
-export default connect(mapStateToProps, mapDispatchToProps)(EthereumAddressInputFieldWrapper);
+EthereumAddressInputFieldWrapper.displayName = "EthereumAddressInputField";
+export default connect(mapStateToProps, mapDispatchToProps)(
+  CSSModule(EthereumAddressInputFieldWrapper, style)
+);

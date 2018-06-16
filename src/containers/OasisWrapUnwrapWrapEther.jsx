@@ -31,6 +31,7 @@ export class OasisWrapUnwrapWrapEtherWrapper extends PureComponent {
     this.state = {};
     this.makeWrap = this.makeWrap.bind(this);
     this.onFormChange = this.onFormChange.bind(this);
+    this.componentIsUnmounted = false;
   }
 
   makeWrap() {
@@ -105,7 +106,7 @@ export class OasisWrapUnwrapWrapEtherWrapper extends PureComponent {
   }
 
   onFormChange() {
-    if (!this.hasNextTransaction) {
+    if (!this.hasNextTransaction && this.componentIsUnmounted===false) {
       this.setState({
         txStatus: undefined,
         txStartTimestamp: undefined
@@ -143,6 +144,9 @@ export class OasisWrapUnwrapWrapEtherWrapper extends PureComponent {
     //       txStartTimestamp: undefined
     //     });
     // }
+  }
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
   }
 }
 
