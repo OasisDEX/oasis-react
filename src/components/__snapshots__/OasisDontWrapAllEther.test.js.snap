@@ -5,21 +5,20 @@ exports[`(Component) OasisDontWrapAllEther should render 1`] = `
   alignItems="center"
   className=""
   color="danger"
-  noBorder={true}
   size="md"
 >
-  <span>
-    Do not wrap all of your 
-    <b>
-      ETH
-    </b>
-    !
-  </span>
   <OasisIcon
     className=""
     icon="warning"
     size="md"
     title="Otherwise you will not be able to pay for transactions."
   />
+  <span>
+    Do not wrap all of your 
+    <b>
+      ETH
+    </b>
+     !
+  </span>
 </InfoBox>
 `;
