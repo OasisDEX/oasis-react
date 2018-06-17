@@ -17,6 +17,7 @@ import OasisButton from "../components/OasisButton";
 import { SETMAXBTN_HIDE_DELAY_MS } from "../constants";
 import platform from "../store/selectors/platform";
 import CSSModules from "react-css-modules";
+import OasisPleaseProvideEthereumAddress from "../components/OasisPleaseProvideEthereumAddress";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -33,6 +34,9 @@ export class TokenTransferFormWrapper extends PureComponent {
       showMaxButton: false
     };
     this.componentIsUnmounted = false;
+    this.onEthereumAddressInputValidityChange = this.onEthereumAddressInputValidityChange.bind(
+      this
+    );
     this.onFormChange = this.onFormChange.bind(this);
     this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
@@ -42,6 +46,14 @@ export class TokenTransferFormWrapper extends PureComponent {
     const { onFormChange, anyTouched } = this.props;
     if (this.componentIsUnmounted === false) {
       onFormChange && onFormChange(anyTouched);
+    }
+  }
+
+  onEthereumAddressInputValidityChange(isValid) {
+    if (this.componentIsUnmounted === false) {
+      this.setState({
+        showPleaseProvideEthereumAddressWarning: !isValid
+      });
     }
   }
 
@@ -73,6 +85,7 @@ export class TokenTransferFormWrapper extends PureComponent {
                 <EthereumAddressInputFieldWrapper
                   disabled={disabled || globalFormLock}
                   fieldName={"recipient"}
+                  onValidityChange={this.onEthereumAddressInputValidityChange}
                 />
               </td>
             </tr>
@@ -119,6 +132,13 @@ export class TokenTransferFormWrapper extends PureComponent {
           </tbody>
         </table>
         {transferState}
+        <div>
+          <div>
+            {this.state.showPleaseProvideEthereumAddressWarning && (
+              <OasisPleaseProvideEthereumAddress />
+            )}
+          </div>
+        </div>
         <div className={`${widgetStyles.OasisWidgetFooter} ${styles.footer}`}>
           <OasisButton
             type="submit"
