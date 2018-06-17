@@ -43,7 +43,7 @@ export class OasisMainContentWrapper extends Component {
               path={'/trade/:baseToken?/:quoteToken?'}
               render={(props) =>  <OasisTradeWrapper {...props} defaultTradingPair={defaultTradingPair}/>}
             />
-            <Route path={'/wrap-unwrap/:token?'} component={ props => <OasisWrapUnwrapWrapper{...props}/> }/>
+            <Route path={'/wrap-unwrap/:token?'} component={ props => <OasisWrapUnwrapWrapper {...props}/> }/>
             <Route path={'/transfer'} component={OasisTransferWrapper}/>
           </Switch>
         </div>

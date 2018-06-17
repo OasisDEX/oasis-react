@@ -4,11 +4,10 @@ import ImmutablePropTypes from "react-immutable-proptypes";
 import OasisWidgetFrame from "../containers/OasisWidgetFrame";
 import { OasisTable } from "./OasisTable";
 import OasisInlineTokenBalance from "./OasisInlineTokenBalance";
-import { fromJS } from 'immutable';
+import { fromJS } from "immutable";
 import styles from "./OasisWrapUnwrapBalances.scss";
-import CSSModules from 'react-css-modules';
+import CSSModules from "react-css-modules";
 /* eslint-disable react/prop-types */
-
 
 const colDefinition = [
   { heading: "coin", key: "unwrappedToken" },
@@ -41,8 +40,6 @@ const colDefinition = [
 const propTypes = PropTypes && {
   changeRoute: PropTypes.func,
   wrapUnwrapBalances: ImmutablePropTypes.list.isRequired,
-  resetActiveWrapForm: PropTypes.func.isRequired,
-  resetActiveUnwrapForm: PropTypes.func.isRequired
 };
 const defaultProps = {};
 
@@ -55,21 +52,14 @@ class OasisWrapUnwrapBalances extends PureComponent {
 
   transformRow(row) {
     if (row.unwrappedToken === this.props.activeUnwrappedToken) {
-      return {...row, isActive: true };
+      return { ...row, isActive: true };
     } else return row;
   }
 
   onTableRowClick({ unwrappedToken }) {
-    const {
-      changeRoute,
-      setActiveWrapUnwrappedToken,
-      resetActiveWrapForm,
-      resetActiveUnwrapForm
-    } = this.props;
+    const { changeRoute, setActiveWrapUnwrappedToken } = this.props;
 
     setActiveWrapUnwrappedToken(unwrappedToken);
-    resetActiveWrapForm();
-    resetActiveUnwrapForm();
     changeRoute(`/wrap-unwrap/${unwrappedToken}`);
   }
 

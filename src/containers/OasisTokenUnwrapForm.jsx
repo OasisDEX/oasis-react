@@ -13,7 +13,7 @@ import styles from "./OasisTokenUnwrapForm.scss";
 import widgetStyles from "./OasisWidgetFrame.scss";
 import CSSModules from "react-css-modules";
 import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBox";
-import { formatAmount } from "../utils/tokens/pair";
+import { AMOUNT_DECIMALS, formatAmount } from "../utils/tokens/pair";
 import MaskedTokenAmountInput from "../components/MaskedTokenAmountInput";
 import platform from "../store/selectors/platform";
 import { SETMAXBTN_HIDE_DELAY_MS } from "../constants";
@@ -65,7 +65,8 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
       <div>
         Unwrap{" "}
         <b>
-          {formatAmount(unwrapTokenAmount, false, null, 5)} {activeWrappedToken}
+          {formatAmount(unwrapTokenAmount, false, null, AMOUNT_DECIMALS)}{" "}
+          {activeWrappedToken}
         </b>
       </div>
     );

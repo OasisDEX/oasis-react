@@ -6,14 +6,15 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import OasisWrapUnwrapUnwrap from "../components/OasisWrapUnwrapUnwrap";
 import wrapUnwrap from "../store/selectors/wrapUnwrap";
-import wrapUnwrapReducer, { UNWRAP_ETHER } from '../store/reducers/wrapUnwrap';
+import wrapUnwrapReducer, { UNWRAP_ETHER } from "../store/reducers/wrapUnwrap";
 import {
   TX_STATUS_AWAITING_CONFIRMATION,
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
   TX_STATUS_CANCELLED_BY_USER,
   TX_STATUS_CONFIRMED,
-  TX_STATUS_REJECTED, TX_UNWRAP_ETHER,
-} from '../store/reducers/transactions';
+  TX_STATUS_REJECTED,
+  TX_UNWRAP_ETHER
+} from "../store/reducers/transactions";
 import accounts from "../store/selectors/accounts";
 
 const propTypes = PropTypes && {
@@ -98,13 +99,17 @@ export class OasisWrapUnwrapUnwrapEther extends PureComponent {
   }
 
   render() {
-    const { hidden, activeWrappedToken, activeWrappedTokenBalance } = this.props;
+    const {
+      hidden,
+      activeWrappedToken,
+      activeWrappedTokenBalance
+    } = this.props;
     const { txStatus, txStartTimestamp, disableForm } = this.state;
     return (
       <OasisWrapUnwrapUnwrap
         hidden={hidden}
         txType={TX_UNWRAP_ETHER}
-        form={'unwrapEther'}
+        form={"unwrapEther"}
         transactionState={{ txStatus, txStartTimestamp }}
         onSubmit={this.makeUnwrap}
         onFormChange={this.onFormChange}
@@ -114,21 +119,20 @@ export class OasisWrapUnwrapUnwrapEther extends PureComponent {
       />
     );
   }
-  componentDidUpdate() {
-    // if (this.props.activeWrappedToken && this.props.activeWrappedToken !== prevProps.activeWrappedToken){
-    //   this.props.actions.resetActiveUnwrapForm();
-    //   if (![TX_STATUS_AWAITING_CONFIRMATION].includes(this.state.txStatus))
-    //     this.setState({
-    //       txStatus: undefined,
-    //       txStartTimestamp: undefined
-    //     })
-    // }
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.activeWrappedToken &&
+      this.props.activeWrappedToken !== prevProps.activeWrappedToken
+    ) {
+      if (!this.state.txStatus) {
+        this.props.actions.resetActiveUnwrapForm(UNWRAP_ETHER);
+      }
+    }
   }
 
   componentWillUnmount() {
     this.componentIsUnmounted = true;
   }
-
 }
 
 export function mapStateToProps(state) {

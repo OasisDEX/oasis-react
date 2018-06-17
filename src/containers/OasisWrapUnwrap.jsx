@@ -11,9 +11,9 @@ import OasisWrapUnwrapUnwrapTokenWrapperWrapper from "./OasisWrapUnwrapUnwrapTok
 import OasisWrapUnwrapWrapEtherWrapper from "./OasisWrapUnwrapWrapEther";
 import wrapUnwrapReducer, {
   UNWRAP_ETHER,
-  UNWRAP_GNT_TOKEN,
+  UNWRAP_TOKEN_WRAPPER,
   WRAP_ETHER,
-  WRAP_GNT_TOKEN
+  WRAP_TOKEN_WRAPPER
 } from "../store/reducers/wrapUnwrap";
 import { TOKEN_ETHER } from "../constants";
 import platformReducer from "../store/reducers/platform";
@@ -35,10 +35,10 @@ export class OasisWrapUnwrapWrapper extends PureComponent {
     this.props.actions.setActiveWrapUnwrappedToken(token);
 
     this.props.actions.resetActiveWrapForm(WRAP_ETHER);
-    this.props.actions.resetActiveWrapForm(WRAP_GNT_TOKEN);
+    this.props.actions.resetActiveWrapForm(WRAP_TOKEN_WRAPPER);
 
     this.props.actions.resetActiveUnwrapForm(UNWRAP_ETHER);
-    this.props.actions.resetActiveUnwrapForm(UNWRAP_GNT_TOKEN);
+    this.props.actions.resetActiveUnwrapForm(UNWRAP_TOKEN_WRAPPER);
   }
 
   render() {
