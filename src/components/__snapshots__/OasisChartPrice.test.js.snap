@@ -20,7 +20,7 @@ exports[`(Component) OasisChartPrice should render 1`] = `
       "labels": Array [],
     }
   }
-  height={180}
+  height="180px"
   options={
     Object {
       "layout": Object {

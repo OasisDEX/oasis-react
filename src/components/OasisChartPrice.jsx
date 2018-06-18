@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import charts from './../store/selectors/charts';
 
 import {Line} from 'react-chartjs-2';
-import {tooltipContainer} from './OasisChart';
+import {tooltipContainer, CHART_HEIGHT} from './OasisChart';
 import moment from 'moment';
 
 const propTypes = PropTypes && {
@@ -23,7 +23,7 @@ export class OasisChartPrice extends PureComponent {
   render() {
     return (
       <Line
-        height={180}
+        height={CHART_HEIGHT}
         data={{
           labels: this.props.priceChartLabels,
           datasets: [{
