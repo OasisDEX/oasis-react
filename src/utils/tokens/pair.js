@@ -4,8 +4,6 @@ import web3 from "../../bootstrap/web3";
 import { ASK, BID } from "../../store/reducers/trades";
 
 export const PRICE_DECIMAL = 5;
-// export const VOLUME_DECIMAL = 5;
-export const AMOUNT_DECIMALS = 5;
 
 const format = (baseToken, quoteToken) => `${baseToken}/${quoteToken}`;
 
@@ -84,7 +82,6 @@ const getBaseAndQuoteAmount = (tradeHistoryEntry, baseToken, quoteToken) => {
   }
 };
 
-const replacePricePattern = /^(\d+)\.(\d{5})\d*$/;
 // eslint-disable-next-line no-unused-vars
 const formatPrice = (
   price,
@@ -94,9 +91,8 @@ const formatPrice = (
 ) =>
   price ?
     new BigNumber(!fromWei ? price : web3.fromWei(price, ETH_UNIT_ETHER))
-        .toFixed(18)
-        .toString()
-        .replace(replacePricePattern, "$1.$2") :
+      .toFormat(5, 4)
+    :
     null;
 
 // const replaceAmountPattern = /^(\d+)\.(\d{3})\d*$/;
@@ -106,20 +102,13 @@ const formatAmount = (price, fromWei = false) =>
     String(
         new BigNumber(!fromWei ? price : web3.fromWei(price, ETH_UNIT_ETHER))
           .toFormat(3, 4)
-          // .round(3, 4)
-          // .toFixed(18)
-          // .replace(replaceAmountPattern, "$1.$2")
     ) :
     null;
 
-// const replaceVolumePattern = /^(\d+)\.(\d{2})\d*$/;
 const formatVolume = tradingPairVolume =>
   web3
     .fromWei(tradingPairVolume, ETH_UNIT_ETHER)
     .toFormat(2, 4);
-    // .round(2, 4)
-    // .toFixed(18)
-    // .replace(replaceVolumePattern, "$1.$2");
 
 const tradeType = (order, baseCurrency) => {
   if (order.buyWhichToken === baseCurrency) {
