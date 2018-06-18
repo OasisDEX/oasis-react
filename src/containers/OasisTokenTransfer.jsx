@@ -143,8 +143,8 @@ export class OasisTokenTransferWrapper extends PureComponent {
     );
   }
 
-  onFormChange(isFormTouched) {
-    if (isFormTouched && this.componentIsUnmounted === false) {
+  onFormChange() {
+    if (this.componentIsUnmounted === false) {
       this.setState({
         txStatus: undefined,
         txStartTimestamp: undefined
@@ -157,6 +157,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
     const { selectedToken } = this.props;
     return (
       <OasisWidgetFrame
+        className={styles.tokenTransferWidget}
         heading="Transfer"
         spaceForContent={true}
         headingChildren={this.selectedToken()}
@@ -202,5 +203,5 @@ export function mapDispatchToProps(dispatch) {
 OasisTokenTransferWrapper.propTypes = propTypes;
 OasisTokenTransferWrapper.displayName = "OasisTokenTransfer";
 export default connect(mapStateToProps, mapDispatchToProps)(
-  CSSModules(OasisTokenTransferWrapper, textStyles)
+  CSSModules(OasisTokenTransferWrapper, { textStyles, styles }, { allowMultiple: true })
 );

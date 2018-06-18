@@ -16,6 +16,7 @@ class EthereumAddressInput extends PureComponent {
         {...this.props.input}
         disabled={this.props.disabled}
         style={inputStyle}
+        required={this.props.required}
         placeholder={'0x'} type="text"
       />
     );

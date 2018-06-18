@@ -140,3 +140,9 @@ export const subscriptionTypeToKeyMap = {
   [SUBSCRIPTIONS_ETHER_BALANCE_CHANGE_EVENTS]: 'etherBalance',
   [SUBSCRIPTIONS_TOKEN_TRANSFER_EVENTS]: 'tokenTransfers'
 };
+
+/**
+ * Validation errors
+ */
+
+export const VALIDATION_VALUE_IS_REQUIRED = 'VALIDATION/VALUE_IS_REQUIRED';

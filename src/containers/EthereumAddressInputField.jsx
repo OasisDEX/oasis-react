@@ -9,6 +9,7 @@ import { Field } from "redux-form/immutable";
 import web3 from "../bootstrap/web3";
 import CSSModule from "react-css-modules";
 import style from "./EthereumAddressInputField.scss";
+import { VALIDATION_VALUE_IS_REQUIRED } from '../constants';
 
 const propTypes = PropTypes && {
   fieldName: PropTypes.string.isRequired,
@@ -33,7 +34,7 @@ export class EthereumAddressInputFieldWrapper extends PureComponent {
       <div className={style.EthereumAddressInputField}>
         <Field
           disabled={disabled}
-          required
+          required={this.props.required}
           validate={this.validateEthereumAddress}
           component={EthereumAddressInput}
           name={fieldName}
@@ -44,6 +45,11 @@ export class EthereumAddressInputFieldWrapper extends PureComponent {
 
   validateEthereumAddress(value) {
     const { onValidityChange } = this.props;
+    if (this.props.required) {
+      if (!value) {
+        return VALIDATION_VALUE_IS_REQUIRED;
+      }
+    }
     if (value && !web3.isAddress(value)) {
       if (this.componentIsUnmounted === false) {
         onValidityChange && onValidityChange(false);
