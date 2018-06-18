@@ -63,6 +63,7 @@ export class OasisChartPrice extends PureComponent {
               display: true,
               ticks: {
                 maxTicksLimit: 6,
+                maxRotation: 0,
                 callback: ts => moment.unix(ts).format('DD/MM'),
               },
             }],
