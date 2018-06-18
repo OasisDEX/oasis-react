@@ -8,6 +8,7 @@ import CSSModules from "react-css-modules/dist/index";
 import OasisSoldReceivedAmounts from "./OasisSoldReceivedAmounts";
 import OasisIsTokenTradingEnabledByUserWrapper from "../containers/OasisIsTokenTradingEnabledByUser";
 import InfoBox from "./InfoBox";
+import OasisIcon from './OasisIcon';
 // import tokenToBeAllowedForOffer from "../utils/offers/tokenToBeAllowedForOffer";
 // import { isVolumeOrPriceEmptyOrZero } from '../store/selectors';
 
@@ -19,7 +20,8 @@ const propTypes = PropTypes && {
   amountReceived: PropTypes.string.isRequired,
   gasEstimateInfo: ImmutablePropTypes.map.isRequired,
   isTokenTradingEnabled: PropTypes.bool.isRequired,
-  isVolumeOrPriceEmptyOrZero: PropTypes.bool
+  isVolumeOrPriceEmptyOrZero: PropTypes.bool,
+  contractsLoaded: PropTypes.bool
 };
 const defaultProps = {
 };
@@ -51,6 +53,17 @@ export class OasisOfferSummary extends PureComponent {
     return (<div>Enable trading to unlock gas est.</div>);
   }
 
+  renderIsTokenEnabledSection() {
+    const { sellToken, contractsLoaded } = this.props;
+    return contractsLoaded ? (
+      <OasisIsTokenTradingEnabledByUserWrapper
+        tokenName={sellToken}
+      />
+    ) : (
+      <div style={{ marginBottom: '4px' }}><OasisIcon icon="loading"/>
+      <span style={{ marginLeft:'5px', display: 'inline-block' }}>Loading market contracts...</span></div>
+    )
+  }
   render() {
     const {
       sellToken,
@@ -72,9 +85,7 @@ export class OasisOfferSummary extends PureComponent {
                 className={styles.detailsAmountCol}
               />
               <div className={styles.detailsTradingCol}>
-                <OasisIsTokenTradingEnabledByUserWrapper
-                  tokenName={sellToken}
-                />
+                {this.renderIsTokenEnabledSection()}
                 {isTokenTradingEnabled
                   ? this.renderGasEstimate()
                   : OasisOfferSummary.renderGasEstimateNotEnabledInfo()}

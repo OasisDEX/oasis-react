@@ -18,9 +18,15 @@ import { isOfferOwner } from "../utils/orders";
 import OasisSelect from "./OasisSelect";
 import styles from "./OasisMyOrders.scss";
 import OasisOfferCancelModalWrapper from "../containers/OasisOfferCancelModal";
-import { OFFER_STATUS_INACTIVE, TYPE_BUY_OFFER, TYPE_SELL_OFFER } from '../store/reducers/offers';
-import { OasisSignificantDigitsWrapper } from "../containers/OasisSignificantDigits";
+import {
+  OFFER_STATUS_INACTIVE,
+  TYPE_BUY_OFFER,
+  TYPE_SELL_OFFER
+} from "../store/reducers/offers";
+import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
 import OasisButton from "./OasisButton";
+import createEtherscanTransactionLink from "../utils/createEtherscanTransactionLink";
+import OasisIcon from "./OasisIcon";
 
 const myOrdersDisplayFormat = offer => {
   let baseAmount = null,
@@ -58,30 +64,18 @@ const myOrdersDisplayFormat = offer => {
 
 const myOpenOffersFilter = entry => {
   const myAccountAddress = web3.eth.defaultAccount;
-  return entry.owner.toString() === myAccountAddress.toString() && entry.status !== OFFER_STATUS_INACTIVE;
+  return (
+    entry.owner.toString() === myAccountAddress.toString() &&
+    entry.status !== OFFER_STATUS_INACTIVE
+  );
 };
 
-const myOffersFilter = entry => {
-  const myAccountAddress = web3.eth.defaultAccount;
-  const isOfferMaker = entry.maker.toString() === myAccountAddress.toString();
-  const isOfferTaker = entry.taker.toString() === myAccountAddress.toString();
-  return isOfferMaker || isOfferTaker;
-};
-
-let actionsColumnTemplate = function(offer) {
-  const { offerToCancel } = this.state;
-  return isOfferOwner(offer) ? (
-    <div>
-      <OasisButton
-        size="xs"
-        disabled={offerToCancel}
-        onClick={() => this.setState({ offerToCancel: offer })}
-      >
-        Cancel
-      </OasisButton>
-    </div>
-  ) : null;
-};
+// const myOffersFilter = entry => {
+//   const myAccountAddress = web3.eth.defaultAccount;
+//   const isOfferMaker = entry.maker.toString() === myAccountAddress.toString();
+//   const isOfferTaker = entry.taker.toString() === myAccountAddress.toString();
+//   return isOfferMaker || isOfferTaker;
+// };
 
 const tradesHistoryColsDefinition = (baseToken, quoteToken) => [
   { heading: "date", key: "date" },
@@ -117,57 +111,113 @@ const tradesHistoryColsDefinition = (baseToken, quoteToken) => [
   }
 ];
 
-const openOrdersColsDefinition = (baseToken, quoteToken, orderActions) => [
-  { heading: "action", key: "tradeTypeEl" },
-  {
-    heading: `price`,
-    template: row => (
-      <OasisSignificantDigitsWrapper
-        fullPrecisionAmount={row.priceFullPrecision}
-        amount={row.price}
-      />
-    )
-  },
-  {
-    heading: `${quoteToken}`,
-    template: row => (
-      <OasisSignificantDigitsWrapper
-        fullPrecisionUnit={ETH_UNIT_ETHER}
-        fullPrecisionAmount={row.quoteAmountFullPrecision}
-        amount={row.quoteAmount}
-      />
-    )
-  },
-  {
-    heading: `${baseToken}`,
-    template: row => (
-      <OasisSignificantDigitsWrapper
-        fullPrecisionUnit={ETH_UNIT_ETHER}
-        fullPrecisionAmount={row.baseAmountFullPrecision}
-        amount={row.baseAmount}
-      />
-    )
-  },
-  { heading: ``, template: actionsColumnTemplate.bind(orderActions) }
-];
-
 const propTypes = PropTypes && {
-  trades: ImmutablePropTypes.list
+  trades: ImmutablePropTypes.list,
+  fetchAndSubscribeUserTradesHistory: PropTypes.func.isRequired,
+  activeNetworkName: PropTypes.string,
+  removeOrderCancelledByTheOwner: PropTypes.func,
+  initialMarketHistoryLoaded: PropTypes.bool,
+  loadingUserMarketHistory: PropTypes.bool
 };
 const defaultProps = {};
 
+const VIEW_TYPE_OPEN_OFFERS = "Open";
+const VIEW_TYPE_MARKET_HISTORY = "Closed";
+
 class OasisMyOrders extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.viewType = "Open";
-    this.onViewTypeChange = this.onViewTypeChange.bind(this);
-    actionsColumnTemplate = actionsColumnTemplate.bind(this);
+
+
+  openOrdersColsDefinition(baseToken, quoteToken, orderActions) {
+    return [
+      { heading: "action", key: "tradeTypeEl" },
+      {
+        heading: `price`,
+        template: row => (
+          <OasisSignificantDigitsWrapper
+            fullPrecisionAmount={row.priceFullPrecision}
+            amount={row.price}
+          />
+        )
+      },
+      {
+        heading: `${quoteToken}`,
+        template: row => (
+          <OasisSignificantDigitsWrapper
+            fullPrecisionUnit={ETH_UNIT_ETHER}
+            fullPrecisionAmount={row.quoteAmountFullPrecision}
+            amount={row.quoteAmount}
+          />
+        )
+      },
+      {
+        heading: `${baseToken}`,
+        template: row => (
+          <OasisSignificantDigitsWrapper
+            fullPrecisionUnit={ETH_UNIT_ETHER}
+            fullPrecisionAmount={row.baseAmountFullPrecision}
+            amount={row.baseAmount}
+          />
+        )
+      },
+      { heading: ``, template: this.actionsColumnTemplate.bind(orderActions) }
+    ];
   }
 
-  onViewTypeChange(ev) {
-    this.viewType = ev.target.value;
-    this.forceUpdate();
+  actionsColumnTemplate(offer) {
+    const { offerToCancel, lastCancelledOfferId } = this.state;
+    const { activeTradingPair } = this.props;
+    if (
+      offer.id.toString() === lastCancelledOfferId &&
+      String(lastCancelledOfferId)
+    ) {
+      this.props.removeOrderCancelledByTheOwner({
+        offerType: offer.offerType,
+        offerId: offer.id,
+        tradingPair: activeTradingPair
+      });
+    }
+    return isOfferOwner(offer) ? (
+      <div>
+        <OasisButton
+          size="xs"
+          disabled={
+            offerToCancel ||
+            (offer.id.toString() === lastCancelledOfferId &&
+              String(lastCancelledOfferId))
+          }
+          onClick={() => {
+            this.setState({ offerToCancel: offer });
+          }}
+        >
+          Cancel
+        </OasisButton>
+      </div>
+    ) : null;
+  }
+
+  constructor(props) {
+    super(props);
+    this.componentIsUnmounted = false;
+    this.state = { viewType: VIEW_TYPE_OPEN_OFFERS };
+    this.onViewTypeChange = this.onViewTypeChange.bind(this);
+    this.actionsColumnTemplate = this.actionsColumnTemplate.bind(this);
+  }
+
+  onViewTypeChange({ target: { value } }) {
+    if (this.componentIsUnmounted === false) {
+      this.setState({
+        viewType: value
+      });
+    }
+  }
+
+  static onRowClick({ transactionHash }, { activeNetworkName }) {
+    window.open(
+      createEtherscanTransactionLink({ activeNetworkName, transactionHash }),
+      "_blank",
+      "noopener"
+    );
+    window.focus();
   }
 
   renderOpenOffers() {
@@ -175,7 +225,8 @@ class OasisMyOrders extends PureComponent {
       activeTradingPair: { baseToken, quoteToken },
       sellOffers = [],
       buyOffers = [],
-      cancelOffer
+      cancelOffer,
+      activeNetworkName
     } = this.props;
     const orderActions = { cancelOffer };
     const myOpenOffers = sellOffers
@@ -199,12 +250,15 @@ class OasisMyOrders extends PureComponent {
       .sort((p, c) => (p.bid_price_sort < c.bid_price_sort ? 1 : -1))
       .map(myOrdersDisplayFormat);
 
-    const emptyTableFallback = <div className={styles.info}>You currently have no active offers</div>;
+    const emptyTableFallback = (
+      <div className={styles.info}>You currently have no active offers</div>
+    );
     return (
       <div>
         <OasisTable
+          metadata={{ activeNetworkName }}
           rows={myOpenOffers.toArray()}
-          col={openOrdersColsDefinition(baseToken, quoteToken, orderActions)}
+          col={this.openOrdersColsDefinition(baseToken, quoteToken, orderActions)}
           className={styles.openOffers}
           emptyFallback={emptyTableFallback}
         />
@@ -230,8 +284,8 @@ class OasisMyOrders extends PureComponent {
         baseAmount = new BigNumber(tradeHistoryEntry.buyHowMuch);
         quoteAmount = new BigNumber(tradeHistoryEntry.sellHowMuch);
       }
-
       return {
+        transactionHash: tradeHistoryEntry.transactionHash,
         date: moment.unix(tradeHistoryEntry.timestamp).format("DD-MM HH:mm"),
         tradeType: (
           <OasisTradeType order={tradeHistoryEntry} baseCurrency={baseToken} />
@@ -244,26 +298,50 @@ class OasisMyOrders extends PureComponent {
         priceFullPrecision: price(tradeHistoryEntry, baseToken, quoteToken)
       };
     };
-    const { trades, activeTradingPair: { baseToken, quoteToken } } = this.props;
-    const myTrades = trades.filter(myOffersFilter);
+    const {
+      trades = fromJS([]),
+      activeNetworkName,
+      activeTradingPair: { baseToken, quoteToken }
+    } = this.props;
+    const myTrades = trades.filter(tradeEntry => {
+      if (
+        (baseToken === tradeEntry.buyWhichToken &&
+          tradeEntry.sellWhichToken === quoteToken) ||
+        (quoteToken === tradeEntry.buyWhichToken &&
+          tradeEntry.sellWhichToken === baseToken)
+      ) {
+        return tradeEntry;
+      }
+    });
     const marketHistory = orderByTimestamp(myTrades.toJSON(), DESCENDING).map(
       toHistoricalTrades
     );
-      return (
-        <OasisTable
-          rows={marketHistory}
-          col={tradesHistoryColsDefinition(baseToken, quoteToken)}
-          className={styles.tradesHistory}
-          emptyFallback={<div className={styles.info}>Your trades history is empty</div>}
-        />
-      );
+    return (
+      <OasisTable
+        metadata={{ activeNetworkName }}
+        onRowClick={OasisMyOrders.onRowClick}
+        rows={marketHistory}
+        col={tradesHistoryColsDefinition(baseToken, quoteToken)}
+        className={styles.tradesHistory}
+        emptyFallback={
+          [true, null].includes(this.props.loadingUserMarketHistory) ? (
+            <div className={styles.info}>
+              {" "}
+              <OasisIcon icon="loading" /> Your trades history is loading
+            </div>
+          ) : (
+            <div className={styles.info}>Your trades history is empty</div>
+          )
+        }
+      />
+    );
   }
 
   renderContent() {
-    switch (this.viewType) {
-      case "Open":
+    switch (this.state.viewType) {
+      case VIEW_TYPE_OPEN_OFFERS:
         return this.renderOpenOffers();
-      case "Closed":
+      case VIEW_TYPE_MARKET_HISTORY:
         return this.renderTradesHistory();
     }
   }
@@ -272,11 +350,11 @@ class OasisMyOrders extends PureComponent {
     return (
       <OasisSelect
         onChange={this.onViewTypeChange}
-        value={this.viewType}
+        value={this.state.viewType}
         className={styles.select}
       >
-        <option value={"Open"}>Open</option>
-        <option value={"Closed"}>Closed</option>
+        <option value={VIEW_TYPE_OPEN_OFFERS}>Open</option>
+        <option value={VIEW_TYPE_MARKET_HISTORY}>Closed</option>
       </OasisSelect>
     );
   }
@@ -290,7 +368,14 @@ class OasisMyOrders extends PureComponent {
       >
         {offerToCancel && (
           <OasisOfferCancelModalWrapper
-            onModalClose={() => this.setState({ offerToCancel: undefined })}
+            onCancelledSuccesfully={lastCancelledOfferId => {
+              this.setState({ lastCancelledOfferId });
+            }}
+            onModalClose={() => {
+              if (this.componentIsUnmounted === false) {
+                this.setState({ offerToCancel: undefined });
+              }
+            }}
             offer={fromJS(offerToCancel)}
           />
         )}
@@ -298,6 +383,21 @@ class OasisMyOrders extends PureComponent {
       </OasisWidgetFrame>
     );
   }
+
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
+  }
+
+  // componentDidUpdate(prevProps, { viewType }) {
+  //   const { fetchAndSubscribeUserTradesHistory } = this.props;
+  //   const { viewType: currentViewType } = this.state;
+  //   if (
+  //     viewType !== currentViewType &&
+  //     currentViewType === VIEW_TYPE_MARKET_HISTORY
+  //   ) {
+  //     fetchAndSubscribeUserTradesHistory(true);
+  //   }
+  // }
 }
 
 OasisMyOrders.displayName = "OasisMyOrders";

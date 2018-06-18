@@ -17,6 +17,7 @@ import OasisButton from "../components/OasisButton";
 import { SETMAXBTN_HIDE_DELAY_MS } from "../constants";
 import platform from "../store/selectors/platform";
 import CSSModules from "react-css-modules";
+import OasisPleaseProvideEthereumAddress from "../components/OasisPleaseProvideEthereumAddress";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -32,6 +33,10 @@ export class TokenTransferFormWrapper extends PureComponent {
     this.state = {
       showMaxButton: false
     };
+    this.componentIsUnmounted = false;
+    this.onEthereumAddressInputValidityChange = this.onEthereumAddressInputValidityChange.bind(
+      this
+    );
     this.onFormChange = this.onFormChange.bind(this);
     this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
@@ -39,7 +44,17 @@ export class TokenTransferFormWrapper extends PureComponent {
 
   onFormChange() {
     const { onFormChange, anyTouched } = this.props;
-    onFormChange && onFormChange(anyTouched);
+    if (this.componentIsUnmounted === false) {
+      onFormChange && onFormChange(anyTouched);
+    }
+  }
+
+  onEthereumAddressInputValidityChange(isValid) {
+    if (this.componentIsUnmounted === false) {
+      this.setState({
+        showPleaseProvideEthereumAddressWarning: !isValid
+      });
+    }
   }
 
   render() {
@@ -56,7 +71,13 @@ export class TokenTransferFormWrapper extends PureComponent {
     return (
       <form method="POST" onSubmit={handleSubmit} onChange={this.onFormChange}>
         <table className={`${tableStyles.table} ${styles.transferTable}`}>
-          <thead><tr><td className={styles.thHeader}></td><td></td><td className={styles.thCurrency}></td></tr></thead>
+          <thead>
+            <tr>
+              <td className={styles.thHeader} />
+              <td />
+              <td className={styles.thCurrency} />
+            </tr>
+          </thead>
           <tbody>
             <tr>
               <th>Recipient</th>
@@ -64,14 +85,20 @@ export class TokenTransferFormWrapper extends PureComponent {
                 <EthereumAddressInputFieldWrapper
                   disabled={disabled || globalFormLock}
                   fieldName={"recipient"}
+                  onValidityChange={this.onEthereumAddressInputValidityChange}
                 />
               </td>
             </tr>
             <tr>
               <th>Amount</th>
-              <td className={`${tableStyles.withInput} ${styles.tdWithErrorMessages}`}>
+              <td
+                className={`${tableStyles.withInput} ${
+                  styles.tdWithErrorMessages
+                }`}
+              >
                 <div className={tableStyles.inputGroup}>
                   <OasisButton
+                    style={{ fontSize: "10px" }}
                     hidden={!this.state.showMaxButton}
                     type="button"
                     onClick={actions.transferMax}
@@ -105,9 +132,14 @@ export class TokenTransferFormWrapper extends PureComponent {
           </tbody>
         </table>
         {transferState}
-        <div
-          className={`${widgetStyles.OasisWidgetFooter} ${styles.footer}`}
-        >
+        <div>
+          <div>
+            {this.state.showPleaseProvideEthereumAddressWarning && (
+              <OasisPleaseProvideEthereumAddress />
+            )}
+          </div>
+        </div>
+        <div className={`${widgetStyles.OasisWidgetFooter} ${styles.footer}`}>
           <OasisButton
             type="submit"
             onClick={makeTransfer}
@@ -127,14 +159,22 @@ export class TokenTransferFormWrapper extends PureComponent {
   }
 
   onTotalFieldSectionFocus() {
-    this.setState({ showMaxButton: true });
+    if (this.componentIsUnmounted === false) {
+      this.setState({ showMaxButton: true });
+    }
   }
 
   onTotalFieldSectionBlur() {
-    setTimeout(
-      () => this.setState({ showMaxButton: false }),
-      SETMAXBTN_HIDE_DELAY_MS
-    );
+    if (this.componentIsUnmounted === false) {
+      setTimeout(
+        () => this.setState({ showMaxButton: false }),
+        SETMAXBTN_HIDE_DELAY_MS
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
   }
 }
 
@@ -156,5 +196,11 @@ TokenTransferFormWrapper.displayName = "TokenTransferForm";
 export default connect(mapStateToProps, mapDispatchToProps)(
   reduxForm({
     form: "tokenTransfer"
-  })(CSSModules(TokenTransferFormWrapper,  { styles, tableStyles, widgetStyles }, { allowMultiple: true }))
+  })(
+    CSSModules(
+      TokenTransferFormWrapper,
+      { styles, tableStyles, widgetStyles },
+      { allowMultiple: true }
+    )
+  )
 );

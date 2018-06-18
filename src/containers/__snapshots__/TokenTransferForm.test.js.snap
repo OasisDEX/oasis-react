@@ -25,6 +25,7 @@ exports[`(Container) TokenTransferForm should render 1`] = `
         >
           <Connect(EthereumAddressInputField)
             fieldName="recipient"
+            onValidityChange={[Function]}
           />
         </td>
       </tr>
@@ -42,6 +43,11 @@ exports[`(Container) TokenTransferForm should render 1`] = `
               hidden={true}
               onClick={[Function]}
               size="xs"
+              style={
+                Object {
+                  "fontSize": "10px",
+                }
+              }
               type="button"
             >
               transfer max
@@ -69,6 +75,9 @@ exports[`(Container) TokenTransferForm should render 1`] = `
       </tr>
     </tbody>
   </table>
+  <div>
+    <div />
+  </div>
   <div
     className="undefined undefined"
   >

@@ -51,6 +51,7 @@ exports[`(Container) OasisTradeOrders should render 1`] = `
     }
   />
   <OasisMyOrders
+    activeNetworkName="kovan"
     activeTradingPair={
       Object {
         "baseToken": "MKR",
@@ -62,7 +63,10 @@ exports[`(Container) OasisTradeOrders should render 1`] = `
       ]
     }
     cancelOffer={[Function]}
+    fetchAndSubscribeUserTradesHistory={[Function]}
     initialMarketHistoryLoaded={true}
+    loadingUserMarketHistory={false}
+    removeOrderCancelledByTheOwner={[Function]}
     sellOffers={
       Immutable.List [
       ]
@@ -94,6 +98,8 @@ Object {
   "actions": Object {
     "cancelOffer": [Function],
     "checkOfferIsActive": [Function],
+    "fetchAndSubscribeUserTradesHistory": [Function],
+    "removeOrderCancelledByTheOwner": [Function],
     "resetCompletedOfferCheck": [Function],
     "setActiveOfferTakeOfferId": [Function],
     "setOfferTakeModalOpen": [Function],
@@ -117,10 +123,13 @@ Object {
   "defaultAccount": "0x0000000000000000000000000000000000000000",
   "initialMarketHistoryLoaded": true,
   "isOfferTakeModalOpen": true,
+  "loadingUserMarketHistory": false,
   "marketData": Immutable.List [
 ],
   "sellOfferCount": undefined,
   "sellOffers": Immutable.List [
+],
+  "userTrades": Immutable.List [
 ],
 }
 `;

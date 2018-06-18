@@ -72,6 +72,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
+    this.componentIsUnmounted = false;
     this.onFormChange = this.onFormChange.bind(this);
     this.onBuyOffer = this.onBuyOffer.bind(this);
     this.onCancel = this.onCancel.bind(this);
@@ -144,10 +145,12 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
   }
 
   onFormChange() {
-    this.setState({
-      txStatus: undefined,
-      txStartTimestamp: undefined
-    });
+    if (this.componentIsUnmounted === false) {
+      this.setState({
+        txStatus: undefined,
+        txStartTimestamp: undefined
+      });
+    }
   }
 
   renderTransactionStatus() {

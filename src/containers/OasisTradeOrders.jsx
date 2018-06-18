@@ -1,28 +1,30 @@
-import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { PureComponent } from "react";
+import { PropTypes } from "prop-types";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { List } from 'immutable';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { List } from "immutable";
 
-import { trades } from '../utils/tokens/pair';
-import OasisBuyOrders from '../components/OasisBuyOrders';
-import OasisSellOrders from '../components/OasisSellOrders';
-import OasisMarketHistory from '../components/OasisMarketHistory';
-import tradesSelectors from '../store/selectors/trades';
-import tokens from '../store/selectors/tokens';
-import offers from '../store/selectors/offers';
-import offersReducer from '../store/reducers/offers';
-import OasisMyOrders from '../components/OasisMyOrders';
-import offerTakesReducer  from '../store/reducers/offerTakes';
-import OasisTakeOfferModalWrapper  from './OasisTakeOfferModal';
-import offerTakes from '../store/selectors/offerTakes';
-import OasisMakeBuyOfferWrapper  from './OasisMakeBuyOffer';
-import OasisMakeSellOfferWrapper  from './OasisMakeSellOffer';
-import network from '../store/selectors/network';
-import {FlexBox} from "../components/FlexBox";
-import accounts from '../store/selectors/accounts';
+import { trades } from "../utils/tokens/pair";
+import OasisBuyOrders from "../components/OasisBuyOrders";
+import OasisSellOrders from "../components/OasisSellOrders";
+import OasisMarketHistory from "../components/OasisMarketHistory";
+import tradesSelectors from "../store/selectors/trades";
+import tokens from "../store/selectors/tokens";
+import offers from "../store/selectors/offers";
+import offersReducer from "../store/reducers/offers";
+import OasisMyOrders from "../components/OasisMyOrders";
+import offerTakesReducer from "../store/reducers/offerTakes";
+import OasisTakeOfferModalWrapper from "./OasisTakeOfferModal";
+import offerTakes from "../store/selectors/offerTakes";
+import OasisMakeBuyOfferWrapper from "./OasisMakeBuyOffer";
+import OasisMakeSellOfferWrapper from "./OasisMakeSellOffer";
+import network from "../store/selectors/network";
+import { FlexBox } from "../components/FlexBox";
+import accounts from "../store/selectors/accounts";
+import userTradesReducer from "../store/reducers/userTrades";
+import userTrades from "../store/selectors/userTrades";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -30,21 +32,15 @@ const propTypes = PropTypes && {
   activeTradingPair: PropTypes.object.isRequired
 };
 
-
 export class OasisTradeOrdersWrapper extends PureComponent {
-
   offerTakeModal() {
+    const { isOfferTakeModalOpen, activeOfferTakeType } = this.props;
 
-    const {
-      isOfferTakeModalOpen,
-      activeOfferTakeType,
-    } = this.props;
-
-    return isOfferTakeModalOpen && (
-      <OasisTakeOfferModalWrapper
-        offerTakeType={activeOfferTakeType}
-      />
-    )
+    return (
+      isOfferTakeModalOpen && (
+        <OasisTakeOfferModalWrapper offerTakeType={activeOfferTakeType} />
+      )
+    );
   }
 
   render() {
@@ -57,20 +53,28 @@ export class OasisTradeOrdersWrapper extends PureComponent {
       buyOffers,
       sellOffers,
       activeNetworkName,
+      userTrades,
+      loadingUserMarketHistory,
       actions: {
         cancelOffer,
         setOfferTakeModalOpen,
         setActiveOfferTakeOfferId,
         checkOfferIsActive,
-        resetCompletedOfferCheck
+        resetCompletedOfferCheck,
+        fetchAndSubscribeUserTradesHistory,
+        removeOrderCancelledByTheOwner
       }
     } = this.props;
 
-    const tradesList = trades(marketData, activeTradingPair.baseToken, activeTradingPair.quoteToken);
+    const tradesList = trades(
+      marketData,
+      activeTradingPair.baseToken,
+      activeTradingPair.quoteToken
+    );
     return (
       <FlexBox wrap>
-        <OasisMakeBuyOfferWrapper/>
-        <OasisMakeSellOfferWrapper/>
+        <OasisMakeBuyOfferWrapper />
+        <OasisMakeSellOfferWrapper />
         <div>{this.offerTakeModal()}</div>
         <OasisBuyOrders
           onSetOfferTakeModalOpen={setOfferTakeModalOpen}
@@ -93,12 +97,19 @@ export class OasisTradeOrdersWrapper extends PureComponent {
           onResetCompletedOfferCheck={resetCompletedOfferCheck}
         />
         <OasisMyOrders
+          activeNetworkName={activeNetworkName}
           sellOffers={sellOffers}
           buyOffers={buyOffers}
-          trades={tradesList}
+          trades={userTrades}
           cancelOffer={cancelOffer}
           activeTradingPair={activeTradingPair}
           initialMarketHistoryLoaded={initialMarketHistoryLoaded}
+          fetchAndSubscribeUserTradesHistory={
+            fetchAndSubscribeUserTradesHistory
+          }
+          loadingUserMarketHistory={loadingUserMarketHistory}
+          removeOrderCancelledByTheOwner={removeOrderCancelledByTheOwner}
+
         />
         <OasisMarketHistory
           trades={tradesList}
@@ -116,7 +127,9 @@ export function mapStateToProps(state) {
     defaultAccount: accounts.defaultAccount(state),
     activeTradingPair: tokens.activeTradingPair(state),
     marketData: tradesSelectors.marketsData(state),
-    initialMarketHistoryLoaded: tradesSelectors.initialMarketHistoryLoaded(state),
+    initialMarketHistoryLoaded: tradesSelectors.initialMarketHistoryLoaded(
+      state
+    ),
     // loadingBuyOffers: offers.loadingBuyOffers(state),
     // loadingSellOffers: offers.loadingSellOffers(state),
     buyOfferCount: offers.activeTradingPairBuyOfferCount(state),
@@ -127,7 +140,8 @@ export function mapStateToProps(state) {
     isOfferTakeModalOpen: offerTakes.isOfferTakeModalOpen(state),
     activeOfferTake: offerTakes.activeOfferTake(state),
     activeNetworkName: network.activeNetworkName(state),
-
+    userTrades: userTrades.marketsData(state),
+    loadingUserMarketHistory: userTrades.loadindUserMarketHistory(state)
   };
 }
 
@@ -135,13 +149,21 @@ export function mapDispatchToProps(dispatch) {
   const actions = {
     cancelOffer: offersReducer.actions.cancelOfferEpic,
     setOfferTakeModalOpen: offerTakesReducer.actions.setOfferTakeModalOpenEpic,
-    setActiveOfferTakeOfferId: offerTakesReducer.actions.setActiveOfferTakeOfferId,
-    checkOfferIsActive: offerTakesReducer.actions.checkIfOfferTakeSubjectStillActiveEpic,
-    resetCompletedOfferCheck: offerTakesReducer.actions.resetCompletedOfferCheck
+    setActiveOfferTakeOfferId:
+      offerTakesReducer.actions.setActiveOfferTakeOfferId,
+    checkOfferIsActive:
+      offerTakesReducer.actions.checkIfOfferTakeSubjectStillActiveEpic,
+    resetCompletedOfferCheck:
+      offerTakesReducer.actions.resetCompletedOfferCheck,
+    fetchAndSubscribeUserTradesHistory:
+      userTradesReducer.actions.fetchAndSubscribeUserTradesHistoryEpic,
+    removeOrderCancelledByTheOwner: offersReducer.actions.removeOrderCancelledByTheOwner
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }
 
 OasisTradeOrdersWrapper.propTypes = propTypes;
-OasisTradeOrdersWrapper.displayName = 'OasisTradeOrders';
-export default connect(mapStateToProps, mapDispatchToProps)(OasisTradeOrdersWrapper);
+OasisTradeOrdersWrapper.displayName = "OasisTradeOrders";
+export default connect(mapStateToProps, mapDispatchToProps)(
+  OasisTradeOrdersWrapper
+);

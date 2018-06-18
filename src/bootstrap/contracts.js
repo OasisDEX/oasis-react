@@ -14,6 +14,7 @@ import { TOKEN_WRAPPED_GNT } from "../constants";
 
 let brokers = fromJS({});
 let contracts = {};
+let contractsInitialized = false;
 
 const init = networkName => {
   const tokencontractsDeploymentAdressessList = config["tokens"][networkName];
@@ -148,7 +149,11 @@ const init = networkName => {
     abiList,
     createContractInstance
   });
+  setContractsInitialized();
 };
+
+const setContractsInitialized = initializationState =>
+  (contractsInitialized = initializationState);
 
 const initDepositBrokerContract = (token, address) => {
   if (!web3.isAddress(address)) {
@@ -180,7 +185,7 @@ const getMarketContractInstance = () => {
 
 const getTokenContractsList = () => contracts.tokens;
 
-const getMarketNoProxyContractInstance =  () => contracts.marketNoProxy;
+const getMarketNoProxyContractInstance = () => contracts.marketNoProxy;
 const getTokenNoProxyContractInstance = tokenName =>
   contracts.noProxyTokens[tokenName];
 
@@ -190,6 +195,8 @@ const getDepositBrokerContractInstance = token => {
   }
 };
 
+const areContractsInitialized = () => contractsInitialized;
+
 export {
   getTokenContractInstance,
   getDepositBrokerContractInstance,
@@ -197,7 +204,8 @@ export {
   getTokenContractsList,
   getMarketNoProxyContractInstance,
   getTokenNoProxyContractInstance,
-  initDepositBrokerContract
+  initDepositBrokerContract,
+  areContractsInitialized
 };
 
 export default {

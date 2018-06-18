@@ -17,6 +17,7 @@ exports[`(Container) OasisOfferSummary should render 1`] = `
     amountReceived="N/A"
     amountSold="N/A"
     buyToken="MKR"
+    contractsLoaded={true}
     gasEstimateInfo={
       Immutable.Map {
         isGasEstimatePending: undefined,
@@ -43,6 +44,7 @@ Object {
 
 exports[`(Container) OasisOfferSummary will receive right props 1`] = `
 Object {
+  "contractsLoaded": true,
   "gasEstimateInfo": Immutable.Map {
     isGasEstimatePending: undefined,
     transactionGasCostEstimate: undefined,

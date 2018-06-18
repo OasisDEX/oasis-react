@@ -2,6 +2,7 @@ import BigNumber from "bignumber.js";
 import { ETH_UNIT_ETHER } from "../../constants";
 import web3 from "../../bootstrap/web3";
 import { ASK, BID } from "../../store/reducers/trades";
+import isNumeric from "../numbers/isNumeric";
 
 export const PRICE_DECIMAL = 5;
 
@@ -85,30 +86,88 @@ const getBaseAndQuoteAmount = (tradeHistoryEntry, baseToken, quoteToken) => {
 // eslint-disable-next-line no-unused-vars
 const formatPrice = (
   price,
-  fromWei = false,
+  fromWei = false
   // unit = ETH_UNIT_ETHER,
   // decimalPlaces = PRICE_DECIMAL
-) =>
-  price ?
-    new BigNumber(!fromWei ? price : web3.fromWei(price, ETH_UNIT_ETHER))
-      .toFormat(5, 4)
-    :
-    null;
+) => {
+  try {
+    if ([null, undefined].includes(price)) {
+      return null;
+    }
+
+    const priceSanitized =
+      isNumeric(price) && price.toString().replace(/[,']+/g, "");
+    return priceSanitized
+      ? new BigNumber(
+          !fromWei
+            ? priceSanitized
+            : web3.fromWei(priceSanitized, ETH_UNIT_ETHER)
+        )
+          .toFixed(18)
+          .toString()
+          .replace(replacePricePattern, "$1.$2")
+      : null;
+  } catch (e) {
+    console.warn(e.toString());
+  }
+  return null;
+};
 
 // const replaceAmountPattern = /^(\d+)\.(\d{3})\d*$/;
 //eslint-disable-next-line no-unused-vars
-const formatAmount = (price, fromWei = false) =>
-  price ?
-    String(
-        new BigNumber(!fromWei ? price : web3.fromWei(price, ETH_UNIT_ETHER))
-          .toFormat(3, 4)
-    ) :
-    null;
+
+const formatTokenAmount = (price, fromWei = false, unit, decimalPlaces) => {
+  if ([null, undefined].includes(price)) {
+    return null;
+  }
+  try {
+    const priceSanitized =
+      isNumeric(price) && price.toString().replace(/[,']+/g, "");
+    return priceSanitized
+      ? String(
+        new BigNumber(
+          !fromWei
+            ? priceSanitized
+            : web3.fromWei(priceSanitized, unit, decimalPlaces)
+        ).toFormat(decimalPlaces, 4)
+        // .round(3, 4)
+        // .toFixed(18)
+        // .replace(replaceAmountPattern, "$1.$2")
+      )
+      : null;
+  } catch (e) {
+    console.warn(e.toString());
+  }
+};
+
+const formatAmount = (price, fromWei = false) => {
+  if ([null, undefined].includes(price)) {
+    return null;
+  }
+  try {
+    const priceSanitized = isNumeric(price) && price.toString().replace(/[,']+/g, "");
+    return priceSanitized
+      ? String(
+        new BigNumber(
+          !fromWei
+            ? priceSanitized
+            : web3.fromWei(priceSanitized, ETH_UNIT_ETHER)
+        ).toFormat(3, 4)
+        // .round(3, 4)
+        // .toFixed(18)
+        // .replace(replaceAmountPattern, "$1.$2")
+      )
+      : null;
+  } catch (e) {
+    console.warn(e.toString());
+  }
+};
 
 const formatVolume = tradingPairVolume =>
-  web3
-    .fromWei(tradingPairVolume, ETH_UNIT_ETHER)
-    .toFormat(2, 4);
+  web3.fromWei(tradingPairVolume, ETH_UNIT_ETHER).toFormat(2, 4);
+// .round(2, 4)
+// .toFixed(18)
+// .replace(replaceVolumePattern, "$1.$2");
 
 const tradeType = (order, baseCurrency) => {
   if (order.buyWhichToken === baseCurrency) {
@@ -141,5 +200,6 @@ export {
   tradeType,
   formatTradeType,
   formatAmount,
+  formatTokenAmount,
   getBaseAndQuoteAmount
 };

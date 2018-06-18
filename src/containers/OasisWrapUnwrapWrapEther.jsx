@@ -31,6 +31,7 @@ export class OasisWrapUnwrapWrapEtherWrapper extends PureComponent {
     this.state = {};
     this.makeWrap = this.makeWrap.bind(this);
     this.onFormChange = this.onFormChange.bind(this);
+    this.componentIsUnmounted = false;
   }
 
   makeWrap() {
@@ -105,7 +106,7 @@ export class OasisWrapUnwrapWrapEtherWrapper extends PureComponent {
   }
 
   onFormChange() {
-    if (!this.hasNextTransaction) {
+    if (!this.hasNextTransaction && this.componentIsUnmounted === false) {
       this.setState({
         txStatus: undefined,
         txStartTimestamp: undefined
@@ -114,7 +115,11 @@ export class OasisWrapUnwrapWrapEtherWrapper extends PureComponent {
   }
 
   render() {
-    const { hidden, activeUnwrappedToken, activeUnwrappedTokenBalance } = this.props;
+    const {
+      hidden,
+      activeUnwrappedToken,
+      activeUnwrappedTokenBalance
+    } = this.props;
     const { txStatus, txStartTimestamp, txStartMeta, disableForm } = this.state;
     return (
       <OasisWrapUnwrapWrapEther
@@ -131,18 +136,18 @@ export class OasisWrapUnwrapWrapEtherWrapper extends PureComponent {
     );
   }
 
-  componentDidUpdate() {
-    // if (
-    //   this.props.activeUnwrappedToken &&
-    //   this.props.activeUnwrappedToken !== prevProps.activeUnwrappedToken
-    // ) {
-    //   this.props.actions.resetActiveWrapForm();
-    //   if (![TX_STATUS_AWAITING_CONFIRMATION].includes(this.state.txStatus))
-    //     this.setState({
-    //       txStatus: undefined,
-    //       txStartTimestamp: undefined
-    //     });
-    // }
+  componentDidUpdate({ activeUnwrappedToken }) {
+    if (
+      this.props.activeUnwrappedToken &&
+      this.props.activeUnwrappedToken !== activeUnwrappedToken
+    ) {
+      if (!this.state.txStatus) {
+        this.props.actions.resetActiveWrapForm(WRAP_ETHER);
+      }
+    }
+  }
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
   }
 }
 

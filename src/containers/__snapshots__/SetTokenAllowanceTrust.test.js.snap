@@ -31,7 +31,7 @@ exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
               "cursor": "default",
               "display": "flex",
               "minHeight": "24px",
-              "postion": "relative",
+              "position": "relative",
               "top": "1px",
             }
           }

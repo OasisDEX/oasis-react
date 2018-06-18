@@ -58,8 +58,8 @@ export const WRAP_ETHER = "WRAP_UNWRAP/WRAP_ETHER";
 export const UNWRAP_ETHER = "WRAP_UNWRAP/UNWRAP_ETHER";
 export const WRAP_TOKEN_WRAPPER_NEXT_TRANSACTION_DELAY_MS = 3000;
 
-export const WRAP_GNT_TOKEN = "WRAP_UNWRAP/WRAP_GNT_TOKEN";
-export const UNWRAP_GNT_TOKEN = "WRAP_UNWRAP/UNWRAP_GNT_TOKEN";
+export const WRAP_TOKEN_WRAPPER = "WRAP_UNWRAP/WRAP_GNT_TOKEN";
+export const UNWRAP_TOKEN_WRAPPER = "WRAP_UNWRAP/UNWRAP_GNT_TOKEN";
 
 export const TOKEN_WRAP_STATUS_AWAITING_TRANSFER_TO_BROKER_APPROVAL =
   "TOKEN_WRAP_STATUS_AWAITING_TRANSFER_TO_BROKER_APPROVAL";
@@ -224,7 +224,7 @@ const unwrapEtherEpic = (
 };
 
 const wrapGNTTokenAction = createAction(
-  WRAP_GNT_TOKEN,
+  WRAP_TOKEN_WRAPPER,
   async ({
     brokerAddress,
     amountInWei,
@@ -284,7 +284,7 @@ const wrapGNTTokenEpic = (
     getState(),
     TOKEN_GOLEM
   );
-  const wrapAmount = getWrapAmount(getState(), WRAP_GNT_TOKEN);
+  const wrapAmount = getWrapAmount(getState(), WRAP_TOKEN_WRAPPER);
   if (!wrapUnwrap.isTokenBrokerInitiallyLoaded(getState(), TOKEN_GOLEM)) {
     await dispatch(loadGNTBrokerAddressEpic());
   }
@@ -392,7 +392,7 @@ const clearDepositBrokerEpic = (tokenName, withCallbacks) => dispatch => {
 };
 
 const unwrapGNTToken = createAction(
-  UNWRAP_GNT_TOKEN,
+  UNWRAP_TOKEN_WRAPPER,
   async ({
     gasLimit = DEFAULT_GAS_LIMIT,
     gasPrice = DEFAULT_GAS_PRICE,
@@ -416,7 +416,7 @@ const unwrapGNTTokenEpic = (
       transactionDispatcher: () =>
         dispatch(
           doUnwrapGNTToken({
-            amountInWei: getUnwrapAmount(getState(), UNWRAP_GNT_TOKEN)
+            amountInWei: getUnwrapAmount(getState(), UNWRAP_TOKEN_WRAPPER)
           })
         ),
       transactionType: TX_UNWRAP_TOKEN_WRAPPER,
@@ -475,10 +475,11 @@ const setWrapMax = () => (dispatch, getState) => {
 
 const setUnwrapMax = () => (dispatch, getState) => {
   const activeWrappedToken = wrapUnwrap.activeWrappedToken(getState());
-  const maxUnwrapValueInEther =
-    activeWrappedToken === TOKEN_ETHER
-      ? web3.fromWei(balances.ethBalance(getState()))
-      : balances.tokenBalance(getState(), { tokenName: activeWrappedToken });
+  const maxUnwrapValueInEther = balances.tokenBalance(getState(), {
+    tokenName: activeWrappedToken
+  });
+
+  console.log({activeWrappedToken ,maxUnwrapValueInEther})
   if (maxUnwrapValueInEther) {
     dispatch(
       change(

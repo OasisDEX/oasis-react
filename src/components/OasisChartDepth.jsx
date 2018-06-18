@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import charts from './../store/selectors/charts';
 
 import {Line} from 'react-chartjs-2';
-import {tooltipContainer} from './OasisChart';
+import {tooltipContainer, CHART_HEIGHT} from './OasisChart';
 import BigNumber from 'bignumber.js';
 
 const propTypes = PropTypes && {
@@ -30,7 +30,7 @@ export class OasisChartDepth extends PureComponent {
   render() {
     return (
       <Line
-        height={180}
+        height={CHART_HEIGHT}
         data={{
           labels: this.props.depthChartLabels,
           datasets: [{

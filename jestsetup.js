@@ -327,6 +327,21 @@ global.storeMock = {
       isExpanded: false
     }
   },
+  userTrades: {
+    volumes: {},
+    marketHistory: [],
+    initialMarketHistoryLoaded: true,
+    loadingTradeHistory: false,
+    volumesLoaded: false,
+    loadingUserMarketHistory: false,
+    tradeHistoryStartingBlockTimestamp: null,
+    latestEventsBlocks: {
+      LogTake: null,
+      LogMake: null,
+      LogTrade: null
+    },
+    trades: []
+  },
   trades: {
     volumes: {
       'W-ETH/DAI': {

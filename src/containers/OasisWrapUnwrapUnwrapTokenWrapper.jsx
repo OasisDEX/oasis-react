@@ -6,7 +6,9 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import OasisWrapUnwrapUnwrap from "../components/OasisWrapUnwrapUnwrap";
 import wrapUnwrap from "../store/selectors/wrapUnwrap";
-import wrapUnwrapReducer from "../store/reducers/wrapUnwrap";
+import wrapUnwrapReducer, {
+  UNWRAP_TOKEN_WRAPPER
+} from "../store/reducers/wrapUnwrap";
 import {
   TX_STATUS_AWAITING_CONFIRMATION,
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
@@ -25,6 +27,7 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
+    this.componentIsUnmounted = false;
     this.makeUnwrap = this.makeUnwrap.bind(this);
     this.onFormChange = this.onFormChange.bind(this);
   }
@@ -73,7 +76,7 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
     this.setState({
       txStatus: TX_STATUS_CONFIRMED
     });
-    this.props.actions.resetActiveUnwrapForm();
+    this.props.actions.resetActiveUnwrapForm(UNWRAP_TOKEN_WRAPPER);
     this.setState({
       disableForm: false
     });
@@ -88,14 +91,20 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
   }
 
   onFormChange() {
-    this.setState({
-      txStatus: undefined,
-      txStartTimestamp: undefined
-    });
+    if (this.componentIsUnmounted === false) {
+      this.setState({
+        txStatus: undefined,
+        txStartTimestamp: undefined
+      });
+    }
   }
 
   render() {
-    const { hidden, activeWrappedToken, activeWrappedTokenBalance } = this.props;
+    const {
+      hidden,
+      activeWrappedToken,
+      activeWrappedTokenBalance
+    } = this.props;
     const { txStatus, txStartTimestamp, disableForm } = this.state;
     return (
       <OasisWrapUnwrapUnwrap
@@ -111,15 +120,19 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
       />
     );
   }
-  componentDidUpdate() {
-    // if (this.props.activeWrappedToken && this.props.activeWrappedToken !== prevProps.activeWrappedToken){
-    //   this.props.actions.resetActiveUnwrapForm();
-    //   if (![TX_STATUS_AWAITING_CONFIRMATION].includes(this.state.txStatus))
-    //     this.setState({
-    //       txStatus: undefined,
-    //       txStartTimestamp: undefined
-    //     })
-    // }
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.activeWrappedToken &&
+      this.props.activeWrappedToken !== prevProps.activeWrappedToken
+    ) {
+      if (!this.state.txStatus) {
+        this.props.actions.resetActiveUnwrapForm(UNWRAP_TOKEN_WRAPPER);
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
   }
 }
 

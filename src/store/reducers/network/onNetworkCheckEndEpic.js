@@ -20,6 +20,8 @@ import {
   SUBSCRIPTIONS_TOKEN_TRANSFER_EVENTS
 } from "../../../constants";
 import { registerSubscription } from "../../../utils/subscriptions/registerSubscription";
+import userTradesReducer from "../userTrades";
+import userTrades from '../../selectors/userTrades';
 
 export const setLastNetworkCheckStartAt = createAction(
   "NETWORK/SET_LAST_NETWORK_CHECK_START_AT",
@@ -73,9 +75,16 @@ export const onNetworkCheckEndEpic = (
         SUBSCRIPTIONS_GROUP_GLOBAL_INITIAL
       );
 
-      dispatch(offersReducer.actions.syncOffersEpic(tradingPair)).then(() =>
-        dispatch(platformReducer.actions.setIsAppLoadingDisabled())
-      );
+      dispatch(offersReducer.actions.syncOffersEpic(tradingPair)).then(() => {
+        if (setInitialSubscriptions || accountChanged) {
+          if (userTrades.marketsData(getState()) === null) {
+            dispatch(
+              userTradesReducer.actions.fetchAndSubscribeUserTradesHistoryEpic()
+            );
+          }
+          dispatch(platformReducer.actions.setIsAppLoadingDisabled());
+        }
+      });
       registerSubscription(
         SUBSCRIPTIONS_ORDERS_EVENTS,
         () => {
@@ -90,6 +99,9 @@ export const onNetworkCheckEndEpic = (
   if (setInitialSubscriptions || accountChanged) {
     const defaultAccount = accounts.defaultAccount(getState());
     if (!setInitialSubscriptions) {
+      dispatch(userTradesReducer.actions.initTradesHistory());
+      dispatch(userTradesReducer.actions.initMarketHistory());
+      dispatch(userTradesReducer.actions.initializeVolumes());
       clearAccountSpecificSubscriptions({ dispatch, getState });
       dispatch(balancesReducer.actions.getDefaultAccountEthBalance());
       registerSubscription(
@@ -105,7 +117,6 @@ export const onNetworkCheckEndEpic = (
         SUBSCRIPTIONS_GROUP_ACCOUNT_SPECIFIC_INITIAL
       );
     }
-
     dispatch(
       balancesReducer.actions.getAllTradedTokensBalances(
         getTokenContractsList(),
@@ -113,6 +124,9 @@ export const onNetworkCheckEndEpic = (
       )
     ).then(() => {
       dispatch(platformReducer.actions.setGlobalFormLockDisabled());
+        dispatch(
+          userTradesReducer.actions.fetchAndSubscribeUserTradesHistoryEpic()
+        );
     });
 
     registerSubscription(

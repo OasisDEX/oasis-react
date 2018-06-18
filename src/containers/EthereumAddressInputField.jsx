@@ -1,40 +1,63 @@
-import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { PureComponent } from "react";
+import { PropTypes } from "prop-types";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import EthereumAddressInput from '../components/EthereumAddressInput';
-import { Field } from 'redux-form/immutable';
-import web3 from '../bootstrap/web3';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import EthereumAddressInput from "../components/EthereumAddressInput";
+import { Field } from "redux-form/immutable";
+import web3 from "../bootstrap/web3";
+import CSSModule from "react-css-modules";
+import style from "./EthereumAddressInputField.scss";
 
 const propTypes = PropTypes && {
   fieldName: PropTypes.string.isRequired,
   actions: PropTypes.object.isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  onValidityChange: PropTypes.func
 };
 
-
-export const VALIDATION_ERROR__NOT_ETHEREUM_ADDRESS_FORMAT = 'VALIDATION_ERROR/NOT_ETHEREUM_ADDRESS_FORMAT';
-
-const validateEthereumAddress = (value) => {
-  if (!web3.isAddress(value)) {
-    return VALIDATION_ERROR__NOT_ETHEREUM_ADDRESS_FORMAT;
-  }
-};
+export const VALIDATION_ERROR__NOT_ETHEREUM_ADDRESS_FORMAT =
+  "VALIDATION_ERROR/NOT_ETHEREUM_ADDRESS_FORMAT";
 
 export class EthereumAddressInputFieldWrapper extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.componentIsUnmounted = false;
+    this.validateEthereumAddress = this.validateEthereumAddress.bind(this);
+  }
+
   render() {
     const { fieldName, disabled } = this.props;
     return (
-      <Field
-        disabled={disabled}
-        required
-        validate={validateEthereumAddress}
-        component={EthereumAddressInput}
-        name={fieldName}
-      />
+      <div className={style.EthereumAddressInputField}>
+        <Field
+          disabled={disabled}
+          required
+          validate={this.validateEthereumAddress}
+          component={EthereumAddressInput}
+          name={fieldName}
+        />
+      </div>
     );
+  }
+
+  validateEthereumAddress(value) {
+    const { onValidityChange } = this.props;
+    if (value && !web3.isAddress(value)) {
+      if (this.componentIsUnmounted === false) {
+        onValidityChange && onValidityChange(false);
+      }
+      return VALIDATION_ERROR__NOT_ETHEREUM_ADDRESS_FORMAT;
+    } else {
+      if (this.componentIsUnmounted === false) {
+        onValidityChange && onValidityChange(true);
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
   }
 }
 
@@ -47,5 +70,7 @@ export function mapDispatchToProps(dispatch) {
 }
 
 EthereumAddressInputFieldWrapper.propTypes = propTypes;
-EthereumAddressInputFieldWrapper.displayName = 'EthereumAddressInputField';
-export default connect(mapStateToProps, mapDispatchToProps)(EthereumAddressInputFieldWrapper);
+EthereumAddressInputFieldWrapper.displayName = "EthereumAddressInputField";
+export default connect(mapStateToProps, mapDispatchToProps)(
+  CSSModule(EthereumAddressInputFieldWrapper, style)
+);

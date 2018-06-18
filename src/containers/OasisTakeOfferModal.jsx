@@ -82,6 +82,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
+    this.componentUnmounted = false;
     this.onBuyOffer = this.onBuyOffer.bind(this);
     this.onCancel = this.onCancel.bind(this);
   }
@@ -114,20 +115,24 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
   }
 
   onTransactionStart() {
-    this.setState({
-      txStatus: TX_STATUS_AWAITING_USER_ACCEPTANCE,
-      disableForm: true,
-      lockCancelButton: true
-    });
+    if (this.componentUnmounted === false) {
+      this.setState({
+        txStatus: TX_STATUS_AWAITING_USER_ACCEPTANCE,
+        disableForm: true,
+        lockCancelButton: true
+      });
+    }
   }
 
   onTransactionCancelledByUser() {
-    this.setState({ disableOfferTakeButton: false });
-    this.setState({
-      txStatus: TX_STATUS_CANCELLED_BY_USER,
-      disableForm: false,
-      lockCancelButton: false
-    });
+    if (this.componentUnmounted === false) {
+      this.setState({ disableOfferTakeButton: false });
+      this.setState({
+        txStatus: TX_STATUS_CANCELLED_BY_USER,
+        disableForm: false,
+        lockCancelButton: false
+      });
+    }
   }
   onTransactionPending({ txStartTimestamp }) {
     this.setState({
@@ -237,7 +242,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
   }
 
   onFormChange() {
-    if (!this.componentUnmounted) {
+    if (this.componentUnmounted=== false) {
       this.setState({
         txStatus: undefined,
         txStartTimestamp: undefined

@@ -15,7 +15,7 @@ exports[`(Container) OasisOfferCancelModal will receive right actions 1`] = `
 Object {
   "actions": Object {
     "cancelOffer": [Function],
-    "removeOrderCancelledByTheOwner": [Function],
+    "markOfferAsInactive": [Function],
   },
 }
 `;
