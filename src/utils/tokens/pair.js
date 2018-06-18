@@ -5,7 +5,6 @@ import { ASK, BID } from "../../store/reducers/trades";
 import isNumeric from "../numbers/isNumeric";
 
 export const PRICE_DECIMAL = 5;
-// export const VOLUME_DECIMAL = 5;
 export const AMOUNT_DECIMALS = 5;
 
 const format = (baseToken, quoteToken) => `${baseToken}/${quoteToken}`;
@@ -85,7 +84,6 @@ const getBaseAndQuoteAmount = (tradeHistoryEntry, baseToken, quoteToken) => {
   }
 };
 
-const replacePricePattern = /^(\d+)\.(\d{5})\d*$/;
 // eslint-disable-next-line no-unused-vars
 const formatPrice = (
   price,
@@ -106,9 +104,7 @@ const formatPrice = (
             ? priceSanitized
             : web3.fromWei(priceSanitized, ETH_UNIT_ETHER)
         )
-          .toFixed(18)
-          .toString()
-          .replace(replacePricePattern, "$1.$2")
+          .toFormat(5, 4)
       : null;
   } catch (e) {
     console.warn(e.toString());
@@ -133,9 +129,6 @@ const formatTokenAmount = (price, fromWei = false, unit, decimalPlaces) => {
             ? priceSanitized
             : web3.fromWei(priceSanitized, unit, decimalPlaces)
         ).toFormat(decimalPlaces, 4)
-        // .round(3, 4)
-        // .toFixed(18)
-        // .replace(replaceAmountPattern, "$1.$2")
       )
       : null;
   } catch (e) {
@@ -156,9 +149,6 @@ const formatAmount = (price, fromWei = false) => {
             ? priceSanitized
             : web3.fromWei(priceSanitized, ETH_UNIT_ETHER)
         ).toFormat(3, 4)
-        // .round(3, 4)
-        // .toFixed(18)
-        // .replace(replaceAmountPattern, "$1.$2")
       )
       : null;
   } catch (e) {
@@ -166,12 +156,8 @@ const formatAmount = (price, fromWei = false) => {
   }
 };
 
-// const replaceVolumePattern = /^(\d+)\.(\d{2})\d*$/;
 const formatVolume = tradingPairVolume =>
   web3.fromWei(tradingPairVolume, ETH_UNIT_ETHER).toFormat(2, 4);
-// .round(2, 4)
-// .toFixed(18)
-// .replace(replaceVolumePattern, "$1.$2");
 
 const tradeType = (order, baseCurrency) => {
   if (order.buyWhichToken === baseCurrency) {

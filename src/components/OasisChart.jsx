@@ -64,7 +64,7 @@ OasisChart.propTypes = propTypes;
 OasisChart.defaultProps = defaultProps;
 export default connect(mapStateToProps, mapDispatchToProps)(OasisChart);
 
-export const CHART_HEIGHT = "180px";
+export const CHART_HEIGHT = 180;
 
 export function tooltipContainer(tooltip, canvas) {
   if (!canvas)
