@@ -20,7 +20,7 @@ exports[`(Component) OasisChartPrice should render 1`] = `
       "labels": Array [],
     }
   }
-  height="180px"
+  height={180}
   options={
     Object {
       "layout": Object {
@@ -36,6 +36,7 @@ exports[`(Component) OasisChartPrice should render 1`] = `
             "display": true,
             "ticks": Object {
               "callback": [Function],
+              "maxRotation": 0,
               "maxTicksLimit": 6,
             },
           },
