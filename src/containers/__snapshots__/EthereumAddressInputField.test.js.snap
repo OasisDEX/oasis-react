@@ -5,7 +5,6 @@ exports[`(Container) EthereumAddressInputField should render 1`] = `
   <Field
     component={[Function]}
     name="exampleFieldName"
-    required={true}
     validate={[Function]}
   />
 </div>

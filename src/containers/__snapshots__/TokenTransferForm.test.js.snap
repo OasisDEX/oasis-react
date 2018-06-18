@@ -26,6 +26,7 @@ exports[`(Container) TokenTransferForm should render 1`] = `
           <Connect(EthereumAddressInputField)
             fieldName="recipient"
             onValidityChange={[Function]}
+            required={true}
           />
         </td>
       </tr>

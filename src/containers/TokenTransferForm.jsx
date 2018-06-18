@@ -83,6 +83,7 @@ export class TokenTransferFormWrapper extends PureComponent {
               <th>Recipient</th>
               <td colSpan="2" className={tableStyles.withInput}>
                 <EthereumAddressInputFieldWrapper
+                  required={true}
                   disabled={disabled || globalFormLock}
                   fieldName={"recipient"}
                   onValidityChange={this.onEthereumAddressInputValidityChange}

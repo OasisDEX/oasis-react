@@ -36,6 +36,7 @@ exports[`(Component) OasisChartPrice should render 1`] = `
             "display": true,
             "ticks": Object {
               "callback": [Function],
+              "maxRotation": 0,
               "maxTicksLimit": 6,
             },
           },
