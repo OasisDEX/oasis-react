@@ -22,6 +22,10 @@ import {
 import { DEFAULT_GAS_LIMIT, DEFAULT_GAS_PRICE } from "../../constants";
 import transactions from "../selectors/transactions";
 import isNumericAndGreaterThanZero from "../../utils/numbers/isNumericAndGreaterThanZero";
+import getTokenByAddress from "../../utils/tokens/getTokenByAddress";
+import {
+  convertToTokenPrecision
+} from "../../utils/conversion";
 
 const initialState = fromJS({
   makeBuyOffer: {
@@ -109,16 +113,22 @@ const makeOfferEpic = (offerMakeType, withCallbacks = {}) => async (
   dispatch,
   getState
 ) => {
-  //TODO: Already refactored?
   dispatch(makeOffer.pending());
 
   const activeOfferMake = offerMakes.activeOfferMakePure(
     getState(),
     offerMakeToFormName(offerMakeType)
   );
+
   const makeOfferPayload = {
-    payAmount: activeOfferMake.getIn(["offerData", "payAmount"]),
-    buyAmount: activeOfferMake.getIn(["offerData", "buyAmount"]),
+    payAmount: convertToTokenPrecision(
+      activeOfferMake.getIn(["offerData", "payAmount"]),
+      activeOfferMake.get("sellToken")
+    ),
+    buyAmount: convertToTokenPrecision(
+      activeOfferMake.getIn(["offerData", "buyAmount"]),
+      activeOfferMake.get("buyToken")
+    ),
     payToken: activeOfferMake.get("sellTokenAddress"),
     buyToken: activeOfferMake.get("buyTokenAddress")
   };
@@ -292,18 +302,24 @@ const getTransactionGasEstimate = createAction(
   (payAmount, payToken, buyAmount, buyToken, toAddress) =>
     new Promise((resolve, reject) => {
       getMarketNoProxyContractInstance().offer.estimateGas(
-        payAmount,
+        convertToTokenPrecision(payAmount, getTokenByAddress(payToken)),
         payToken,
-        buyAmount,
+        convertToTokenPrecision(buyAmount, getTokenByAddress(buyToken)),
         buyToken,
         0,
         { to: toAddress, gasLimit: DEFAULT_GAS_LIMIT },
         (e, estimation) => {
           if (e) {
             reject({
-              payAmount,
+              payAmount: convertToTokenPrecision(
+                payAmount,
+                getTokenByAddress(payToken)
+              ),
               payToken,
-              buyAmount,
+              buyAmount: convertToTokenPrecision(
+                buyAmount,
+                getTokenByAddress(buyToken)
+              ),
               buyToken,
               toAddress
             });

@@ -12,16 +12,16 @@ import tokens from "./tokens";
 import tokenToBeAllowedForOffer from "../../utils/offers/tokenToBeAllowedForOffer";
 import offers from "./offers";
 
-const offerTakes = s => s.get("offerTakes");
+const offerTakesState = s => s.get("offerTakes");
 
-const activeOfferTakeType = createSelector(offerTakes, s =>
+const activeOfferTakeType = createSelector(offerTakesState, s =>
   s.get("activeOfferTakeType")
 );
 
-const isOfferTakeModalOpen = createSelector(offerTakes, s =>
+const isOfferTakeModalOpen = createSelector(offerTakesState, s =>
   s.get("isOfferTakeModalOpen")
 );
-const activeOfferTakeOfferId = createSelector(offerTakes, s =>
+const activeOfferTakeOfferId = createSelector(offerTakesState, s =>
   s.get("activeOfferTakeOfferId")
 );
 
@@ -86,7 +86,7 @@ const activeOfferTakeSellToken = createSelector(activeOfferTake, s =>
 
 const takeFormValuesSelector = formValueSelector("takeOffer");
 
-const isOfferBelowLimit = createSelector(offerTakes, s =>
+const isOfferBelowLimit = createSelector(offerTakesState, s =>
   s.get("isOfferBelowLimit")
 );
 
@@ -146,9 +146,8 @@ const isVolumeGreaterThanOfferMax = createSelector(
   }
 );
 
-const hasExceededGasLimit = createSelector(
-  offerTakes,
-  s => Boolean(s.get('exceededGasLimit'))
+const hasExceededGasLimit = createSelector(offerTakesState, s =>
+  Boolean(s.get("exceededGasLimit"))
 );
 
 const tokenToBeAllowed = createSelector(
@@ -160,7 +159,10 @@ const tokenToBeAllowed = createSelector(
   }
 );
 
-const isOfferActive = createSelector(offerTakes, s => s.get("isOfferActive"));
+const isOfferActive = createSelector(offerTakesState, s =>
+  s.get("isOfferActive")
+);
+
 
 const canFulfillOffer = createSelector(
   hasSufficientTokenAmount,
@@ -180,7 +182,7 @@ const canFulfillOffer = createSelector(
     isBuyEnabled,
     istTokenEnabled,
     isVolumeZero,
-    isVolumeGreaterThanOfferMax
+    isVolumeGreaterThanOfferMax,
   ) => {
     if (
       !isOfferActive ||
@@ -197,16 +199,15 @@ const canFulfillOffer = createSelector(
   }
 );
 
-
-const transactionGasCostEstimate = createSelector(offerTakes, s =>
+const transactionGasCostEstimate = createSelector(offerTakesState, s =>
   s.get("transactionGasCostEstimate")
 );
 
-const checkingIfOfferIsActive = createSelector(offerTakes, s =>
+const checkingIfOfferIsActive = createSelector(offerTakesState, s =>
   s.get("checkingIfOfferActive")
 );
 
-const gasEstimatePending = createSelector(offerTakes, s =>
+const gasEstimatePending = createSelector(offerTakesState, s =>
   s.get("transactionGasCostEstimatePending")
 );
 
@@ -234,18 +235,19 @@ const isActiveOfferTakeBestOffer = createSelector(
   }
 );
 
-const getBuyAmount = getState => {
-  const offerType = activeOfferTakeType(getState());
-
-  if (offerType === TAKE_BUY_OFFER) {
-    return takeFormValuesSelector(getState(), "total");
-  } else {
-    return takeFormValuesSelector(getState(), "volume");
-  }
-};
+const getBuyAmount = createSelector(
+  activeOfferTakeType,
+  activeOfferTakeBuyToken,
+  activeOfferTakeSellToken,
+  rootState => rootState,
+  (activeOfferType, buyToken, sellToken, rs) =>
+    activeOfferType === TAKE_BUY_OFFER
+      ? takeFormValuesSelector(rs, "total")
+      : takeFormValuesSelector(rs, "volume")
+);
 
 export default {
-  state: offerTakes,
+  state: offerTakesState,
   activeOfferTake,
   activeOfferTakeType,
   activeOfferTakeOfferData,
