@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) OasisTokenWrapForm should render 1`] = `
-<form>
+<form
+  onChange={[Function]}
+>
   <table>
     <tbody>
       <tr>

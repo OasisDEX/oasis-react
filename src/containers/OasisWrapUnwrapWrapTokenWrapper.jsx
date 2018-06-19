@@ -36,7 +36,6 @@ export class OasisWrapUnwrapWrapTokenWrapperWrapper extends PureComponent {
   makeWrap() {
     this.setState(
       {
-        disableTransferButton: true,
         txStatus: false,
         txStartTimestamp: undefined
       },

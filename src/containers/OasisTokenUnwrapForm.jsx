@@ -44,6 +44,8 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
     this.setUnwrapMax = this.setUnwrapMax.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
     this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
+    this.onFormChange = this.onFormChange.bind(this);
+    this.transactionInfoBlock = this.transactionInfoBlock.bind(this);
   }
 
   validate(value) {
@@ -57,6 +59,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
 
   setUnwrapMax() {
     this.props.actions.setUnwrapMax();
+    this.onFormChange();
   }
 
   transactionInfoBlock() {
@@ -80,7 +83,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
     return (
       <OasisTransactionStatusWrapperInfoBox
         txStatus={txStatus}
-        infoText={this.transactionInfoBlock()}
+        infoText={this.transactionInfoBlock}
         localStatus={txStatus}
         txTimestamp={txStartTimestamp}
         txType={txType}
@@ -105,6 +108,11 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
     ) : null;
   }
 
+
+  onFormChange() {
+    const { onFormChange } = this.props;
+    onFormChange && onFormChange();
+  }
   render() {
     const {
       valid,
@@ -113,13 +121,12 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
       activeWrappedToken,
       disabled,
       globalFormLock,
-      onFormChange,
       unwrapTokenAmount,
       activeWrappedTokenBalance
     } = this.props;
 
     return (
-      <form onChange={onFormChange} onSubmit={handleSubmit}>
+      <form onChange={this.onFormChange} onSubmit={handleSubmit}>
         <table className={tableStyles.table}>
           <tbody>
             <tr>
