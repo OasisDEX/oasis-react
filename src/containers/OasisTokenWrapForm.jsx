@@ -150,7 +150,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
     return !txStatus
       ? isNumericAndGreaterThanZero(wrapTokenAmount) &&
           web3.fromWei(activeUnwrappedTokenBalance).lt(wrapTokenAmount) && (
-            <OasisInsufficientAmountOfToken tokenName={activeUnwrappedToken} />
+            <OasisInsufficientAmountOfToken tokenName={activeUnwrappedToken} noBorder />
           )
       : null;
   }
@@ -219,11 +219,11 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
           </tbody>
         </table>
         <div>{this.renderTransactionStatus()}</div>
-        <div>
-          {this.renderInsufficientBalanceWarning()}
-          {this.renderDoNotWrapAllEtherWarning()}
-        </div>
         <div className={`${styles.footer} ${widgetStyles.OasisWidgetFooter}`}>
+          <div>
+            {this.renderInsufficientBalanceWarning()}
+            {this.renderDoNotWrapAllEtherWarning()}
+          </div>
           <OasisButton
             type="submit"
             disabled={

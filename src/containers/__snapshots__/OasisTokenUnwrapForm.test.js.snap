@@ -49,6 +49,7 @@ exports[`(Container) OasisTokenUnwrapForm should render 1`] = `
   <div
     className="undefined undefined"
   >
+    <div />
     <OasisButton
       btnType="button"
       color="default"

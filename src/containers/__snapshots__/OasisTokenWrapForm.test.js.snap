@@ -45,10 +45,10 @@ exports[`(Container) OasisTokenWrapForm should render 1`] = `
       txTimestamp={1}
     />
   </div>
-  <div />
   <div
     className="undefined undefined"
   >
+    <div />
     <OasisButton
       btnType="button"
       color="default"
