@@ -18,11 +18,12 @@ export function convertToTokenPrecisionInternal(precision, amountIn18Precision) 
 
 export function convertToTokenPrecision(amountIn18Precision, tokenName) {
   return convertToTokenPrecisionInternal(
-    tokens.getTokenSpecs(getState(), tokenName),
-    amountIn18Precision)
+    tokens.getTokenSpecs(getState(), tokenName.precision).get("precision"),
+    amountIn18Precision);
 }
 
 export function convertTo18PrecisionInternal(precision, amountInTokenPrecision) {
+
   if (precision === APP_BASE_PRECISION) {
     return amountInTokenPrecision;
   } else {
@@ -36,7 +37,7 @@ export function convertTo18PrecisionInternal(precision, amountInTokenPrecision) 
 
 export function convertTo18Precision(amountInTokenPrecision, token) {
   return convertTo18PrecisionInternal(
-    tokens.getTokenSpecs(getState(), token),
+    tokens.getTokenSpecs(getState(), token).get("precision"),
     amountInTokenPrecision);
 }
 
