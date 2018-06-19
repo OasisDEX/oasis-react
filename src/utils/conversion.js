@@ -18,7 +18,7 @@ export function convertToTokenPrecisionInternal(precision, amountIn18Precision) 
 
 export function convertToTokenPrecision(amountIn18Precision, tokenName) {
   return convertToTokenPrecisionInternal(
-    tokens.getTokenSpecs(getState(), tokenName.precision).get("precision"),
+    tokens.getTokenSpecs(getState(), tokenName).get("precision"),
     amountIn18Precision);
 }
 
