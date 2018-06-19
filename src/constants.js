@@ -146,3 +146,9 @@ export const subscriptionTypeToKeyMap = {
  */
 
 export const VALIDATION_VALUE_IS_REQUIRED = 'VALIDATION/VALUE_IS_REQUIRED';
+
+/**
+ * Global precision - 10**18
+ * @type {number}
+ */
+export const APP_BASE_PRECISION = 18;

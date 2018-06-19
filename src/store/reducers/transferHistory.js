@@ -8,6 +8,7 @@ import networkReducer from "./network";
 import { getTokenContractInstance } from "../../bootstrap/contracts";
 import { registerAccountSpecificSubscriptions } from "../../bootstrap/web3";
 import transferHistory from "../selectors/transferHistory";
+import { convertTo18Precision } from '../../utils/conversion';
 
 const initialState = fromJS({
   tokensLoadingStatus: {},
@@ -160,7 +161,7 @@ const reducer = handleActions(
             fromAddress: from,
             toAddress: to,
             timestamp: blockInfo.timestamp,
-            tokenAmount: value.toString(),
+            tokenAmount: convertTo18Precision(value.toString(), tokenName),
             transactionHash: event.transactionHash,
             action:
               transferType === TRANSFER_HISTORY_TYPE_TRANSFER_FROM

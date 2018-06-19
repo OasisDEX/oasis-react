@@ -31,6 +31,7 @@ import {
   getTokenContractInstance
 } from "../../bootstrap/contracts";
 import { getTimestamp } from "../../utils/time";
+import { convertTo18Precision } from '../../utils/conversion';
 
 const initialState = fromJS({
   accounts: [],
@@ -68,7 +69,7 @@ const getAllTradedTokensBalances = createAction(
     return Promise.all(tokensBalancesPromises).then(tokenBalances => {
       const balancesByToken = {};
       Object.keys(tokensContractsLists).forEach(
-        (tokenName, i) => (balancesByToken[tokenName] = tokenBalances[i])
+        (tokenName, i) => (balancesByToken[tokenName] = convertTo18Precision(tokenBalances[i], tokenName))
       );
 
       return balancesByToken;
@@ -134,15 +135,16 @@ const syncTokenBalances = (tokensContractsList = [], address) => (
 
   Object.entries(tokensContractsList).forEach(([tokenName, tokenContract]) => {
     tokenContract.balanceOf(address).then(tokenBalance => {
+      const balanceInWei =  web3.toBigNumber(convertTo18Precision(tokenBalance, tokenName));
       const oldBalance = balances.tokenBalance(getState(), {
         tokenName,
         balanceUnit: ETH_UNIT_WEI
       });
-      if (oldBalance !== null && !tokenBalance.eq(oldBalance)) {
+      if (oldBalance !== null && !balanceInWei.eq(oldBalance)) {
         dispatch(
           updateTokenBalance({
             tokenName,
-            tokenBalance,
+            tokenBalance: balanceInWei,
             address
           })
         );

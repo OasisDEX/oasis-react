@@ -1,43 +1,37 @@
-import BigNumber from 'bignumber.js';
-import tokens from '../store/selectors/tokens';
+import BigNumber from "bignumber.js";
+import tokens from "../store/selectors/tokens";
+import { APP_BASE_PRECISION } from "../constants";
 
 let getState = null;
 
-export function convertToTokenPrecision(amount, token) {
-  if (typeof token !== 'undefined' && token !== '') {
-    const tokenSpecs = tokens.getTokenSpecs(getState(), token);
-    if (tokenSpecs) {
-      let value = amount;
-      if (!(amount instanceof BigNumber)) {
-        value = new BigNumber(amount);
-      }
-      return value.times(new BigNumber(10).pow(tokenSpecs.get('precision'))).valueOf();
-    }
-    throw new Error('Precision not found when converting');
+export function convertToTokenPrecision(amountIn18Precision, tokenName) {
+  const tokenSpecs = tokens.getTokenSpecs(getState(), tokenName);
+  if (tokenSpecs.get("precision") === APP_BASE_PRECISION) {
+    return amountIn18Precision;
+  } else {
+    const precisionDifference =
+      APP_BASE_PRECISION - tokenSpecs.get("precision");
+    return new BigNumber(amountIn18Precision)
+      .times(new BigNumber(10).pow(-precisionDifference))
+      .toFixed(0);
   }
-  throw new Error('Token not found when converting');
 }
 
-export function convertTo18Precision(amount, token) {
-  if (typeof token !== 'undefined' && token !== '') {
-    const tokenSpecs = tokens.getTokenSpecs(getState(),token);
-    if (tokenSpecs) {
-      if (tokenSpecs.precision === 18) {
-        return amount;
-      }
-      let value = amount;
-      if (!(amount instanceof BigNumber)) {
-        value = new BigNumber(amount);
-      }
-      return value.times(new BigNumber(10).pow(18 - tokenSpecs.get('precision'))).valueOf();
-    }
-    throw new Error('Precision not found when converting');
+export function convertTo18Precision(amountInTokenPrecision, token) {
+  const tokenSpecs = tokens.getTokenSpecs(getState(), token);
+  if (tokenSpecs.get("precision") === APP_BASE_PRECISION) {
+    return amountInTokenPrecision;
+  } else {
+    return new BigNumber(amountInTokenPrecision)
+      .times(
+        new BigNumber(10).pow(APP_BASE_PRECISION - tokenSpecs.get("precision"))
+      )
+      .toFixed(0);
   }
-  throw new Error('Token not found when converting');
 }
 
-const init = getStateFunction => getState = getStateFunction;
+const init = getStateFunction => (getState = getStateFunction);
 
-export default  {
+export default {
   init
-}
+};

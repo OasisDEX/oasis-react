@@ -15,7 +15,6 @@ import offerMakesReducer from "../store/reducers/offerMakes";
 import tokens from "../store/selectors/tokens";
 import balances from "../store/selectors/balances";
 import {
-  formatValue,
   greaterThanZeroValidator,
   numericFormatValidator
 } from "../utils/forms/offers";
@@ -184,7 +183,6 @@ export class OfferMakeForm extends React.Component {
     return (
       <Field
         autoComplete="off"
-        onBlur={formatValue}
         name="volume"
         component={MaskedTokenAmountInput}
         type="text"
@@ -213,7 +211,6 @@ export class OfferMakeForm extends React.Component {
           autoComplete="off"
           min={0}
           onChange={this.onTotalFieldChange}
-          onBlur={formatValue}
           name="total"
           component={MaskedTokenAmountInput}
           type="text"
