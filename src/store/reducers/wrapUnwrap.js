@@ -479,7 +479,6 @@ const setUnwrapMax = () => (dispatch, getState) => {
     tokenName: activeWrappedToken
   });
 
-  console.log({activeWrappedToken ,maxUnwrapValueInEther})
   if (maxUnwrapValueInEther) {
     dispatch(
       change(

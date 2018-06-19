@@ -37,7 +37,6 @@ export class OasisWrapUnwrapWrapEtherWrapper extends PureComponent {
   makeWrap() {
     this.setState(
       {
-        disableTransferButton: true,
         txStatus: false,
         txStartTimestamp: undefined
       },

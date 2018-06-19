@@ -18,10 +18,7 @@ import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBo
 import { AMOUNT_DECIMALS, formatAmount } from "../utils/tokens/pair";
 import MaskedTokenAmountInput from "../components/MaskedTokenAmountInput";
 import platform from "../store/selectors/platform";
-import {
-  SETMAXBTN_HIDE_DELAY_MS,
-  TOKEN_ETHER
-} from "../constants";
+import { SETMAXBTN_HIDE_DELAY_MS, TOKEN_ETHER } from "../constants";
 import OasisDontWrapAllEther from "../components/OasisDontWrapAllEther";
 import isNumericAndGreaterThanZero from "../utils/numbers/isNumericAndGreaterThanZero";
 import OasisInsufficientAmountOfToken from "../components/OasisInsufficientAmountOfToken";
@@ -51,6 +48,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
     this.transactionInfoBlock = this.transactionInfoBlock.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
     this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
+    this.onFormChange = this.onFormChange.bind(this);
   }
 
   validate(value) {
@@ -64,6 +62,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
 
   setWrapMax() {
     this.props.actions.setWrapMax();
+    this.onFormChange();
   }
 
   transactionInfoBlock(txMeta) {
@@ -156,6 +155,11 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
       : null;
   }
 
+  onFormChange() {
+    const { onFormChange } = this.props;
+    onFormChange && onFormChange();
+  }
+
   render() {
     const {
       valid,
@@ -163,12 +167,11 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
       activeUnwrappedToken,
       disabled,
       globalFormLock,
-      onFormChange,
       wrapTokenAmount,
       activeUnwrappedTokenBalance
     } = this.props;
     return (
-      <form onChange={onFormChange} onSubmit={handleSubmit}>
+      <form onChange={this.onFormChange} onSubmit={handleSubmit}>
         <table className={tableStyles.table}>
           <tbody>
             <tr>
