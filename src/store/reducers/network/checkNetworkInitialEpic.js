@@ -20,7 +20,7 @@ export const checkNetworkInitialEpic = () => async (dispatch, getState) => {
   if (!tokens.activeTradingPair(getState())) {
     dispatch(
       tokensReducer.actions.setActiveTradingPairEpic(
-        tokens.defaultTradingPair(getState()),
+        tokens.defaultTradingPair(getState()).toJS(),
         false
       )
     );
