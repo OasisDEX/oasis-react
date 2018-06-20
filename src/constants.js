@@ -37,42 +37,19 @@ export const NO_ACCOUNTS = false;
 export const TOKEN_ETHER = "ETH";
 export const TOKEN_WRAPPED_ETH = "W-ETH";
 export const TOKEN_WRAPPED_GNT = "W-GNT";
-export const TOKEN_1ST = "1ST";
 export const TOKEN_DAI = "DAI";
-export const TOKEN_SAI = "SAI";
 export const TOKEN_MAKER = "MKR";
 export const TOKEN_DIGIX = "DGD";
 export const TOKEN_GOLEM = "GNT";
 export const TOKEN_RHOC = "RHOC";
-export const TOKEN_AUGUR = "REP";
-export const TOKEN_ICONOMI = "ICN";
-export const TOKEN_PLUTON = "PLU";
-export const TOKEN_SINGULARDTV = "SNGLS";
-export const TOKEN_VSL = "VSL";
-export const TOKEN_MLN = "MLN";
-export const TOKEN_TIME = "TIME";
-export const TOKEN_GUP = "GUP";
-export const TOKEN_BAT = "BAT";
-export const TOKEN_NMR = "NMR";
 
-export const QUOTE_TOKENS = ["W-ETH"];
+export const QUOTE_TOKENS = [TOKEN_WRAPPED_ETH, TOKEN_DAI];
 
 export const BASE_TOKENS = [
-  "W-GNT",
-  "DAI",
-  "DGD",
-  "REP",
-  "ICN",
-  "1ST",
-  "SNGLS",
-  "VSL",
-  "PLU",
-  "MLN",
-  "RHOC",
-  "TIME",
-  "GUP",
-  "BAT",
-  "NMR"
+  TOKEN_DAI,
+  TOKEN_WRAPPED_GNT,
+  TOKEN_DIGIX,
+  TOKEN_RHOC,
 ];
 
 export const MAKE_BUY_OFFER = "OFFER_MAKES/MAKE_BUY_OFFER";

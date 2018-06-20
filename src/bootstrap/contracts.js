@@ -10,7 +10,15 @@ const MatchingMarketAbi = require("./../contracts/abi/maker-otc/matching-market"
 const DepositBrokerAbi = require("./../contracts/abi/token-wrapper/deposit-broker");
 import { fromJS } from "immutable";
 import web3 from "./web3";
-import { TOKEN_WRAPPED_GNT } from "../constants";
+import {
+  TOKEN_DAI,
+  TOKEN_DIGIX,
+  TOKEN_GOLEM,
+  TOKEN_MAKER,
+  TOKEN_RHOC,
+  TOKEN_WRAPPED_ETH,
+  TOKEN_WRAPPED_GNT,
+} from '../constants';
 
 let brokers = fromJS({});
 let contracts = {};
@@ -28,10 +36,6 @@ const init = networkName => {
     erc20Abi.interface,
     tokencontractsDeploymentAdressessList["DAI"]
   );
-  const SAI = loadContact(
-    erc20Abi.interface,
-    tokencontractsDeploymentAdressessList["SAI"]
-  );
   const MKR = loadContact(
     erc20Abi.interface,
     tokencontractsDeploymentAdressessList["MKR"]
@@ -48,55 +52,10 @@ const init = networkName => {
     TokenWrapperAbi.interface,
     tokencontractsDeploymentAdressessList["W-GNT"]
   );
-  const REP = loadContact(
-    erc20Abi.interface,
-    tokencontractsDeploymentAdressessList["REP"]
-  );
-  const ICN = loadContact(
-    erc20Abi.interface,
-    tokencontractsDeploymentAdressessList["ICN"]
-  );
-  const _1ST = loadContact(
-    erc20Abi.interface,
-    tokencontractsDeploymentAdressessList["1ST"]
-  );
-  const SNGLS = loadContact(
-    erc20Abi.interface,
-    tokencontractsDeploymentAdressessList["SNGLS"]
-  );
-  const VSL = loadContact(
-    erc20Abi.interface,
-    tokencontractsDeploymentAdressessList["VSL"]
-  );
-  const PLU = loadContact(
-    erc20Abi.interface,
-    tokencontractsDeploymentAdressessList["PLU"]
-  );
-  const MLN = loadContact(
-    erc20Abi.interface,
-    tokencontractsDeploymentAdressessList["MLN"]
-  );
   const RHOC = loadContact(
     erc20Abi.interface,
     tokencontractsDeploymentAdressessList["RHOC"]
   );
-  const TIME = loadContact(
-    erc20Abi.interface,
-    tokencontractsDeploymentAdressessList["TIME"]
-  );
-  const GUP = loadContact(
-    erc20Abi.interface,
-    tokencontractsDeploymentAdressessList["GUP"]
-  );
-  const BAT = loadContact(
-    erc20Abi.interface,
-    tokencontractsDeploymentAdressessList["BAT"]
-  );
-  const NMR = loadContact(
-    erc20Abi.interface,
-    tokencontractsDeploymentAdressessList["NMR"]
-  );
-
   const market = loadContact(
     MatchingMarketAbi.interface,
     marketDeploymentAddress
@@ -121,25 +80,13 @@ const init = networkName => {
 
   contracts = Object.freeze({
     tokens: {
-      "W-ETH": WETH,
-      "W-GNT": WGNT,
-      "1ST": _1ST,
-      DAI,
-      SAI,
-      MKR,
-      DGD,
-      GNT,
-      REP,
-      ICN,
-      SNGLS,
-      VSL,
-      PLU,
-      MLN,
-      RHOC,
-      TIME,
-      GUP,
-      BAT,
-      NMR
+      [TOKEN_WRAPPED_ETH]: WETH,
+      [TOKEN_WRAPPED_GNT]: WGNT,
+      [TOKEN_DAI]: DAI,
+      [TOKEN_MAKER]: MKR,
+      [TOKEN_DIGIX]: DGD,
+      [TOKEN_GOLEM]: GNT,
+      [TOKEN_RHOC]: RHOC
     },
     market,
     noProxyTokens: {
