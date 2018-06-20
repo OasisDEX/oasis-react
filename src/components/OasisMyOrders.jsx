@@ -2,12 +2,9 @@
 import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
 import { fromJS } from "immutable";
-import BigNumber from "bignumber.js";
 import ImmutablePropTypes from "react-immutable-proptypes";
-import moment from "moment";
 
 import { DESCENDING, orderByTimestamp } from "../utils/sort";
-import { formatAmount, formatPrice, price } from "../utils/tokens/pair";
 import { OasisTable } from "./OasisTable";
 import { OasisTradeType } from "./OasisTradeType";
 import OasisWidgetFrame from "../containers/OasisWidgetFrame";
@@ -27,40 +24,8 @@ import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits"
 import OasisButton from "./OasisButton";
 import createEtherscanTransactionLink from "../utils/createEtherscanTransactionLink";
 import OasisIcon from "./OasisIcon";
-
-const myOrdersDisplayFormat = offer => {
-  let baseAmount = null,
-    baseAmountFullPrecision = null,
-    quoteAmount = null,
-    quoteAmountFullPrecision = null;
-  switch (offer.tradeType) {
-    case BID:
-      baseAmount = formatAmount(offer.buyHowMuch, true, ETH_UNIT_ETHER);
-      baseAmountFullPrecision = offer.buyHowMuch;
-      quoteAmount = formatAmount(offer.sellHowMuch, true, ETH_UNIT_ETHER);
-      quoteAmountFullPrecision = offer.sellHowMuch;
-      break;
-    case ASK:
-      baseAmount = formatAmount(offer.sellHowMuch, true, ETH_UNIT_ETHER);
-      baseAmountFullPrecision = offer.sellHowMuch;
-      quoteAmount = formatAmount(offer.buyHowMuch, true, ETH_UNIT_ETHER);
-      quoteAmountFullPrecision = offer.buyHowMuch;
-      break;
-  }
-
-  return {
-    offerType: offer.offerType,
-    tradeTypeEl: offer.tradeTypeEl,
-    price: formatPrice(offer.price),
-    priceFullPrecision: offer.price,
-    baseAmount,
-    baseAmountFullPrecision,
-    quoteAmount,
-    quoteAmountFullPrecision,
-    owner: offer.owner,
-    id: offer.id
-  };
-};
+import { myOffersDisplayFormat } from "../utils/offers/myOffersDisplayFormat";
+import { toHistoricalTrades } from "../utils/offers/toHistoricalTrades";
 
 const myOpenOffersFilter = entry => {
   const myAccountAddress = web3.eth.defaultAccount;
@@ -125,8 +90,6 @@ const VIEW_TYPE_OPEN_OFFERS = "Open";
 const VIEW_TYPE_MARKET_HISTORY = "Closed";
 
 class OasisMyOrders extends PureComponent {
-
-
   openOrdersColsDefinition(baseToken, quoteToken, orderActions) {
     return [
       { heading: "action", key: "tradeTypeEl" },
@@ -176,6 +139,7 @@ class OasisMyOrders extends PureComponent {
         tradingPair: activeTradingPair
       });
     }
+
     return isOfferOwner(offer) ? (
       <div>
         <OasisButton
@@ -248,7 +212,7 @@ class OasisMyOrders extends PureComponent {
       )
       .filter(myOpenOffersFilter)
       .sort((p, c) => (p.bid_price_sort < c.bid_price_sort ? 1 : -1))
-      .map(myOrdersDisplayFormat);
+      .map(myOffersDisplayFormat);
 
     const emptyTableFallback = (
       <div className={styles.info}>You currently have no active offers</div>
@@ -258,7 +222,11 @@ class OasisMyOrders extends PureComponent {
         <OasisTable
           metadata={{ activeNetworkName }}
           rows={myOpenOffers.toArray()}
-          col={this.openOrdersColsDefinition(baseToken, quoteToken, orderActions)}
+          col={this.openOrdersColsDefinition(
+            baseToken,
+            quoteToken,
+            orderActions
+          )}
           className={styles.openOffers}
           emptyFallback={emptyTableFallback}
         />
@@ -267,43 +235,13 @@ class OasisMyOrders extends PureComponent {
   }
 
   renderTradesHistory() {
-    const toHistoricalTrades = tradeHistoryEntry => {
-      let baseAmount = null,
-        quoteAmount = null;
-
-      if (
-        tradeHistoryEntry.buyWhichToken === quoteToken &&
-        tradeHistoryEntry.sellWhichToken === baseToken
-      ) {
-        baseAmount = new BigNumber(tradeHistoryEntry.sellHowMuch);
-        quoteAmount = new BigNumber(tradeHistoryEntry.buyHowMuch);
-      } else if (
-        tradeHistoryEntry.buyWhichToken === baseToken &&
-        tradeHistoryEntry.sellWhichToken === quoteToken
-      ) {
-        baseAmount = new BigNumber(tradeHistoryEntry.buyHowMuch);
-        quoteAmount = new BigNumber(tradeHistoryEntry.sellHowMuch);
-      }
-      return {
-        transactionHash: tradeHistoryEntry.transactionHash,
-        date: moment.unix(tradeHistoryEntry.timestamp).format("DD-MM HH:mm"),
-        tradeType: (
-          <OasisTradeType order={tradeHistoryEntry} baseCurrency={baseToken} />
-        ),
-        baseAmount: formatAmount(baseAmount, true),
-        baseAmountFullPrecision: baseAmount,
-        quoteAmount: formatAmount(quoteAmount, true),
-        quoteAmountFullPrecision: quoteAmount,
-        price: formatPrice(price(tradeHistoryEntry, baseToken, quoteToken)),
-        priceFullPrecision: price(tradeHistoryEntry, baseToken, quoteToken)
-      };
-    };
     const {
       trades = fromJS([]),
       activeNetworkName,
       activeTradingPair: { baseToken, quoteToken }
     } = this.props;
     const myTrades = trades.filter(tradeEntry => {
+      console.log({baseToken, quoteToken})
       if (
         (baseToken === tradeEntry.buyWhichToken &&
           tradeEntry.sellWhichToken === quoteToken) ||
@@ -314,7 +252,7 @@ class OasisMyOrders extends PureComponent {
       }
     });
     const marketHistory = orderByTimestamp(myTrades.toJSON(), DESCENDING).map(
-      toHistoricalTrades
+      tradeHistoryEntry => toHistoricalTrades(tradeHistoryEntry, baseToken, quoteToken)
     );
     return (
       <OasisTable

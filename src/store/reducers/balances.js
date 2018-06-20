@@ -2,7 +2,6 @@
 import { createAction, handleActions } from "redux-actions";
 import { fromJS } from "immutable";
 import * as BigNumber from "bignumber.js";
-import moment from 'moment';
 
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import { fulfilled } from "../../utils/store";
@@ -31,7 +30,7 @@ import {
   getTokenContractInstance
 } from "../../bootstrap/contracts";
 import { getTimestamp } from "../../utils/time";
-import { convertTo18Precision } from '../../utils/conversion';
+import { convertTo18Precision } from "../../utils/conversion";
 
 const initialState = fromJS({
   accounts: [],
@@ -69,7 +68,11 @@ const getAllTradedTokensBalances = createAction(
     return Promise.all(tokensBalancesPromises).then(tokenBalances => {
       const balancesByToken = {};
       Object.keys(tokensContractsLists).forEach(
-        (tokenName, i) => (balancesByToken[tokenName] = convertTo18Precision(tokenBalances[i], tokenName))
+        (tokenName, i) =>
+          (balancesByToken[tokenName] = convertTo18Precision(
+            tokenBalances[i],
+            tokenName
+          ))
       );
 
       return balancesByToken;
@@ -114,13 +117,12 @@ const tokenTransferFromEvent = createAction(
   })
 );
 
-
 const tokenBalanceUpdateEvent = createAction(
   "BALANCES/EVENT___TOKEN_BALANCE_UPDATE",
   (tokenName, userAddress, event) => ({
     tokenName,
     userAddress,
-    event,
+    event
   })
 );
 
@@ -138,26 +140,29 @@ const etherBalanceChanged = createAction("BALANCES/ETHER_BALANCE_CHANGED");
 
 const syncTokenBalances$ = createPromiseActions("BALANCES/SYNC_TOKEN_BALANCES");
 
-
 const syncTokenBalance = createAction(
-  'BALANCES/SYNC_TOKEN_BALANCE', ({ tokenName, accountAddress }) =>
+  "BALANCES/SYNC_TOKEN_BALANCE",
+  ({ tokenName, accountAddress }) =>
     getTokenContractInstance(tokenName).balanceOf(accountAddress)
 );
 
-const syncTokenBalanceEpic = ({ tokenName, accountAddress }) => (dispatch, getState) => {
-  dispatch(
-    syncTokenBalance({ tokenName, accountAddress })
-  ).then(
-    ({ value : newTokenBalance }) => {
-      if (!newTokenBalance.eq(balances.tokenBalance(getState(), { tokenName }))) {
+const syncTokenBalanceEpic = ({ tokenName, accountAddress }) => (
+  dispatch,
+  getState
+) => {
+  dispatch(syncTokenBalance({ tokenName, accountAddress })).then(
+    ({ value: newTokenBalance }) => {
+      if (
+        !newTokenBalance.eq(balances.tokenBalance(getState(), { tokenName }))
+      ) {
         dispatch(
           updateTokenBalance({
             tokenName,
-            tokenBalance: newTokenBalance,
+            tokenBalance: convertTo18Precision(newTokenBalance, tokenName),
             address: accountAddress
-          }));
+          })
+        );
       }
-
     }
   );
 };
@@ -170,7 +175,9 @@ const syncTokenBalances = (tokensContractsList = [], address) => (
 
   Object.entries(tokensContractsList).forEach(([tokenName, tokenContract]) => {
     tokenContract.balanceOf(address).then(tokenBalance => {
-      const balanceInWei =  web3.toBigNumber(convertTo18Precision(tokenBalance, tokenName));
+      const balanceInWei = web3.toBigNumber(
+        convertTo18Precision(tokenBalance, tokenName)
+      );
       const oldBalance = balances.tokenBalance(getState(), {
         tokenName,
         balanceUnit: ETH_UNIT_WEI
@@ -188,11 +195,9 @@ const syncTokenBalances = (tokensContractsList = [], address) => (
   });
   dispatch(syncTokenBalances$.fulfilled());
   dispatch(
-    setLatestBalancesSyncBlockNumber(
-      network.latestBlockNumber(getState())
-    )
+    setLatestBalancesSyncBlockNumber(network.latestBlockNumber(getState()))
   );
-  dispatch(setLatestBalancesSyncTimestamp())
+  dispatch(setLatestBalancesSyncTimestamp());
 };
 
 const updateTokenBalance = createAction(
@@ -224,11 +229,19 @@ const subscribeTokenTransfersEventsEpic = (
       .then((err, transferEvent) => {
         const { from, to } = transferEvent.args;
         if (from === address) {
-          dispatch(syncTokenBalanceEpic({tokenName, accountAddress: address }));
-          dispatch(tokenTransferFromEvent(tokenName, address, transferEvent, false));
+          dispatch(
+            syncTokenBalanceEpic({ tokenName, accountAddress: address })
+          );
+          dispatch(
+            tokenTransferFromEvent(tokenName, address, transferEvent, false)
+          );
         } else if (to === address) {
-          dispatch(syncTokenBalanceEpic({tokenName, accountAddress: address }));
-          dispatch(tokenTransferToEvent(tokenName, address, transferEvent, false));
+          dispatch(
+            syncTokenBalanceEpic({ tokenName, accountAddress: address })
+          );
+          dispatch(
+            tokenTransferToEvent(tokenName, address, transferEvent, false)
+          );
         }
       });
     subscriptionsMap = subscriptionsMap.set(tokenName, subscription);
@@ -472,15 +485,25 @@ const reducer = handleActions(
       state,
       { payload, meta: { tokenName, spenderAddress } }
     ) => state.setIn(["tokenAllowances", tokenName, spenderAddress], payload),
-    [tokenTransferFromEvent]: (state, { payload: { tokenName, event, shouldUpdateBalance } }) => {
-      return shouldUpdateBalance ? state.updateIn(["tokenBalances", tokenName], balance => {
-        return new BigNumber(balance).sub(event.args.value).toString();
-      }): state;
+    [tokenTransferFromEvent]: (
+      state,
+      { payload: { tokenName, event, shouldUpdateBalance } }
+    ) => {
+      return shouldUpdateBalance
+        ? state.updateIn(["tokenBalances", tokenName], balance => {
+            return new BigNumber(balance).sub(event.args.value).toString();
+          })
+        : state;
     },
-    [tokenTransferToEvent]: (state, { payload: { tokenName, event, shouldUpdateBalance } }) => {
-      return shouldUpdateBalance ? state.updateIn(["tokenBalances", tokenName], balance => {
-        return new BigNumber(balance).add(event.args.value).toString();
-      }): state;
+    [tokenTransferToEvent]: (
+      state,
+      { payload: { tokenName, event, shouldUpdateBalance } }
+    ) => {
+      return shouldUpdateBalance
+        ? state.updateIn(["tokenBalances", tokenName], balance => {
+            return new BigNumber(balance).add(event.args.value).toString();
+          })
+        : state;
     },
 
     [etherBalanceChanged]: (state, { payload }) =>
