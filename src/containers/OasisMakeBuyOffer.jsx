@@ -2,6 +2,7 @@ import React from "react";
 import { PropTypes } from "prop-types";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
+import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import tokens from "../store/selectors/tokens";
@@ -25,7 +26,7 @@ const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
 };
 
-export class OasisMakeBuyOfferWrapper extends React.Component {
+export class OasisMakeBuyOfferWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.onModalOpen = this.onModalOpen.bind(this);
@@ -94,11 +95,11 @@ export class OasisMakeBuyOfferWrapper extends React.Component {
     );
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return !this.props.isModalOpen || nextProps.isModalOpen === false
-      ? this.state !== nextState || this.props !== nextProps
-      : false;
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return !this.props.isModalOpen || nextProps.isModalOpen === false
+  //     ? this.state !== nextState || this.props !== nextProps
+  //     : false;
+  // }
 
   UNSAFE_componentWillUpdate(nextProps) {
     const pairChanged =
