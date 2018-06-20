@@ -10,7 +10,7 @@ exports[`(Component) OasisDontWrapAllEther should render 1`] = `
   <OasisIcon
     className=""
     icon="warning"
-    size="md"
+    size="lg"
     title="Otherwise you will not be able to pay for transactions."
   />
   <span>

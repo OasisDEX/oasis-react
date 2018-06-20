@@ -17,7 +17,6 @@ class OasisDontWrapAllEther extends PureComponent {
       <InfoBox color="danger" alignItems="center" {...this.props}>
           <OasisIcon
             icon="warning"
-            size="md"
             title="Otherwise you will not be able to pay for transactions."
             className={styles.warningIco}
           />

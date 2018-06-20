@@ -117,23 +117,11 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
   renderDoNotWrapAllEtherWarning() {
     const {
       activeUnwrappedToken,
-      activeUnwrappedTokenBalance,
-      wrapTokenAmount
     } = this.props;
     if (
-      activeUnwrappedToken === TOKEN_ETHER &&
-      activeUnwrappedTokenBalance &&
-      isNumericAndGreaterThanZero(wrapTokenAmount) &&
-      web3
-        .toBigNumber(web3.fromWei(activeUnwrappedTokenBalance))
-        .toPrecision(7, 4)
-        .toString() ===
-        web3
-          .toBigNumber(wrapTokenAmount)
-          .toPrecision(7, 4)
-          .toString()
+      activeUnwrappedToken === TOKEN_ETHER
     ) {
-      return <OasisDontWrapAllEther />;
+      return <OasisDontWrapAllEther noBorder />;
     } else {
       return null;
     }
