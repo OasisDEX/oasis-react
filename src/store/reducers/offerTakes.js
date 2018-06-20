@@ -374,7 +374,7 @@ const getTransactionGasCostEstimateEpic = (
   ) {
     return null;
   }
-
+  console.log("===========================================================================================");
   console.log("transactionGasCostEstimate",
     getBuyAmount(getState()),
     offerTakes.activeOfferTakeType(getState()),
@@ -383,6 +383,8 @@ const getTransactionGasCostEstimateEpic = (
     offerTakes.activeOfferTakeType(getState()) === TAKE_BUY_OFFER
     ? activeOfferTakeOfferData(getState()).get("buyWhichToken")
     : activeOfferTakeOfferData(getState()).get("sellWhichToken"));
+  console.log("===========================================================================================");
+
 
   const transactionGasCostEstimate = (await dispatch(
     defer(getTransactionGasCostEstimate, {
