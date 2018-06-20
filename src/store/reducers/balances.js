@@ -114,6 +114,16 @@ const tokenTransferFromEvent = createAction(
   })
 );
 
+
+const tokenBalanceUpdateEvent = createAction(
+  "BALANCES/EVENT___TOKEN_BALANCE_UPDATE",
+  (tokenName, userAddress, event) => ({
+    tokenName,
+    userAddress,
+    event,
+  })
+);
+
 const tokenTransferToEvent = createAction(
   "BALANCES/EVENT___TOKEN_TRANSFER_TO",
   (tokenName, userAddress, event, shouldUpdateBalance = true) => ({
@@ -127,6 +137,31 @@ const tokenTransferToEvent = createAction(
 const etherBalanceChanged = createAction("BALANCES/ETHER_BALANCE_CHANGED");
 
 const syncTokenBalances$ = createPromiseActions("BALANCES/SYNC_TOKEN_BALANCES");
+
+
+const syncTokenBalance = createAction(
+  'BALANCES/SYNC_TOKEN_BALANCE', ({ tokenName, accountAddress }) =>
+    getTokenContractInstance(tokenName).balanceOf(accountAddress)
+);
+
+const syncTokenBalanceEpic = ({ tokenName, accountAddress }) => (dispatch, getState) => {
+  dispatch(
+    syncTokenBalance({ tokenName, accountAddress })
+  ).then(
+    ({ value : newTokenBalance }) => {
+      if (!newTokenBalance.eq(balances.tokenBalance(getState(), { tokenName }))) {
+        dispatch(
+          updateTokenBalance({
+            tokenName,
+            tokenBalance: newTokenBalance,
+            address: accountAddress
+          }));
+      }
+
+    }
+  );
+};
+
 const syncTokenBalances = (tokensContractsList = [], address) => (
   dispatch,
   getState
@@ -187,18 +222,13 @@ const subscribeTokenTransfersEventsEpic = (
         { fromBlock: network.latestBlockNumber(getState()), toBlock: "latest" }
       )
       .then((err, transferEvent) => {
-
         const { from, to } = transferEvent.args;
-        const { blockNumber } = transferEvent;
-        const shouldUpdateBalance =  (
-          getTimestamp() < balances.latestBalancesSyncTimestamp(getState()) &&
-          blockNumber >= balances.latestBalancesSyncBlockNumber(getState())
-        );
-
         if (from === address) {
-          dispatch(tokenTransferFromEvent(tokenName, address, transferEvent, shouldUpdateBalance));
+          dispatch(syncTokenBalanceEpic({tokenName, accountAddress: address }));
+          dispatch(tokenTransferFromEvent(tokenName, address, transferEvent, false));
         } else if (to === address) {
-          dispatch(tokenTransferToEvent(tokenName, address, transferEvent, shouldUpdateBalance));
+          dispatch(syncTokenBalanceEpic({tokenName, accountAddress: address }));
+          dispatch(tokenTransferToEvent(tokenName, address, transferEvent, false));
         }
       });
     subscriptionsMap = subscriptionsMap.set(tokenName, subscription);
@@ -415,7 +445,8 @@ const actions = {
   syncTokenBalances,
   getDefaultAccountTokenAllowanceForMarket,
   setTokenTrustAddressDisabled,
-  setTokenTrustAddressEnabled
+  setTokenTrustAddressEnabled,
+  syncTokenBalanceEpic
 };
 
 const reducer = handleActions(
