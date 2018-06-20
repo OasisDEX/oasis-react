@@ -1,29 +1,29 @@
 import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
-// import ImmutablePropTypes from 'react-immutable-proptypes';
-
-// import styles from './OasisDontWrapAllEther.scss';
-import { InfoBox } from "./InfoBox";
-import { OasisIcon } from "./OasisIcon";
 import styles from "./OasisDontWrapAllEther.scss";
 import CSSModules from "react-css-modules/dist/index";
+import { InfoBoxWithIco } from "./InfoBoxWithIco";
 
-const propTypes = PropTypes && {};
+const propTypes = PropTypes && {
+  noBorder: PropTypes.bool
+};
 const defaultProps = {};
 
 class OasisDontWrapAllEther extends PureComponent {
   render() {
+    const { noBorder, ...props } = this.props;
+    const tokenName = "ETH";
     return (
-      <InfoBox color="danger" alignItems="center" {...this.props}>
-          <OasisIcon
-            icon="warning"
-            title="Otherwise you will not be able to pay for transactions."
-            className={styles.warningIco}
-          />
-          <span className={styles.text}>
-          Do not wrap all of your <b className={styles.tokenName}>ETH</b> !
+      <InfoBoxWithIco
+        noBorder={noBorder}
+        color="danger"
+        icon="warning"
+        {...props}
+      >
+        <span>
+          Do not wrap all of your <b>{tokenName}</b>!
         </span>
-      </InfoBox>
+      </InfoBoxWithIco>
     );
   }
 }
