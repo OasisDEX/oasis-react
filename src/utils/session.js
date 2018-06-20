@@ -11,14 +11,14 @@ export const Session = {
   init: (dispatch, getStateFunction) => {
     getState = getStateFunction;
     dispatch(sessionReducer.actions.resetSession());
-    const defaultAccount = accounts.defaultAccount(getState());
-    const accountSessionData = sessionStorage.getItem(defaultAccount);
-    const accountPersistentData = localStorage.getItem(defaultAccount);
+    const defaultAccountHash = web3.sha3(accounts.defaultAccount(getState()));
+    const accountSessionData = sessionStorage.getItem(defaultAccountHash);
+    const accountPersistentData = localStorage.getItem(defaultAccountHash);
     if(accountPersistentData) {
       dispatch(
         sessionReducer.actions.loadSavedPersistentData( fromJS(JSON.parse(accountPersistentData))));
     } else {
-      localStorage.setItem(defaultAccount, JSON.stringify(session.persistentData(getState())));
+      localStorage.setItem(defaultAccountHash, JSON.stringify(session.persistentData(getState())));
     }
 
     if(accountSessionData) {
@@ -26,7 +26,7 @@ export const Session = {
         sessionReducer.actions.loadSavedSessionData(fromJS(JSON.parse(accountSessionData)))
       );
     } else {
-      sessionStorage.setItem(defaultAccount, JSON.stringify(session.sessionData(getState())));
+      sessionStorage.setItem(defaultAccountHash, JSON.stringify(session.sessionData(getState())));
     }
     dispatch(sessionReducer.actions.init());
   },
@@ -44,14 +44,14 @@ export const Session = {
   setPersistent: (dispatchFunction, key, value) => {
     dispatchFunction(sessionReducer.actions.SetValue(key, value));
     localStorage.setItem(
-      web3.eth.defaultAccount, JSON.stringify(getState().getIn(['session', 'persist']).toJSON()),
+      web3.sha3(web3.eth.defaultAccount), JSON.stringify(getState().getIn(['session', 'persist']).toJSON()),
     );
   },
 
   dismissMessage: (dispatchFunction, msgType) => {
     dispatchFunction(sessionReducer.actions.dismissMessage(msgType));
     localStorage.setItem(
-      web3.eth.defaultAccount, JSON.stringify(getState().getIn(['session', 'persist']).toJSON())
+      web3.sha3(web3.eth.defaultAccount), JSON.stringify(getState().getIn(['session', 'persist']).toJSON())
     );
   },
 
