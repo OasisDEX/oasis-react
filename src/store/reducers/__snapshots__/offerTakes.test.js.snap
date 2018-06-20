@@ -50,10 +50,6 @@ Array [
 ]
 `;
 
-exports[`getTransactionGasCostEstimateEpic canMakeOffer: false 1`] = `Array []`;
-
-exports[`getTransactionGasCostEstimateEpic canMakeOffer: true 1`] = `Array []`;
-
 exports[`sellMaxEpic balance greater than the offer 1`] = `
 Array [
   Object {

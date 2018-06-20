@@ -301,13 +301,6 @@ const getTransactionGasEstimate = createAction(
   "OFFER_MAKES/GET_TRANSACTION_GAS_ESTIMATE",
   (payAmount, payToken, buyAmount, buyToken, toAddress) =>
     new Promise((resolve, reject) => {
-
-      console.log("getTransactionGasEstimate",
-        convertToTokenPrecision(payAmount, getTokenByAddress(payToken)),
-        payToken,
-        convertToTokenPrecision(buyAmount, getTokenByAddress(buyToken)),
-        buyToken);
-
       getMarketNoProxyContractInstance().offer.estimateGas(
         convertToTokenPrecision(payAmount, getTokenByAddress(payToken)),
         payToken,
