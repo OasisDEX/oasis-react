@@ -127,7 +127,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
 
     return (
       <form onChange={this.onFormChange} onSubmit={handleSubmit}>
-        <table className={tableStyles.table}>
+        <table className={`${tableStyles.table} ${styles.form}`}>
           <tbody>
             <tr>
               <th>Amount</th>
@@ -172,7 +172,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
           </tbody>
         </table>
         <div>{this.renderTransactionStatus()}</div>
-        <div className={`${styles.footer} ${widgetStyles.OasisWidgetFooter}`}>
+        <div className={styles.footer}>
           <div>
             {this.renderInsufficientBalanceWarning()}
           </div>

@@ -4,7 +4,9 @@ exports[`(Container) OasisTokenUnwrapForm should render 1`] = `
 <form
   onChange={[Function]}
 >
-  <table>
+  <table
+    className="undefined undefined"
+  >
     <tbody>
       <tr>
         <th>
@@ -46,9 +48,7 @@ exports[`(Container) OasisTokenUnwrapForm should render 1`] = `
       txTimestamp={1}
     />
   </div>
-  <div
-    className="undefined undefined"
-  >
+  <div>
     <div />
     <OasisButton
       btnType="button"

@@ -74,7 +74,7 @@ class OasisWrapUnwrapWrap extends PureComponent {
     } = this.props;
     return (
       <OasisWidgetFrame hidden={hidden} heading={"Wrap"} spaceForContent={true}>
-        <OasisTokenBalanceSummary summary="Wallet">
+        <OasisTokenBalanceSummary summary="Wallet" className={styles.balance}>
           {this.getBalance()}
         </OasisTokenBalanceSummary>
         <OasisTokenWrapFormWrapper
