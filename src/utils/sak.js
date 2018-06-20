@@ -62,6 +62,12 @@ const logTake = (fromBlock, toBlock ) => {
     });
 };
 
+const loadOffer = (offerId) => {
+  getMarketContractInstance().offers(offerId)
+    .then((o) => o.map(x => x.toString()))
+    .then(print);
+}
+
 export default (store) => {
   window.sak = {
     getTokenAllowance: getTokenAllowance(store),
@@ -69,6 +75,7 @@ export default (store) => {
     enableTokenTrust: enableTokenTrust(store),
     state: () => store.getState().toJS(),
     logTake,
-    BigNumber: (n) => new BigNumber(n)
+    BigNumber: (n) => new BigNumber(n),
+    loadOffer
   };
 }

@@ -375,6 +375,15 @@ const getTransactionGasCostEstimateEpic = (
     return null;
   }
 
+  console.log("transactionGasCostEstimate",
+    getBuyAmount(getState()),
+    offerTakes.activeOfferTakeType(getState()),
+    activeOfferTakeOfferData(getState()).get("buyWhichToken"),
+    activeOfferTakeOfferData(getState()).get("sellWhichToken"),
+    offerTakes.activeOfferTakeType(getState()) === TAKE_BUY_OFFER
+    ? activeOfferTakeOfferData(getState()).get("buyWhichToken")
+    : activeOfferTakeOfferData(getState()).get("sellWhichToken"));
+
   const transactionGasCostEstimate = (await dispatch(
     defer(getTransactionGasCostEstimate, {
       offerId,
