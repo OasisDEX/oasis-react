@@ -209,8 +209,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
         <div>{this.renderTransactionStatus()}</div>
         <div className={styles.footer}>
           <div>
-            {this.renderInsufficientBalanceWarning()}
-            {this.renderDoNotWrapAllEtherWarning()}
+            {this.renderInsufficientBalanceWarning() || this.renderDoNotWrapAllEtherWarning()}
           </div>
           <OasisButton
             type="submit"

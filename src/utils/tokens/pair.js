@@ -136,7 +136,8 @@ const formatTokenAmount = (price, fromWei = false, unit, decimalPlaces) => {
   }
 };
 
-const formatAmount = (price, fromWei = false) => {
+//eslint-disable-next-line no-unused-vars
+const formatAmount = (price, fromWei = false, unknown = null, precision = 3) => {
   if ([null, undefined].includes(price)) {
     return null;
   }
@@ -148,7 +149,7 @@ const formatAmount = (price, fromWei = false) => {
           !fromWei
             ? priceSanitized
             : web3.fromWei(priceSanitized, ETH_UNIT_ETHER)
-        ).toFormat(3, 4)
+        ).toFormat(precision, 4)
       )
       : null;
   } catch (e) {
