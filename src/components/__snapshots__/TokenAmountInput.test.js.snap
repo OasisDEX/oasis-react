@@ -5,6 +5,7 @@ exports[`(Component) TokenAmountInput should render 1`] = `
   <MaskedTokenAmountInput
     meta={Object {}}
     selectedToken="MKR"
+    showInlineWarning={false}
   />
 </div>
 `;

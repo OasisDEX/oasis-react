@@ -18,6 +18,7 @@ import { SETMAXBTN_HIDE_DELAY_MS } from "../constants";
 import platform from "../store/selectors/platform";
 import CSSModules from "react-css-modules";
 import OasisPleaseProvideEthereumAddress from "../components/OasisPleaseProvideEthereumAddress";
+import OasisInsufficientAmountOfToken from "../components/OasisInsufficientAmountOfToken";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -34,12 +35,16 @@ export class TokenTransferFormWrapper extends PureComponent {
       showMaxButton: false
     };
     this.componentIsUnmounted = false;
-    this.onEthereumAddressInputValidityChange = this.onEthereumAddressInputValidityChange.bind(
-      this
-    );
+
     this.onFormChange = this.onFormChange.bind(this);
     this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
+    this.onEthereumAddressInputValidityChange = this.onEthereumAddressInputValidityChange.bind(
+      this
+    );
+    this.onTokenAmountInputValidityChange = this.onTokenAmountInputValidityChange.bind(
+      this
+    );
   }
 
   onFormChange() {
@@ -49,6 +54,13 @@ export class TokenTransferFormWrapper extends PureComponent {
     }
   }
 
+  onTokenAmountInputValidityChange(isValid) {
+    if (this.componentIsUnmounted === false) {
+      this.setState({
+        showInsufficientTokenAmountWarning: !isValid
+      });
+    }
+  }
   onEthereumAddressInputValidityChange(isValid) {
     if (this.componentIsUnmounted === false) {
       this.setState({
@@ -57,6 +69,21 @@ export class TokenTransferFormWrapper extends PureComponent {
     }
   }
 
+  renderWarningSectionContent() {
+    const { selectedToken } = this.props;
+    const {
+      showInsufficientTokenAmountWarning,
+      showPleaseProvideEthereumAddressWarning
+    } = this.state;
+
+    return showInsufficientTokenAmountWarning ? (
+      <OasisInsufficientAmountOfToken noBorder tokenName={selectedToken} />
+    ) : (
+      showPleaseProvideEthereumAddressWarning && (
+        <OasisPleaseProvideEthereumAddress />
+      )
+    );
+  }
   render() {
     const {
       handleSubmit,
@@ -93,9 +120,7 @@ export class TokenTransferFormWrapper extends PureComponent {
             <tr>
               <th>Amount</th>
               <td
-                className={`${tableStyles.withInput} ${
-                  styles.tdWithErrorMessages
-                }`}
+                className={`${tableStyles.withInput}`}
               >
                 <div className={tableStyles.inputGroup}>
                   <OasisButton
@@ -115,6 +140,7 @@ export class TokenTransferFormWrapper extends PureComponent {
                     onFocus={this.onTotalFieldSectionFocus}
                   >
                     <TokenAmountInputFieldWrapper
+                      onValidityChange={this.onTokenAmountInputValidityChange}
                       disabled={disabled || globalFormLock}
                       fieldName={"tokenAmount"}
                     />
@@ -133,14 +159,10 @@ export class TokenTransferFormWrapper extends PureComponent {
           </tbody>
         </table>
         {transferState}
-        <div>
-          <div>
-            {this.state.showPleaseProvideEthereumAddressWarning && (
-              <OasisPleaseProvideEthereumAddress />
-            )}
-          </div>
-        </div>
         <div className={`${widgetStyles.OasisWidgetFooter} ${styles.footer}`}>
+          <div className={styles.validationErrorsBox}>
+            {this.renderWarningSectionContent()}
+          </div>
           <OasisButton
             type="submit"
             onClick={makeTransfer}
