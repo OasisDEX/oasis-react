@@ -2,9 +2,11 @@
 
 exports[`(Component) EthereumAddressInput should render 1`] = `
 <input
+  autoComplete="off"
   placeholder="0x"
   style={
     Object {
+      "paddingRight": "20px",
       "textAlign": "right",
     }
   }

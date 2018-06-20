@@ -35,7 +35,7 @@ exports[`(Container) TokenTransferForm should render 1`] = `
           Amount
         </th>
         <td
-          className="undefined undefined"
+          className="undefined"
         >
           <div>
             <OasisButton
@@ -59,6 +59,7 @@ exports[`(Container) TokenTransferForm should render 1`] = `
             >
               <Connect(TokenAmountInputField)
                 fieldName="tokenAmount"
+                onValidityChange={[Function]}
               />
             </div>
             <Field
@@ -76,12 +77,10 @@ exports[`(Container) TokenTransferForm should render 1`] = `
       </tr>
     </tbody>
   </table>
-  <div>
-    <div />
-  </div>
   <div
     className="undefined undefined"
   >
+    <div />
     <OasisButton
       btnType="button"
       color="default"

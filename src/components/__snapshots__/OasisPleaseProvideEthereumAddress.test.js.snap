@@ -5,6 +5,7 @@ exports[`(Component) OasisPleaseProvideEthereumAddress should render 1`] = `
   alignItems="center"
   color="danger"
   icon="warning"
+  noBorder={true}
 >
   Please provide 
   <b>

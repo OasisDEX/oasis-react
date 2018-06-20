@@ -13,7 +13,8 @@ const propTypes = PropTypes && {
   fieldName: PropTypes.string.isRequired,
   actions: PropTypes.object.isRequired,
   maxAmountLimit: PropTypes.string,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  onValidityChange: PropTypes.func
 };
 
 export const VALIDATION_ERROR__VALUE_GREATER_THAN_BALANCE = 'VALIDATION_ERROR/VALUE_GREATER_THAN_BALANCE';
@@ -31,11 +32,19 @@ export class TokenAmountInputFieldWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.validateTokenAmount = this.validateTokenAmount.bind(this);
+    this.onValidityChange = this.onValidityChange.bind(this);
   }
 
+  onValidityChange(validationError) {
+    const { onValidityChange } = this.props;
+    onValidityChange && onValidityChange(validationError);
+  }
   validateTokenAmount(value) {
     if (web3.toBigNumber(this.props.maxAmountLimit).lt(value)) {
+      this.onValidityChange(false);
       return [ VALIDATION_ERROR__VALUE_GREATER_THAN_BALANCE ];
+    } else {
+      return this.onValidityChange(true);
     }
   }
 
