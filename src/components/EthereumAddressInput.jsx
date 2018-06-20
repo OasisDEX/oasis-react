@@ -6,7 +6,7 @@ import styles from "./EthereumAddressInput.scss";
 const propTypes = PropTypes && {};
 const defaultProps = {};
 
-const inputStyle = { textAlign: "right", paddingRight: "20px" };
+const inputStyle = { textAlign: "right", paddingRight: "30px" };
 
 class EthereumAddressInput extends PureComponent {
   render() {

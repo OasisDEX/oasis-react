@@ -6,7 +6,7 @@ exports[`(Component) EthereumAddressInput should render 1`] = `
   placeholder="0x"
   style={
     Object {
-      "paddingRight": "20px",
+      "paddingRight": "30px",
       "textAlign": "right",
     }
   }
