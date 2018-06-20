@@ -55,7 +55,7 @@ const initialState = fromJS({
     [TOKEN_WRAPPED_GNT]: { precision: 18, format: "0,0.00[0000000000000000]" },
     [TOKEN_RHOC]: { precision: 8, format: "0,0.00[000000]" },
   },
-  defaultTradingPair: { baseToken: TOKEN_MAKER, quoteToken: TOKEN_WRAPPED_ETH },
+  defaultTradingPair: { baseToken: TOKEN_WRAPPED_ETH, quoteToken: TOKEN_DAI },
   activeTradingPair: null
 });
 
