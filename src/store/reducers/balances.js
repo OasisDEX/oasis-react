@@ -135,6 +135,7 @@ const syncTokenBalances = (tokensContractsList = [], address) => (
 
   Object.entries(tokensContractsList).forEach(([tokenName, tokenContract]) => {
     tokenContract.balanceOf(address).then(tokenBalance => {
+      console.log({tokenName})
       const balanceInWei =  web3.toBigNumber(convertTo18Precision(tokenBalance, tokenName));
       const oldBalance = balances.tokenBalance(getState(), {
         tokenName,

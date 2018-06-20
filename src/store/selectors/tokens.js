@@ -69,7 +69,10 @@ const precision = createSelector(
 );
 
 const activeTradingPairBaseToken = createSelector(
-  tokens, s => s.get('activeTradingPair').baseToken
+  tokens, s => {
+    console.log(s.get('activeTradingPair'));
+    return s.get('activeTradingPair').baseToken
+  }
 );
 
 const activeTradingPairQuoteToken = createSelector(

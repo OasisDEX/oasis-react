@@ -2,30 +2,17 @@ import { createAction, handleActions } from "redux-actions";
 import { fromJS } from "immutable";
 import { fulfilled } from "../../utils/store";
 import { convertTo18Precision } from "../../utils/conversion";
+import { TOKEN_DAI, TOKEN_DIGIX, TOKEN_MAKER, TOKEN_RHOC, TOKEN_WRAPPED_ETH, TOKEN_WRAPPED_GNT } from '../../constants';
 
 const initialState = fromJS({
   limitsLoaded: false,
   tokens: {
-    "OW-ETH": { minSell: null },
-    "W-ETH": { minSell: null },
-    DAI: { minSell: null },
-    SAI: { minSell: null },
-    MKR: { minSell: null },
-    DGD: { minSell: null },
-    GNT: { minSell: null },
-    "W-GNT": { minSell: null },
-    REP: { minSell: null },
-    ICN: { minSell: null },
-    "1ST": { minSell: null },
-    SNGLS: { minSell: null },
-    VSL: { minSell: null },
-    PLU: { minSell: null },
-    MLN: { minSell: null },
-    RHOC: { minSell: null },
-    TIME: { minSell: null },
-    GUP: { minSell: null },
-    BAT: { minSell: null },
-    NMR: { minSell: null }
+    [TOKEN_WRAPPED_ETH]: { minSell: null },
+    [TOKEN_DAI]:         { minSell: null },
+    [TOKEN_MAKER]:       { minSell: null },
+    [TOKEN_DIGIX]:       { minSell: null },
+    [TOKEN_WRAPPED_GNT]: { minSell: null },
+    [TOKEN_RHOC]:        { minSell: null },
   }
 });
 
