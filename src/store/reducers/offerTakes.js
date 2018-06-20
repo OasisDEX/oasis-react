@@ -117,8 +117,8 @@ const takeOfferEpic = (withCallbacks = {}) => async (dispatch, getState) => {
   const amountInWei = convertToTokenPrecision(
     web3.toWei(offerTakes.getBuyAmount(getState()), ETH_UNIT_ETHER),
     offerTakes.activeOfferTakeType(getState()) === TAKE_BUY_OFFER
-      ? offerTakes.activeOfferTakeOfferData(getState()).get("buyWhichToken")
-      : offerTakes.activeOfferTakeOfferData(getState()).get("sellWhichToken")
+      ? offerTakes.activeOfferTakeOfferData(getState()).get("sellWhichToken")
+      : offerTakes.activeOfferTakeOfferData(getState()).get("buyWhichToken")
   );
 
   const activeOfferTakeOfferId = offerTakes.activeOfferTakeOfferId(getState());
@@ -381,8 +381,8 @@ const getTransactionGasCostEstimateEpic = (
       amount: convertToTokenPrecision(
         web3.toWei(getBuyAmount(getState()), ETH_UNIT_ETHER),
         offerTakes.activeOfferTakeType(getState()) === TAKE_BUY_OFFER
-          ? activeOfferTakeOfferData(getState()).get("buyWhichToken")
-          : activeOfferTakeOfferData(getState()).get("sellWhichToken")
+          ? activeOfferTakeOfferData(getState()).get("sellWhichToken")
+          : activeOfferTakeOfferData(getState()).get("buyWhichToken")
       ),
       offerOwner: activeOfferTakeOfferOwner(getState()),
       activeOfferData: activeOfferTakeOfferData(getState())
