@@ -117,9 +117,16 @@ const loadEtherWrapUnwrapsHistoryEpic = (address, config) => async (
                 TOKEN_WRAPPED_ETH,
                 filterAddress,
                 { args: { from: filterAddress, value: amount } },
-                true
+                false
               )
             );
+            dispatch(
+              balancesReducer.actions.syncTokenBalanceEpic({
+                tokenName: TOKEN_WRAPPED_GNT,
+                accountAddress: filterAddress
+              })
+            );
+
           }
           dispatch(
             tokenWrapEvent(
@@ -150,8 +157,12 @@ const loadEtherWrapUnwrapsHistoryEpic = (address, config) => async (
                 TOKEN_WRAPPED_ETH,
                 filterAddress,
                 { args: { from: filterAddress, value: amount } },
-                true
+                false
               )
+            );
+
+            dispatch(
+              balancesReducer.actions.getDefaultAccountEthBalance()
             );
           }
           dispatch(
@@ -207,8 +218,14 @@ const loadGNTWrapUnwrapsHistoryEpic = (address, config) => async (
                 TOKEN_WRAPPED_GNT,
                 filterAddress,
                 { args: { to: filterAddress, value } },
-                true
+                false
               )
+            );
+            dispatch(
+              balancesReducer.actions.syncTokenBalanceEpic({
+                tokenName: TOKEN_WRAPPED_GNT,
+                accountAddress: filterAddress
+              })
             );
           }
 
@@ -239,17 +256,19 @@ const loadGNTWrapUnwrapsHistoryEpic = (address, config) => async (
           )).value;
 
           if (wrapUnwrapEvent.blockNumber > currentLatestBlock) {
-            const { value } = wrapUnwrapEvent.args;
             dispatch(
-              balancesReducer.actions.tokenTransferFromEvent(
-                TOKEN_WRAPPED_GNT,
-                filterAddress,
-                { args: { from: filterAddress, value } },
-                true
-              )
+              balancesReducer.actions.syncTokenBalanceEpic({
+                tokenName: TOKEN_WRAPPED_GNT,
+                accountAddress: filterAddress
+              })
+            );
+            dispatch(
+              balancesReducer.actions.syncTokenBalanceEpic({
+                tokenName: TOKEN_GOLEM,
+                accountAddress: filterAddress
+              })
             );
           }
-
           dispatch(
             tokenUnwrapEvent(
               tokenName,
