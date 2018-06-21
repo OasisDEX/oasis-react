@@ -90,6 +90,7 @@ const makeOfferTransaction = createAction(
     payToken,
     buyAmount,
     buyToken,
+    isCloseMatchingEnabled,
     gasLimit = DEFAULT_GAS_LIMIT,
     gasPrice = DEFAULT_GAS_PRICE
   }) =>
@@ -99,6 +100,7 @@ const makeOfferTransaction = createAction(
       buyAmount,
       buyToken,
       0,
+      isCloseMatchingEnabled,
       {
         gas: gasLimit,
         gasPrice
@@ -130,7 +132,8 @@ const makeOfferEpic = (offerMakeType, withCallbacks = {}) => async (
       activeOfferMake.get("buyToken")
     ),
     payToken: activeOfferMake.get("sellTokenAddress"),
-    buyToken: activeOfferMake.get("buyTokenAddress")
+    buyToken: activeOfferMake.get("buyTokenAddress"),
+    isCloseMatchingEnabled: true
   };
 
   return handleTransaction({
@@ -307,6 +310,7 @@ const getTransactionGasEstimate = createAction(
         convertToTokenPrecision(buyAmount, getTokenByAddress(buyToken)),
         buyToken,
         0,
+        true, // isCloseMatchingEnabled 
         { to: toAddress, gasLimit: DEFAULT_GAS_LIMIT },
         (e, estimation) => {
           if (e) {
