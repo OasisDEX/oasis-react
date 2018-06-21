@@ -175,9 +175,14 @@ export class TokenTransferFormWrapper extends PureComponent {
     );
   }
 
-  UNSAFE_componentWillUpdate(nextProps) {
-    if (this.props.selectedToken !== nextProps.selectedToken) {
-      this.props.change("token", nextProps.selectedToken);
+  componentDidUpdate(prevProps) {
+    if (this.props.selectedToken !== prevProps.selectedToken) {
+      this.props.change("token", this.props.selectedToken);
+      this.onFormChange();
+      this.setState({
+        showInsufficientTokenAmountWarning: false,
+        showPleaseProvideEthereumAddressWarning: false
+      })
     }
   }
 
