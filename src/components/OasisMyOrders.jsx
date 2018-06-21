@@ -236,12 +236,12 @@ class OasisMyOrders extends PureComponent {
 
   renderTradesHistory() {
     const {
+      defaultAccount,
       trades = fromJS([]),
       activeNetworkName,
       activeTradingPair: { baseToken, quoteToken }
     } = this.props;
     const myTrades = trades.filter(tradeEntry => {
-      console.log({baseToken, quoteToken})
       if (
         (baseToken === tradeEntry.buyWhichToken &&
           tradeEntry.sellWhichToken === quoteToken) ||
@@ -252,7 +252,7 @@ class OasisMyOrders extends PureComponent {
       }
     });
     const marketHistory = orderByTimestamp(myTrades.toJSON(), DESCENDING).map(
-      tradeHistoryEntry => toHistoricalTrades(tradeHistoryEntry, baseToken, quoteToken)
+      tradeHistoryEntry => toHistoricalTrades(tradeHistoryEntry, defaultAccount, baseToken, quoteToken)
     );
     return (
       <OasisTable

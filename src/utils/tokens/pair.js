@@ -42,7 +42,6 @@ const volume = (tradingPairTrades, baseToken, quoteToken) => {
 
 const price = (tradeHistoryEntry, baseToken, quoteToken) => {
   if (!tradeHistoryEntry) {
-    console.log("tradeHistoryEntry", tradeHistoryEntry, baseToken, quoteToken);
     return null;
   }
   let price = 0;
@@ -160,11 +159,19 @@ const formatAmount = (price, fromWei = false, unknown = null, precision = 3) => 
 const formatVolume = tradingPairVolume =>
   web3.fromWei(tradingPairVolume, ETH_UNIT_ETHER).toFormat(2, 4);
 
-const tradeType = (order, baseCurrency) => {
+const tradeType = (order, baseCurrency, accountAddress) => {
   if (order.buyWhichToken === baseCurrency) {
-    return ASK;
+    if (accountAddress) {
+      return order.maker.toString() !== accountAddress.toString() ? ASK : BID;
+    } else {
+      return BID;
+    }
   } else if (order.sellWhichToken === baseCurrency) {
-    return BID;
+    if (accountAddress) {
+     return order.maker.toString() !== accountAddress.toString() ? BID : ASK
+    } else {
+      return ASK;
+    }
   }
 };
 

@@ -11,8 +11,8 @@ const defaultProps = {};
 
 export class OasisTradeType extends PureComponent {
   render() {
-    const { order, baseCurrency, type } = this.props;
-    const tradeTypeEnum = type || tradeType(order, baseCurrency);
+    const { order, baseCurrency, type, accountAddress } = this.props;
+    const tradeTypeEnum = type || tradeType(order, baseCurrency, accountAddress);
 
     const typeStyle = (type) => {
       if (!type) {
