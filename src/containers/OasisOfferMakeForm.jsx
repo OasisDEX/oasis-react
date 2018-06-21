@@ -78,18 +78,30 @@ export class OfferMakeForm extends React.Component {
   }
 
   onVolumeFieldChange(event, newValue) {
-    const { volumeFieldValueChanged } = this.props.actions;
-    volumeFieldValueChanged(this.props.offerMakeType, newValue);
+    if (this.componentIsUnmounted === false) {
+      setTimeout(() => {
+        const { volumeFieldValueChanged } = this.props.actions;
+        volumeFieldValueChanged(this.props.offerMakeType, newValue);
+      }, 0);
+    }
   }
 
   onPriceFieldChange(event, newValue) {
-    const { priceFieldValueChanged } = this.props.actions;
-    priceFieldValueChanged(this.props.offerMakeType, newValue);
+    if (this.componentIsUnmounted === false) {
+      setTimeout(() => {
+        const { priceFieldValueChanged } = this.props.actions;
+        priceFieldValueChanged(this.props.offerMakeType, newValue);
+      }, 0);
+    }
   }
 
   onTotalFieldChange(event, newValue) {
-    const { totalFieldValueChanged } = this.props.actions;
-    totalFieldValueChanged(this.props.offerMakeType, newValue);
+    if (this.componentIsUnmounted === false) {
+      setTimeout(() => {
+        const { totalFieldValueChanged } = this.props.actions;
+        totalFieldValueChanged(this.props.offerMakeType, newValue);
+      }, 0);
+    }
   }
 
   setMaxButton() {
