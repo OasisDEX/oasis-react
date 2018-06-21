@@ -15,6 +15,7 @@ exports[`(Container) OasisWrapUnwrapUnwrap should render 1`] = `
     }
   }
   txType="TX/GROUP__WRAP_UNWRAP/UNWRAP_ETHER"
+  wrappedToken="W-ETH"
 />
 `;
 

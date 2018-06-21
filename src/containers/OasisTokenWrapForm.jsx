@@ -68,7 +68,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
   transactionInfoBlock(txMeta) {
     const {
       wrapTokenAmount,
-      activeUnwrappedToken,
+      unwrappedToken,
       transactionState: { txStartMeta }
     } = this.props;
     const metaData = txStartMeta || txMeta;
@@ -77,13 +77,13 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
         case WRAP_UNWRAP_CREATE_DEPOSIT_BROKER:
           return (
             <div>
-              Create <b>{activeUnwrappedToken}</b> broker
+              Create <b>{unwrappedToken}</b> broker
             </div>
           );
         case WRAP_UNWRAP_CLEAR_DEPOSIT_BROKER:
           return (
             <div>
-              Clear <b>{activeUnwrappedToken}</b> broker
+              Clear <b>{unwrappedToken}</b> broker
             </div>
           );
       }
@@ -93,7 +93,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
         Wrap{" "}
         <b>
           {formatAmount(wrapTokenAmount, false, null, AMOUNT_DECIMALS)}{" "}
-          {activeUnwrappedToken}
+          {unwrappedToken}
         </b>
       </div>
     );
@@ -116,10 +116,10 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
   }
   renderDoNotWrapAllEtherWarning() {
     const {
-      activeUnwrappedToken,
+      unwrappedToken,
     } = this.props;
     if (
-      activeUnwrappedToken === TOKEN_ETHER
+      unwrappedToken === TOKEN_ETHER
     ) {
       return <OasisDontWrapAllEther noBorder />;
     } else {
@@ -131,14 +131,14 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
     const {
       activeUnwrappedTokenBalance,
       wrapTokenAmount,
-      activeUnwrappedToken,
+      unwrappedToken,
       transactionState: { txStatus }
     } = this.props;
 
     return !txStatus
       ? isNumericAndGreaterThanZero(wrapTokenAmount) &&
           web3.fromWei(activeUnwrappedTokenBalance).lt(wrapTokenAmount) && (
-            <OasisInsufficientAmountOfToken tokenName={activeUnwrappedToken} noBorder />
+            <OasisInsufficientAmountOfToken tokenName={unwrappedToken} noBorder />
           )
       : null;
   }
@@ -152,7 +152,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
     const {
       valid,
       handleSubmit,
-      activeUnwrappedToken,
+      unwrappedToken,
       disabled,
       globalFormLock,
       wrapTokenAmount,
@@ -167,7 +167,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
               <td className={tableStyles.withInput}>
                 <div className={tableStyles.inputGroup}>
                   {this.state.showMaxButton &&
-                    activeUnwrappedToken !== TOKEN_ETHER && (
+                    unwrappedToken !== TOKEN_ETHER && (
                       <OasisButton
                         type="button"
                         size="xs"
@@ -202,7 +202,7 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
                   </div>
                 </div>
               </td>
-              <td className={tableStyles.currency}>{activeUnwrappedToken}</td>
+              <td className={tableStyles.currency}>{unwrappedToken}</td>
             </tr>
           </tbody>
         </table>

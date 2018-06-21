@@ -19,6 +19,7 @@ import {
   TX_WRAP_ETHER
 } from "../store/reducers/transactions";
 import accounts from "../store/selectors/accounts";
+import { TOKEN_ETHER } from '../constants';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
@@ -122,6 +123,7 @@ export class OasisWrapUnwrapWrapEtherWrapper extends PureComponent {
     const { txStatus, txStartTimestamp, txStartMeta, disableForm } = this.state;
     return (
       <OasisWrapUnwrapWrapEther
+        unwrappedToken={TOKEN_ETHER}
         hidden={hidden}
         txType={TX_WRAP_ETHER}
         form={"wrapEther"}

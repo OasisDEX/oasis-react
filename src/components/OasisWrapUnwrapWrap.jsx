@@ -4,7 +4,7 @@ import { PropTypes } from "prop-types";
 
 import OasisTokenWrapFormWrapper from "../containers/OasisTokenWrapForm";
 import OasisTokenBalanceWrapper from "../containers/OasisTokenBalance";
-import { TOKEN_ETHER } from "../constants";
+import { TOKEN_ETHER, TOKEN_GOLEM } from '../constants';
 import OasisWidgetFrame from "../containers/OasisWidgetFrame";
 import OasisEtherBalanceWrapper from "../containers/OasisEtherBalance";
 import {
@@ -27,7 +27,10 @@ const propTypes = PropTypes && {
   onFormChange: PropTypes.func.isRequired,
   disableForm: PropTypes.bool,
   hidden: PropTypes.bool.isRequired,
-  txType: PropTypes.oneOf([TX_WRAP_ETHER, TX_WRAP_TOKEN_WRAPPER])
+  txType: PropTypes.oneOf([TX_WRAP_ETHER, TX_WRAP_TOKEN_WRAPPER]),
+  unwrappedToken: PropTypes.oneOf([
+    TOKEN_ETHER, TOKEN_GOLEM
+  ])
 };
 const defaultProps = {};
 
@@ -66,7 +69,7 @@ class OasisWrapUnwrapWrap extends PureComponent {
 
   render() {
     const {
-      activeUnwrappedToken,
+      unwrappedToken,
       hidden,
       txType,
       form,
@@ -78,11 +81,11 @@ class OasisWrapUnwrapWrap extends PureComponent {
           {this.getBalance()}
         </OasisTokenBalanceSummary>
         <OasisTokenWrapFormWrapper
+          unwrappedToken={unwrappedToken}
           form={form}
           txType={txType}
           onFormChange={this.onFormChange}
           transactionState={transactionState}
-          activeUnwrappedToken={activeUnwrappedToken}
           onSubmit={this.props.onSubmit}
           disabled={this.shouldDisableForm()}
         />

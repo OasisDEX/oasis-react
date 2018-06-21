@@ -8,8 +8,8 @@ import wrapUnwrap from "../store/selectors/wrapUnwrap";
 import OasisWrapUnwrapWrapTokenWrapper from "../components/OasisWrapUnwrapWrap";
 import wrapUnwrapReducer, {
   WRAP_TOKEN_WRAPPER,
-  WRAP_TOKEN_WRAPPER_NEXT_TRANSACTION_DELAY_MS,
-} from '../store/reducers/wrapUnwrap';
+  WRAP_TOKEN_WRAPPER_NEXT_TRANSACTION_DELAY_MS
+} from "../store/reducers/wrapUnwrap";
 import {
   TX_STATUS_AWAITING_CONFIRMATION,
   TX_STATUS_AWAITING_USER_ACCEPTANCE,
@@ -19,9 +19,13 @@ import {
   TX_WRAP_TOKEN_WRAPPER
 } from "../store/reducers/transactions";
 import accounts from "../store/selectors/accounts";
+import { TOKEN_ETHER, TOKEN_GOLEM } from '../constants';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  unwrappedToken: PropTypes.oneOf([
+    TOKEN_ETHER, TOKEN_GOLEM
+  ])
 };
 
 export class OasisWrapUnwrapWrapTokenWrapperWrapper extends PureComponent {
@@ -104,7 +108,7 @@ export class OasisWrapUnwrapWrapTokenWrapperWrapper extends PureComponent {
   }
 
   onFormChange() {
-    if (!this.hasNextTransaction &&  this.componentIsUnmounted === false) {
+    if (!this.hasNextTransaction && this.componentIsUnmounted === false) {
       this.setState({
         txStatus: undefined,
         txStartTimestamp: undefined
@@ -113,10 +117,16 @@ export class OasisWrapUnwrapWrapTokenWrapperWrapper extends PureComponent {
   }
 
   render() {
-    const { hidden, activeUnwrappedToken, activeUnwrappedTokenBalance } = this.props;
+    const {
+      hidden,
+      activeUnwrappedToken,
+      activeUnwrappedTokenBalance,
+      unwrappedToken
+    } = this.props;
     const { txStatus, txStartTimestamp, txStartMeta, disableForm } = this.state;
     return (
       <OasisWrapUnwrapWrapTokenWrapper
+        unwrappedToken={unwrappedToken}
         hidden={hidden}
         txType={TX_WRAP_TOKEN_WRAPPER}
         form={"wrapTokenWrapper"}
@@ -131,7 +141,10 @@ export class OasisWrapUnwrapWrapTokenWrapperWrapper extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.activeUnwrappedToken && this.props.activeUnwrappedToken !== prevProps.activeUnwrappedToken){
+    if (
+      this.props.activeUnwrappedToken &&
+      this.props.activeUnwrappedToken !== prevProps.activeUnwrappedToken
+    ) {
       if (!this.state.txStatus) {
         this.props.actions.resetActiveWrapForm(WRAP_TOKEN_WRAPPER);
       }
@@ -140,7 +153,6 @@ export class OasisWrapUnwrapWrapTokenWrapperWrapper extends PureComponent {
   componentWillUnmount() {
     this.componentIsUnmounted = true;
   }
-
 }
 
 export function mapStateToProps(state) {
