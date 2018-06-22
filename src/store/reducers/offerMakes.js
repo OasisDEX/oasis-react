@@ -93,19 +93,32 @@ const makeOfferTransaction = createAction(
     isCloseMatchingEnabled,
     gasLimit = DEFAULT_GAS_LIMIT,
     gasPrice = DEFAULT_GAS_PRICE
-  }) =>
-    getMarketContractInstance().offer(
-      payAmount,
-      payToken,
-      buyAmount,
-      buyToken,
-      0,
-      isCloseMatchingEnabled,
+  }) => {
+
+    const offer = getMarketNoProxyContractInstance().offer['uint256,address,uint256,address,uint256,bool'];
+
+    return new Promise((resolve, reject) =>
+      offer(
+        payAmount,
+        payToken,
+        buyAmount,
+        buyToken,
+        0,
+        isCloseMatchingEnabled,
+        {
+          gas: gasLimit,
+          gasPrice
+        },
+        (err, res) =>
       {
-        gas: gasLimit,
-        gasPrice
-      }
-    )
+        if (err) {
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      })
+    );
+  }
 );
 
 const makeOffer = createPromiseActions("OFFER_MAKES/MAKE_OFFER");
@@ -304,7 +317,7 @@ const getTransactionGasEstimate = createAction(
   "OFFER_MAKES/GET_TRANSACTION_GAS_ESTIMATE",
   (payAmount, payToken, buyAmount, buyToken, toAddress) =>
     new Promise((resolve, reject) => {
-      getMarketNoProxyContractInstance().offer.estimateGas(
+      getMarketNoProxyContractInstance().offer['uint256,address,uint256,address,uint256,bool'].estimateGas(
         convertToTokenPrecision(payAmount, getTokenByAddress(payToken)),
         payToken,
         convertToTokenPrecision(buyAmount, getTokenByAddress(buyToken)),
