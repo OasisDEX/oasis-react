@@ -101,7 +101,7 @@ export class OasisChartPrice extends PureComponent {
     const REL_PADDING = 10;
     axis.ticks = axis.ticks.reduce(({lastDay, lastDayIndex, result}, tick, i) => {
       const day = moment.unix(tick).startOf('day').unix();
-      return day == lastDay || (lastDayIndex && i-lastDayIndex < axis.ticks.length/REL_PADDING) ?
+      return day == lastDay || (lastDayIndex !== null && i-lastDayIndex < axis.ticks.length/REL_PADDING) ?
         {lastDay, lastDayIndex, result: result.concat(null)} :
         {lastDay: day, lastDayIndex: i, result: result.concat(tick)};
     }, {lastDay: null, lastDayIndex: null, result: []}).result;
