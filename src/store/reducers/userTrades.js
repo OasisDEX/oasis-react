@@ -155,7 +155,7 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock, perTradingPair }) => (
             dispatch(fetchLogTakeEventsAction.rejected(err));
             reject(err);
           }
-          resolve({ toBlock, logTakesList });
+          resolve({ toBlock, logTakesList: logTakesList.map(item => ({...item, isTaker: true })) } );
         });
     }),
     new Promise((resolve, reject) => {
@@ -185,7 +185,7 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock, perTradingPair }) => (
               )
             );
           }
-          resolve({ toBlock, logTakesList });
+          resolve({ toBlock, logTakesList: logTakesList.map(item => ({...item, isMaker: true })) });
         });
     })
   ]).then(
