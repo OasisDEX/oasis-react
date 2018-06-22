@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import { formatAmount, formatPrice, price } from '../tokens/pair';
 import OasisTradeType from '../../components/OasisTradeType';
 
-export const toHistoricalTrades = (tradeHistoryEntry, baseToken, quoteToken) => {
+export const toHistoricalTrades = (tradeHistoryEntry, userAccountAddress, baseToken, quoteToken) => {
   let baseAmount = null, quoteAmount = null;
   if (
     tradeHistoryEntry.buyWhichToken === quoteToken &&
@@ -20,12 +20,15 @@ export const toHistoricalTrades = (tradeHistoryEntry, baseToken, quoteToken) => 
     baseAmount = new BigNumber(tradeHistoryEntry.buyHowMuch);
     quoteAmount = new BigNumber(tradeHistoryEntry.sellHowMuch);
   }
-
   return {
     transactionHash: tradeHistoryEntry.transactionHash,
     date: moment.unix(tradeHistoryEntry.timestamp).format("DD-MM HH:mm"),
     tradeType: (
-      <OasisTradeType order={tradeHistoryEntry} baseCurrency={baseToken}/>
+      <OasisTradeType
+        order={tradeHistoryEntry}
+        baseCurrency={baseToken}
+        userToTradeRelation={tradeHistoryEntry.userToTradeRelation}
+      />
     ),
     baseAmount: formatAmount(baseAmount, true),
     baseAmountFullPrecision: baseAmount,

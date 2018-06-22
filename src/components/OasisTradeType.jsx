@@ -1,22 +1,32 @@
-import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
-import { BID, ASK } from '../store/reducers/trades';
-import { tradeType, formatTradeType } from '../utils/tokens/pair';
+import React, { PureComponent } from "react";
+import { PropTypes } from "prop-types";
+import { BID, ASK } from "../store/reducers/trades";
+import { tradeType, formatTradeType } from "../utils/tokens/pair";
 
-import styles from './OasisTradeType.scss';
-import CSSModules from 'react-css-modules';
+import styles from "./OasisTradeType.scss";
+import CSSModules from "react-css-modules";
+import {
+  USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER,
+  USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE
+} from "../constants";
 
-const propTypes = PropTypes && {};
+const propTypes = PropTypes && {
+  userToTradeRelation: PropTypes.oneOf([
+    USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE,
+    USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER
+  ])
+};
 const defaultProps = {};
 
 export class OasisTradeType extends PureComponent {
   render() {
-    const { order, baseCurrency, type } = this.props;
-    const tradeTypeEnum = type || tradeType(order, baseCurrency);
+    const { order, baseCurrency, type, userToTradeRelation } = this.props;
+    const tradeTypeEnum =
+      type || tradeType(order, baseCurrency, userToTradeRelation);
 
-    const typeStyle = (type) => {
+    const typeStyle = type => {
       if (!type) {
-        return '';
+        return "";
       } else {
         switch (type) {
           case BID:
@@ -31,12 +41,11 @@ export class OasisTradeType extends PureComponent {
       <span className={`${typeStyle(tradeTypeEnum)}`}>
         {formatTradeType(tradeTypeEnum)}
       </span>
-
     );
   }
 }
 
-OasisTradeType.displayName = 'OasisTradeType';
+OasisTradeType.displayName = "OasisTradeType";
 OasisTradeType.propTypes = propTypes;
 OasisTradeType.defaultProps = defaultProps;
 export default CSSModules(OasisTradeType, styles);

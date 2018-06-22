@@ -1,5 +1,6 @@
 import getTokenByAddress from '../tokens/getTokenByAddress';
 import { convertTo18Precision } from '../conversion';
+import { USER_TO_LOG_TAKE_OFFER_RELATION_NONE } from '../../constants';
 
 export default (logTake) => {
   const buyWhichToken = getTokenByAddress(logTake.args.buy_gem);
@@ -15,7 +16,8 @@ export default (logTake) => {
       timestamp: logTake.args.timestamp.toNumber(),
       transactionHash: logTake.transactionHash,
       maker: logTake.args.maker,
-      taker: logTake.args.taker
+      taker: logTake.args.taker,
+      userToTradeRelation: (logTake.userToTradeRelation ? logTake.userToTradeRelation : USER_TO_LOG_TAKE_OFFER_RELATION_NONE)
     };
   }
   return false;

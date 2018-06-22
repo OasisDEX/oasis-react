@@ -1,5 +1,9 @@
 import BigNumber from "bignumber.js";
-import { ETH_UNIT_ETHER } from "../../constants";
+import {
+  ETH_UNIT_ETHER,
+  USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER,
+  USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE
+} from "../../constants";
 import web3 from "../../bootstrap/web3";
 import { ASK, BID } from "../../store/reducers/trades";
 import isNumeric from "../numbers/isNumeric";
@@ -42,7 +46,6 @@ const volume = (tradingPairTrades, baseToken, quoteToken) => {
 
 const price = (tradeHistoryEntry, baseToken, quoteToken) => {
   if (!tradeHistoryEntry) {
-    console.log("tradeHistoryEntry", tradeHistoryEntry, baseToken, quoteToken);
     return null;
   }
   let price = 0;
@@ -103,8 +106,7 @@ const formatPrice = (
           !fromWei
             ? priceSanitized
             : web3.fromWei(priceSanitized, ETH_UNIT_ETHER)
-        )
-          .toFormat(5, 4)
+        ).toFormat(5, 4)
       : null;
   } catch (e) {
     console.warn(e.toString());
@@ -124,33 +126,39 @@ const formatTokenAmount = (price, fromWei = false, unit, decimalPlaces) => {
       isNumeric(price) && price.toString().replace(/[,']+/g, "");
     return priceSanitized
       ? String(
-        new BigNumber(
-          !fromWei
-            ? priceSanitized
-            : web3.fromWei(priceSanitized, unit, decimalPlaces)
-        ).toFormat(decimalPlaces, 4)
-      )
+          new BigNumber(
+            !fromWei
+              ? priceSanitized
+              : web3.fromWei(priceSanitized, unit, decimalPlaces)
+          ).toFormat(decimalPlaces, 4)
+        )
       : null;
   } catch (e) {
     console.warn(e.toString());
   }
 };
 
-//eslint-disable-next-line no-unused-vars
-const formatAmount = (price, fromWei = false, unknown = null, precision = 3) => {
+const formatAmount = (
+  price,
+  fromWei = false,
+  //eslint-disable-next-line no-unused-vars
+  unknown = null,
+  precision = 3
+) => {
   if ([null, undefined].includes(price)) {
     return null;
   }
   try {
-    const priceSanitized = isNumeric(price) && price.toString().replace(/[,']+/g, "");
+    const priceSanitized =
+      isNumeric(price) && price.toString().replace(/[,']+/g, "");
     return priceSanitized
       ? String(
-        new BigNumber(
-          !fromWei
-            ? priceSanitized
-            : web3.fromWei(priceSanitized, ETH_UNIT_ETHER)
-        ).toFormat(precision, 4)
-      )
+          new BigNumber(
+            !fromWei
+              ? priceSanitized
+              : web3.fromWei(priceSanitized, ETH_UNIT_ETHER)
+          ).toFormat(precision, 4)
+        )
       : null;
   } catch (e) {
     console.warn(e.toString());
@@ -160,11 +168,31 @@ const formatAmount = (price, fromWei = false, unknown = null, precision = 3) => 
 const formatVolume = tradingPairVolume =>
   web3.fromWei(tradingPairVolume, ETH_UNIT_ETHER).toFormat(2, 4);
 
-const tradeType = (order, baseCurrency) => {
+const tradeType = (order, baseCurrency, userToTradeRelation) => {
+  const checkWithOwnership = (
+    userToTradeRelationEnum,
+    noRelationType,
+    noRelationOtherType
+  ) => {
+    switch (userToTradeRelationEnum) {
+      case USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER:
+        return noRelationType;
+      case USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE:
+        return noRelationOtherType;
+    }
+  };
   if (order.buyWhichToken === baseCurrency) {
-    return ASK;
+    if (userToTradeRelation) {
+      return checkWithOwnership(userToTradeRelation, BID, ASK);
+    } else {
+      return BID;
+    }
   } else if (order.sellWhichToken === baseCurrency) {
-    return BID;
+    if (userToTradeRelation) {
+      return checkWithOwnership(userToTradeRelation, ASK, BID);
+    } else {
+      return ASK;
+    }
   }
 };
 
