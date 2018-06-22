@@ -17,7 +17,11 @@ import accounts from "../selectors/accounts";
 import web3 from "../../bootstrap/web3";
 import markets from "../selectors/markets";
 import network from "../selectors/network";
-import { SUBSCRIPTIONS_USER_LOG_TAKE_EVENTS } from "../../constants";
+import {
+  SUBSCRIPTIONS_USER_LOG_TAKE_EVENTS,
+  USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER,
+  USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE
+} from "../../constants";
 import { solSha3 } from "../../utils/solSha3";
 import userTrades from "../selectors/userTrades";
 
@@ -126,7 +130,6 @@ const loadingUserMarketHistory = createAction(
   isLoading => isLoading
 );
 
-
 const fetchLogTakeEventsAction = createPromiseActions(FETCH_LOG_TAKE_EVENTS);
 const fetchLogTakeEventsEpic = ({ fromBlock, toBlock, perTradingPair }) => (
   dispatch,
@@ -155,7 +158,13 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock, perTradingPair }) => (
             dispatch(fetchLogTakeEventsAction.rejected(err));
             reject(err);
           }
-          resolve({ toBlock, logTakesList });
+          resolve({
+            toBlock,
+            logTakesList: logTakesList.map(item => ({
+              ...item,
+              userToTradeRelation: USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE
+            }))
+          });
         });
     }),
     new Promise((resolve, reject) => {
@@ -185,7 +194,13 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock, perTradingPair }) => (
               )
             );
           }
-          resolve({ toBlock, logTakesList });
+          resolve({
+            toBlock,
+            logTakesList: logTakesList.map(item => ({
+              ...item,
+              userToTradeRelation: USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER
+            }))
+          });
         });
     })
   ]).then(
@@ -228,7 +243,14 @@ const subscribeLogTakeEventsEpic = ({ fromBlock, perTradingPair }) => (
           },
           { fromBlock: fromBlock, toBlock: "latest" }
         )
-        .then((err, logTake) => dispatch(addTradeHistoryEntry(logTake)))
+        .then((err, logTake) =>
+          dispatch(
+            addTradeHistoryEntry({
+              ...logTake,
+              userToTradeRelation: USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER
+            })
+          )
+        )
     }
   });
   registerAccountSpecificSubscriptions({
@@ -247,7 +269,14 @@ const subscribeLogTakeEventsEpic = ({ fromBlock, perTradingPair }) => (
           },
           { fromBlock: fromBlock, toBlock: "latest" }
         )
-        .then((err, logTake) => dispatch(addTradeHistoryEntry(logTake)))
+        .then((err, logTake) =>
+          dispatch(
+            addTradeHistoryEntry({
+              ...logTake,
+              userToTradeRelation: USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE
+            })
+          )
+        )
     }
   });
   dispatch(subscribeLogTakeEventsAction.fulfilled());

@@ -55,6 +55,7 @@ export class OasisTradeOrdersWrapper extends PureComponent {
       activeNetworkName,
       userTrades,
       loadingUserMarketHistory,
+      defaultAccount,
       actions: {
         cancelOffer,
         setOfferTakeModalOpen,
@@ -62,7 +63,7 @@ export class OasisTradeOrdersWrapper extends PureComponent {
         checkOfferIsActive,
         resetCompletedOfferCheck,
         fetchAndSubscribeUserTradesHistory,
-        removeOrderCancelledByTheOwner
+        removeOrderCancelledByTheOwner,
       }
     } = this.props;
 
@@ -97,6 +98,7 @@ export class OasisTradeOrdersWrapper extends PureComponent {
           onResetCompletedOfferCheck={resetCompletedOfferCheck}
         />
         <OasisMyOrders
+          defaultAccount={defaultAccount}
           activeNetworkName={activeNetworkName}
           sellOffers={sellOffers}
           buyOffers={buyOffers}
