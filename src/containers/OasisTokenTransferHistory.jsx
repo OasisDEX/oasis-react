@@ -14,7 +14,7 @@ import transferHistory from "../store/selectors/transferHistory";
 import { formatAmount } from "../utils/tokens/pair";
 import { Map } from "immutable";
 import styles from "./OasisTokenTransferHistory.scss";
-import createEtherscanTransactionLink from "../utils/createEtherscanTransactionLink";
+import openEtherscanTransactionLink from "../utils/openEtherscanTransactionLink";
 import OasisSignificantDigitsWrapper from "./OasisSignificantDigits";
 import { ETH_UNIT_ETHER } from "../constants";
 import OasisLoadingIndicator from "../components/OasisLoadingIndicator";
@@ -73,12 +73,7 @@ export class OasisTokenTransferHistoryWrapper extends PureComponent {
   }
 
   static onRowClick({ transactionHash }, { activeNetworkName }) {
-    window.open(
-      createEtherscanTransactionLink({ activeNetworkName, transactionHash }),
-      "_blank",
-      "noopener"
-    );
-    window.focus();
+    openEtherscanTransactionLink({ activeNetworkName, transactionHash });
   }
 
   render() {

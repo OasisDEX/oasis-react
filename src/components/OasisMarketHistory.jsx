@@ -11,7 +11,7 @@ import styles from "./OasisMarketHistory.scss";
 import CSSModules from "react-css-modules";
 
 import ImmutablePropTypes from "react-immutable-proptypes";
-import createEtherscanTransactionLink from "../utils/createEtherscanTransactionLink";
+import openEtherscanTransactionLink from "../utils/openEtherscanTransactionLink";
 import { OasisSignificantDigitsWrapper } from "../containers/OasisSignificantDigits";
 import OasisLoadingIndicator from "./OasisLoadingIndicator";
 import { ETH_UNIT_ETHER } from "../constants";
@@ -56,12 +56,7 @@ const colsDefinition = (baseToken, quoteToken) => {
 
 class OasisMarketHistory extends PureComponent {
   static onRowClick({ transactionHash }, { activeNetworkName }) {
-    window.open(
-      createEtherscanTransactionLink({ activeNetworkName, transactionHash }),
-      "_blank",
-      "noopener"
-    );
-    window.focus();
+    openEtherscanTransactionLink({ activeNetworkName, transactionHash });
   }
 
   toHistoricalTrades(tradeHistoryEntry) {

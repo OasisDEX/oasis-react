@@ -22,7 +22,7 @@ import {
 } from "../store/reducers/offers";
 import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
 import OasisButton from "./OasisButton";
-import createEtherscanTransactionLink from "../utils/createEtherscanTransactionLink";
+import openEtherscanTransactionLink from "../utils/openEtherscanTransactionLink";
 import OasisIcon from "./OasisIcon";
 import { myOffersDisplayFormat } from "../utils/offers/myOffersDisplayFormat";
 import { toHistoricalTrades } from "../utils/offers/toHistoricalTrades";
@@ -176,12 +176,7 @@ class OasisMyOrders extends PureComponent {
   }
 
   static onRowClick({ transactionHash }, { activeNetworkName }) {
-    window.open(
-      createEtherscanTransactionLink({ activeNetworkName, transactionHash }),
-      "_blank",
-      "noopener"
-    );
-    window.focus();
+    openEtherscanTransactionLink({ activeNetworkName, transactionHash });
   }
 
   renderOpenOffers() {
