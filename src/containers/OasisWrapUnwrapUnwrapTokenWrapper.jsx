@@ -18,9 +18,14 @@ import {
   TX_UNWRAP_TOKEN_WRAPPER
 } from "../store/reducers/transactions";
 import accounts from "../store/selectors/accounts";
+import { TOKEN_WRAPPED_ETH, TOKEN_WRAPPED_GNT } from '../constants';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  wrappedToken: PropTypes.oneOf([
+    TOKEN_WRAPPED_ETH,
+    TOKEN_WRAPPED_GNT
+  ])
 };
 
 export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
@@ -103,7 +108,8 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
     const {
       hidden,
       activeWrappedToken,
-      activeWrappedTokenBalance
+      activeWrappedTokenBalance,
+      wrappedToken
     } = this.props;
     const { txStatus, txStartTimestamp, disableForm } = this.state;
     return (
@@ -111,6 +117,7 @@ export class OasisWrapUnwrapUnwrapWrapper extends PureComponent {
         hidden={hidden}
         txType={TX_UNWRAP_TOKEN_WRAPPER}
         form={"unwrapTokenWrapper"}
+        wrappedToken={wrappedToken}
         transactionState={{ txStatus, txStartTimestamp }}
         onSubmit={this.makeUnwrap}
         onFormChange={this.onFormChange}

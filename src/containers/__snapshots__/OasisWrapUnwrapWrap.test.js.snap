@@ -16,6 +16,7 @@ exports[`(Container) OasisWrapUnwrapWrap should render 1`] = `
     }
   }
   txType="TX/GROUP__WRAP_UNWRAP/WRAP"
+  unwrappedToken="ETH"
 />
 `;
 

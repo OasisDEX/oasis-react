@@ -46,6 +46,7 @@ const initialState = fromJS({
   defaultQuoteToken: TOKEN_WRAPPED_ETH,
   precision: null,
   tradingPairs: generateTradingPairs(),
+  tokensWithDepositBroker : [TOKEN_WRAPPED_GNT],
   tokenSpecs: {
     [TOKEN_WRAPPED_ETH]: { precision: 18, format: "0,0.00[0000000000000000]" },
     [TOKEN_DAI]: { precision: 18, format: "0,0.00[0000000000000000]" },

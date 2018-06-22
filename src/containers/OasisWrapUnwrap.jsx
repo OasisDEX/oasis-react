@@ -15,7 +15,7 @@ import wrapUnwrapReducer, {
   WRAP_ETHER,
   WRAP_TOKEN_WRAPPER
 } from "../store/reducers/wrapUnwrap";
-import { TOKEN_ETHER } from "../constants";
+import { TOKEN_ETHER, TOKEN_GOLEM, TOKEN_WRAPPED_GNT } from '../constants';
 import platformReducer from "../store/reducers/platform";
 import { FlexBox } from "../components/FlexBox";
 import OasisWrapUnwrapWrapTokenWrapperWrapper from "./OasisWrapUnwrapWrapTokenWrapper";
@@ -57,9 +57,11 @@ export class OasisWrapUnwrapWrapper extends PureComponent {
           hidden={activeUnwrappedToken !== TOKEN_ETHER}
         />
         <OasisWrapUnwrapWrapTokenWrapperWrapper
+          unwrappedToken={TOKEN_GOLEM}
           hidden={activeUnwrappedToken === TOKEN_ETHER}
         />
         <OasisWrapUnwrapUnwrapTokenWrapperWrapper
+          wrappedToken={TOKEN_WRAPPED_GNT}
           hidden={activeUnwrappedToken === TOKEN_ETHER}
         />
       </FlexBox>
