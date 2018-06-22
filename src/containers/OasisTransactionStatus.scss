@@ -1,0 +1,23 @@
+@import "../styles/modules/typography";
+
+.base {
+  @include text();
+}
+
+.infoText {
+  padding: 7px 0;
+}
+
+%status {
+  display: flex;
+  alignContent: space-between;
+}
+
+.status {
+  @extend %status;
+}
+
+.statusDanger {
+  @extend %status;
+  color: $danger-text;
+}
