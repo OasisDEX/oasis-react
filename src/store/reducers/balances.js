@@ -109,7 +109,7 @@ const subscribeAccountEthBalanceChangeEventEpic = accountAddress => async (
 
 const tokenTransferFromEvent = createAction(
   "BALANCES/EVENT___TOKEN_TRANSFER_FROM",
-  (tokenName, userAddress, event, shouldUpdateBalance = true) => ({
+  (tokenName, userAddress, event, shouldUpdateBalance = false) => ({
     tokenName,
     userAddress,
     event,
@@ -128,7 +128,7 @@ const tokenBalanceUpdateEvent = createAction(
 
 const tokenTransferToEvent = createAction(
   "BALANCES/EVENT___TOKEN_TRANSFER_TO",
-  (tokenName, userAddress, event, shouldUpdateBalance = true) => ({
+  (tokenName, userAddress, event, shouldUpdateBalance = false) => ({
     tokenName,
     userAddress,
     event,
