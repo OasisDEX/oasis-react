@@ -52,9 +52,11 @@ const checkAccountsEpic = () => async (dispatch, getState) => {
     dispatch(defaultAccountChanged());
     dispatch(setDefaultAccount(web3.eth.defaultAccount));
     dispatch(setAccounts(userAccounts));
-    dispatch(platformReducer.actions.setGlobalFormLockEnabled());
+
     if(isMetamaskLocked) {
       dispatch(platformReducer.actions.metamaskUnlocked())
+    } else {
+      dispatch(platformReducer.actions.setGlobalFormLockEnabled());
     }
     sessionStorage.setItem('address', web3.eth.defaultAccount);
   }
