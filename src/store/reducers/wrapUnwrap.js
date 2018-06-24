@@ -197,7 +197,7 @@ const unwrapEther = createAction(
   UNWRAP_ETHER,
   async (
     amountInWei,
-    { gasLimit = DEFAULT_GAS_LIMIT, gasPrice = DEFAULT_GAS_LIMIT } = {}
+    { gasLimit = DEFAULT_GAS_LIMIT, gasPrice = DEFAULT_GAS_PRICE } = {}
   ) =>
     getTokenContractInstance(TOKEN_WRAPPED_ETH).withdraw(amountInWei, {
       gas: gasLimit,
