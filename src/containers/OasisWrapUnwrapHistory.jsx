@@ -21,7 +21,7 @@ export class OasisWrapUnwrapHistoryWrapper extends PureComponent {
   async componentDidMount() {
     const { latestBlockNumber, contractsLoaded, hasAccountEntry } = this.props;
     if (latestBlockNumber && contractsLoaded && !hasAccountEntry) {
-      await this.props.actions.loadGNTBrokerAddress();
+      // await this.props.actions.loadGNTBrokerAddress();
       this.props.actions.loadWrapUnwrapsHistory();
     }
   }
@@ -35,7 +35,7 @@ export class OasisWrapUnwrapHistoryWrapper extends PureComponent {
     hasAccountEntry
   }) {
     if (latestBlockNumber && contractsLoaded && !hasAccountEntry) {
-      await this.props.actions.loadGNTBrokerAddress();
+      // await this.props.actions.loadGNTBrokerAddress();
       this.props.actions.loadWrapUnwrapsHistory();
     }
   }

@@ -181,6 +181,7 @@ const loadEtherWrapUnwrapsHistoryEpic = (address, config) => async (
   dispatch(loadWrapUnwrapsHistory$.fulfilled());
 };
 
+// eslint-disable-next-line no-unused-vars
 const loadGNTWrapUnwrapsHistoryEpic = (address, config) => async (
   dispatch,
   getState
@@ -292,7 +293,7 @@ const loadWrapUnwrapsHistoryEpic = () => (dispatch, getState) => {
   }
   dispatch(loadingWrapUnwrapHistorySetPending());
   dispatch(loadEtherWrapUnwrapsHistoryEpic());
-  dispatch(loadGNTWrapUnwrapsHistoryEpic());
+  // dispatch(loadGNTWrapUnwrapsHistoryEpic());
   dispatch(loadingWrapUnwrapHistorySetInitiallyLoaded());
 };
 
