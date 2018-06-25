@@ -106,7 +106,7 @@ const formatPrice = (
           !fromWei
             ? priceSanitized
             : web3.fromWei(priceSanitized, ETH_UNIT_ETHER)
-        ).toFormat(5, 4)
+        ).toFormat(5, BigNumber.ROUND_HALF_UP)
       : null;
   } catch (e) {
     console.warn(e.toString());
@@ -130,7 +130,7 @@ const formatTokenAmount = (price, fromWei = false, unit, decimalPlaces) => {
             !fromWei
               ? priceSanitized
               : web3.fromWei(priceSanitized, unit, decimalPlaces)
-          ).toFormat(decimalPlaces, 4)
+          ).toFormat(decimalPlaces, BigNumber.ROUND_DOWN)
         )
       : null;
   } catch (e) {
@@ -157,7 +157,7 @@ const formatAmount = (
             !fromWei
               ? priceSanitized
               : web3.fromWei(priceSanitized, ETH_UNIT_ETHER)
-          ).toFormat(precision, 4)
+          ).toFormat(precision, BigNumber.ROUND_HALF_UP)
         )
       : null;
   } catch (e) {
@@ -166,7 +166,7 @@ const formatAmount = (
 };
 
 const formatVolume = tradingPairVolume =>
-  web3.fromWei(tradingPairVolume, ETH_UNIT_ETHER).toFormat(2, 4);
+  web3.fromWei(tradingPairVolume, ETH_UNIT_ETHER).toFormat(2, BigNumber.ROUND_HALF_UP);
 
 const tradeType = (order, baseCurrency, userToTradeRelation) => {
   const checkWithOwnership = (
