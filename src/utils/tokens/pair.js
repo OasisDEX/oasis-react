@@ -168,28 +168,49 @@ const formatAmount = (
 const formatVolume = tradingPairVolume =>
   web3.fromWei(tradingPairVolume, ETH_UNIT_ETHER).toFormat(2, BigNumber.ROUND_HALF_UP);
 
-const tradeType = (order, baseCurrency, userToTradeRelation) => {
+const tradeType = (
+  order,
+  baseCurrency,
+  userToTradeBaseRelation,
+  userToTradeAdditionalRelation
+) => {
   const checkWithOwnership = (
     userToTradeRelationEnum,
+    userToTradeAdditionalRelationEnum,
     noRelationType,
     noRelationOtherType
   ) => {
     switch (userToTradeRelationEnum) {
-      case USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER:
+      case USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER: {
+        return userToTradeAdditionalRelationEnum ===
+          USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE
+          ? noRelationType
+          : noRelationOtherType;
+      }
+      case USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE: {
         return noRelationType;
-      case USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE:
-        return noRelationOtherType;
+      }
     }
   };
   if (order.buyWhichToken === baseCurrency) {
-    if (userToTradeRelation) {
-      return checkWithOwnership(userToTradeRelation, BID, ASK);
+    if (userToTradeBaseRelation) {
+      return checkWithOwnership(
+        userToTradeBaseRelation,
+        userToTradeAdditionalRelation,
+        BID,
+        ASK
+      );
     } else {
       return BID;
     }
   } else if (order.sellWhichToken === baseCurrency) {
-    if (userToTradeRelation) {
-      return checkWithOwnership(userToTradeRelation, ASK, BID);
+    if (userToTradeBaseRelation) {
+      return checkWithOwnership(
+        userToTradeBaseRelation,
+        userToTradeAdditionalRelation,
+        ASK,
+        BID
+      );
     } else {
       return ASK;
     }

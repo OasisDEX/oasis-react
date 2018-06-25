@@ -46,7 +46,7 @@ const { store, history } = configureStore();
 
 sak(store);
 
-export const HEALTHCHECK_INTERVAL_MS = 2000;
+export const HEALTHCHECK_INTERVAL_MS = 6000;
 const PENDING_INITIAL_NETWORK_CHECK = "PENDING_INITIAL_NETWORK_CHECK";
 
 const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
