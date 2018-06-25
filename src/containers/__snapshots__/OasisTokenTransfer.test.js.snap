@@ -24,7 +24,6 @@ exports[`(Container) OasisTokenTransfer should render 1`] = `
     onSubmit={[Function]}
     transferState={
       <OasisTransactionStatusWrapperInfoBox
-        className={undefined}
         infoText={
           <div>
             Transfer

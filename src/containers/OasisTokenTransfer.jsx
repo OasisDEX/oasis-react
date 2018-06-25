@@ -137,7 +137,6 @@ export class OasisTokenTransferWrapper extends PureComponent {
           localStatus={txStatus}
           txTimestamp={txStartTimestamp}
           txType={TX__GROUP__TRANSFERS}
-          className={styles.transactionStatusShorter}
         />
       )
     );
