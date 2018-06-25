@@ -162,10 +162,10 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock, perTradingPair }) => (
             toBlock,
             logTakesList: logTakesList.map(item => ({
               ...item,
-              userToTradeBaseRelation: USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE,
+              userToTradeBaseRelation: USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER,
               userToTradeAdditionalRelation:
                 item.args.taker.toString() === accounts.defaultAccount(getState())
-                  ? USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER
+                  ? USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE
                   : null
             }))
           });
@@ -202,10 +202,10 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock, perTradingPair }) => (
             toBlock,
             logTakesList: logTakesList.map(item => ({
               ...item,
-              userToTradeBaseRelation: USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER,
+              userToTradeBaseRelation: USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE,
               userToTradeAdditionalRelation:
                 item.args.maker.toString() === accounts.defaultAccount(getState())
-                  ? USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE
+                  ? USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER
                   : null
             }))
           });
