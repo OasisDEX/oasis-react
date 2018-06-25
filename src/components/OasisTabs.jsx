@@ -5,7 +5,9 @@ import styles from './OasisTabs.scss';
 import CSSModules from 'react-css-modules';
 
 const propTypes = PropTypes && {
-  pathname: PropTypes.string
+  pathname: PropTypes.string,
+  activeTradingPair: PropTypes.object,
+  defaultTradingPair: PropTypes.object.isRequired,
 };
 const defaultProps = {};
 
@@ -15,11 +17,13 @@ class OasisTabs extends PureComponent {
     return (pathname && pathname.indexOf(basePath) === 0) ? styles.active : ''
   }
   render() {
+    const  { defaultTradingPair, activeTradingPair } = this.props;
+    const { baseToken, quoteToken } = activeTradingPair ? activeTradingPair : defaultTradingPair;
     return (
       <div className={styles.rowTabs}>
         <ul className={styles.tabs}>
           <li className={`${styles.tab} ${this.isActive('/trade')}`}>
-            <NavLink to={'/trade'}>Trade</NavLink>
+            <NavLink to={`/trade/${baseToken}/${quoteToken}`}>Trade</NavLink>
           </li>
           <li className={`${styles.tab} ${styles.tabBig} ${this.isActive('/wrap-unwrap')}`}>
             <NavLink to={'/wrap-unwrap'}>Wrap / Unwrap</NavLink>

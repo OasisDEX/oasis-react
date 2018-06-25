@@ -8,8 +8,8 @@ exports[`(Component) OasisTabs should render 1`] = `
     >
       <NavLink
         activeClassName="active"
-        ariaCurrent="true"
-        to="/trade"
+        aria-current="page"
+        to="/trade/W-ETH/DAI"
       >
         Trade
       </NavLink>
@@ -19,7 +19,7 @@ exports[`(Component) OasisTabs should render 1`] = `
     >
       <NavLink
         activeClassName="active"
-        ariaCurrent="true"
+        aria-current="page"
         to="/wrap-unwrap"
       >
         Wrap / Unwrap
@@ -30,7 +30,7 @@ exports[`(Component) OasisTabs should render 1`] = `
     >
       <NavLink
         activeClassName="active"
-        ariaCurrent="true"
+        aria-current="page"
         to="/transfer"
       >
         Transfer

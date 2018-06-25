@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisTabsContainer should render 1`] = `
+<div>
+  <OasisTabs
+    activeTradingPair={
+      Object {
+        "baseToken": "MKR",
+        "quoteToken": "DAI",
+      }
+    }
+    defaultTradingPair={
+      Immutable.Map {
+        baseToken: "MKR",
+        quoteToken: "W-ETH",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`(Container) OasisTabsContainer will receive right actions 1`] = `
+Object {
+  "actions": Object {},
+}
+`;
+
+exports[`(Container) OasisTabsContainer will receive right props 1`] = `
+Object {
+  "activeTradingPair": Object {
+    "baseToken": "MKR",
+    "quoteToken": "DAI",
+  },
+  "defaultTradingPair": Immutable.Map {
+    baseToken: "MKR",
+    quoteToken: "W-ETH",
+},
+}
+`;

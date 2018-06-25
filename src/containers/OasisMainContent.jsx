@@ -7,11 +7,12 @@ import { bindActionCreators } from "redux";
 import { Route, Redirect, withRouter } from "react-router-dom";
 import { compose } from "redux";
 
-import OasisTabs from "../components/OasisTabs";
-import OasisTradeWrapper from "./OasisTrade";
-import OasisTransferWrapper from "./OasisTransferMainWrapper";
-import OasisWrapUnwrapWrapper from "./OasisWrapUnwrap";
-import tokensSelectors from "./../store/selectors/tokens";
+
+import OasisTradeWrapper from './OasisTrade';
+import OasisTransferWrapper from './OasisTransferMainWrapper';
+import OasisWrapUnwrapWrapper from './OasisWrapUnwrap';
+import tokensSelectors from './../store/selectors/tokens';
+import OasisTabsContainerWrapper  from './OasisTabsContainer';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object
@@ -62,8 +63,8 @@ export class OasisMainContentWrapper extends Component {
     const { defaultTradingPair, location: { pathname } } = this.props;
     return (
       this.redirect() || (
-        <div className="OasisMainContentWrapper">
-          <OasisTabs pathname={pathname} />
+        <div className="OasisMainContent">
+          <OasisTabsContainerWrapper pathname={pathname}/>
           <div>
             <Route
               path={"*"}
