@@ -27,7 +27,8 @@ export const toHistoricalTrades = (tradeHistoryEntry, userAccountAddress, baseTo
       <OasisTradeType
         order={tradeHistoryEntry}
         baseCurrency={baseToken}
-        userToTradeRelation={tradeHistoryEntry.userToTradeRelation}
+        userToTradeBaseRelation={tradeHistoryEntry.userToTradeBaseRelation}
+        userToTradeAdditionalRelation={tradeHistoryEntry.userToTradeAdditionalRelation}
       />
     ),
     baseAmount: formatAmount(baseAmount, true),

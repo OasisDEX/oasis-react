@@ -162,7 +162,11 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock, perTradingPair }) => (
             toBlock,
             logTakesList: logTakesList.map(item => ({
               ...item,
-              userToTradeRelation: USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE
+              userToTradeBaseRelation: USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE,
+              userToTradeAdditionalRelation:
+                item.args.taker.toString() === accounts.defaultAccount(getState())
+                  ? USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER
+                  : null
             }))
           });
         });
@@ -198,7 +202,11 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock, perTradingPair }) => (
             toBlock,
             logTakesList: logTakesList.map(item => ({
               ...item,
-              userToTradeRelation: USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER
+              userToTradeBaseRelation: USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER,
+              userToTradeAdditionalRelation:
+                item.args.maker.toString() === accounts.defaultAccount(getState())
+                  ? USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE
+                  : null
             }))
           });
         });
@@ -243,14 +251,18 @@ const subscribeLogTakeEventsEpic = ({ fromBlock, perTradingPair }) => (
           },
           { fromBlock: fromBlock, toBlock: "latest" }
         )
-        .then((err, logTake) =>
+        .then((err, logTake) => {
           dispatch(
             addTradeHistoryEntry({
               ...logTake,
-              userToTradeRelation: USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER
+              userToTradeBaseRelation: USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER,
+              userToTradeAdditionalRelation:
+                logTake.args.maker.toString() === accounts.defaultAccount(getState())
+                  ? USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE
+                  : null
             })
-          )
-        )
+          );
+        })
     }
   });
   registerAccountSpecificSubscriptions({
@@ -269,14 +281,18 @@ const subscribeLogTakeEventsEpic = ({ fromBlock, perTradingPair }) => (
           },
           { fromBlock: fromBlock, toBlock: "latest" }
         )
-        .then((err, logTake) =>
+        .then((err, logTake) => {
           dispatch(
             addTradeHistoryEntry({
               ...logTake,
-              userToTradeRelation: USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE
+              userToTradeBaseRelation: USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE,
+              userToTradeAdditionalRelation:
+                logTake.args.taker.toString() === accounts.defaultAccount(getState())
+                  ? USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER
+                  : null
             })
-          )
-        )
+          );
+        })
     }
   });
   dispatch(subscribeLogTakeEventsAction.fulfilled());

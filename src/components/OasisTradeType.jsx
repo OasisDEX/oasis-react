@@ -11,18 +11,23 @@ import {
 } from "../constants";
 
 const propTypes = PropTypes && {
-  userToTradeRelation: PropTypes.oneOf([
+  userToTradeBaseRelation: PropTypes.oneOf([
     USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE,
     USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER
+  ]),
+  userToTradeAdditionalRelation: PropTypes.oneOf([
+    USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE,
+    USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER,
+    null
   ])
 };
 const defaultProps = {};
 
 export class OasisTradeType extends PureComponent {
   render() {
-    const { order, baseCurrency, type, userToTradeRelation } = this.props;
+    const { order, baseCurrency, type, userToTradeBaseRelation, userToTradeAdditionalRelation } = this.props;
     const tradeTypeEnum =
-      type || tradeType(order, baseCurrency, userToTradeRelation);
+      type || tradeType(order, baseCurrency, userToTradeBaseRelation, userToTradeAdditionalRelation);
 
     const typeStyle = type => {
       if (!type) {
