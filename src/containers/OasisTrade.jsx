@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { validateTradingPair } from '../utils/validateTradingPair';
-import { BASE_TOKENS, QUOTE_TOKENS, TOKEN_MAKER, TOKEN_WRAPPED_ETH } from '../constants';
+import { BASE_TOKENS, QUOTE_TOKENS, TOKEN_DAI, TOKEN_WRAPPED_ETH } from '../constants';
 import tokensReducer from './../store/reducers/tokens';
 import { generateTradingPairs } from '../utils/generateTradingPairs';
 import OasisMarketWidget from '../components/OasisMarketWidget';
@@ -32,9 +32,9 @@ export class OasisTradeWrapper extends PureComponent {
 
     if (!validateTradingPair(params.baseToken, params.quoteToken, generateTradingPairs(BASE_TOKENS, QUOTE_TOKENS))) {
 
-      if(baseToken === TOKEN_WRAPPED_ETH && quoteToken === TOKEN_MAKER) {
+      if(baseToken === TOKEN_WRAPPED_ETH && quoteToken === TOKEN_DAI) {
         return (
-          <Redirect to={`/trade/${TOKEN_MAKER}/${TOKEN_WRAPPED_ETH}`}/>
+          <Redirect to={`/trade/${TOKEN_WRAPPED_ETH}/${TOKEN_DAI}`}/>
         );
       } else {
         return (
