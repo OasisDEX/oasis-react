@@ -88,10 +88,16 @@ export class OfferTakeForm extends PureComponent {
   }
 
   setMaxButton() {
+
     if (false === this.state.showMaxButton) {
       return null;
     }
-    if (web3.toBigNumber(this.props.activeBaseTokenBalance).gt(0)) {
+
+    const balanceOfTokenToPayWith = this.props.offerTakeType === TAKE_BUY_OFFER ?
+      this.props.activeBaseTokenBalance :
+      this.props.activeQuoteTokenBalance;
+
+    if (web3.toBigNumber(balanceOfTokenToPayWith).gt(0)) {
       const {
         disableForm,
         globalFormLock,
