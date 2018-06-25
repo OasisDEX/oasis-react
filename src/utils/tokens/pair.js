@@ -157,7 +157,7 @@ const formatAmount = (
             !fromWei
               ? priceSanitized
               : web3.fromWei(priceSanitized, ETH_UNIT_ETHER)
-          ).toFormat(precision, BigNumber.ROUND_HALF_UP)
+          ).toFormat(precision, BigNumber.ROUND_DOWN)
         )
       : null;
   } catch (e) {
