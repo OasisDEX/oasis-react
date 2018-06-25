@@ -7,18 +7,14 @@ import { bindActionCreators } from "redux";
 import OasisWrapUnwrapBalancesWrapper from "./OasisWrapUnwrapBalances";
 import OasisWrapUnwrapHistoryWrapper from "./OasisWrapUnwrapHistory";
 import OasisWrapUnwrapUnwrapEtherWrapper from "./OasisWrapUnwrapUnwrapEther";
-import OasisWrapUnwrapUnwrapTokenWrapperWrapper from "./OasisWrapUnwrapUnwrapTokenWrapper";
 import OasisWrapUnwrapWrapEtherWrapper from "./OasisWrapUnwrapWrapEther";
 import wrapUnwrapReducer, {
   UNWRAP_ETHER,
-  UNWRAP_TOKEN_WRAPPER,
   WRAP_ETHER,
-  WRAP_TOKEN_WRAPPER
 } from "../store/reducers/wrapUnwrap";
-import { TOKEN_ETHER, TOKEN_GOLEM, TOKEN_WRAPPED_GNT } from '../constants';
+import { TOKEN_ETHER } from '../constants';
 import platformReducer from "../store/reducers/platform";
 import { FlexBox } from "../components/FlexBox";
-import OasisWrapUnwrapWrapTokenWrapperWrapper from "./OasisWrapUnwrapWrapTokenWrapper";
 import wrapUnwrap from "../store/selectors/wrapUnwrap";
 
 const propTypes = PropTypes && {
@@ -30,9 +26,9 @@ export class OasisWrapUnwrapWrapper extends PureComponent {
     super(props);
     this.props.actions.setActiveWrapUnwrappedToken(TOKEN_ETHER);
     this.props.actions.resetActiveWrapForm(WRAP_ETHER);
-    this.props.actions.resetActiveWrapForm(WRAP_TOKEN_WRAPPER);
+    // this.props.actions.resetActiveWrapForm(WRAP_TOKEN_WRAPPER);
     this.props.actions.resetActiveUnwrapForm(UNWRAP_ETHER);
-    this.props.actions.resetActiveUnwrapForm(UNWRAP_TOKEN_WRAPPER);
+    // this.props.actions.resetActiveUnwrapForm(UNWRAP_TOKEN_WRAPPER);
   }
 
   render() {
@@ -50,14 +46,14 @@ export class OasisWrapUnwrapWrapper extends PureComponent {
         <OasisWrapUnwrapUnwrapEtherWrapper
           hidden={activeUnwrappedToken !== TOKEN_ETHER}
         />
-        <OasisWrapUnwrapWrapTokenWrapperWrapper
-          unwrappedToken={TOKEN_GOLEM}
-          hidden={activeUnwrappedToken === TOKEN_ETHER}
-        />
-        <OasisWrapUnwrapUnwrapTokenWrapperWrapper
-          wrappedToken={TOKEN_WRAPPED_GNT}
-          hidden={activeUnwrappedToken === TOKEN_ETHER}
-        />
+        {/*<OasisWrapUnwrapWrapTokenWrapperWrapper*/}
+          {/*unwrappedToken={TOKEN_GOLEM}*/}
+          {/*hidden={activeUnwrappedToken === TOKEN_ETHER}*/}
+        {/*/>*/}
+        {/*<OasisWrapUnwrapUnwrapTokenWrapperWrapper*/}
+          {/*wrappedToken={TOKEN_WRAPPED_GNT}*/}
+          {/*hidden={activeUnwrappedToken === TOKEN_ETHER}*/}
+        {/*/>*/}
       </FlexBox>
     );
   }

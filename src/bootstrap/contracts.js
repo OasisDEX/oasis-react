@@ -13,11 +13,9 @@ import web3 from "./web3";
 import {
   TOKEN_DAI,
   TOKEN_DIGIX,
-  TOKEN_GOLEM,
   TOKEN_MAKER,
   TOKEN_RHOC,
   TOKEN_WRAPPED_ETH,
-  TOKEN_WRAPPED_GNT,
 } from '../constants';
 
 let brokers = fromJS({});
@@ -44,14 +42,14 @@ const init = networkName => {
     erc20Abi.interface,
     tokencontractsDeploymentAdressessList["DGD"]
   );
-  const GNT = loadContact(
-    erc20Abi.interface,
-    tokencontractsDeploymentAdressessList["GNT"]
-  );
-  const WGNT = loadContact(
-    TokenWrapperAbi.interface,
-    tokencontractsDeploymentAdressessList["W-GNT"]
-  );
+  // const GNT = loadContact(
+  //   erc20Abi.interface,
+  //   tokencontractsDeploymentAdressessList["GNT"]
+  // );
+  // const WGNT = loadContact(
+  //   TokenWrapperAbi.interface,
+  //   tokencontractsDeploymentAdressessList["W-GNT"]
+  // );
   const RHOC = loadContact(
     erc20Abi.interface,
     tokencontractsDeploymentAdressessList["RHOC"]
@@ -65,11 +63,11 @@ const init = networkName => {
     marketDeploymentAddress,
     true
   );
-  const WGNTNoProxy = loadContact(
-    TokenWrapperAbi.interface,
-    tokencontractsDeploymentAdressessList["W-GNT"],
-    true
-  );
+  // const WGNTNoProxy = loadContact(
+  //   TokenWrapperAbi.interface,
+  //   tokencontractsDeploymentAdressessList["W-GNT"],
+  //   true
+  // );
 
   const abiList = Object.freeze({
     erc20Abi,
@@ -81,16 +79,16 @@ const init = networkName => {
   contracts = Object.freeze({
     tokens: {
       [TOKEN_WRAPPED_ETH]: WETH,
-      [TOKEN_WRAPPED_GNT]: WGNT,
+      // [TOKEN_WRAPPED_GNT]: WGNT,
       [TOKEN_DAI]: DAI,
       [TOKEN_MAKER]: MKR,
       [TOKEN_DIGIX]: DGD,
-      [TOKEN_GOLEM]: GNT,
+      // [TOKEN_GOLEM]: GNT,
       [TOKEN_RHOC]: RHOC
     },
     market,
     noProxyTokens: {
-      [TOKEN_WRAPPED_GNT]: WGNTNoProxy
+      // [TOKEN_WRAPPED_GNT]: WGNTNoProxy
     },
     marketNoProxy,
     abiList,

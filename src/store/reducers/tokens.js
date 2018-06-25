@@ -13,7 +13,6 @@ import {
   TOKEN_MAKER,
   TOKEN_RHOC,
   TOKEN_WRAPPED_ETH,
-  TOKEN_WRAPPED_GNT,
 } from '../../constants';
 import { generateTradingPairs } from "../../utils/generateTradingPairs";
 import tokens from "../selectors/tokens";
@@ -27,8 +26,8 @@ const initialState = fromJS({
     TOKEN_WRAPPED_ETH,
     TOKEN_MAKER,
     TOKEN_DIGIX,
-    TOKEN_GOLEM,
-    TOKEN_WRAPPED_GNT,
+    // TOKEN_GOLEM,
+    // TOKEN_WRAPPED_GNT,
     TOKEN_RHOC,
     TOKEN_DAI
   ],
@@ -36,7 +35,7 @@ const initialState = fromJS({
     TOKEN_WRAPPED_ETH,
     TOKEN_DAI,
     TOKEN_MAKER,
-    TOKEN_WRAPPED_GNT,
+    // TOKEN_WRAPPED_GNT,
     TOKEN_DIGIX,
     TOKEN_RHOC,
   ],
@@ -46,14 +45,14 @@ const initialState = fromJS({
   defaultQuoteToken: TOKEN_WRAPPED_ETH,
   precision: null,
   tradingPairs: generateTradingPairs(),
-  tokensWithDepositBroker : [TOKEN_WRAPPED_GNT],
+  // tokensWithDepositBroker : [TOKEN_WRAPPED_GNT],
   tokenSpecs: {
     [TOKEN_WRAPPED_ETH]: { precision: 18, format: "0,0.00[0000000000000000]" },
     [TOKEN_DAI]: { precision: 18, format: "0,0.00[0000000000000000]" },
     [TOKEN_MAKER]: { precision: 18, format: "0,0.00[0000000000000000]" },
     [TOKEN_DIGIX]: { precision: 9, format: "0,0.00[0000000]" },
     [TOKEN_GOLEM]: { precision: 18, format: "0,0.00[0000000000000000]" },
-    [TOKEN_WRAPPED_GNT]: { precision: 18, format: "0,0.00[0000000000000000]" },
+    // [TOKEN_WRAPPED_GNT]: { precision: 18, format: "0,0.00[0000000000000000]" },
     [TOKEN_RHOC]: { precision: 8, format: "0,0.00[000000]" },
   },
   defaultTradingPair: { baseToken: TOKEN_WRAPPED_ETH, quoteToken: TOKEN_DAI },

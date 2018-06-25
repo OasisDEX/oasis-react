@@ -42,10 +42,10 @@ const initialState = fromJS({
       unwrapped: TOKEN_ETHER,
       wrapper: TOKEN_WRAPPED_ETH
     },
-    {
-      unwrapped: TOKEN_GOLEM,
-      wrapper: TOKEN_WRAPPED_GNT
-    }
+    // {
+    //   unwrapped: TOKEN_GOLEM,
+    //   wrapper: TOKEN_WRAPPED_GNT
+    // }
   ],
   activeUnwrappedToken: TOKEN_ETHER,
   loadedBrokerContracts: [],
