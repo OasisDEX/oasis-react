@@ -157,7 +157,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
     const { selectedToken } = this.props;
     return (
       <OasisWidgetFrame
-        className={styles.tokenTransferWidget}
+        className={styles.frame}
         heading="Transfer"
         spaceForContent={true}
         headingChildren={this.selectedToken()}

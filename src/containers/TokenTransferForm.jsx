@@ -159,7 +159,7 @@ export class TokenTransferFormWrapper extends PureComponent {
           </tbody>
         </table>
         {transferState}
-        <div className={`${widgetStyles.OasisWidgetFooter} ${styles.footer}`}>
+        <div className={styles.footer}>
           <div className={styles.validationErrorsBox}>
             {this.renderWarningSectionContent()}
           </div>

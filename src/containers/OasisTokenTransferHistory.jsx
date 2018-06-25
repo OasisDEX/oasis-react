@@ -90,6 +90,7 @@ export class OasisTokenTransferHistoryWrapper extends PureComponent {
           ) : null
         }
         heading="History"
+        className={styles.frame}
       >
         <div>
           {
