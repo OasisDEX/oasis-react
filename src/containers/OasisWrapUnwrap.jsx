@@ -28,15 +28,9 @@ const propTypes = PropTypes && {
 export class OasisWrapUnwrapWrapper extends PureComponent {
   constructor(props) {
     super(props);
-    const { match: { params: { token }, url } } = this.props;
-    if (!token) {
-      return this.props.actions.changeRoute(`${url}/${TOKEN_ETHER}`);
-    }
-    this.props.actions.setActiveWrapUnwrappedToken(token);
-
+    this.props.actions.setActiveWrapUnwrappedToken(TOKEN_ETHER);
     this.props.actions.resetActiveWrapForm(WRAP_ETHER);
     this.props.actions.resetActiveWrapForm(WRAP_TOKEN_WRAPPER);
-
     this.props.actions.resetActiveUnwrapForm(UNWRAP_ETHER);
     this.props.actions.resetActiveUnwrapForm(UNWRAP_TOKEN_WRAPPER);
   }
