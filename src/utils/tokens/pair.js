@@ -201,7 +201,7 @@ const tradeType = (
         ASK
       );
     } else {
-      return BID;
+      return ASK;
     }
   } else if (order.sellWhichToken === baseCurrency) {
     if (userToTradeBaseRelation) {
@@ -212,7 +212,7 @@ const tradeType = (
         BID
       );
     } else {
-      return ASK;
+      return BID;
     }
   }
 };
