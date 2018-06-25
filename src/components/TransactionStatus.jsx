@@ -29,7 +29,7 @@ class TransactionStatus extends PureComponent {
     switch (transaction.get("txStatus")) {
       case TX_STATUS_AWAITING_USER_ACCEPTANCE:
         return (
-          <div>
+          <div style={{paddingTop: '1px', color: '#68676B'}}>
             Sign Trans.<StatusPictogram
               status={transaction.get("txStatus")}
               className={styles.imgRight}
@@ -53,7 +53,7 @@ class TransactionStatus extends PureComponent {
         );
       case TX_STATUS_CONFIRMED:
         return (
-          <FlexBox alignItems="baseline">
+          <FlexBox alignItems="baseline" additionalStyles={{paddingTop: '2px'}}>
             <EtherscanLinkWrapper
               label={"Confirmed"}
               type={ETHERSCAN_LINK_TYPE_TRANSACTION}
@@ -67,6 +67,7 @@ class TransactionStatus extends PureComponent {
         );
 
       case TX_STATUS_REJECTED:
+        console.log("TX_STATUS_REJECTED", styles.transactionFailedHash, styles);
         return (
           <FlexBox alignItems="baseline">
             <StatusPictogram
@@ -74,11 +75,13 @@ class TransactionStatus extends PureComponent {
               className={styles.imgLeft}
             />
             Your transaction
-            <EtherscanLinkWrapper
-              className={styles.spaceBoth}
-              type={ETHERSCAN_LINK_TYPE_TRANSACTION}
-              txHash={transaction.get("txHash")}
-            />{" "}
+            <span className={styles.transactionFailedHash}>
+              <EtherscanLinkWrapper
+                className={styles.spaceBoth}
+                type={ETHERSCAN_LINK_TYPE_TRANSACTION}
+                txHash={transaction.get("txHash")}
+              />{" "}
+            </span>
             failed
           </FlexBox>
         );

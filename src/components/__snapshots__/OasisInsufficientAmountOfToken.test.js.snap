@@ -7,9 +7,7 @@ exports[`(Component) OasisInsufficientAmountOfToken should render 1`] = `
   icon="warning"
 >
   <span>
-     
-    You do not have enough
-     
+    You do not have enough 
     <strong>
       W-ETH
     </strong>

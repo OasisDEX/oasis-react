@@ -23,6 +23,8 @@ import {
   getMarketNoProxyContractInstance
 } from "../../bootstrap/contracts";
 import transactions from "../selectors/transactions";
+import isNumericAndGreaterThanZero from "../../utils/numbers/isNumericAndGreaterThanZero";
+import { convertToTokenPrecision } from "../../utils/conversion";
 
 export const TAKE_BUY_OFFER = "OFFER_TAKES/TAKE_BUY_OFFER";
 export const TAKE_SELL_OFFER = "OFFER_TAKES/TAKE_SELL_OFFER";
@@ -112,9 +114,9 @@ const sendBuyTransaction = createAction(
 const takeOffer = createPromiseActions("OFFER_TAKES/TAKE_OFFER");
 
 const takeOfferEpic = (withCallbacks = {}) => async (dispatch, getState) => {
-  const amountInWei = web3.toWei(
-    offerTakes.getBuyAmount(getState),
-    ETH_UNIT_ETHER
+  const amountInWei = convertToTokenPrecision(
+    web3.toWei(offerTakes.getBuyAmount(getState()), ETH_UNIT_ETHER),
+    offerTakes.activeOfferTakeOfferData(getState()).get("sellWhichToken")
   );
 
   const activeOfferTakeOfferId = offerTakes.activeOfferTakeOfferId(getState());
@@ -357,16 +359,38 @@ const getTransactionGasCostEstimateEpic = (
   } = {}
 ) => async (dispatch, getState) => {
   const offerId = activeOfferTakeOfferId(getState());
-  const volume = takeFormValuesSelector(getState(), "volume");
+  const { volume, total } = takeFormValuesSelector(
+    getState(),
+    "volume",
+    "total"
+  );
 
-  if (!canFulfillOffer(getState()) || !volume) {
+  if (
+    !isNumericAndGreaterThanZero(volume) ||
+    !isNumericAndGreaterThanZero(total) ||
+    !canFulfillOffer(getState())
+  ) {
     return null;
   }
 
+  // console.log("===========================================================================================");
+  // console.log("transactionGasCostEstimate",
+  //   getBuyAmount(getState()),
+  //   offerTakes.activeOfferTakeType(getState()),
+  //   activeOfferTakeOfferData(getState()).get("buyWhichToken"),
+  //   activeOfferTakeOfferData(getState()).get("sellWhichToken"),
+  //   offerTakes.activeOfferTakeType(getState()) === TAKE_BUY_OFFER
+  //   ? activeOfferTakeOfferData(getState()).get("buyWhichToken")
+  //   : activeOfferTakeOfferData(getState()).get("sellWhichToken"));
+  // console.log("===========================================================================================");
+  
   const transactionGasCostEstimate = (await dispatch(
     defer(getTransactionGasCostEstimate, {
       offerId,
-      amount: web3.toWei(getBuyAmount(getState), ETH_UNIT_ETHER),
+      amount: convertToTokenPrecision(
+        web3.toWei(getBuyAmount(getState()), ETH_UNIT_ETHER),
+        activeOfferTakeOfferData(getState()).get("sellWhichToken")
+      ),
       offerOwner: activeOfferTakeOfferOwner(getState()),
       activeOfferData: activeOfferTakeOfferData(getState())
     })

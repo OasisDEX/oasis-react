@@ -327,6 +327,21 @@ global.storeMock = {
       isExpanded: false
     }
   },
+  userTrades: {
+    volumes: {},
+    marketHistory: [],
+    initialMarketHistoryLoaded: true,
+    loadingTradeHistory: false,
+    volumesLoaded: false,
+    loadingUserMarketHistory: false,
+    tradeHistoryStartingBlockTimestamp: null,
+    latestEventsBlocks: {
+      LogTake: null,
+      LogMake: null,
+      LogTrade: null
+    },
+    trades: []
+  },
   trades: {
     volumes: {
       'W-ETH/DAI': {
@@ -570,21 +585,45 @@ global.storeMock = {
         sellOfferCount: null,
         buyOffers: [],
         sellOffers: [],
-        initialSyncStatus: 'STATUS_PRISTINE'
+        initialSyncStatus: 'STATUS_PRISTINE',
+        initialSyncMeta: {
+          syncStartBlockNumber: null,
+          syncEndBlockNumber: null,
+          syncTimestamps: {
+            syncStartTimestamp: null,
+            syncEndTimestamp: null
+          }
+        },
       },
       'Map { "baseToken": "1ST", "quoteToken": "W-ETH" }': {
         buyOfferCount: null,
         sellOfferCount: null,
         buyOffers: [],
         sellOffers: [],
-        initialSyncStatus: 'STATUS_PRISTINE'
+        initialSyncStatus: 'STATUS_PRISTINE',
+        initialSyncMeta: {
+          syncStartBlockNumber: null,
+          syncEndBlockNumber: null,
+          syncTimestamps: {
+            syncStartTimestamp: null,
+            syncEndTimestamp: null
+          }
+        },
       },
       'Map { "baseToken": "MLN", "quoteToken": "W-ETH" }': {
         buyOfferCount: null,
         sellOfferCount: null,
         buyOffers: [],
         sellOffers: [],
-        initialSyncStatus: 'STATUS_PRISTINE'
+        initialSyncStatus: 'STATUS_PRISTINE',
+        initialSyncMeta: {
+          syncStartBlockNumber: null,
+          syncEndBlockNumber: null,
+          syncTimestamps: {
+            syncStartTimestamp: null,
+            syncEndTimestamp: null
+          }
+        },
       },
       'Map { "baseToken": "GUP", "quoteToken": "W-ETH" }': {
         buyOfferCount: null,
@@ -598,7 +637,15 @@ global.storeMock = {
         sellOfferCount: null,
         buyOffers: [],
         sellOffers: [],
-        initialSyncStatus: 'STATUS_PRISTINE'
+        initialSyncStatus: 'STATUS_PRISTINE',
+        initialSyncMeta: {
+          syncStartBlockNumber: null,
+          syncEndBlockNumber: null,
+          syncTimestamps: {
+            syncStartTimestamp: null,
+            syncEndTimestamp: null
+          }
+        },
       },
       'Map { "baseToken": "MKR", "quoteToken": "W-ETH" }': {
         buyOfferCount: null,
@@ -648,21 +695,45 @@ global.storeMock = {
             bid_price_sort: 0.5
           },
         ],
-        initialSyncStatus: 'STATUS_PRISTINE'
+        initialSyncStatus: 'STATUS_PRISTINE',
+        initialSyncMeta: {
+          syncStartBlockNumber: null,
+          syncEndBlockNumber: null,
+          syncTimestamps: {
+            syncStartTimestamp: null,
+            syncEndTimestamp: null
+          }
+        },
       },
       'Map { "baseToken": "TIME", "quoteToken": "W-ETH" }': {
         buyOfferCount: null,
         sellOfferCount: null,
         buyOffers: [],
         sellOffers: [],
-        initialSyncStatus: 'STATUS_PRISTINE'
+        initialSyncStatus: 'STATUS_PRISTINE',
+        initialSyncMeta: {
+          syncStartBlockNumber: null,
+          syncEndBlockNumber: null,
+          syncTimestamps: {
+            syncStartTimestamp: null,
+            syncEndTimestamp: null
+          }
+        },
       },
       'Map { "baseToken": "DGD", "quoteToken": "W-ETH" }': {
         buyOfferCount: null,
         sellOfferCount: null,
         buyOffers: [],
         sellOffers: [],
-        initialSyncStatus: 'STATUS_PRISTINE'
+        initialSyncStatus: 'STATUS_PRISTINE',
+        initialSyncMeta: {
+          syncStartBlockNumber: null,
+          syncEndBlockNumber: null,
+          syncTimestamps: {
+            syncStartTimestamp: null,
+            syncEndTimestamp: null
+          }
+        },
       },
       // 'Map { "baseToken": "MKR", "quoteToken": "DAI" }': {
        [Map({ "baseToken": "MKR", "quoteToken": "DAI" })]: {
@@ -705,6 +776,14 @@ global.storeMock = {
           }
         ],
         initialSyncStatus: 'STATUS_COMPLETED',
+         initialSyncMeta: {
+           syncStartBlockNumber: null,
+           syncEndBlockNumber: null,
+           syncTimestamps: {
+             syncStartTimestamp: null,
+             syncEndTimestamp: null
+           }
+         },
         loadingBuyOffers: 'OFFERS/SYNC_STATUS_COMPLETED',
         loadingSellOffers: 'OFFERS/SYNC_STATUS_COMPLETED'
       },
@@ -849,6 +928,14 @@ global.storeMock = {
           }
         ],
         initialSyncStatus: 'STATUS_COMPLETED',
+        initialSyncMeta: {
+          syncStartBlockNumber: null,
+          syncEndBlockNumber: null,
+          syncTimestamps: {
+            syncStartTimestamp: null,
+            syncEndTimestamp: null
+          }
+        },
         loadingBuyOffers: 'OFFERS/SYNC_STATUS_COMPLETED',
         loadingSellOffers: 'OFFERS/SYNC_STATUS_COMPLETED'
       },
@@ -857,28 +944,60 @@ global.storeMock = {
         sellOfferCount: null,
         buyOffers: [],
         sellOffers: [],
-        initialSyncStatus: 'STATUS_PRISTINE'
+        initialSyncStatus: 'STATUS_PRISTINE',
+        initialSyncMeta: {
+          syncStartBlockNumber: null,
+          syncEndBlockNumber: null,
+          syncTimestamps: {
+            syncStartTimestamp: null,
+            syncEndTimestamp: null
+          }
+        },
       },
       'Map { "baseToken": "W-GNT", "quoteToken": "W-ETH" }': {
         buyOfferCount: null,
         sellOfferCount: null,
         buyOffers: [],
         sellOffers: [],
-        initialSyncStatus: 'STATUS_PRISTINE'
+        initialSyncStatus: 'STATUS_PRISTINE',
+        initialSyncMeta: {
+          syncStartBlockNumber: null,
+          syncEndBlockNumber: null,
+          syncTimestamps: {
+            syncStartTimestamp: null,
+            syncEndTimestamp: null
+          }
+        },
       },
       'Map { "baseToken": "NMR", "quoteToken": "W-ETH" }': {
         buyOfferCount: null,
         sellOfferCount: null,
         buyOffers: [],
         sellOffers: [],
-        initialSyncStatus: 'STATUS_PRISTINE'
+        initialSyncStatus: 'STATUS_PRISTINE',
+        initialSyncMeta: {
+          syncStartBlockNumber: null,
+          syncEndBlockNumber: null,
+          syncTimestamps: {
+            syncStartTimestamp: null,
+            syncEndTimestamp: null
+          }
+        },
       },
       'Map { "baseToken": "REP", "quoteToken": "W-ETH" }': {
         buyOfferCount: null,
         sellOfferCount: null,
         buyOffers: [],
         sellOffers: [],
-        initialSyncStatus: 'STATUS_PRISTINE'
+        initialSyncStatus: 'STATUS_PRISTINE',
+        initialSyncMeta: {
+          syncStartBlockNumber: null,
+          syncEndBlockNumber: null,
+          syncTimestamps: {
+            syncStartTimestamp: null,
+            syncEndTimestamp: null
+          }
+        },
       }
     },
     syncingOffers: [],

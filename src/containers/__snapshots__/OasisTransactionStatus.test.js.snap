@@ -2,29 +2,18 @@
 
 exports[`(Container) OasisTransactionStatus should render 1`] = `
 <InfoBox
+  actions={Object {}}
   alignItems="baseline"
   className=""
   color="default"
   fullWidth={true}
   justifyContent="space-between"
+  networkName="kovan"
   size="sm"
+  txTimestamp={1}
 >
-  <div
-    style={
-      Object {
-        "padding": "7px 0",
-      }
-    }
-  />
-  <div
-    className=""
-    style={
-      Object {
-        "alignContent": "space-between",
-        "display": "flex",
-      }
-    }
-  >
+  <div />
+  <div>
     <TransactionStatus
       transaction={
         Immutable.Map {

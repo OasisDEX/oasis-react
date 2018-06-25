@@ -1,12 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Component) OasisDontWrapAllEther should render 1`] = `
-<InfoBox
+<InfoBoxWithIco
   alignItems="center"
-  className=""
   color="danger"
-  noBorder={true}
-  size="md"
+  icon="warning"
 >
   <span>
     Do not wrap all of your 
@@ -15,11 +13,5 @@ exports[`(Component) OasisDontWrapAllEther should render 1`] = `
     </b>
     !
   </span>
-  <OasisIcon
-    className=""
-    icon="warning"
-    size="md"
-    title="Otherwise you will not be able to pay for transactions."
-  />
-</InfoBox>
+</InfoBoxWithIco>
 `;

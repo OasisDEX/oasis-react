@@ -50,28 +50,6 @@ Array [
 ]
 `;
 
-exports[`getTransactionGasCostEstimateEpic canMakeOffer: false 1`] = `Array []`;
-
-exports[`getTransactionGasCostEstimateEpic canMakeOffer: true 1`] = `
-Array [
-  Object {
-    "payload": Object {
-      "args": Array [
-        Object {
-          "activeOfferData": undefined,
-          "amount": "123000000000000000000",
-          "offerId": "offerId",
-          "offerOwner": "owner",
-        },
-      ],
-      "thunk": [Function],
-      "thunkName": "actionCreator",
-    },
-    "type": "deferred-thunk",
-  },
-]
-`;
-
 exports[`sellMaxEpic balance greater than the offer 1`] = `
 Array [
   Object {

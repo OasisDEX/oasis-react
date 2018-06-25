@@ -4,7 +4,7 @@ import { PropTypes } from "prop-types";
 
 import OasisTokenWrapFormWrapper from "../containers/OasisTokenWrapForm";
 import OasisTokenBalanceWrapper from "../containers/OasisTokenBalance";
-import { TOKEN_ETHER } from "../constants";
+import { TOKEN_ETHER, TOKEN_GOLEM } from '../constants';
 import OasisWidgetFrame from "../containers/OasisWidgetFrame";
 import OasisEtherBalanceWrapper from "../containers/OasisEtherBalance";
 import {
@@ -14,6 +14,10 @@ import {
 import OasisTokenBalanceSummary from "../containers/OasisTokenBalanceSummary";
 import styles from "./OasisWrapUnwrapWrap.scss";
 import CSSModules from "react-css-modules";
+import {
+  TX_WRAP_ETHER,
+  TX_WRAP_TOKEN_WRAPPER
+} from "../store/reducers/transactions";
 
 const propTypes = PropTypes && {
   activeUnwrappedToken: PropTypes.string,
@@ -21,7 +25,12 @@ const propTypes = PropTypes && {
   activeUnwrappedTokenBalance: PropTypes.object,
   transactionState: PropTypes.object,
   onFormChange: PropTypes.func.isRequired,
-  disableForm: PropTypes.bool
+  disableForm: PropTypes.bool,
+  hidden: PropTypes.bool.isRequired,
+  txType: PropTypes.oneOf([TX_WRAP_ETHER, TX_WRAP_TOKEN_WRAPPER]),
+  unwrappedToken: PropTypes.oneOf([
+    TOKEN_ETHER, TOKEN_GOLEM
+  ])
 };
 const defaultProps = {};
 
@@ -29,6 +38,7 @@ class OasisWrapUnwrapWrap extends PureComponent {
   constructor(props) {
     super(props);
     this.onFormChange = this.onFormChange.bind(this);
+    this.componentIsUnmounted = false
   }
 
   getBalance() {
@@ -52,26 +62,40 @@ class OasisWrapUnwrapWrap extends PureComponent {
 
   onFormChange() {
     const { onFormChange, anyTouched } = this.props;
-    onFormChange && onFormChange(anyTouched);
+    if (this.componentIsUnmounted === false) {
+      onFormChange && onFormChange(anyTouched);
+    }
   }
 
   render() {
-    const { activeUnwrappedToken, transactionState } = this.props;
+    const {
+      unwrappedToken,
+      hidden,
+      txType,
+      form,
+      transactionState
+    } = this.props;
     return (
-      <OasisWidgetFrame heading={"Wrap"} spaceForContent={true}>
-        <OasisTokenBalanceSummary summary="Wallet">
+      <OasisWidgetFrame hidden={hidden} heading={"Wrap"} spaceForContent={true} className={styles.frame}>
+        <OasisTokenBalanceSummary summary="Wallet" className={styles.balance}>
           {this.getBalance()}
         </OasisTokenBalanceSummary>
         <OasisTokenWrapFormWrapper
+          unwrappedToken={unwrappedToken}
+          form={form}
+          txType={txType}
           onFormChange={this.onFormChange}
           transactionState={transactionState}
-          activeUnwrappedToken={activeUnwrappedToken}
           onSubmit={this.props.onSubmit}
           disabled={this.shouldDisableForm()}
         />
         <WrapUnwrapStatusWrapper type={WRAP_STATUS_VIEW_TYPE_WRAP} />
       </OasisWidgetFrame>
     );
+  }
+
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
   }
 }
 

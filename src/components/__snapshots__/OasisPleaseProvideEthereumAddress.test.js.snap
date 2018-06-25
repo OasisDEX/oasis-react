@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisPleaseProvideEthereumAddress should render 1`] = `
+<InfoBoxWithIco
+  alignItems="center"
+  color="danger"
+  icon="warning"
+  noBorder={true}
+>
+  Please provide 
+  <b>
+    Ethereum address
+  </b>
+   !
+</InfoBoxWithIco>
+`;

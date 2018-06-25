@@ -15,7 +15,6 @@ import offerMakesReducer from "../store/reducers/offerMakes";
 import tokens from "../store/selectors/tokens";
 import balances from "../store/selectors/balances";
 import {
-  formatValue,
   greaterThanZeroValidator,
   numericFormatValidator
 } from "../utils/forms/offers";
@@ -30,6 +29,7 @@ import OasisVolumeIsGreaterThanUserBalance from "../components/OasisVolumeIsGrea
 // import isNumeric from '../utils/numbers/isNumeric';
 import MaskedTokenAmountInput from "../components/MaskedTokenAmountInput";
 import platform from "../store/selectors/platform";
+import isNumericAndGreaterThanZero from "../utils/numbers/isNumericAndGreaterThanZero";
 
 const propTypes = PropTypes && {
   // activeOfferMakeOfferData: ImmutablePropTypes.map.isRequired,
@@ -52,6 +52,7 @@ const validateTotal = [greaterThanZeroValidator, numericFormatValidator];
 export class OfferMakeForm extends React.Component {
   constructor(props) {
     super(props);
+    this.componentIsUnmounted = false;
 
     this.state = {
       showMaxButton: false
@@ -77,25 +78,43 @@ export class OfferMakeForm extends React.Component {
   }
 
   onVolumeFieldChange(event, newValue) {
-    const { volumeFieldValueChanged } = this.props.actions;
-    volumeFieldValueChanged(this.props.offerMakeType, newValue);
+    if (this.componentIsUnmounted === false) {
+      setTimeout(() => {
+        const { volumeFieldValueChanged } = this.props.actions;
+        volumeFieldValueChanged(this.props.offerMakeType, newValue);
+      }, 0);
+    }
   }
 
   onPriceFieldChange(event, newValue) {
-    const { priceFieldValueChanged } = this.props.actions;
-    priceFieldValueChanged(this.props.offerMakeType, newValue);
+    if (this.componentIsUnmounted === false) {
+      setTimeout(() => {
+        const { priceFieldValueChanged } = this.props.actions;
+        priceFieldValueChanged(this.props.offerMakeType, newValue);
+      }, 0);
+    }
   }
 
   onTotalFieldChange(event, newValue) {
-    const { totalFieldValueChanged } = this.props.actions;
-    totalFieldValueChanged(this.props.offerMakeType, newValue);
+    if (this.componentIsUnmounted === false) {
+      setTimeout(() => {
+        const { totalFieldValueChanged } = this.props.actions;
+        totalFieldValueChanged(this.props.offerMakeType, newValue);
+      }, 0);
+    }
   }
 
   setMaxButton() {
     if (false === this.state.showMaxButton) {
       return null;
     }
-    const { currentFormValues = {}, disableForm, globalFormLock } = this.props;
+    const {
+      currentFormValues = {},
+      disableForm,
+      globalFormLock,
+      activeBaseTokenBalance,
+      activeQuoteTokenBalance
+    } = this.props;
     switch (this.props.offerMakeType) {
       case MAKE_BUY_OFFER:
         return (
@@ -104,7 +123,8 @@ export class OfferMakeForm extends React.Component {
             disabled={
               greaterThanZeroValidator(currentFormValues.price) ||
               disableForm ||
-              globalFormLock
+              globalFormLock ||
+              !isNumericAndGreaterThanZero(activeQuoteTokenBalance)
             }
             type="button"
             color="success"
@@ -121,7 +141,8 @@ export class OfferMakeForm extends React.Component {
             disabled={
               greaterThanZeroValidator(currentFormValues.price) ||
               disableForm ||
-              globalFormLock
+              globalFormLock ||
+              !isNumericAndGreaterThanZero(activeBaseTokenBalance)
             }
             type="button"
             color="danger"
@@ -136,13 +157,19 @@ export class OfferMakeForm extends React.Component {
   }
 
   onTotalFieldSectionFocus() {
-    this.setState({ showMaxButton: true });
+    if (this.componentIsUnmounted === false) {
+      this.setState({ showMaxButton: true });
+    }
   }
 
   onTotalFieldSectionBlur() {
-    if (!this.isUnmounted) {
+    if (this.componentIsUnmounted === false) {
       setTimeout(
-        () => this.setState({ showMaxButton: false }),
+        () => {
+          if (this.componentIsUnmounted === false) {
+            this.setState({ showMaxButton: false });
+          }
+        },
         SETMAXBTN_HIDE_DELAY_MS
       );
     }
@@ -168,7 +195,6 @@ export class OfferMakeForm extends React.Component {
     return (
       <Field
         autoComplete="off"
-        onBlur={formatValue}
         name="volume"
         component={MaskedTokenAmountInput}
         type="text"
@@ -197,7 +223,6 @@ export class OfferMakeForm extends React.Component {
           autoComplete="off"
           min={0}
           onChange={this.onTotalFieldChange}
-          onBlur={formatValue}
           name="total"
           component={MaskedTokenAmountInput}
           type="text"
@@ -216,7 +241,9 @@ export class OfferMakeForm extends React.Component {
 
   onFormChange() {
     const { onFormChange } = this.props;
-    onFormChange && onFormChange();
+    if(this.componentIsUnmounted === false) {
+      onFormChange && onFormChange();
+    }
   }
 
   render() {
@@ -233,12 +260,16 @@ export class OfferMakeForm extends React.Component {
           <tbody>
             <tr>
               <th>Price</th>
-              <td className={tableStyles.withInput}>{this.renderPriceField()}</td>
+              <td className={tableStyles.withInput}>
+                {this.renderPriceField()}
+              </td>
               <td className={tableStyles.currency}> {quoteToken}</td>
             </tr>
             <tr>
               <th>Amount</th>
-              <td className={tableStyles.withInput}>{this.renderAmountField()}</td>
+              <td className={tableStyles.withInput}>
+                {this.renderAmountField()}
+              </td>
               <td className={tableStyles.currency}>
                 {baseToken}
                 <div>
@@ -277,9 +308,8 @@ export class OfferMakeForm extends React.Component {
       return false;
     }
   }
-
   componentWillUnmount() {
-    this.isUnmounted = true;
+    this.componentIsUnmounted = true;
   }
 }
 
@@ -315,5 +345,7 @@ export function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  reduxForm({})(CSSModules(OfferMakeForm, { styles, tableStyles }, { allowMultiple: true }))
+  reduxForm({})(
+    CSSModules(OfferMakeForm, { styles, tableStyles }, { allowMultiple: true })
+  )
 );

@@ -13,16 +13,21 @@ import styles from "./OasisTokenUnwrapForm.scss";
 import widgetStyles from "./OasisWidgetFrame.scss";
 import CSSModules from "react-css-modules";
 import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBox";
-import { TX_UNWRAP } from "../store/reducers/transactions";
-import { formatAmount } from "../utils/tokens/pair";
+import { AMOUNT_DECIMALS, formatAmount } from "../utils/tokens/pair";
 import MaskedTokenAmountInput from "../components/MaskedTokenAmountInput";
 import platform from "../store/selectors/platform";
-import { SETMAXBTN_HIDE_DELAY_MS } from "../constants";
+import { SETMAXBTN_HIDE_DELAY_MS, TOKEN_WRAPPED_ETH, TOKEN_WRAPPED_GNT } from '../constants';
+import isNumericAndGreaterThanZero from "../utils/numbers/isNumericAndGreaterThanZero";
+import OasisInsufficientAmountOfToken from "../components/OasisInsufficientAmountOfToken";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired,
   activeUnwrappedTokenBalance: PropTypes.string,
-  onFormChange: PropTypes.func
+  onFormChange: PropTypes.func,
+  wrappedToken: PropTypes.oneOf([
+    TOKEN_WRAPPED_ETH,
+    TOKEN_WRAPPED_GNT
+  ])
 };
 
 const inputStyle = { textAlign: "right", width: "100%" };
@@ -37,10 +42,14 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
       txStartTimestamp: undefined
     };
 
+    this.componentIsUnmounted = false;
+
     this.validate = this.validate.bind(this);
     this.setUnwrapMax = this.setUnwrapMax.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
     this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
+    this.onFormChange = this.onFormChange.bind(this);
+    this.transactionInfoBlock = this.transactionInfoBlock.bind(this);
   }
 
   validate(value) {
@@ -54,46 +63,75 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
 
   setUnwrapMax() {
     this.props.actions.setUnwrapMax();
+    this.onFormChange();
   }
 
   transactionInfoBlock() {
-    const { unwrapTokenAmount, activeWrappedToken } = this.props;
+    const { unwrapTokenAmount, wrappedToken } = this.props;
     return (
       <div>
         Unwrap{" "}
         <b>
-          {formatAmount(unwrapTokenAmount, false, null, 5)} {activeWrappedToken}
+          {formatAmount(unwrapTokenAmount, false, null, AMOUNT_DECIMALS)}{" "}
+          {wrappedToken}
         </b>
       </div>
     );
   }
 
   renderTransactionStatus() {
-    const { transactionState: { txStatus, txStartTimestamp } } = this.props;
+    const {
+      txType,
+      transactionState: { txStatus, txStartTimestamp }
+    } = this.props;
     return (
       <OasisTransactionStatusWrapperInfoBox
         txStatus={txStatus}
-        infoText={this.transactionInfoBlock()}
+        infoText={this.transactionInfoBlock}
         localStatus={txStatus}
         txTimestamp={txStartTimestamp}
-        txType={TX_UNWRAP}
+        txType={txType}
       />
     );
   }
 
+  renderInsufficientBalanceWarning() {
+    const {
+      activeWrappedTokenBalance,
+      unwrapTokenAmount,
+      wrappedToken,
+      transactionState: { txStatus }
+    } = this.props;
+    return !txStatus ? (
+      <div>
+        {isNumericAndGreaterThanZero(unwrapTokenAmount) &&
+          web3.fromWei(activeWrappedTokenBalance).lt(unwrapTokenAmount) && (
+            <OasisInsufficientAmountOfToken tokenName={wrappedToken} noBorder />
+          )}
+      </div>
+    ) : null;
+  }
+
+
+  onFormChange() {
+    const { onFormChange } = this.props;
+    onFormChange && onFormChange();
+  }
   render() {
     const {
       valid,
       handleSubmit,
       initialized,
-      activeWrappedToken,
+      wrappedToken,
       disabled,
       globalFormLock,
-      onFormChange
+      unwrapTokenAmount,
+      activeWrappedTokenBalance
     } = this.props;
+
     return (
-      <form onChange={onFormChange} onSubmit={handleSubmit}>
-        <table className={tableStyles.table}>
+      <form onChange={this.onFormChange} onSubmit={handleSubmit}>
+        <table className={`${tableStyles.table} ${styles.form}`}>
           <tbody>
             <tr>
               <th>Amount</th>
@@ -105,9 +143,13 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
                       size="xs"
                       className={tableStyles.inputBtn}
                       onClick={this.setUnwrapMax}
-                      disabled={disabled || globalFormLock}
+                      disabled={
+                        disabled ||
+                        globalFormLock ||
+                        !isNumericAndGreaterThanZero(activeWrappedTokenBalance)
+                      }
                     >
-                      unwrap max
+                      <span style={{ fontSize: "10px" }}>unwrap max</span>
                     </OasisButton>
                   )}
                   <div
@@ -129,15 +171,24 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
                   </div>
                 </div>
               </td>
-              <td className={tableStyles.currency}>{activeWrappedToken}</td>
+              <td className={tableStyles.currency}>{wrappedToken}</td>
             </tr>
           </tbody>
         </table>
         <div>{this.renderTransactionStatus()}</div>
-        <div className={`${styles.footer} ${widgetStyles.OasisWidgetFooter}`}>
+        <div className={styles.footer}>
+          <div>
+            {this.renderInsufficientBalanceWarning()}
+          </div>
           <OasisButton
             type="submit"
-            disabled={!valid || disabled || globalFormLock || initialized}
+            disabled={
+              !valid ||
+              disabled ||
+              globalFormLock ||
+              initialized ||
+              !isNumericAndGreaterThanZero(unwrapTokenAmount)
+            }
             className={styles.footerBtn}
           >
             Unwrap
@@ -148,11 +199,13 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
   }
 
   onTotalFieldSectionFocus() {
-    this.setState({ showMaxButton: true });
+    if (this.componentIsUnmounted === false) {
+      this.setState({ showMaxButton: true });
+    }
   }
 
   onTotalFieldSectionBlur() {
-    if (!this.isUnmounted) {
+    if (this.componentIsUnmounted === false) {
       setTimeout(
         () => this.setState({ showMaxButton: false }),
         SETMAXBTN_HIDE_DELAY_MS
@@ -161,17 +214,17 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
   }
 
   componentWillUnmount() {
-    this.isUnmounted = true;
+    this.componentIsUnmounted = true;
   }
 }
 
-export function mapStateToProps(state) {
+export function mapStateToProps(state, { form }) {
   return {
     activeWrappedTokenBalance: wrapUnwrap.activeWrappedTokenBalance(
       state,
       true
     ),
-    unwrapTokenAmount: wrapUnwrap.unwrapTokenAmount(state),
+    unwrapTokenAmount: wrapUnwrap.unwrapTokenAmount(state, form),
     globalFormLock: platform.globalFormLock(state)
   };
 }
@@ -185,9 +238,7 @@ export function mapDispatchToProps(dispatch) {
 OasisTokenUnwrapFormWrapper.propTypes = propTypes;
 OasisTokenUnwrapFormWrapper.displayName = "OasisTokenUnwrapForm";
 export default connect(mapStateToProps, mapDispatchToProps)(
-  reduxForm({
-    form: "unwrapToken"
-  })(
+  reduxForm({})(
     CSSModules(
       OasisTokenUnwrapFormWrapper,
       { tableStyles, styles, widgetStyles },

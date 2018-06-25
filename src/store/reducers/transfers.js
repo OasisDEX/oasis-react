@@ -15,6 +15,7 @@ import { TX__GROUP__TRANSFERS } from "./transactions";
 import balances from "../selectors/balances";
 import { handleTransaction } from "../../utils/transactions/handleTransaction";
 import { getTokenContractInstance } from "../../bootstrap/contracts";
+import { convertToTokenPrecision } from "../../utils/conversion";
 
 const initialState = fromJS({});
 
@@ -30,11 +31,18 @@ const transferTransaction = createAction(
     gasPrice = DEFAULT_GAS_PRICE
   ) => {
     const contractInstance = getTokenContractInstance(tokenName);
-    const tokenAmountWei = web3.toWei(tokenAmountInEther, ETH_UNIT_ETHER);
-    return contractInstance.transfer(recipientAddress, tokenAmountWei, {
-      gas: gasLimit,
-      gasPrice
-    });
+    const tokenAmountInTokenPrecisionWei = convertToTokenPrecision(
+      web3.toWei(tokenAmountInEther, ETH_UNIT_ETHER),
+      tokenName
+    );
+    return contractInstance.transfer(
+      recipientAddress,
+      tokenAmountInTokenPrecisionWei,
+      {
+        gas: gasLimit,
+        gasPrice
+      }
+    );
   }
 );
 

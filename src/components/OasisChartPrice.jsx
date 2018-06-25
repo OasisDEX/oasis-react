@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import charts from './../store/selectors/charts';
 
 import {Line} from 'react-chartjs-2';
-import {tooltipContainer} from './OasisChart';
+import {tooltipContainer, CHART_HEIGHT} from './OasisChart';
 import moment from 'moment';
 
 const propTypes = PropTypes && {
@@ -23,6 +23,7 @@ export class OasisChartPrice extends PureComponent {
   render() {
     return (
       <Line
+        height={CHART_HEIGHT}
         data={{
           labels: this.props.priceChartLabels,
           datasets: [{
@@ -60,9 +61,11 @@ export class OasisChartPrice extends PureComponent {
             }],
             xAxes: [{
               display: true,
+              afterBuildTicks: this.removeRedundantTicks.bind(this),
               ticks: {
-                maxTicksLimit: 6,
-                callback: ts => moment.unix(ts).format('DD/MM'),
+                autoSkip: false,
+                maxRotation: 0,
+                callback: ts => ts && moment.unix(ts).format('DD/MM'),
               },
             }],
           },
@@ -92,6 +95,16 @@ export class OasisChartPrice extends PureComponent {
         </div>`;
       tooltipEl.style.opacity = 1;
     }
+  }
+
+  removeRedundantTicks(axis) {
+    const REL_PADDING = 10;
+    axis.ticks = axis.ticks.reduce(({lastDay, lastDayIndex, result}, tick, i) => {
+      const day = moment.unix(tick).startOf('day').unix();
+      return day == lastDay || (lastDayIndex !== null && i-lastDayIndex < axis.ticks.length/REL_PADDING) ?
+        {lastDay, lastDayIndex, result: result.concat(null)} :
+        {lastDay: day, lastDayIndex: i, result: result.concat(tick)};
+    }, {lastDay: null, lastDayIndex: null, result: []}).result;
   }
 }
 

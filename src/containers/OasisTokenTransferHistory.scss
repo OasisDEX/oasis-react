@@ -1,9 +1,15 @@
 @import "../styles/modules/typography";
 @import "../styles/modules/grid";
 
-.recipientAddress {
-  @include ellipsis(80px);
+$recipientAddressWidth: 100px;
 
+.recipientAddress {
+  @include ellipsis($recipientAddressWidth);
+
+}
+
+.frame {
+  align-self: flex-start;
 }
 
 .table {
@@ -18,7 +24,7 @@
 
   th:first-child,
   td:first-child {
-    flex-basis: 78px;
+    flex-basis: 70px;
     text-align: right;
   }
 
@@ -28,7 +34,7 @@
 
   th:nth-child(2),
   td:nth-child(2) {
-    flex-basis: 28px;
+    flex-basis: 40px;
     padding-left: 0;
     padding-right: 0;
     text-align: center;
@@ -37,7 +43,7 @@
 
   th:nth-child(3),
   td:nth-child(3) {
-    flex-basis: 88px;
+    flex-basis: $recipientAddressWidth;
     flex-grow: 0;
     text-align: left;
     height: 19px;
@@ -45,7 +51,7 @@
 
   th:nth-child(4),
   td:nth-child(4) {
-    flex-basis: 48px;
+    flex-basis: 46px;
     text-align: center;
   }
 

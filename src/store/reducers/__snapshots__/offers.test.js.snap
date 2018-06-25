@@ -799,24 +799,17 @@ Array [
 ]
 `;
 
-exports[`syncOffersEpic main 1`] = `
-Object {
-  "payload": Object {
-    "baseToken": "MKR",
-    "quoteToken": "W-ETH",
-  },
-  "type": Array [
-    "OFFERS/SYNC_OFFERS_FULFILLED",
-  ],
-}
-`;
+exports[`syncOffersEpic main 1`] = `undefined`;
 
 exports[`syncOffersEpic main 2`] = `
 Array [
   Object {
     "payload": Object {
-      "baseToken": "MKR",
-      "quoteToken": "W-ETH",
+      "syncStartBlockNumber": 1,
+      "tradingPair": Object {
+        "baseToken": "MKR",
+        "quoteToken": "W-ETH",
+      },
     },
     "type": "OFFERS/SYNC_OFFERS_PENDING",
   },
@@ -845,12 +838,18 @@ Array [
   },
   Object {
     "payload": Object {
-      "baseToken": "MKR",
-      "quoteToken": "W-ETH",
+      "syncEndBlockNumber": 1,
+      "tradingPair": Object {
+        "baseToken": "MKR",
+        "quoteToken": "W-ETH",
+      },
     },
     "type": Array [
       "OFFERS/SYNC_OFFERS_FULFILLED",
     ],
+  },
+  Object {
+    "type": "RE_SYNC_OFFERS/RE_SYNC_OFFERS_PENDING",
   },
 ]
 `;

@@ -13,3 +13,9 @@
   margin-left: 0.3em;
   margin-right: 0.3em;
 }
+.transactionFailedHash {
+  display: inline-block;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

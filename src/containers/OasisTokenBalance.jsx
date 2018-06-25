@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { formatAmount } from '../utils/tokens/pair';
+import { AMOUNT_DECIMALS, formatTokenAmount } from '../utils/tokens/pair';
 import balances from '../store/selectors/balances';
 import { ETH_UNIT_ETHER } from '../constants';
 import styles from './OasisTokenBalance.scss';
@@ -29,11 +29,9 @@ export class OasisTokenBalanceWrapper extends PureComponent {
       return (
         <div className={styles.available}>
           <span className={styles["available-amount"]}>
-          { formatAmount(balance, fromWei, balanceUnit ||  ETH_UNIT_ETHER, this.props.decimalPlaces) }
+          { formatTokenAmount(balance, fromWei, balanceUnit ||  ETH_UNIT_ETHER, AMOUNT_DECIMALS) }
           </span>
-          <span className={styles["available-currency"]}>
-            <b>{tokenName}</b>
-          </span>
+          <span className={styles["available-currency"]}>{tokenName}</span>
         </div>
       );
     }

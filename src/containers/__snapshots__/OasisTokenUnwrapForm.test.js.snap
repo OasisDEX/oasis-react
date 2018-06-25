@@ -1,8 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) OasisTokenUnwrapForm should render 1`] = `
-<form>
-  <table>
+<form
+  onChange={[Function]}
+>
+  <table
+    className="undefined undefined"
+  >
     <tbody>
       <tr>
         <th>
@@ -38,24 +42,14 @@ exports[`(Container) OasisTokenUnwrapForm should render 1`] = `
   </table>
   <div>
     <OasisTransactionStatusWrapperInfoBox
-      infoText={
-        <div>
-          Unwrap
-           
-          <b>
-             
-          </b>
-        </div>
-      }
+      infoText={[Function]}
       localStatus="TX/STATUS_AWAITING_CONFIRMATION"
       txStatus="TX/STATUS_AWAITING_CONFIRMATION"
       txTimestamp={1}
-      txType="TX/GROUP__WRAP_UNWRAP/UNWRAP"
     />
   </div>
-  <div
-    className="undefined undefined"
-  >
+  <div>
+    <div />
     <OasisButton
       btnType="button"
       color="default"

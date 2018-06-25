@@ -142,15 +142,21 @@ const offersAsks = createSelector(
 )
 
 function upSum(array) {
-  return array.reduce((a, e) => [a[0].add(e), a[1].concat(e.add(a[0]))], [new BigNumber(0), []])[1];
+  return array.reduce(({sum, result}, bn) => (
+    {sum: sum.add(bn), result: result.concat(bn.add(sum))}
+  ), {sum: new BigNumber(0), result: []}).result;
 }
 
 function downSum(array) {
-  return array.reduceRight((a, e) => [a[0].add(e), [e.add(a[0])].concat(a[1])], [new BigNumber(0), []])[1];
+  return array.reduceRight(({sum, result}, bn) => (
+    {sum: sum.add(bn), result: [bn.add(sum)].concat(result)}
+  ), {sum: new BigNumber(0), result: []}).result;
 }
 
 function bigSum(array) {
-  return array.reduce((a, e) => a ? a.add(new BigNumber(e)) : new BigNumber(e), null);
+  return array.reduce((sum, bn) =>
+    sum ? sum.add(new BigNumber(bn)) : new BigNumber(bn)
+  , null);
 }
 
 function groupBy(array, by = _.identity) {
@@ -165,10 +171,10 @@ function groupBy(array, by = _.identity) {
 }
 
 function mapWithPreviousResult(array, mapper = _.identity) {
-  return array.reduce((a, e) => {
-    const res = mapper(e, a[0]);
-    return [res, a[1].concat([res])];
-  }, [null, []])[1];
+  return array.reduce(({prevRes, result}, e) => {
+    const res = mapper(e, prevRes);
+    return {prevRes: res, result: result.concat([res])};
+  }, {prevRes: null, result: []}).result;
 }
 
 const depthChartData = createSelector(

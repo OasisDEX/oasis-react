@@ -1,10 +1,15 @@
 
 .footer {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1em;
+  padding-bottom: 2em;
 }
 
 .transferTable {
+  margin-bottom: 1em;
+
   th,
   .thHeader {
     width: 100px;
@@ -19,11 +24,16 @@
       padding: 0;
       border: 0;
     }
-
   }
 }
 
 .tdWithErrorMessages {
   overflow: visible;
   position: relative;
+}
+
+.validationErrorsBox {
+  display: flex;
+  width: 100%;
+  height: 34px;
 }

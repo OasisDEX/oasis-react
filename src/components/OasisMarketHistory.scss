@@ -15,7 +15,7 @@ table.table {
   th:first-child,
   td:first-child {
     flex-basis: 72px;
-    text-align: right;
+    text-align: center;
   }
 
   td:first-child {
@@ -26,7 +26,7 @@ table.table {
   th:nth-child(2),
   td:nth-child(2) {
     flex-basis: 41px;
-    text-align: right;
+    text-align: center;
   }
 
   th:nth-child(3),

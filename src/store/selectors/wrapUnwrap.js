@@ -132,16 +132,18 @@ const isBrokerContractLoaded = createSelector(
   (lbcl, tokenName) => lbcl.includes(tokenName)
 );
 
-const wrapTokenformSelector = formValueSelector("wrapToken");
-const unwrapTokenformSelector = formValueSelector("unwrapToken");
+const wrapTokenformSelector = formName => formValueSelector(formName);
+const unwrapTokenformSelector = formName => formValueSelector(formName);
 
 const wrapTokenAmount = createSelector(
-  rootState => wrapTokenformSelector(rootState, "amount"),
+  (rootState, formName) =>
+    wrapTokenformSelector(formName)(rootState, "amount"),
   wrapAmount => wrapAmount
 );
 
 const unwrapTokenAmount = createSelector(
-  rootState => unwrapTokenformSelector(rootState, "amount"),
+  (rootState, formName) =>
+    unwrapTokenformSelector(formName)(rootState, "amount"),
   wrapAmount => wrapAmount
 );
 

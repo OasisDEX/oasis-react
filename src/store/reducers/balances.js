@@ -29,6 +29,8 @@ import {
   getMarketContractInstance,
   getTokenContractInstance
 } from "../../bootstrap/contracts";
+import { getTimestamp } from "../../utils/time";
+import { convertTo18Precision } from "../../utils/conversion";
 
 const initialState = fromJS({
   accounts: [],
@@ -37,7 +39,9 @@ const initialState = fromJS({
   address: null,
   ethBalance: null,
   tokenBalances: {},
-  tokenAllowances: {}
+  tokenAllowances: {},
+  latestBalancesSyncTimestamp: null,
+  latestBalancesSyncBlockNumber: null
 });
 
 const Init = createAction("BALANCES/INIT", () => null);
@@ -64,7 +68,11 @@ const getAllTradedTokensBalances = createAction(
     return Promise.all(tokensBalancesPromises).then(tokenBalances => {
       const balancesByToken = {};
       Object.keys(tokensContractsLists).forEach(
-        (tokenName, i) => (balancesByToken[tokenName] = tokenBalances[i])
+        (tokenName, i) =>
+          (balancesByToken[tokenName] = convertTo18Precision(
+            tokenBalances[i],
+            tokenName
+          ))
       );
 
       return balancesByToken;
@@ -101,6 +109,16 @@ const subscribeAccountEthBalanceChangeEventEpic = accountAddress => async (
 
 const tokenTransferFromEvent = createAction(
   "BALANCES/EVENT___TOKEN_TRANSFER_FROM",
+  (tokenName, userAddress, event, shouldUpdateBalance = false) => ({
+    tokenName,
+    userAddress,
+    event,
+    shouldUpdateBalance
+  })
+);
+
+const tokenBalanceUpdateEvent = createAction(
+  "BALANCES/EVENT___TOKEN_BALANCE_UPDATE",
   (tokenName, userAddress, event) => ({
     tokenName,
     userAddress,
@@ -110,16 +128,45 @@ const tokenTransferFromEvent = createAction(
 
 const tokenTransferToEvent = createAction(
   "BALANCES/EVENT___TOKEN_TRANSFER_TO",
-  (tokenName, userAddress, event) => ({
+  (tokenName, userAddress, event, shouldUpdateBalance = false) => ({
     tokenName,
     userAddress,
-    event
+    event,
+    shouldUpdateBalance
   })
 );
 
 const etherBalanceChanged = createAction("BALANCES/ETHER_BALANCE_CHANGED");
 
 const syncTokenBalances$ = createPromiseActions("BALANCES/SYNC_TOKEN_BALANCES");
+
+const syncTokenBalance = createAction(
+  "BALANCES/SYNC_TOKEN_BALANCE",
+  ({ tokenName, accountAddress }) =>
+    getTokenContractInstance(tokenName).balanceOf(accountAddress)
+);
+
+const syncTokenBalanceEpic = ({ tokenName, accountAddress }) => (
+  dispatch,
+  getState
+) => {
+  dispatch(syncTokenBalance({ tokenName, accountAddress })).then(
+    ({ value: newTokenBalance }) => {
+      if (
+        !newTokenBalance.eq(balances.tokenBalance(getState(), { tokenName }))
+      ) {
+        dispatch(
+          updateTokenBalance({
+            tokenName,
+            tokenBalance: convertTo18Precision(newTokenBalance, tokenName),
+            address: accountAddress
+          })
+        );
+      }
+    }
+  );
+};
+
 const syncTokenBalances = (tokensContractsList = [], address) => (
   dispatch,
   getState
@@ -128,15 +175,18 @@ const syncTokenBalances = (tokensContractsList = [], address) => (
 
   Object.entries(tokensContractsList).forEach(([tokenName, tokenContract]) => {
     tokenContract.balanceOf(address).then(tokenBalance => {
+      const balanceInWei = web3.toBigNumber(
+        convertTo18Precision(tokenBalance, tokenName)
+      );
       const oldBalance = balances.tokenBalance(getState(), {
         tokenName,
         balanceUnit: ETH_UNIT_WEI
       });
-      if (oldBalance !== null && !tokenBalance.eq(oldBalance)) {
+      if (oldBalance !== null && !balanceInWei.eq(oldBalance)) {
         dispatch(
           updateTokenBalance({
             tokenName,
-            tokenBalance,
+            tokenBalance: balanceInWei,
             address
           })
         );
@@ -144,6 +194,10 @@ const syncTokenBalances = (tokensContractsList = [], address) => (
     });
   });
   dispatch(syncTokenBalances$.fulfilled());
+  dispatch(
+    setLatestBalancesSyncBlockNumber(network.latestBlockNumber(getState()))
+  );
+  dispatch(setLatestBalancesSyncTimestamp());
 };
 
 const updateTokenBalance = createAction(
@@ -175,9 +229,19 @@ const subscribeTokenTransfersEventsEpic = (
       .then((err, transferEvent) => {
         const { from, to } = transferEvent.args;
         if (from === address) {
-          dispatch(tokenTransferFromEvent(tokenName, address, transferEvent));
+          dispatch(
+            syncTokenBalanceEpic({ tokenName, accountAddress: address })
+          );
+          dispatch(
+            tokenTransferFromEvent(tokenName, address, transferEvent, false)
+          );
         } else if (to === address) {
-          dispatch(tokenTransferToEvent(tokenName, address, transferEvent));
+          dispatch(
+            syncTokenBalanceEpic({ tokenName, accountAddress: address })
+          );
+          dispatch(
+            tokenTransferToEvent(tokenName, address, transferEvent, false)
+          );
         }
       });
     subscriptionsMap = subscriptionsMap.set(tokenName, subscription);
@@ -190,7 +254,13 @@ const subscribeTokenTransfersEventsEpic = (
 
 const setAllowance = createAction(
   "BALANCES/SET_ALLOWANCE",
-  (tokenName, spenderAddress, newAllowance, gasLimit = DEFAULT_GAS_LIMIT, gasPrice = DEFAULT_GAS_PRICE) =>
+  (
+    tokenName,
+    spenderAddress,
+    newAllowance,
+    gasLimit = DEFAULT_GAS_LIMIT,
+    gasPrice = DEFAULT_GAS_PRICE
+  ) =>
     getTokenContractInstance(tokenName).approve(spenderAddress, newAllowance, {
       gasPrice,
       gas: gasLimit
@@ -199,7 +269,12 @@ const setAllowance = createAction(
 
 const setTokenTrustAddressEnabled = createAction(
   "BALANCES/SET_TOKEN_TRUST_ADDRESS_ENABLED",
-  (tokenName, spenderAddress, gasLimit = DEFAULT_GAS_LIMIT, gasPrice = DEFAULT_GAS_PRICE) =>
+  (
+    tokenName,
+    spenderAddress,
+    gasLimit = DEFAULT_GAS_LIMIT,
+    gasPrice = DEFAULT_GAS_PRICE
+  ) =>
     getTokenContractInstance(tokenName).approve(spenderAddress, -1, {
       gasPrice,
       gas: gasLimit
@@ -208,10 +283,16 @@ const setTokenTrustAddressEnabled = createAction(
 
 const setTokenTrustAddressDisabled = createAction(
   "BALANCES/SET_TOKEN_TRUST_ADDRESS_DISABLED",
-  (tokenName, spenderAddress, gasLimit = DEFAULT_GAS_LIMIT, gasPrice = DEFAULT_GAS_PRICE) =>
+  (
+    tokenName,
+    spenderAddress,
+    gasLimit = DEFAULT_GAS_LIMIT,
+    gasPrice = DEFAULT_GAS_PRICE
+  ) =>
     getTokenContractInstance(tokenName).approve(
       spenderAddress,
-      TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED_MIN_MAX, {
+      TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED_MIN_MAX,
+      {
         gasPrice,
         gas: gasLimit
       }
@@ -344,6 +425,25 @@ const setTokenAllowanceTrustEpic = (
   }
 };
 
+const setLatestBalancesSyncBlockNumber = createAction(
+  "BALANCES/LATEST_BALANCES_SYNC_BLOCK_NUMBER"
+);
+const setLatestBalancesSyncBlockNumberEpic = () => (dispatch, getState) => {
+  const latestBlockNumber = network.latestBlockNumber(getState());
+  if (latestBlockNumber) {
+    dispatch(setLatestBalancesSyncBlockNumber(latestBlockNumber.toString()));
+  } else {
+    console.warn(
+      "setLatestBalancesSyncBlockNumberEpic => Latest block not set yet!"
+    );
+  }
+};
+
+const setLatestBalancesSyncTimestamp = createAction(
+  "BALANCES/LATEST_BALANCES_SYNC_TIMESTAMP",
+  () => getTimestamp()
+);
+
 const actions = {
   Init,
   getDefaultAccountEthBalance,
@@ -358,7 +458,8 @@ const actions = {
   syncTokenBalances,
   getDefaultAccountTokenAllowanceForMarket,
   setTokenTrustAddressDisabled,
-  setTokenTrustAddressEnabled
+  setTokenTrustAddressEnabled,
+  syncTokenBalanceEpic
 };
 
 const reducer = handleActions(
@@ -384,15 +485,25 @@ const reducer = handleActions(
       state,
       { payload, meta: { tokenName, spenderAddress } }
     ) => state.setIn(["tokenAllowances", tokenName, spenderAddress], payload),
-    [tokenTransferFromEvent]: (state, { payload: { tokenName, event } }) => {
-      return state.updateIn(["tokenBalances", tokenName], balance => {
-        return new BigNumber(balance).sub(event.args.value).toString();
-      });
+    [tokenTransferFromEvent]: (
+      state,
+      { payload: { tokenName, event, shouldUpdateBalance } }
+    ) => {
+      return shouldUpdateBalance
+        ? state.updateIn(["tokenBalances", tokenName], balance => {
+            return new BigNumber(balance).sub(event.args.value).toString();
+          })
+        : state;
     },
-    [tokenTransferToEvent]: (state, { payload: { tokenName, event } }) => {
-      return state.updateIn(["tokenBalances", tokenName], balance => {
-        return new BigNumber(balance).add(event.args.value).toString();
-      });
+    [tokenTransferToEvent]: (
+      state,
+      { payload: { tokenName, event, shouldUpdateBalance } }
+    ) => {
+      return shouldUpdateBalance
+        ? state.updateIn(["tokenBalances", tokenName], balance => {
+            return new BigNumber(balance).add(event.args.value).toString();
+          })
+        : state;
     },
 
     [etherBalanceChanged]: (state, { payload }) =>
@@ -400,7 +511,11 @@ const reducer = handleActions(
 
     [updateTokenBalance]: (state, { payload: { tokenName, tokenBalance } }) => {
       return state.setIn(["tokenBalances", tokenName], tokenBalance.toString());
-    }
+    },
+    [setLatestBalancesSyncBlockNumber]: (state, { payload }) =>
+      state.set("latestBalancesSyncBlockNumber", payload),
+    [setLatestBalancesSyncTimestamp]: (state, { payload }) =>
+      state.set("latestBalancesSyncTimestamp", payload)
   },
   initialState
 );

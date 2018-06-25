@@ -4,6 +4,7 @@ exports[`(Component) OasisWrapUnwrapUnwrap should render 1`] = `
 <OasisWidgetFrame
   className=""
   heading="Unwrap"
+  hidden={true}
   spaceForContent={true}
 >
   <OasisTokenBalance
@@ -16,7 +17,6 @@ exports[`(Component) OasisWrapUnwrapUnwrap should render 1`] = `
     />
   </OasisTokenBalance>
   <Connect(ReduxForm)
-    activeWrappedToken="W-ETH"
     onSubmit={[Function]}
     transactionState={
       Object {

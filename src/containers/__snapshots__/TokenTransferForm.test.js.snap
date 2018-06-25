@@ -25,6 +25,8 @@ exports[`(Container) TokenTransferForm should render 1`] = `
         >
           <Connect(EthereumAddressInputField)
             fieldName="recipient"
+            onValidityChange={[Function]}
+            required={true}
           />
         </td>
       </tr>
@@ -33,7 +35,7 @@ exports[`(Container) TokenTransferForm should render 1`] = `
           Amount
         </th>
         <td
-          className="undefined undefined"
+          className="undefined"
         >
           <div>
             <OasisButton
@@ -42,6 +44,11 @@ exports[`(Container) TokenTransferForm should render 1`] = `
               hidden={true}
               onClick={[Function]}
               size="xs"
+              style={
+                Object {
+                  "fontSize": "10px",
+                }
+              }
               type="button"
             >
               transfer max
@@ -52,6 +59,7 @@ exports[`(Container) TokenTransferForm should render 1`] = `
             >
               <Connect(TokenAmountInputField)
                 fieldName="tokenAmount"
+                onValidityChange={[Function]}
               />
             </div>
             <Field
@@ -69,9 +77,8 @@ exports[`(Container) TokenTransferForm should render 1`] = `
       </tr>
     </tbody>
   </table>
-  <div
-    className="undefined undefined"
-  >
+  <div>
+    <div />
     <OasisButton
       btnType="button"
       color="default"

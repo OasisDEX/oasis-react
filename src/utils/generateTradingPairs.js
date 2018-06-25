@@ -1,43 +1,41 @@
-import { TOKEN_DAI, TOKEN_MAKER } from '../constants';
+import {
+  TOKEN_DAI,
+  TOKEN_DIGIX,
+  TOKEN_MAKER,
+  TOKEN_RHOC,
+  TOKEN_WRAPPED_ETH,
+  TOKEN_WRAPPED_GNT
+} from "../constants";
 
-export const generateTradingPairs = (baseTokens, quoteTokens) => {
-  const TradingPairs = [
+export const generateTradingPairs = () => {
+  return [
     {
-      base: 'MKR',
-      quote: 'W-ETH',
-      priority: 10,
-      isDefault: true
-    },
-    {
-      base: 'W-ETH',
-      quote: 'DAI',
+      base: TOKEN_WRAPPED_ETH,
+      quote: TOKEN_DAI,
       priority: 9,
       isDefault: true
     },
     {
-      base: 'MKR',
-      quote: 'DAI',
-      priority: 8,
+      base: TOKEN_MAKER,
+      quote: TOKEN_DAI,
       isDefault: true
     },
     {
-      base: 'SAI',
-      quote: 'DAI',
-      priority: 6,
+      base: TOKEN_MAKER,
+      quote: TOKEN_WRAPPED_ETH,
       isDefault: true
     },
+    {
+      base: TOKEN_DIGIX,
+      quote: TOKEN_WRAPPED_ETH
+    },
+    {
+      base: TOKEN_RHOC,
+      quote: TOKEN_WRAPPED_ETH
+    },
+    {
+      base: TOKEN_WRAPPED_GNT,
+      quote: TOKEN_WRAPPED_ETH
+    }
   ];
-
-  baseTokens.forEach((base) => {
-    if(base === TOKEN_MAKER || base === TOKEN_DAI) { return; }
-    quoteTokens.forEach((quote) => {
-      TradingPairs.push({
-        base,
-        quote,
-        priority: 0,
-        isDefault: false
-      });
-    });
-  });
-  return TradingPairs;
 };

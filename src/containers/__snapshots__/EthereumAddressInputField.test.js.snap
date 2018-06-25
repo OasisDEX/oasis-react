@@ -1,12 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) EthereumAddressInputField should render 1`] = `
-<Field
-  component={[Function]}
-  name="exampleFieldName"
-  required={true}
-  validate={[Function]}
-/>
+<div>
+  <Field
+    component={[Function]}
+    name="exampleFieldName"
+    validate={[Function]}
+  />
+</div>
 `;
 
 exports[`(Container) EthereumAddressInputField will receive right actions 1`] = `

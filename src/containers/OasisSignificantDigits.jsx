@@ -80,9 +80,9 @@ export class OasisSignificantDigitsWrapper extends PureComponent {
                   .toBigNumber(
                     fullPrecisionUnit
                       ? web3.fromWei(fullPrecisionAmount)
-                      : amount
+                      : amount.replace(/,/g, '') // TODO: Ugly fix, component should never be given formated string
                   )
-                  .toFixed()}
+                  .toFormat()}
               </div>
             )}
           </Popper>

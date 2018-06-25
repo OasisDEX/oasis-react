@@ -61,6 +61,11 @@ exports[`(Component) OasisMyOrders should render 1`] = `
             You currently have no active offers
           </div>
         }
+        metadata={
+          Object {
+            "activeNetworkName": undefined,
+          }
+        }
         rows={Array []}
       />
     </div>

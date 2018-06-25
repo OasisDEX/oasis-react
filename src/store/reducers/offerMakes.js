@@ -20,7 +20,12 @@ import {
   getMarketNoProxyContractInstance
 } from "../../bootstrap/contracts";
 import { DEFAULT_GAS_LIMIT, DEFAULT_GAS_PRICE } from "../../constants";
-import transactions from '../selectors/transactions';
+import transactions from "../selectors/transactions";
+import isNumericAndGreaterThanZero from "../../utils/numbers/isNumericAndGreaterThanZero";
+import getTokenByAddress from "../../utils/tokens/getTokenByAddress";
+import {
+  convertToTokenPrecision
+} from "../../utils/conversion";
 
 const initialState = fromJS({
   makeBuyOffer: {
@@ -85,20 +90,35 @@ const makeOfferTransaction = createAction(
     payToken,
     buyAmount,
     buyToken,
+    isCloseMatchingEnabled,
     gasLimit = DEFAULT_GAS_LIMIT,
     gasPrice = DEFAULT_GAS_PRICE
-  }) =>
-    getMarketContractInstance().offer(
-      payAmount,
-      payToken,
-      buyAmount,
-      buyToken,
-      0,
+  }) => {
+
+    const offer = getMarketNoProxyContractInstance().offer['uint256,address,uint256,address,uint256,bool'];
+
+    return new Promise((resolve, reject) =>
+      offer(
+        payAmount,
+        payToken,
+        buyAmount,
+        buyToken,
+        0,
+        isCloseMatchingEnabled,
+        {
+          gas: gasLimit,
+          gasPrice
+        },
+        (err, res) =>
       {
-        gas: gasLimit,
-        gasPrice
-      }
-    )
+        if (err) {
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      })
+    );
+  }
 );
 
 const makeOffer = createPromiseActions("OFFER_MAKES/MAKE_OFFER");
@@ -108,18 +128,25 @@ const makeOfferEpic = (offerMakeType, withCallbacks = {}) => async (
   dispatch,
   getState
 ) => {
-  //TODO: Already refactored?
   dispatch(makeOffer.pending());
 
   const activeOfferMake = offerMakes.activeOfferMakePure(
     getState(),
     offerMakeToFormName(offerMakeType)
   );
+
   const makeOfferPayload = {
-    payAmount: activeOfferMake.getIn(["offerData", "payAmount"]),
-    buyAmount: activeOfferMake.getIn(["offerData", "buyAmount"]),
+    payAmount: convertToTokenPrecision(
+      activeOfferMake.getIn(["offerData", "payAmount"]),
+      activeOfferMake.get("sellToken")
+    ),
+    buyAmount: convertToTokenPrecision(
+      activeOfferMake.getIn(["offerData", "buyAmount"]),
+      activeOfferMake.get("buyToken")
+    ),
     payToken: activeOfferMake.get("sellTokenAddress"),
-    buyToken: activeOfferMake.get("buyTokenAddress")
+    buyToken: activeOfferMake.get("buyTokenAddress"),
+    isCloseMatchingEnabled: true
   };
 
   return handleTransaction({
@@ -290,19 +317,26 @@ const getTransactionGasEstimate = createAction(
   "OFFER_MAKES/GET_TRANSACTION_GAS_ESTIMATE",
   (payAmount, payToken, buyAmount, buyToken, toAddress) =>
     new Promise((resolve, reject) => {
-      getMarketNoProxyContractInstance().offer.estimateGas(
-        payAmount,
+      getMarketNoProxyContractInstance().offer['uint256,address,uint256,address,uint256,bool'].estimateGas(
+        convertToTokenPrecision(payAmount, getTokenByAddress(payToken)),
         payToken,
-        buyAmount,
+        convertToTokenPrecision(buyAmount, getTokenByAddress(buyToken)),
         buyToken,
         0,
+        true, // isCloseMatchingEnabled 
         { to: toAddress, gasLimit: DEFAULT_GAS_LIMIT },
         (e, estimation) => {
           if (e) {
             reject({
-              payAmount,
+              payAmount: convertToTokenPrecision(
+                payAmount,
+                getTokenByAddress(payToken)
+              ),
               payToken,
-              buyAmount,
+              buyAmount: convertToTokenPrecision(
+                buyAmount,
+                getTokenByAddress(buyToken)
+              ),
               buyToken,
               toAddress
             });
@@ -343,7 +377,10 @@ const updateTransactionGasCostEstimateEpic = (
     buyAmount = offerMake.getIn(["offerData", "buyAmount"]),
     buyToken = offerMake.get("buyTokenAddress"),
     toAddress = getMarketContractInstance().address;
-  if (payAmount > 0 && buyAmount > 0) {
+  if (
+    isNumericAndGreaterThanZero(payAmount) &&
+    isNumericAndGreaterThanZero(buyAmount)
+  ) {
     const transactionGasCostEstimate = (await dispatch(
       defer(
         getTransactionGasEstimate,
@@ -364,7 +401,6 @@ const updateTransactionGasCostEstimateEpic = (
       dispatch(setGasExceedsTheLimitDisabled());
     }
     return transactionGasCostEstimate;
-
   }
 };
 

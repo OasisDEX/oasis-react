@@ -1,10 +1,14 @@
 import BigNumber from "bignumber.js";
-import { ETH_UNIT_ETHER } from "../../constants";
+import {
+  ETH_UNIT_ETHER,
+  USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER,
+  USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE
+} from "../../constants";
 import web3 from "../../bootstrap/web3";
 import { ASK, BID } from "../../store/reducers/trades";
+import isNumeric from "../numbers/isNumeric";
 
 export const PRICE_DECIMAL = 5;
-// export const VOLUME_DECIMAL = 5;
 export const AMOUNT_DECIMALS = 5;
 
 const format = (baseToken, quoteToken) => `${baseToken}/${quoteToken}`;
@@ -42,7 +46,6 @@ const volume = (tradingPairTrades, baseToken, quoteToken) => {
 
 const price = (tradeHistoryEntry, baseToken, quoteToken) => {
   if (!tradeHistoryEntry) {
-    console.log("tradeHistoryEntry", tradeHistoryEntry, baseToken, quoteToken);
     return null;
   }
   let price = 0;
@@ -84,48 +87,112 @@ const getBaseAndQuoteAmount = (tradeHistoryEntry, baseToken, quoteToken) => {
   }
 };
 
-const replacePricePattern = /^(\d+)\.(\d{5})\d*$/;
 // eslint-disable-next-line no-unused-vars
 const formatPrice = (
   price,
-  fromWei = false,
+  fromWei = false
   // unit = ETH_UNIT_ETHER,
   // decimalPlaces = PRICE_DECIMAL
-) =>
-  price ?
-    new BigNumber(!fromWei ? price : web3.fromWei(price, ETH_UNIT_ETHER))
-        .toFixed(18)
-        .toString()
-        .replace(replacePricePattern, "$1.$2") :
-    null;
+) => {
+  try {
+    if ([null, undefined].includes(price)) {
+      return null;
+    }
+
+    const priceSanitized =
+      isNumeric(price) && price.toString().replace(/[,']+/g, "");
+    return priceSanitized
+      ? new BigNumber(
+          !fromWei
+            ? priceSanitized
+            : web3.fromWei(priceSanitized, ETH_UNIT_ETHER)
+        ).toFormat(5, 4)
+      : null;
+  } catch (e) {
+    console.warn(e.toString());
+  }
+  return null;
+};
 
 // const replaceAmountPattern = /^(\d+)\.(\d{3})\d*$/;
 //eslint-disable-next-line no-unused-vars
-const formatAmount = (price, fromWei = false) =>
-  price ?
-    String(
-        new BigNumber(!fromWei ? price : web3.fromWei(price, ETH_UNIT_ETHER))
-          .toFormat(3, 4)
-          // .round(3, 4)
-          // .toFixed(18)
-          // .replace(replaceAmountPattern, "$1.$2")
-    ) :
-    null;
 
-// const replaceVolumePattern = /^(\d+)\.(\d{2})\d*$/;
+const formatTokenAmount = (price, fromWei = false, unit, decimalPlaces) => {
+  if ([null, undefined].includes(price)) {
+    return null;
+  }
+  try {
+    const priceSanitized =
+      isNumeric(price) && price.toString().replace(/[,']+/g, "");
+    return priceSanitized
+      ? String(
+          new BigNumber(
+            !fromWei
+              ? priceSanitized
+              : web3.fromWei(priceSanitized, unit, decimalPlaces)
+          ).toFormat(decimalPlaces, 4)
+        )
+      : null;
+  } catch (e) {
+    console.warn(e.toString());
+  }
+};
+
+const formatAmount = (
+  price,
+  fromWei = false,
+  //eslint-disable-next-line no-unused-vars
+  unknown = null,
+  precision = 3
+) => {
+  if ([null, undefined].includes(price)) {
+    return null;
+  }
+  try {
+    const priceSanitized =
+      isNumeric(price) && price.toString().replace(/[,']+/g, "");
+    return priceSanitized
+      ? String(
+          new BigNumber(
+            !fromWei
+              ? priceSanitized
+              : web3.fromWei(priceSanitized, ETH_UNIT_ETHER)
+          ).toFormat(precision, 4)
+        )
+      : null;
+  } catch (e) {
+    console.warn(e.toString());
+  }
+};
+
 const formatVolume = tradingPairVolume =>
-  web3
-    .fromWei(tradingPairVolume, ETH_UNIT_ETHER)
-    .toFormat(2, 4);
-    // .round(2, 4)
-    // .toFixed(18)
-    // .replace(replaceVolumePattern, "$1.$2");
+  web3.fromWei(tradingPairVolume, ETH_UNIT_ETHER).toFormat(2, 4);
 
-const tradeType = (order, baseCurrency) => {
+const tradeType = (order, baseCurrency, userToTradeRelation) => {
+  const checkWithOwnership = (
+    userToTradeRelationEnum,
+    noRelationType,
+    noRelationOtherType
+  ) => {
+    switch (userToTradeRelationEnum) {
+      case USER_TO_LOG_TAKE_OFFER_RELATION_TAKEN_BY_USER:
+        return noRelationType;
+      case USER_TO_LOG_TAKE_OFFER_RELATION_USER_MADE:
+        return noRelationOtherType;
+    }
+  };
   if (order.buyWhichToken === baseCurrency) {
-    return ASK;
+    if (userToTradeRelation) {
+      return checkWithOwnership(userToTradeRelation, BID, ASK);
+    } else {
+      return BID;
+    }
   } else if (order.sellWhichToken === baseCurrency) {
-    return BID;
+    if (userToTradeRelation) {
+      return checkWithOwnership(userToTradeRelation, ASK, BID);
+    } else {
+      return ASK;
+    }
   }
 };
 
@@ -152,5 +219,6 @@ export {
   tradeType,
   formatTradeType,
   formatAmount,
+  formatTokenAmount,
   getBaseAndQuoteAmount
 };

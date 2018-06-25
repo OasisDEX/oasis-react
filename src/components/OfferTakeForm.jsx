@@ -27,6 +27,7 @@ import CSSModules from "react-css-modules";
 import MaskedTokenAmountInput from "./MaskedTokenAmountInput";
 import { SETMAXBTN_HIDE_DELAY_MS } from "../constants";
 import platform from "../store/selectors/platform";
+import isNumericAndGreaterThanZero from "../utils/numbers/isNumericAndGreaterThanZero";
 
 const fieldStyle = { textAlign: "right" };
 
@@ -48,10 +49,10 @@ const validateTotal = [greaterThanZeroValidator, numericFormatValidator];
 export class OfferTakeForm extends PureComponent {
   constructor(props) {
     super(props);
-
     this.state = {
       showMaxButton: false
     };
+    this.componentIsUnmounted = false;
 
     this.onFormChange = this.onFormChange.bind(this);
     this.onVolumeFieldChange = this.onVolumeFieldChange.bind(this);
@@ -73,28 +74,36 @@ export class OfferTakeForm extends PureComponent {
   }
 
   onVolumeFieldChange(event, newValue) {
-    console.log("onVolumeFieldChange", newValue);
     const { volumeFieldValueChanged } = this.props.actions;
-    // if (newValue.toString() !== previousValue.toString()) {
-    setTimeout(() => volumeFieldValueChanged(newValue), 0);
-    // }
+    if (this.componentIsUnmounted === false) {
+      setTimeout(() => volumeFieldValueChanged(newValue), 0);
+    }
   }
 
   onTotalFieldChange(event, newValue) {
-    // console.log("onTotalFieldChange", newValue, previousValue);
-    console.log("onTotalFieldChange", newValue);
     const { totalFieldValueChanged } = this.props.actions;
-    // if (newValue.toString() !== previousValue.toString()) {
-    setTimeout(() => totalFieldValueChanged(newValue), 0);
-    // }
+    if (this.componentIsUnmounted === false) {
+      setTimeout(() => totalFieldValueChanged(newValue), 0);
+    }
   }
 
   setMaxButton() {
+
     if (false === this.state.showMaxButton) {
       return null;
     }
-    if (web3.toBigNumber(this.props.activeBaseTokenBalance).gt(0)) {
-      const { disableForm, globalFormLock } = this.props;
+
+    const balanceOfTokenToPayWith = this.props.offerTakeType === TAKE_BUY_OFFER ?
+      this.props.activeBaseTokenBalance :
+      this.props.activeQuoteTokenBalance;
+
+    if (web3.toBigNumber(balanceOfTokenToPayWith).gt(0)) {
+      const {
+        disableForm,
+        globalFormLock,
+        activeBaseTokenBalance,
+        activeQuoteTokenBalance
+      } = this.props;
       switch (this.props.offerTakeType) {
         case TAKE_BUY_OFFER:
           return (
@@ -104,7 +113,11 @@ export class OfferTakeForm extends PureComponent {
               color="success"
               size="xs"
               onClick={this.onSetSellMax}
-              disabled={disableForm}
+              disabled={
+                disableForm ||
+                globalFormLock ||
+                !isNumericAndGreaterThanZero(activeBaseTokenBalance)
+              }
             >
               Sell max
             </OasisButton>
@@ -117,7 +130,11 @@ export class OfferTakeForm extends PureComponent {
               color="danger"
               size="xs"
               onClick={this.onSetBuyMax}
-              disabled={disableForm || globalFormLock}
+              disabled={
+                disableForm ||
+                globalFormLock ||
+                !isNumericAndGreaterThanZero(activeQuoteTokenBalance)
+              }
             >
               Buy max
             </OasisButton>
@@ -237,7 +254,9 @@ export class OfferTakeForm extends PureComponent {
 
   onFormChange() {
     const { onFormChange } = this.props;
-    onFormChange && onFormChange();
+    if (this.componentIsUnmounted === false) {
+      onFormChange && onFormChange();
+    }
   }
 
   render() {
@@ -256,14 +275,22 @@ export class OfferTakeForm extends PureComponent {
   }
 
   onTotalFieldSectionFocus() {
-    this.setState({ showMaxButton: true });
+    if (this.componentIsUnmounted === false) {
+      this.setState({ showMaxButton: true });
+    }
   }
 
   onTotalFieldSectionBlur() {
-    setTimeout(
-      () => this.setState({ showMaxButton: false }),
-      SETMAXBTN_HIDE_DELAY_MS
-    );
+    if (this.componentIsUnmounted === false) {
+      setTimeout(
+        () => this.setState({ showMaxButton: false }),
+        SETMAXBTN_HIDE_DELAY_MS
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
   }
 }
 
@@ -279,6 +306,7 @@ export function mapStateToProps(state) {
     offerTakeType: offerTakes.activeOfferTakeType(state),
     activeTradingPairPrecision: tokens.precision(state),
     activeBaseTokenBalance: balances.activeBaseTokenBalance(state),
+    activeQuoteTokenBalance: balances.activeQuoteTokenBalance(state),
     globalFormLock: platform.globalFormLock(state)
   };
 }

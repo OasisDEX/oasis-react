@@ -10,7 +10,8 @@ describe('(Component) OasisWrapUnwrapUnwrap', () => {
     const props = {
       activeWrappedToken: TOKEN_WRAPPED_ETH,
       onSubmit: jest.fn,
-      transactionState: { txStatus: true }
+      transactionState: { txStatus: true },
+      hidden: true
     };
     const wrapper = shallow(
       <OasisWrapUnwrapUnwrap {...props}/>,

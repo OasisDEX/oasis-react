@@ -1,43 +1,48 @@
-import BigNumber from 'bignumber.js';
-import tokens from '../store/selectors/tokens';
+import BigNumber from "bignumber.js";
+import tokens from "../store/selectors/tokens";
+import { APP_BASE_PRECISION } from "../constants";
 
 let getState = null;
 
-export function convertToTokenPrecision(amount, token) {
-  if (typeof token !== 'undefined' && token !== '') {
-    const tokenSpecs = tokens.getTokenSpecs(getState(), token);
-    if (tokenSpecs) {
-      let value = amount;
-      if (!(amount instanceof BigNumber)) {
-        value = new BigNumber(amount);
-      }
-      return value.times(new BigNumber(10).pow(tokenSpecs.get('precision'))).valueOf();
-    }
-    throw new Error('Precision not found when converting');
+export function convertToTokenPrecisionInternal(precision, amountIn18Precision) {
+  if (precision === APP_BASE_PRECISION) {
+    return amountIn18Precision;
+  } else {
+    const precisionDifference =
+      APP_BASE_PRECISION - precision;
+    return new BigNumber(amountIn18Precision)
+      .times(new BigNumber(10).pow(-precisionDifference))
+      .toFixed(0);
   }
-  throw new Error('Token not found when converting');
 }
 
-export function convertTo18Precision(amount, token) {
-  if (typeof token !== 'undefined' && token !== '') {
-    const tokenSpecs = tokens.getTokenSpecs(getState(),token);
-    if (tokenSpecs) {
-      if (tokenSpecs.precision === 18) {
-        return amount;
-      }
-      let value = amount;
-      if (!(amount instanceof BigNumber)) {
-        value = new BigNumber(amount);
-      }
-      return value.times(new BigNumber(10).pow(18 - tokenSpecs.get('precision'))).valueOf();
-    }
-    throw new Error('Precision not found when converting');
-  }
-  throw new Error('Token not found when converting');
+export function convertToTokenPrecision(amountIn18Precision, tokenName) {
+  return convertToTokenPrecisionInternal(
+    tokens.getTokenSpecs(getState(), tokenName).get("precision"),
+    amountIn18Precision);
 }
 
-const init = getStateFunction => getState = getStateFunction;
+export function convertTo18PrecisionInternal(precision, amountInTokenPrecision) {
 
-export default  {
+  if (precision === APP_BASE_PRECISION) {
+    return amountInTokenPrecision;
+  } else {
+    return new BigNumber(amountInTokenPrecision)
+      .times(
+        new BigNumber(10).pow(APP_BASE_PRECISION - precision)
+      )
+      .toFixed(0);
+  }
+}
+
+export function convertTo18Precision(amountInTokenPrecision, token) {
+  return convertTo18PrecisionInternal(
+    tokens.getTokenSpecs(getState(), token).get("precision"),
+    amountInTokenPrecision);
+}
+
+const init = getStateFunction => (getState = getStateFunction);
+
+export default {
   init
-}
+};

@@ -1,53 +1,94 @@
-import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { Component } from "react";
+import { PropTypes } from "prop-types";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import {
-  Route,
-  Switch,
-  Redirect,
-  withRouter,
-} from 'react-router-dom';
-import { compose } from 'redux';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Route, Redirect, withRouter } from "react-router-dom";
+import { compose } from "redux";
 
-import OasisTabs from '../components/OasisTabs';
+
 import OasisTradeWrapper from './OasisTrade';
 import OasisTransferWrapper from './OasisTransferMainWrapper';
 import OasisWrapUnwrapWrapper from './OasisWrapUnwrap';
 import tokensSelectors from './../store/selectors/tokens';
+import OasisTabsContainerWrapper  from './OasisTabsContainer';
 
 const propTypes = PropTypes && {
-  actions: PropTypes.object,
+  actions: PropTypes.object
 };
 
 export class OasisMainContentWrapper extends Component {
-
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
   redirect() {
-    if (document.location.pathname === '/') {
-      return (
-        <Redirect from={'/'} to={`/trade`}/>
-      );
-    } else { return null; }
+    if (document.location.pathname === "/") {
+      return <Redirect from={"/"} to={`/trade`} />;
+    } else {
+      return null;
+    }
+  }
+
+  renderWrapUnwrapContent(pathname, rootRouteProps) {
+    const wrapUnwrapPathMatches = /^\/wrap-unwrap(\/\w+)?\/?$/g.test(pathname);
+    if (wrapUnwrapPathMatches && !this.wrapUnwrapInitiallyLoaded) {
+      this.wrapUnwrapInitiallyLoaded = true;
+    }
+    return (
+      <div hidden={!wrapUnwrapPathMatches}>
+        {this.wrapUnwrapInitiallyLoaded && (
+          <OasisWrapUnwrapWrapper {...rootRouteProps} />
+        )}
+      </div>
+    );
+  }
+
+  renderTransferContent(pathName, rootRouteProps) {
+    const transferPathMatches = /^\/transfer\/?$/.test(pathName);
+    if (transferPathMatches && !this.transferViewInitiallyLoaded) {
+      this.transferViewInitiallyLoaded = true;
+    }
+    return (
+      <div hidden={!transferPathMatches}>
+        {this.transferViewInitiallyLoaded && (
+          <OasisTransferWrapper {...rootRouteProps} />
+        )}
+      </div>
+    );
   }
 
   render() {
     const { defaultTradingPair, location: { pathname } } = this.props;
-    return this.redirect() || (
-      <div className="OasisMainContentWrapper">
-        <OasisTabs pathname={pathname}/>
-        <div>
-          <Switch>
+    return (
+      this.redirect() || (
+        <div className="OasisMainContent">
+          <OasisTabsContainerWrapper pathname={pathname}/>
+          <div>
             <Route
-              path={'/trade/:baseToken?/:quoteToken?'}
-              render={(props) =>  <OasisTradeWrapper {...props} defaultTradingPair={defaultTradingPair}/>}
+              path={"*"}
+              render={rootRouteProps => (
+                <div>
+                  <Route
+                    path={"/trade/:baseToken?/:quoteToken?"}
+                    render={props => (
+                      <div>
+                        <OasisTradeWrapper
+                          {...props}
+                          defaultTradingPair={defaultTradingPair}
+                        />
+                      </div>
+                    )}
+                  />
+                  {this.renderWrapUnwrapContent(pathname, rootRouteProps)}
+                  {this.renderTransferContent(pathname, rootRouteProps)}
+                </div>
+              )}
             />
-            <Route path={'/wrap-unwrap/:token?'} component={ props => <OasisWrapUnwrapWrapper{...props}/> }/>
-            <Route path={'/transfer'} component={OasisTransferWrapper}/>
-          </Switch>
+          </div>
         </div>
-      </div>
+      )
     );
   }
 
@@ -71,9 +112,9 @@ export function mapDispatchToProps(dispatch) {
 }
 
 OasisMainContentWrapper.propTypes = propTypes;
-OasisMainContentWrapper.displayName = 'OasisMainContentWrapper';
+OasisMainContentWrapper.displayName = "OasisMainContentWrapper";
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps)
 )(OasisMainContentWrapper);

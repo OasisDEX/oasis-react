@@ -4,6 +4,8 @@ exports[`(Container) OasisWrapUnwrapWrap should render 1`] = `
 <OasisWrapUnwrapWrap
   activeUnwrappedToken="GNT"
   activeUnwrappedTokenBalance={"0"}
+  form="wrapEther"
+  hidden={false}
   onFormChange={[Function]}
   onSubmit={[Function]}
   transactionState={
@@ -13,6 +15,8 @@ exports[`(Container) OasisWrapUnwrapWrap should render 1`] = `
       "txStatus": undefined,
     }
   }
+  txType="TX/GROUP__WRAP_UNWRAP/WRAP"
+  unwrappedToken="ETH"
 />
 `;
 

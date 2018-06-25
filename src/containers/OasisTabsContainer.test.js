@@ -1,17 +1,17 @@
 /* global shallow describe it expect */
 /* eslint-disable import/first */
 import React from 'react';
-import Immutable from 'immutable';
+import { fromJS } from 'immutable';
 
 import {
-  SetTokenAllowanceWrapper,
+  OasisTabsContainerWrapper,
   mapStateToProps,
   mapDispatchToProps
-} from './SetTokenAllowance';
+} from './OasisTabsContainer';
 import { shallow } from 'enzyme';
 
-describe('(Container) SetTokenAllowance', () => {
-  const state = Immutable.fromJS({});
+describe('(Container) OasisTabsContainer', () => {
+  const state = fromJS(global.storeMock);
   const initialProps = mapStateToProps(state);
   const initialActions = mapDispatchToProps(x => x);
   const props = {
@@ -30,7 +30,7 @@ describe('(Container) SetTokenAllowance', () => {
 
   it('should render', () => {
     const wrapper = shallow(
-      <SetTokenAllowanceWrapper {...props}/>
+      <OasisTabsContainerWrapper {...props}/>
     );
     expect(wrapper).toMatchSnapshot();
   });

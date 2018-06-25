@@ -12,7 +12,7 @@ import {
   TX_STATUS_CANCELLED_BY_USER,
   TX_STATUS_REJECTED
 } from "../store/reducers/transactions";
-import textStyles from "../styles/modules/_typography.scss";
+import styles from "./OasisTransactionStatus.scss";
 import CSSModules from "react-css-modules";
 import InfoBox from "../components/InfoBox";
 import network from "../store/selectors/network";
@@ -56,7 +56,7 @@ export class OasisTransactionStatusWrapper extends PureComponent {
   }
 
   render() {
-    const { transaction, infoText, noBorder } = this.props;
+    const { transaction, infoText, noBorder, ...props } = this.props;
     return (
       <InfoBox
         justifyContent="space-between"
@@ -64,8 +64,10 @@ export class OasisTransactionStatusWrapper extends PureComponent {
         size="sm"
         fullWidth
         noBorder={noBorder}
+        className={styles.base}
+        {...props}
       >
-        <div style={{ padding: "7px 0" }}>
+        <div className={styles.infoText}>
           {typeof infoText === "function"
             ? infoText(transaction.get("txMeta"))
             : infoText}
@@ -73,10 +75,9 @@ export class OasisTransactionStatusWrapper extends PureComponent {
         <div
           className={
             this.hasTransactionFailedOrSignatureDenied()
-              ? textStyles.textDanger
-              : ""
+              ? styles.statusDanger
+              : styles.status
           }
-          style={{ display: "flex", alignContent: "space-between" }}
         >
           <TransactionStatus transaction={transaction} />
         </div>
@@ -104,5 +105,5 @@ export function mapDispatchToProps(dispatch) {
 OasisTransactionStatusWrapper.propTypes = propTypes;
 OasisTransactionStatusWrapper.displayName = "OasisTransactionStatus";
 export default connect(mapStateToProps, mapDispatchToProps)(
-  CSSModules(OasisTransactionStatusWrapper, textStyles)
+  CSSModules(OasisTransactionStatusWrapper, styles)
 );

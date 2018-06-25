@@ -8,6 +8,7 @@ import OasisTokenSelectWrapper from "./OasisTokenSelect";
 import TokenTransferFormWrapper from "./TokenTransferForm";
 import OasisTokenBalanceSummary from "./OasisTokenBalanceSummary";
 import OasisWidgetFrame from "../containers/OasisWidgetFrame";
+import styles from "./OasisTokenTransfer.scss"
 
 import transfersReducer from "../store/reducers/transfers";
 import transfers from "../store/selectors/transfers";
@@ -33,6 +34,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
+    this.componentIsUnmounted = false;
     this.makeTransfer = this.makeTransfer.bind(this);
     this.onFormChange = this.onFormChange.bind(this);
   }
@@ -135,13 +137,14 @@ export class OasisTokenTransferWrapper extends PureComponent {
           localStatus={txStatus}
           txTimestamp={txStartTimestamp}
           txType={TX__GROUP__TRANSFERS}
+          className={styles.transactionStatusShorter}
         />
       )
     );
   }
 
-  onFormChange(isFormTouched) {
-    if (isFormTouched) {
+  onFormChange() {
+    if (this.componentIsUnmounted === false) {
       this.setState({
         txStatus: undefined,
         txStartTimestamp: undefined
@@ -154,6 +157,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
     const { selectedToken } = this.props;
     return (
       <OasisWidgetFrame
+        className={styles.frame}
         heading="Transfer"
         spaceForContent={true}
         headingChildren={this.selectedToken()}
@@ -162,6 +166,7 @@ export class OasisTokenTransferWrapper extends PureComponent {
           summary="Wallet"
           token={selectedToken}
           decimalPlaces={5}
+          className={styles.tokenBalanceSummaryShorter}
         />
         <TokenTransferFormWrapper
           txStatus={txStatus}
@@ -173,6 +178,11 @@ export class OasisTokenTransferWrapper extends PureComponent {
       </OasisWidgetFrame>
     );
   }
+
+  componentWillUnmount() {
+    this.componentIsUnmounted = true;
+  }
+
 }
 
 export function mapStateToProps(state) {
@@ -193,5 +203,5 @@ export function mapDispatchToProps(dispatch) {
 OasisTokenTransferWrapper.propTypes = propTypes;
 OasisTokenTransferWrapper.displayName = "OasisTokenTransfer";
 export default connect(mapStateToProps, mapDispatchToProps)(
-  CSSModules(OasisTokenTransferWrapper, textStyles)
+  CSSModules(OasisTokenTransferWrapper, { textStyles, styles }, { allowMultiple: true })
 );

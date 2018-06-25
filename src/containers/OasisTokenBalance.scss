@@ -1,22 +1,17 @@
+@import "../styles/modules/typography";
+
 .available {
   display: inline-block;
   float: right;
 }
 
 .available-amount {
-  font-family: Roboto, sans-serif;
-  font-size: 19px;
-  text-align: right;
+  @include mainInput;
   display: inline-block;
-  padding-right: 10px;
 }
 
 .available-currency {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-align: left;
-  padding-left: 13px;
+  @include currency;
   display: inline-block;
 }
 

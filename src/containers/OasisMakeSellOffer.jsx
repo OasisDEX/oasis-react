@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
@@ -25,7 +25,7 @@ const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
 };
 
-export class OasisMakeSellOfferWrapper extends React.Component {
+export class OasisMakeSellOfferWrapper extends PureComponent {
   constructor(props) {
     super(props);
     this.onModalOpen = this.onModalOpen.bind(this);
@@ -107,11 +107,11 @@ export class OasisMakeSellOfferWrapper extends React.Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return !this.props.isModalOpen || nextProps.isModalOpen === false
-      ? this.state !== nextState || this.props !== nextProps
-      : false;
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return !this.props.isModalOpen || nextProps.isModalOpen === false
+  //     ? this.state !== nextState || this.props !== nextProps
+  //     : false;
+  // }
 }
 
 export function mapStateToProps(state) {

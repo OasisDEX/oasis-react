@@ -31,7 +31,7 @@ exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
               "cursor": "default",
               "display": "flex",
               "minHeight": "24px",
-              "postion": "relative",
+              "position": "relative",
               "top": "1px",
             }
           }
@@ -66,7 +66,6 @@ exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
       alignContent="stretch"
       alignItems="center"
       className=""
-      hidden={false}
       justifyContent="normal"
       vertical={false}
       wrap={false}

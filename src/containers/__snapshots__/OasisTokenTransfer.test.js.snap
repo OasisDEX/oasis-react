@@ -24,13 +24,14 @@ exports[`(Container) OasisTokenTransfer should render 1`] = `
     onSubmit={[Function]}
     transferState={
       <OasisTransactionStatusWrapperInfoBox
+        className={undefined}
         infoText={
           <div>
             Transfer
             <strong
               className={undefined}
             >
-              1.000
+              1.00000
                
               MKR
             </strong>

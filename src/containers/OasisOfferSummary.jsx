@@ -18,6 +18,7 @@ import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from "../store/reducers/offerTakes";
 import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from "../constants";
 import isVolumeOrPriceEmptyOrZero from "../store/selectors/isVolumeOrPriceEmptyOrZero";
 import OasisOrderExceedsGasLimitInfoWrapper from "./OasisOrderExceedsGasLimitInfo";
+import platform from '../store/selectors/platform';
 
 const propTypes = PropTypes && {
   offerType: PropTypes.oneOf([
@@ -34,7 +35,8 @@ const propTypes = PropTypes && {
   actions: PropTypes.object,
   buyToken: PropTypes.string,
   sellToken: PropTypes.string,
-  disableBalanceWarning: PropTypes.bool
+  disableBalanceWarning: PropTypes.bool,
+  contractsLoaded: PropTypes.bool
 };
 
 export class OasisOfferSummaryWrapper extends PureComponent {
@@ -47,7 +49,8 @@ export class OasisOfferSummaryWrapper extends PureComponent {
       hasSufficientTokenAmount,
       isTokenTradingEnabled,
       isVolumeOrPriceEmptyOrZero,
-      disableBalanceWarning
+      disableBalanceWarning,
+      contractsLoaded
     } = this.props;
     return (
       <div>
@@ -59,6 +62,7 @@ export class OasisOfferSummaryWrapper extends PureComponent {
           />
         )}
         <OasisOfferSummary
+          contractsLoaded={contractsLoaded}
           isVolumeOrPriceEmptyOrZero={isVolumeOrPriceEmptyOrZero}
           gasEstimateInfo={gasEstimateInfo}
           {...getUsersSoldAndReceivedAmounts(offerType, offerFormValues)}
@@ -80,6 +84,7 @@ export class OasisOfferSummaryWrapper extends PureComponent {
 
 export function mapStateToProps(state, { offerType }) {
   return {
+    contractsLoaded: platform.contractsLoaded(state),
     offerFormValues: getOfferFormValuesByOfferType(state, offerType),
     offerBuyAndSellTokens: getOfferBuyAndSellTokenByOfferType(state, offerType),
     gasEstimateInfo: gasEstimateInfo(state, offerType),

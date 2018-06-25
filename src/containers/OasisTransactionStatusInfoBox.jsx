@@ -16,9 +16,9 @@ const propTypes = PropTypes && {
 export class OasisTransactionStatusWrapperInfoBox extends PureComponent {
 
   render() {
-    const { txStatus } = this.props;
+    const { txStatus, ...props } = this.props;
     return txStatus ? (
-      <OasisTransactionStatusWrapper{...this.props}/>
+      <OasisTransactionStatusWrapper{...props}/>
     ) : null;
   }
 }

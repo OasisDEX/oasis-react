@@ -1,8 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`(Container) OasisTokenWrapForm should render 1`] = `
-<form>
-  <table>
+<form
+  onChange={[Function]}
+>
+  <table
+    className="undefined undefined"
+  >
     <tbody>
       <tr>
         <th>
@@ -41,12 +45,9 @@ exports[`(Container) OasisTokenWrapForm should render 1`] = `
       localStatus="TX/STATUS_AWAITING_CONFIRMATION"
       txStatus="TX/STATUS_AWAITING_CONFIRMATION"
       txTimestamp={1}
-      txType="TX/GROUP__WRAP_UNWRAP/WRAP"
     />
   </div>
-  <div
-    className="undefined undefined"
-  >
+  <div>
     <div />
     <OasisButton
       btnType="button"
