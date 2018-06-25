@@ -6,6 +6,10 @@
 
 .infoText {
   padding: 7px 0;
+  color: #949396;
+  :global(b), :global(strong) {
+    color: #68676B;
+  }
 }
 
 %status {

@@ -29,7 +29,7 @@ class TransactionStatus extends PureComponent {
     switch (transaction.get("txStatus")) {
       case TX_STATUS_AWAITING_USER_ACCEPTANCE:
         return (
-          <div style={{paddingTop: '1px'}}>
+          <div style={{paddingTop: '1px', color: '#68676B'}}>
             Sign Trans.<StatusPictogram
               status={transaction.get("txStatus")}
               className={styles.imgRight}
