@@ -33,6 +33,12 @@ export class EthereumAddressInputFieldWrapper extends PureComponent {
     return (
       <div className={style.EthereumAddressInputField}>
         <Field
+          normalize={(value) => {
+            if (web3.isAddress(value) && value.indexOf("0x")!==0){
+              return `0x${value}`;
+            }
+            return value;
+          }}
           disabled={disabled}
           required={this.props.required}
           validate={this.validateEthereumAddress}
