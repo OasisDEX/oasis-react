@@ -111,8 +111,6 @@ Object {
 exports[`(Container) OasisTradeOrders will receive right props 1`] = `
 Object {
   "activeNetworkName": "kovan",
-  "activeOfferTake": Immutable.Map {
-},
   "activeOfferTakeType": "OFFER_TAKES/TAKE_SELL_OFFER",
   "activeTradingPair": Object {
     "baseToken": "MKR",

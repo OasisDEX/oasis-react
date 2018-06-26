@@ -26,25 +26,24 @@ const activeOfferTakeOfferId = createSelector(offerTakesState, s =>
 );
 
 const activeOfferTake = createSelector(
-  s => s,
+  offers.activeTradingPairBuyOffers,
+  offers.activeTradingPairSellOffers,
   activeOfferTakeType,
   activeOfferTakeOfferId,
   tokens.activeTradingPair,
-  (rootState, offerTakeType, offerId, activeTradingPair) => {
+  (activeTradingPairBuyOffers, activeTradingPairSellOffers, offerTakeType, offerId, activeTradingPair) => {
     const { baseToken, quoteToken } = activeTradingPair;
     let offer = null;
     switch (offerTakeType) {
       case TAKE_BUY_OFFER:
         {
-          offer = offers
-            .activeTradingPairBuyOffers(rootState)
+          offer = activeTradingPairBuyOffers
             .find(offer => fromJS(offer).get("id") === offerId);
         }
         break;
       case TAKE_SELL_OFFER:
         {
-          offer = offers
-            .activeTradingPairSellOffers(rootState)
+          offer = activeTradingPairSellOffers
             .find(offer => fromJS(offer).get("id") === offerId);
         }
         break;
@@ -52,7 +51,7 @@ const activeOfferTake = createSelector(
 
     if (offer) {
       const { sellToken, buyToken } = getOfferTakeBuyAndSellTokens(
-        tokens.activeTradingPair(rootState),
+        activeTradingPair,
         offerTakeType
       );
       return fromJS({
