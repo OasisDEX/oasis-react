@@ -140,7 +140,6 @@ export function mapStateToProps(state) {
     sellOffers: offers.activeTradingPairSellOffers(state),
     activeOfferTakeType: offerTakes.activeOfferTakeType(state),
     isOfferTakeModalOpen: offerTakes.isOfferTakeModalOpen(state),
-    activeOfferTake: offerTakes.activeOfferTake(state),
     activeNetworkName: network.activeNetworkName(state),
     userTrades: userTrades.marketsData(state),
     loadingUserMarketHistory: userTrades.loadindUserMarketHistory(state)
