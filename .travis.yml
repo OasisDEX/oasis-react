@@ -24,7 +24,7 @@ after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 before_deploy:
-  - export PROD_BRANCH="mk/gp-test"
+  - export PROD_BRANCH="master"
   # for testing
   - if [ $TRAVIS_BRANCH == $PROD_BRANCH ] && [ $TRAVIS_BRANCH != "master" ]; then export PUBLIC_URL="https://oasisdex.github.io/oasis-react"; fi
   - yarn build
@@ -42,7 +42,7 @@ deploy:
     project: ./build/
     domain: oasisdex-staging.surge.sh
     skip_cleanup: true
-  - on: mk/gp-test
+  - on: master
     provider: pages
     target-branch: gh-pages
     local-dir: build/
