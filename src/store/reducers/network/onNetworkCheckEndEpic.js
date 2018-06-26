@@ -74,27 +74,27 @@ export const onNetworkCheckEndEpic = (
         { dispatch, getState },
         SUBSCRIPTIONS_GROUP_GLOBAL_INITIAL
       );
-
-      dispatch(offersReducer.actions.syncOffersEpic(tradingPair)).then(() => {
-        if (setInitialSubscriptions || accountChanged) {
-          if (userTrades.marketsData(getState()) === null) {
-            dispatch(
-              userTradesReducer.actions.fetchAndSubscribeUserTradesHistoryEpic()
-            );
-          }
-          dispatch(platformReducer.actions.setIsAppLoadingDisabled());
-        }
-      });
-      registerSubscription(
-        SUBSCRIPTIONS_ORDERS_EVENTS,
-        () => {
-          dispatch(offersReducer.actions.subscribeOffersEventsEpic());
-        },
-        { dispatch, getState },
-        SUBSCRIPTIONS_GROUP_GLOBAL_INITIAL
-      );
     });
     //Fetch LogTake events for set historicalRange
+    dispatch(offersReducer.actions.syncOffersEpic(tradingPair)).then(() => {
+      if (setInitialSubscriptions || accountChanged) {
+        if (userTrades.marketsData(getState()) === null) {
+          dispatch(
+            userTradesReducer.actions.fetchAndSubscribeUserTradesHistoryEpic()
+          );
+        }
+        dispatch(platformReducer.actions.setIsAppLoadingDisabled());
+      }
+    });
+    registerSubscription(
+      SUBSCRIPTIONS_ORDERS_EVENTS,
+      () => {
+        dispatch(offersReducer.actions.subscribeOffersEventsEpic());
+      },
+      { dispatch, getState },
+      SUBSCRIPTIONS_GROUP_GLOBAL_INITIAL
+    );
+
   }
   if (setInitialSubscriptions || accountChanged) {
     const defaultAccount = accounts.defaultAccount(getState());
