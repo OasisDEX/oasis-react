@@ -42,7 +42,9 @@ exports[`(Container) TokenTransferForm should render 1`] = `
               btnType="button"
               color="default"
               hidden={true}
+              onBlur={[Function]}
               onClick={[Function]}
+              onFocus={[Function]}
               size="xs"
               style={
                 Object {

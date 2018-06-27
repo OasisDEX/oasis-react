@@ -43,9 +43,12 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
     };
 
     this.componentIsUnmounted = false;
+    this.currentSetMaxTimeout = null;
 
     this.validate = this.validate.bind(this);
     this.setUnwrapMax = this.setUnwrapMax.bind(this);
+    this.onSetMaxFocus = this.onSetMaxFocus.bind(this);
+    this.onSetMaxBlur = this.onSetMaxBlur.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
     this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
     this.onFormChange = this.onFormChange.bind(this);
@@ -143,6 +146,8 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
                       size="xs"
                       className={tableStyles.inputBtn}
                       onClick={this.setUnwrapMax}
+                      onFocus={this.onSetMaxFocus}
+                      onBlur={this.onSetMaxBlur}
                       disabled={
                         disabled ||
                         globalFormLock ||
@@ -198,6 +203,14 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
     );
   }
 
+  onSetMaxFocus() {
+    clearTimeout(this.currentSetMaxTimeout);
+  }
+
+  onSetMaxBlur() {
+    this.setState({ showMaxButton: false });
+  }
+
   onTotalFieldSectionFocus() {
     if (this.componentIsUnmounted === false) {
       this.setState({ showMaxButton: true });
@@ -206,7 +219,7 @@ export class OasisTokenUnwrapFormWrapper extends PureComponent {
 
   onTotalFieldSectionBlur() {
     if (this.componentIsUnmounted === false) {
-      setTimeout(
+      this.currentSetMaxTimeout = setTimeout(
         () => this.setState({ showMaxButton: false }),
         SETMAXBTN_HIDE_DELAY_MS
       );

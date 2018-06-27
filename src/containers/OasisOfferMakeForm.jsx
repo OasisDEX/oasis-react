@@ -53,6 +53,7 @@ export class OfferMakeForm extends React.Component {
   constructor(props) {
     super(props);
     this.componentIsUnmounted = false;
+    this.currentSetMaxTimeout = null;
 
     this.state = {
       showMaxButton: false
@@ -62,6 +63,8 @@ export class OfferMakeForm extends React.Component {
     this.onTotalFieldChange = this.onTotalFieldChange.bind(this);
     this.onSetBuyMax = this.onSetBuyMax.bind(this);
     this.onSetSellMax = this.onSetSellMax.bind(this);
+    this.onSetMaxFocus = this.onSetMaxFocus.bind(this);
+    this.onSetMaxBlur = this.onSetMaxBlur.bind(this);
     this.onPriceFieldChange = this.onPriceFieldChange.bind(this);
     this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
@@ -130,6 +133,8 @@ export class OfferMakeForm extends React.Component {
             color="success"
             size="xs"
             onClick={this.onSetBuyMax}
+            onFocus={this.onSetMaxFocus}
+            onBlur={this.onSetMaxBlur}
           >
             Buy max
           </OasisButton>
@@ -148,12 +153,22 @@ export class OfferMakeForm extends React.Component {
             color="danger"
             size="xs"
             onClick={this.onSetSellMax}
+            onFocus={this.onSetMaxFocus}
+            onBlur={this.onSetMaxBlur}
           >
             Sell max
           </OasisButton>
         );
     }
     // }
+  }
+
+  onSetMaxFocus() {
+    clearTimeout(this.currentSetMaxTimeout);
+  }
+
+  onSetMaxBlur() {
+    this.setState({ showMaxButton: false });
   }
 
   onTotalFieldSectionFocus() {
@@ -164,7 +179,7 @@ export class OfferMakeForm extends React.Component {
 
   onTotalFieldSectionBlur() {
     if (this.componentIsUnmounted === false) {
-      setTimeout(
+      this.currentSetMaxTimeout = setTimeout(
         () => {
           if (this.componentIsUnmounted === false) {
             this.setState({ showMaxButton: false });

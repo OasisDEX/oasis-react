@@ -53,12 +53,15 @@ export class OfferTakeForm extends PureComponent {
       showMaxButton: false
     };
     this.componentIsUnmounted = false;
+    this.currentSetMaxTimeout = null;
 
     this.onFormChange = this.onFormChange.bind(this);
     this.onVolumeFieldChange = this.onVolumeFieldChange.bind(this);
     this.onTotalFieldChange = this.onTotalFieldChange.bind(this);
     this.onSetBuyMax = this.onSetBuyMax.bind(this);
     this.onSetSellMax = this.onSetSellMax.bind(this);
+    this.onSetMaxFocus = this.onSetMaxFocus.bind(this);
+    this.onSetMaxBlur = this.onSetMaxBlur.bind(this);
     this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
     // this.estimateGas = throttle(this.props.estimateGas, 500);
@@ -113,6 +116,8 @@ export class OfferTakeForm extends PureComponent {
               color="success"
               size="xs"
               onClick={this.onSetSellMax}
+              onFocus={this.onSetMaxFocus}
+              onBlur={this.onSetMaxBlur}
               disabled={
                 disableForm ||
                 globalFormLock ||
@@ -274,6 +279,14 @@ export class OfferTakeForm extends PureComponent {
     );
   }
 
+  onSetMaxFocus() {
+    clearTimeout(this.currentSetMaxTimeout);
+  }
+
+  onSetMaxBlur() {
+    this.setState({ showMaxButton: false });
+  }
+
   onTotalFieldSectionFocus() {
     if (this.componentIsUnmounted === false) {
       this.setState({ showMaxButton: true });
@@ -282,7 +295,7 @@ export class OfferTakeForm extends PureComponent {
 
   onTotalFieldSectionBlur() {
     if (this.componentIsUnmounted === false) {
-      setTimeout(
+      this.currentSetMaxTimeout = setTimeout(
         () => this.setState({ showMaxButton: false }),
         SETMAXBTN_HIDE_DELAY_MS
       );
