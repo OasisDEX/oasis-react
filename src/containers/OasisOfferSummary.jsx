@@ -18,7 +18,7 @@ import { TAKE_BUY_OFFER, TAKE_SELL_OFFER } from "../store/reducers/offerTakes";
 import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from "../constants";
 import isVolumeOrPriceEmptyOrZero from "../store/selectors/isVolumeOrPriceEmptyOrZero";
 import OasisOrderExceedsGasLimitInfoWrapper from "./OasisOrderExceedsGasLimitInfo";
-import platform from '../store/selectors/platform';
+import platform from "../store/selectors/platform";
 
 const propTypes = PropTypes && {
   offerType: PropTypes.oneOf([
@@ -40,7 +40,7 @@ const propTypes = PropTypes && {
 };
 
 export class OasisOfferSummaryWrapper extends PureComponent {
-  render() {
+  renderOfferSummary() {
     const {
       offerType,
       offerFormValues,
@@ -52,13 +52,14 @@ export class OasisOfferSummaryWrapper extends PureComponent {
       disableBalanceWarning,
       contractsLoaded
     } = this.props;
-    return (
+
+    return (hasSufficientTokenAmount || disableBalanceWarning) ? (
       <div>
         {gasEstimateInfo && (
           <OasisOrderExceedsGasLimitInfoWrapper
             gasEstimateInfo={gasEstimateInfo}
-            onTransactionGasLimitExceeded={() => { alert('onTransactionGasLimitExceeded'); }}
-            onTransactionGasBelowLimit={() => { alert('onTransactionGasBelowLimit'); }}
+            onTransactionGasLimitExceeded={() => {}}
+            onTransactionGasBelowLimit={() => {}}
           />
         )}
         <OasisOfferSummary
@@ -71,6 +72,18 @@ export class OasisOfferSummaryWrapper extends PureComponent {
           sellToken={offerBuyAndSellTokens.get("sellToken")}
           isTokenTradingEnabled={isTokenTradingEnabled}
         />
+      </div>
+    ) : null;
+  }
+  render() {
+    const {
+      offerBuyAndSellTokens,
+      hasSufficientTokenAmount,
+      disableBalanceWarning
+    } = this.props;
+    return (
+      <div>
+        {this.renderOfferSummary()}
         {!hasSufficientTokenAmount &&
           !disableBalanceWarning && (
             <OasisInsufficientAmountOfToken

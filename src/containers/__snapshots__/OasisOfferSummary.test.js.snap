@@ -2,34 +2,6 @@
 
 exports[`(Container) OasisOfferSummary should render 1`] = `
 <div>
-  <Connect(OasisOrderExceedsGasLimitInfo)
-    gasEstimateInfo={
-      Immutable.Map {
-        isGasEstimatePending: undefined,
-        transactionGasCostEstimate: undefined,
-        transactionGasCostEstimateError: undefined,
-      }
-    }
-    onTransactionGasBelowLimit={[Function]}
-    onTransactionGasLimitExceeded={[Function]}
-  />
-  <OasisOfferSummary
-    amountReceived="N/A"
-    amountSold="N/A"
-    buyToken="MKR"
-    contractsLoaded={true}
-    gasEstimateInfo={
-      Immutable.Map {
-        isGasEstimatePending: undefined,
-        transactionGasCostEstimate: undefined,
-        transactionGasCostEstimateError: undefined,
-      }
-    }
-    isTokenTradingEnabled={false}
-    isVolumeOrPriceEmptyOrZero={false}
-    offerType="OFFER_MAKES/MAKE_BUY_OFFER"
-    sellToken="W-ETH"
-  />
   <OasisInsufficientAmountOfToken
     tokenName="W-ETH"
   />
