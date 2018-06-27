@@ -35,10 +35,13 @@ export class TokenTransferFormWrapper extends PureComponent {
       showMaxButton: false
     };
     this.componentIsUnmounted = false;
+    this.currentSetMaxTimeout = null;
 
     this.onFormChange = this.onFormChange.bind(this);
     this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
+    this.onSetMaxFocus = this.onSetMaxFocus.bind(this);
+    this.onSetMaxBlur = this.onSetMaxBlur.bind(this);
     this.onEthereumAddressInputValidityChange = this.onEthereumAddressInputValidityChange.bind(
       this
     );
@@ -128,6 +131,8 @@ export class TokenTransferFormWrapper extends PureComponent {
                     hidden={!this.state.showMaxButton}
                     type="button"
                     onClick={actions.transferMax}
+                    onFocus={this.onSetMaxFocus}
+                    onBlur={this.onSetMaxBlur}
                     size="xs"
                     className={tableStyles.inputBtn}
                     disabled={disabled || globalFormLock}
@@ -186,6 +191,14 @@ export class TokenTransferFormWrapper extends PureComponent {
     }
   }
 
+  onSetMaxFocus() {
+    clearTimeout(this.currentSetMaxTimeout);
+  }
+
+  onSetMaxBlur() {
+    this.setState({ showMaxButton: false });
+  }
+
   onTotalFieldSectionFocus() {
     if (this.componentIsUnmounted === false) {
       this.setState({ showMaxButton: true });
@@ -194,7 +207,7 @@ export class TokenTransferFormWrapper extends PureComponent {
 
   onTotalFieldSectionBlur() {
     if (this.componentIsUnmounted === false) {
-      setTimeout(
+      this.currentSetMaxTimeout = setTimeout(
         () => this.setState({ showMaxButton: false }),
         SETMAXBTN_HIDE_DELAY_MS
       );

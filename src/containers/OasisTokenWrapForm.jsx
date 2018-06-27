@@ -42,9 +42,12 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
     };
 
     this.componentIsUnmounted = false;
+    this.currentSetMaxTimeout = null;
 
     this.validate = this.validate.bind(this);
     this.setWrapMax = this.setWrapMax.bind(this);
+    this.onSetMaxFocus = this.onSetMaxFocus.bind(this);
+    this.onSetMaxBlur = this.onSetMaxBlur.bind(this);
     this.transactionInfoBlock = this.transactionInfoBlock.bind(this);
     this.onTotalFieldSectionFocus = this.onTotalFieldSectionFocus.bind(this);
     this.onTotalFieldSectionBlur = this.onTotalFieldSectionBlur.bind(this);
@@ -173,6 +176,8 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
                         size="xs"
                         className={tableStyles.inputBtn}
                         onClick={this.setWrapMax}
+                        onFocus={this.onSetMaxFocus}
+                        onBlur={this.onSetMaxBlur}
                         disabled={
                           disabled ||
                           globalFormLock ||
@@ -227,13 +232,21 @@ export class OasisTokenWrapFormWrapper extends PureComponent {
     );
   }
 
+  onSetMaxFocus() {
+    clearTimeout(this.currentSetMaxTimeout);
+  }
+
+  onSetMaxBlur() {
+    this.setState({ showMaxButton: false });
+  }
+
   onTotalFieldSectionFocus() {
     this.setState({ showMaxButton: true });
   }
 
   onTotalFieldSectionBlur() {
     if (this.componentIsUnmounted === false) {
-      setTimeout(() => {
+      this.currentSetMaxTimeout = setTimeout(() => {
         if (this.componentIsUnmounted === false) {
           this.setState({ showMaxButton: false });
         }

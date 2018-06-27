@@ -77,7 +77,7 @@ export const SYNC_STATUS_PENDING = "SYNC_STATUS_PENDING";
 export const SYNC_STATUS_COMPLETED = "SYNC_STATUS_COMPLETED";
 export const SYNC_STATUS_ERROR = "SYNC_STATUS_ERROR";
 
-export const SETMAXBTN_HIDE_DELAY_MS = 400;
+export const SETMAXBTN_HIDE_DELAY_MS = 100;
 
 /**
  *  GAS and GAS_PRICE default values
