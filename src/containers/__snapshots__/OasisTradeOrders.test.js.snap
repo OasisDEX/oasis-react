@@ -50,33 +50,7 @@ exports[`(Container) OasisTradeOrders should render 1`] = `
       ]
     }
   />
-  <OasisMyOrders
-    activeNetworkName="kovan"
-    activeTradingPair={
-      Object {
-        "baseToken": "MKR",
-        "quoteToken": "DAI",
-      }
-    }
-    buyOffers={
-      Immutable.List [
-      ]
-    }
-    cancelOffer={[Function]}
-    defaultAccount="0x0000000000000000000000000000000000000000"
-    fetchAndSubscribeUserTradesHistory={[Function]}
-    initialMarketHistoryLoaded={true}
-    loadingUserMarketHistory={false}
-    removeOrderCancelledByTheOwner={[Function]}
-    sellOffers={
-      Immutable.List [
-      ]
-    }
-    trades={
-      Immutable.List [
-      ]
-    }
-  />
+  <Connect(OasisMyOrdersContainer) />
   <OasisMarketHistory
     activeNetworkName="kovan"
     activeTradingPair={

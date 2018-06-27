@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Container) OasisMyOrdersContainer should render 1`] = `
+<OasisMyOrders
+  activeNetworkName="kovan"
+  activeTradingPair={
+    Object {
+      "baseToken": "MKR",
+      "quoteToken": "DAI",
+    }
+  }
+  buyOffers={
+    Immutable.List [
+    ]
+  }
+  defaultAccount="0x0000000000000000000000000000000000000000"
+  initialMarketHistoryLoaded={true}
+  loadingUserMarketHistory={false}
+  onFetchAndSubscribeUserTradesHistory={[Function]}
+  removeOrderCancelledByTheOwner={[Function]}
+  sellOffers={
+    Immutable.List [
+    ]
+  }
+  trades={
+    Immutable.List [
+    ]
+  }
+/>
+`;
+
+exports[`(Container) OasisMyOrdersContainer will receive right actions 1`] = `
+Object {
+  "actions": Object {
+    "fetchAndSubscribeUserTradesHistory": [Function],
+    "removeOrderCancelledByTheOwner": [Function],
+  },
+}
+`;
+
+exports[`(Container) OasisMyOrdersContainer will receive right props 1`] = `
+Object {
+  "activeNetworkName": "kovan",
+  "activeTradingPair": Object {
+    "baseToken": "MKR",
+    "quoteToken": "DAI",
+  },
+  "buyOfferCount": undefined,
+  "buyOffers": Immutable.List [
+],
+  "defaultAccount": "0x0000000000000000000000000000000000000000",
+  "initialMarketHistoryLoaded": true,
+  "loadingUserMarketHistory": false,
+  "sellOfferCount": undefined,
+  "sellOffers": Immutable.List [
+],
+  "userTradesList": Immutable.List [
+],
+}
+`;

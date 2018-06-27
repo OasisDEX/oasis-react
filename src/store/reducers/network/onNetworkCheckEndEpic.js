@@ -21,7 +21,6 @@ import {
 } from "../../../constants";
 import { registerSubscription } from "../../../utils/subscriptions/registerSubscription";
 import userTradesReducer from "../userTrades";
-import userTrades from '../../selectors/userTrades';
 
 export const setLastNetworkCheckStartAt = createAction(
   "NETWORK/SET_LAST_NETWORK_CHECK_START_AT",
@@ -77,14 +76,7 @@ export const onNetworkCheckEndEpic = (
     });
     //Fetch LogTake events for set historicalRange
     dispatch(offersReducer.actions.syncOffersEpic(tradingPair)).then(() => {
-      if (setInitialSubscriptions || accountChanged) {
-        if (userTrades.marketsData(getState()) === null) {
-          dispatch(
-            userTradesReducer.actions.fetchAndSubscribeUserTradesHistoryEpic()
-          );
-        }
         dispatch(platformReducer.actions.setIsAppLoadingDisabled());
-      }
     });
     registerSubscription(
       SUBSCRIPTIONS_ORDERS_EVENTS,
@@ -96,8 +88,13 @@ export const onNetworkCheckEndEpic = (
     );
 
   }
+
   if (setInitialSubscriptions || accountChanged) {
     const defaultAccount = accounts.defaultAccount(getState());
+
+    /**
+     * We do that for each change of the default account, but not on initial load.
+     */
     if (!setInitialSubscriptions) {
       dispatch(userTradesReducer.actions.initTradesHistory());
       dispatch(userTradesReducer.actions.initMarketHistory());
@@ -116,7 +113,11 @@ export const onNetworkCheckEndEpic = (
         { dispatch, getState },
         SUBSCRIPTIONS_GROUP_ACCOUNT_SPECIFIC_INITIAL
       );
+      dispatch(
+        userTradesReducer.actions.fetchAndSubscribeUserTradesHistoryEpic()
+      );
     }
+
     dispatch(
       balancesReducer.actions.getAllTradedTokensBalances(
         getTokenContractsList(),
@@ -124,9 +125,6 @@ export const onNetworkCheckEndEpic = (
       )
     ).then(() => {
       dispatch(platformReducer.actions.setGlobalFormLockDisabled());
-        dispatch(
-          userTradesReducer.actions.fetchAndSubscribeUserTradesHistoryEpic()
-        );
     });
 
     registerSubscription(

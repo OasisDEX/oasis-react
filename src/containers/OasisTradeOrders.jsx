@@ -14,7 +14,6 @@ import tradesSelectors from "../store/selectors/trades";
 import tokens from "../store/selectors/tokens";
 import offers from "../store/selectors/offers";
 import offersReducer from "../store/reducers/offers";
-import OasisMyOrders from "../components/OasisMyOrders";
 import offerTakesReducer from "../store/reducers/offerTakes";
 import OasisTakeOfferModalWrapper from "./OasisTakeOfferModal";
 import offerTakes from "../store/selectors/offerTakes";
@@ -25,6 +24,7 @@ import { FlexBox } from "../components/FlexBox";
 import accounts from "../store/selectors/accounts";
 import userTradesReducer from "../store/reducers/userTrades";
 import userTrades from "../store/selectors/userTrades";
+import OasisMyOrdersContainerWrapper  from './OasisMyOrdersContainer';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -53,17 +53,12 @@ export class OasisTradeOrdersWrapper extends PureComponent {
       buyOffers,
       sellOffers,
       activeNetworkName,
-      userTrades,
-      loadingUserMarketHistory,
-      defaultAccount,
       actions: {
         cancelOffer,
         setOfferTakeModalOpen,
         setActiveOfferTakeOfferId,
         checkOfferIsActive,
         resetCompletedOfferCheck,
-        fetchAndSubscribeUserTradesHistory,
-        removeOrderCancelledByTheOwner,
       }
     } = this.props;
 
@@ -97,22 +92,7 @@ export class OasisTradeOrdersWrapper extends PureComponent {
           onCheckOfferIsActive={checkOfferIsActive}
           onResetCompletedOfferCheck={resetCompletedOfferCheck}
         />
-        <OasisMyOrders
-          defaultAccount={defaultAccount}
-          activeNetworkName={activeNetworkName}
-          sellOffers={sellOffers}
-          buyOffers={buyOffers}
-          trades={userTrades}
-          cancelOffer={cancelOffer}
-          activeTradingPair={activeTradingPair}
-          initialMarketHistoryLoaded={initialMarketHistoryLoaded}
-          fetchAndSubscribeUserTradesHistory={
-            fetchAndSubscribeUserTradesHistory
-          }
-          loadingUserMarketHistory={loadingUserMarketHistory}
-          removeOrderCancelledByTheOwner={removeOrderCancelledByTheOwner}
-
-        />
+        <OasisMyOrdersContainerWrapper/>
         <OasisMarketHistory
           trades={tradesList}
           activeTradingPair={activeTradingPair}

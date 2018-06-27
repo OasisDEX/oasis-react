@@ -35,13 +35,6 @@ const myOpenOffersFilter = entry => {
   );
 };
 
-// const myOffersFilter = entry => {
-//   const myAccountAddress = web3.eth.defaultAccount;
-//   const isOfferMaker = entry.maker.toString() === myAccountAddress.toString();
-//   const isOfferTaker = entry.taker.toString() === myAccountAddress.toString();
-//   return isOfferMaker || isOfferTaker;
-// };
-
 const tradesHistoryColsDefinition = (baseToken, quoteToken) => [
   { heading: "date", key: "date" },
   { heading: "action", key: "tradeType" },
@@ -78,7 +71,7 @@ const tradesHistoryColsDefinition = (baseToken, quoteToken) => [
 
 const propTypes = PropTypes && {
   trades: ImmutablePropTypes.list,
-  fetchAndSubscribeUserTradesHistory: PropTypes.func.isRequired,
+  onFetchAndSubscribeUserTradesHistory: PropTypes.func.isRequired,
   activeNetworkName: PropTypes.string,
   removeOrderCancelledByTheOwner: PropTypes.func,
   initialMarketHistoryLoaded: PropTypes.bool,
@@ -169,6 +162,11 @@ class OasisMyOrders extends PureComponent {
 
   onViewTypeChange({ target: { value } }) {
     if (this.componentIsUnmounted === false) {
+      const { trades, loadingUserMarketHistory } = this.props;
+      console.log({trades, loadingUserMarketHistory });
+      if (!trades && !loadingUserMarketHistory) {
+          this.props.onFetchAndSubscribeUserTradesHistory()
+      }
       this.setState({
         viewType: value
       });
