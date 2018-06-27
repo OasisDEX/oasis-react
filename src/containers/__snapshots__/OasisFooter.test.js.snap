@@ -55,7 +55,7 @@ exports[`(Container) OasisFooter should render 1`] = `
           MakerDAO
         </h4>
         <a
-          href="https://chat.makerdao.com/channel/maker-market"
+          href="https://chat.makerdao.com/"
           key="0"
           rel="noopener noreferrer"
           styleName="Link"

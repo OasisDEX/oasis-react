@@ -31,7 +31,7 @@ const sections = [
     links: [
       {
         label: 'Chat',
-        url: 'https://chat.makerdao.com/channel/maker-market',
+        url: 'https://chat.makerdao.com/',
       },
       {
         label: 'Reddit',
