@@ -41,7 +41,7 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
         <div>
           <div>
             <Connect(OasisOfferSummary)
-              disableBalanceWarning={true}
+              disableBalanceWarning={false}
               offerType="OFFER_TAKES/TAKE_BUY_OFFER"
             />
           </div>
@@ -49,13 +49,6 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
         </div>
       </div>
       <div />
-      <Connect(SetTokenAllowanceTrust)
-        allowanceSubjectAddress="0x8cf1cab422a0b6b554077a361f8419cdf122a9f9"
-        onCancelCleanup={[Function]}
-        onTransactionCompleted={[Function]}
-        onTransactionPending={[Function]}
-        onTransactionRejected={[Function]}
-      />
       <div>
         <Connect(OasisNotTheBestOfferPriceWarning) />
       </div>
@@ -104,6 +97,7 @@ Object {
   "buyToken": undefined,
   "canFulfillOffer": false,
   "hasExceededGasLimit": false,
+  "hasSufficientTokenAmount": false,
   "isCurrentOfferActive": true,
   "isOfferTakeModalOpen": true,
   "isTokenTradingEnabled": false,
