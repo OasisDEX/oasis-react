@@ -107,10 +107,10 @@ const setPrecision = createAction(
 const denotePrecision = () => (dispatch, getState) => {
   const { baseToken, quoteToken } = tokens.activeTradingPair(getState());
   const basePrecision = tokens
-    .getTokenSpecs(getState(), baseToken)
+    .getTokenSpecs(getState())(baseToken)
     .get("precision");
   const quotePrecision = tokens
-    .getTokenSpecs(getState(), quoteToken)
+    .getTokenSpecs(getState())(quoteToken)
     .get("precision");
   const precision =
     basePrecision < quotePrecision ? basePrecision : quotePrecision;

@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import reselect from '../../utils/reselect';
+import {memoize} from 'lodash';
 
 const tokens = state => state.get('tokens');
 
@@ -54,8 +54,7 @@ const baseTokens = createSelector(
 
 const getTokenSpecs = createSelector(
   tokens,
-  reselect.getProps,
-  (state, props) => state.getIn(['tokenSpecs', props])
+  (tokens) => memoize(token => tokens.getIn(['tokenSpecs', token]))
 );
 
 const getTokensSpecsObject = createSelector(
