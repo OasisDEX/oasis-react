@@ -102,6 +102,8 @@ Object {
   "sellOfferCount": undefined,
   "sellOffers": Immutable.List [
 ],
+  "tokenTrades": Immutable.List [
+],
   "userTrades": Immutable.List [
 ],
 }
