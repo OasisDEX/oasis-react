@@ -1,4 +1,6 @@
 import { createSelector } from 'reselect';
+import { List } from 'immutable';
+import tokens from './tokens';
 
 const trades = state => state.get('trades');
 
@@ -23,6 +25,18 @@ const marketsData = createSelector(
   },
 );
 
+const tokenTrades = createSelector(
+  marketHistory,
+  tokens.activeTradingPair,
+  (marketHistory, activeTradingPair) => {
+    const tokens = [activeTradingPair.baseToken, activeTradingPair.quoteToken];
+    return (marketHistory || List()).filter(t =>
+      t.buyWhichToken == tokens[0] && t.sellWhichToken == tokens[1] ||
+      t.buyWhichToken == tokens[1] && t.sellWhichToken == tokens[0]
+    )
+  },
+)
+
 const volumesLoaded = createSelector(
   trades,
   state => state.get('volumesLoaded')
@@ -31,6 +45,7 @@ const volumesLoaded = createSelector(
 export default {
   state: trades,
   marketsData,
+  tokenTrades,
   initialMarketHistoryLoaded,
   volumesLoaded,
 };

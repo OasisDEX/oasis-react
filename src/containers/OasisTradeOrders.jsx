@@ -1,12 +1,9 @@
 import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
-// import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { List } from "immutable";
 
-import { trades } from "../utils/tokens/pair";
 import OasisBuyOrders from "../components/OasisBuyOrders";
 import OasisSellOrders from "../components/OasisSellOrders";
 import OasisMarketHistory from "../components/OasisMarketHistory";
@@ -45,7 +42,7 @@ export class OasisTradeOrdersWrapper extends PureComponent {
 
   render() {
     const {
-      marketData = List(),
+      tokenTrades,
       initialMarketHistoryLoaded,
       activeTradingPair,
       buyOfferCount,
@@ -67,11 +64,6 @@ export class OasisTradeOrdersWrapper extends PureComponent {
       }
     } = this.props;
 
-    const tradesList = trades(
-      marketData,
-      activeTradingPair.baseToken,
-      activeTradingPair.quoteToken
-    );
     return (
       <FlexBox wrap>
         <OasisMakeBuyOfferWrapper />
@@ -114,7 +106,7 @@ export class OasisTradeOrdersWrapper extends PureComponent {
 
         />
         <OasisMarketHistory
-          trades={tradesList}
+          trades={tokenTrades}
           activeTradingPair={activeTradingPair}
           initialMarketHistoryLoaded={initialMarketHistoryLoaded}
           activeNetworkName={activeNetworkName}
@@ -129,6 +121,7 @@ export function mapStateToProps(state) {
     defaultAccount: accounts.defaultAccount(state),
     activeTradingPair: tokens.activeTradingPair(state),
     marketData: tradesSelectors.marketsData(state),
+    tokenTrades: tradesSelectors.tokenTrades(state),
     initialMarketHistoryLoaded: tradesSelectors.initialMarketHistoryLoaded(
       state
     ),
