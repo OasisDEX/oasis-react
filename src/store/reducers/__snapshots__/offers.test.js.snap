@@ -668,13 +668,6 @@ exports[`syncOffer initial sync 2`] = `
 Array [
   Object {
     "payload": Array [
-      "MKR",
-      "W-ETH",
-    ],
-    "type": "MOCK___GET_TRADING_PAIR_OFFERS_COUNT",
-  },
-  Object {
-    "payload": Array [
       Object {
         "buyHowMuch": "100000000000000000",
         "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
@@ -719,13 +712,6 @@ exports[`syncOffer new offer sync 2`] = `
 Array [
   Object {
     "payload": Array [
-      "MKR",
-      "W-ETH",
-    ],
-    "type": "MOCK___GET_TRADING_PAIR_OFFERS_COUNT",
-  },
-  Object {
-    "payload": Array [
       Object {
         "buyHowMuch": "100000000000000000",
         "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
@@ -768,13 +754,6 @@ Object {
 
 exports[`syncOffer update sync 2`] = `
 Array [
-  Object {
-    "payload": Array [
-      "MKR",
-      "W-ETH",
-    ],
-    "type": "MOCK___GET_TRADING_PAIR_OFFERS_COUNT",
-  },
   Object {
     "payload": Array [
       Object {

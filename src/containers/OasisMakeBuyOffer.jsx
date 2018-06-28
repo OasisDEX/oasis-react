@@ -10,7 +10,7 @@ import OasisWidgetFrame from "../containers/OasisWidgetFrame";
 import OasisTokenBalanceSummary from "./OasisTokenBalanceSummary";
 import OfferMakeForm from "./OasisOfferMakeForm";
 import offerMakesReducer from "../store/reducers/offerMakes";
-import { MAKE_BUY_OFFER, MAKE_BUY_OFFER_FORM_NAME } from "../constants";
+import { MAKE_BUY_OFFER, MAKE_BUY_OFFER_FORM_NAME } from '../constants';
 import OasisMakeOfferModalWrapper from "./OasisMakeOfferModal";
 import offerMakes from "../store/selectors/offerMakes";
 import OasisInsufficientAmountOfToken from "../components/OasisInsufficientAmountOfToken";
@@ -21,6 +21,7 @@ import CSSModules from "react-css-modules";
 import InfoBox from "../components/InfoBox";
 import isVolumeOrPriceEmptyOrZero from "../store/selectors/isVolumeOrPriceEmptyOrZero";
 import OasisOfferBelowDustLimitWrapper from "./OasisOfferBelowDustLimit";
+import OasisYourOrderExceedsMaxTotalForToken from '../components/OasisYourOrderExceedsMaxTotalForToken';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -47,6 +48,7 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
     const {
       activeTradingPair: { baseToken, quoteToken },
       hasSufficientTokenAmount,
+      isTotalOverTheTokenMax,
       canMakeOffer,
       isModalOpen,
       globalFormLock
@@ -76,6 +78,9 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
                 tokenName={quoteToken}
                 offerType={MAKE_BUY_OFFER}
               />
+            )}
+            {hasSufficientTokenAmount && isTotalOverTheTokenMax && (
+              <OasisYourOrderExceedsMaxTotalForToken/>
             )}
             <InfoBox hidden={this.props.isPriceSet} noBorder color="muted">
               {!globalFormLock && ("Enter a price to unlock amount and total.")}
@@ -114,6 +119,10 @@ export class OasisMakeBuyOfferWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
+    isTotalOverTheTokenMax: offerMakes.isTotalOverTheTokenLimit(
+      state,
+      MAKE_BUY_OFFER
+    ),
     hasSufficientTokenAmount: offerMakes.hasSufficientTokenAmount(
       state,
       MAKE_BUY_OFFER

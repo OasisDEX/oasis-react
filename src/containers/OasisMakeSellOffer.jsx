@@ -20,6 +20,7 @@ import CSSModules from "react-css-modules";
 import InfoBox from "../components/InfoBox";
 import isVolumeOrPriceEmptyOrZero from "../store/selectors/isVolumeOrPriceEmptyOrZero";
 import OasisOfferBelowDustLimitWrapper from "./OasisOfferBelowDustLimit";
+import OasisYourOrderExceedsMaxTotalForToken from '../components/OasisYourOrderExceedsMaxTotalForToken';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -48,7 +49,9 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
       hasSufficientTokenAmount,
       canMakeOffer,
       globalFormLock,
-      isModalOpen
+      isModalOpen,
+      isTotalOverTheTokenMax,
+      isPriceSet
     } = this.props;
     const formProps = {
       baseToken,
@@ -66,7 +69,7 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
         </div>
         <div className={styles.footer}>
           <div className={styles.helpBlock}>
-            {hasSufficientTokenAmount === false && (
+            {isPriceSet && hasSufficientTokenAmount === false && (
               <OasisInsufficientAmountOfToken
                 noBorder={true}
                 tokenName={baseToken}
@@ -79,7 +82,10 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
                 offerType={MAKE_SELL_OFFER}
               />
             )}
-            <InfoBox hidden={this.props.isPriceSet} noBorder  color="muted">
+            {hasSufficientTokenAmount && isTotalOverTheTokenMax && (
+              <OasisYourOrderExceedsMaxTotalForToken noBorder/>
+            )}
+            <InfoBox hidden={isPriceSet} noBorder  color="muted">
               {!globalFormLock && "Enter a price to unlock amount and total."}
             </InfoBox>
           </div>
@@ -116,6 +122,10 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
+    isTotalOverTheTokenMax: offerMakes.isTotalOverTheTokenLimit(
+      state,
+      MAKE_SELL_OFFER
+    ),
     hasSufficientTokenAmount: offerMakes.hasSufficientTokenAmount(
       state,
       MAKE_SELL_OFFER

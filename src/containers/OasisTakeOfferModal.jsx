@@ -33,7 +33,10 @@ import {
 } from "../store/reducers/transactions";
 import { OasisTransactionStatusWrapperInfoBox } from "./OasisTransactionStatusInfoBox";
 import OasisVolumeIsOverTheOfferMax from "../components/OasisVolumeIsOverTheOfferMax";
-import { getActiveOfferAllowanceStatus, hasSufficientTokenAmountByOfferType } from '../store/selectors';
+import {
+  getActiveOfferAllowanceStatus,
+  hasSufficientTokenAmountByOfferType
+} from "../store/selectors";
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -173,14 +176,11 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     } else return null;
   }
   renderOfferSummary() {
-    const {
-      offerTakeType,
-      isVolumeGreaterThanOfferMax,
-    } = this.props;
+    const { offerTakeType, isVolumeGreaterThanOfferMax } = this.props;
     return (
       <div>
         <div>
-          {!isVolumeGreaterThanOfferMax &&
+          {!isVolumeGreaterThanOfferMax && (
             <OasisOfferSummaryWrapper
               disableBalanceWarning={
                 this.isTakeInProgressOrOfferTaken() ||
@@ -189,7 +189,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
               }
               offerType={offerTakeType}
             />
-          }
+          )}
         </div>
         <div>{this.renderOfferNotAvailableWarning()}</div>
       </div>
@@ -197,9 +197,18 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
   }
 
   shouldDisableTakeOfferButton() {
-    const { isCurrentOfferActive, canFulfillOffer, hasExceededGasLimit } = this.props;
+    const {
+      isCurrentOfferActive,
+      canFulfillOffer,
+      hasExceededGasLimit
+    } = this.props;
     const { disableOfferTakeButton } = this.state;
-    return !isCurrentOfferActive || !canFulfillOffer || disableOfferTakeButton || hasExceededGasLimit;
+    return (
+      !isCurrentOfferActive ||
+      !canFulfillOffer ||
+      disableOfferTakeButton ||
+      hasExceededGasLimit
+    );
   }
 
   isTakeInProgressOrOfferTaken() {
@@ -219,14 +228,12 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
 
   renderSetTokenAllowanceWrapper() {
     const {
-      isVolumeGreaterThanOfferMax,
       activeMarketAddress,
       sellToken,
-      hasSufficientTokenAmount,
       actions: { getTransactionGasCostEstimate }
     } = this.props;
 
-    return (!isVolumeGreaterThanOfferMax && hasSufficientTokenAmount) || this.state.txStatus ? (
+    return (!this.shouldDisableMinorWarnings() || this.state.txStatus) ? (
       <SetTokenAllowanceTrustWrapper
         onTransactionPending={() => this.setState({ lockCancelButton: true })}
         onTransactionCompleted={newAllowanceStatus => {
@@ -238,11 +245,11 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
         allowanceSubjectAddress={activeMarketAddress}
         tokenName={sellToken}
       />
-    ): null;
+    ) : null;
   }
 
   onFormChange() {
-    if (this.componentUnmounted=== false) {
+    if (this.componentUnmounted === false) {
       this.setState({
         txStatus: undefined,
         txStartTimestamp: undefined
@@ -256,7 +263,6 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
       sellToken,
       buyToken,
       isVolumeGreaterThanOfferMax,
-      isTokenTradingEnabled,
       actions: { getTransactionGasCostEstimate }
     } = this.props;
 
@@ -302,11 +308,9 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
                 txType={TX_OFFER_TAKE}
               />
             ) : (
-              <div>
-                <OasisNotTheBestOfferPriceWarningWrapper />
-              </div>
+              <div>{this.renderNotTheBestOfferWarning()}</div>
             )}
-            {isTokenTradingEnabled && <OasisOfferTakeWarningBox />}
+            {this.renderOfferTakeWarning()}
           </div>
           <div className={styles.footer}>
             <OasisButton
@@ -330,6 +334,18 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
         </div>
       </ReactModal>
     );
+  }
+
+  shouldDisableMinorWarnings() {
+    return false === this.props.canFulfillOffer;
+  }
+
+  renderOfferTakeWarning() {
+   return !this.shouldDisableMinorWarnings() ?
+     <OasisOfferTakeWarningBox /> : null;
+  }
+  renderNotTheBestOfferWarning() {
+    return !this.shouldDisableMinorWarnings() ? <OasisNotTheBestOfferPriceWarningWrapper />: null;
   }
 
   UNSAFE_componentWillUpdate(nextProps) {
