@@ -62,20 +62,11 @@ class OasisBuyOrders extends PureComponent {
   }
 
   onTableRowClick(rowData) {
-    const {
-      onSetOfferTakeModalOpen,
-      onCheckOfferIsActive,
-      onResetOfferTake
-    } = this.props;
-    onCheckOfferIsActive(rowData.id).then(
-      isActive =>
-        isActive === true
-          ? onSetOfferTakeModalOpen({
-              offerTakeType: TAKE_BUY_OFFER,
-              offerId: rowData.id
-            })
-          : onResetOfferTake()
-    );
+    const { onSetOfferTakeModalOpen } = this.props;
+    onSetOfferTakeModalOpen({
+      offerTakeType: TAKE_BUY_OFFER,
+      offerId: rowData.id
+    })
   }
 
   render() {

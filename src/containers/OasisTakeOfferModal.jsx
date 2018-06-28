@@ -87,31 +87,31 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
     this.onCancel = this.onCancel.bind(this);
   }
 
+  componentDidMount() {
+    this.props.actions.checkIfOfferIsActive();
+  }
+
   onCancel() {
     this.props.actions.setOfferTakeModalClosed();
   }
 
   async onBuyOffer() {
     const { actions } = this.props;
-    actions.checkIfOfferIsActive().then(isActive => {
-      if (isActive) {
-        this.setState(
-          {
-            disableOfferTakeButton: true,
-            txStatus: undefined,
-            txStartTimestamp: undefined
-          },
-          () =>
-            actions.takeOffer({
-              onStart: this.onTransactionStart.bind(this),
-              onCancelCleanup: this.onTransactionCancelledByUser.bind(this),
-              onPending: this.onTransactionPending.bind(this),
-              onCompleted: this.onTransactionCompleted.bind(this),
-              onRejected: this.onTransactionRejected.bind(this)
-            })
-        );
-      }
-    });
+    this.setState(
+      {
+        disableOfferTakeButton: true,
+        txStatus: undefined,
+        txStartTimestamp: undefined
+      },
+      () =>
+        actions.takeOffer({
+          onStart: this.onTransactionStart.bind(this),
+          onCancelCleanup: this.onTransactionCancelledByUser.bind(this),
+          onPending: this.onTransactionPending.bind(this),
+          onCompleted: this.onTransactionCompleted.bind(this),
+          onRejected: this.onTransactionRejected.bind(this)
+        })
+    );
   }
 
   onTransactionStart() {
@@ -357,7 +357,7 @@ export function mapStateToProps(state) {
     canFulfillOffer: offerTakes.canFulfillOffer(state),
     buyToken: offerTakes.activeOfferTakeBuyToken(state),
     sellToken: offerTakes.activeOfferTakeSellToken(state),
-    isCurrentOfferActive: offerTakes.isOfferActive(state) === true,
+    isCurrentOfferActive: offerTakes.isOfferActive(state) !== false,
     isVolumeGreaterThanOfferMax: offerTakes.isVolumeGreaterThanOfferMax(state),
     isTokenTradingEnabled: getActiveOfferAllowanceStatus(
       state,
