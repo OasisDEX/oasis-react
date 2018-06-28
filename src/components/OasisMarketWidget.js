@@ -20,6 +20,7 @@ import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits"
 import { ETH_UNIT_ETHER, TOKEN_DAI } from '../constants';
 import moment from "moment-timezone";
 import OasisLinkLikeButton from "./OasisLinkLikeButton";
+import tokensReducer from '../store/reducers/tokens';
 
 const periodHeading = {
   [DAY]: "daily",
@@ -107,6 +108,7 @@ class OasisMarketWidget extends PureComponent {
         baseToken,
         quoteToken
       );
+
       const tradingPairPrice = tradingPairVolume.toNumber()
         ? price(weeklyTradingPairTrades.last(), baseToken, quoteToken)
         : null;
@@ -138,6 +140,7 @@ class OasisMarketWidget extends PureComponent {
     const { baseToken, quoteToken } = rowData.rawTradingPair;
     setActiveTradingPair({ baseToken, quoteToken });
     changeRoute(`/trade/${baseToken}/${quoteToken}`);
+    tokensReducer.actions.getActiveTradingPairAllowanceStatus()
   }
 
   render() {

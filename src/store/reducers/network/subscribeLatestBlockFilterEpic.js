@@ -5,11 +5,13 @@ import { createPromiseActions } from "../../../utils/createPromiseActions";
 import transactionsReducer from "../transactions";
 import web3, { web3p } from "../../../bootstrap/web3";
 import accounts from "../../selectors/accounts";
-import tokensReducer from "../tokens";
 import offersReducer from "../offers";
 import { createAction } from "redux-actions";
 import { getTimestamp } from "../../../utils/time";
 import { checkIfOutOfSyncEpic } from './checkIfOutOfSync';
+import offers from '../../selectors/offers';
+import { getTradingPairOfferCount } from '../offers/getTradingPairOffersCount';
+import tokens from '../../selectors/tokens';
 
 export const fetchEthereumPrice = createAction(
   "NETWORK/FETCH_ETHEREUM_PRICE",
@@ -71,16 +73,23 @@ export const subscribeLatestBlockFilterEpic = () => async (
     dispatch(fetchEthereumPrice());
     dispatch(transactionsReducer.actions.getCurrentTxNonceEpic());
     dispatch(transactionsReducer.actions.getCurrentGasPrice());
-    if (areContractsInitialized) {
-      dispatch(
-        balancesReducer.actions.syncTokenBalances(
-          getTokenContractsList(),
-          accounts.defaultAccount(getState())
+    if (areContractsInitialized && tokens.activeTradingPair(getState())) {
+      dispatch(offersReducer.actions.getBestOfferIdsForActiveTradingPairEpic());
+      if (offers.activeTradingPairOffersInitiallyLoaded(getState())) {
+        dispatch(
+          balancesReducer.actions.syncTokenBalances(
+            getTokenContractsList(),
+            accounts.defaultAccount(getState())
+          )
+        );
+        dispatch(
+          getTradingPairOfferCount(
+            tokens.activeTradingPairBaseToken(getState()),
+            tokens.activeTradingPairQuoteToken(getState())
+          )
         )
-      )
+      }
     }
-    dispatch(offersReducer.actions.getBestOfferIdsForActiveTradingPairEpic());
-    dispatch(tokensReducer.actions.getActiveTradingPairAllowanceStatus());
   };
 
   const tid = setInterval(() => {
