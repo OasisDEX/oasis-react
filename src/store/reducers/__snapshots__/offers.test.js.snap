@@ -645,34 +645,10 @@ Array [
 ]
 `;
 
-exports[`syncOffer initial sync 1`] = `
-Object {
-  "offer": Array [
-    "130350000000000000",
-    "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
-    "100000000000000000",
-    "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
-    "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
-    false,
-    "0",
-  ],
-  "offerMeta": Object {
-    "baseToken": "MKR",
-    "offerType": "OFFERS/TYPE_BUY",
-    "quoteToken": "W-ETH",
-  },
-}
-`;
+exports[`syncOffer initial sync 1`] = `undefined`;
 
 exports[`syncOffer initial sync 2`] = `
 Array [
-  Object {
-    "payload": Array [
-      "MKR",
-      "W-ETH",
-    ],
-    "type": "MOCK___GET_TRADING_PAIR_OFFERS_COUNT",
-  },
   Object {
     "payload": Array [
       Object {
@@ -696,34 +672,10 @@ Array [
 ]
 `;
 
-exports[`syncOffer new offer sync 1`] = `
-Object {
-  "offer": Array [
-    "130350000000000000",
-    "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
-    "100000000000000000",
-    "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
-    "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
-    false,
-    "0",
-  ],
-  "offerMeta": Object {
-    "baseToken": "MKR",
-    "offerType": "OFFERS/TYPE_BUY",
-    "quoteToken": "W-ETH",
-  },
-}
-`;
+exports[`syncOffer new offer sync 1`] = `undefined`;
 
 exports[`syncOffer new offer sync 2`] = `
 Array [
-  Object {
-    "payload": Array [
-      "MKR",
-      "W-ETH",
-    ],
-    "type": "MOCK___GET_TRADING_PAIR_OFFERS_COUNT",
-  },
   Object {
     "payload": Array [
       Object {
@@ -747,34 +699,10 @@ Array [
 ]
 `;
 
-exports[`syncOffer update sync 1`] = `
-Object {
-  "offer": Array [
-    "130350000000000000",
-    "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
-    "100000000000000000",
-    "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
-    "0x2495eb6895c2e6c591ae9eb63a07b4a450623220",
-    false,
-    "0",
-  ],
-  "offerMeta": Object {
-    "baseToken": "MKR",
-    "offerType": "OFFERS/TYPE_BUY",
-    "quoteToken": "W-ETH",
-  },
-}
-`;
+exports[`syncOffer update sync 1`] = `undefined`;
 
 exports[`syncOffer update sync 2`] = `
 Array [
-  Object {
-    "payload": Array [
-      "MKR",
-      "W-ETH",
-    ],
-    "type": "MOCK___GET_TRADING_PAIR_OFFERS_COUNT",
-  },
   Object {
     "payload": Array [
       Object {

@@ -124,6 +124,7 @@ export const onNetworkCheckEndEpic = (
         defaultAccount
       )
     ).then(() => {
+      dispatch(offersReducer.actions.getBestOfferIdsForActiveTradingPairEpic());
       dispatch(platformReducer.actions.setGlobalFormLockDisabled());
     });
 

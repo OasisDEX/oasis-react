@@ -205,15 +205,7 @@ export const reducer = {
             return tradingPairOffers.updateIn(["sellOffers"], sellOffers =>
               sellOffers.push(offer)
             );
-          default: {
-            console.log("this should never happen !!!", {
-              offer,
-              baseToken,
-              quoteToken,
-              offerType
-            });
-            return tradingPairOffers;
-          }
+          default: { return tradingPairOffers; }
         }
       }
     );
