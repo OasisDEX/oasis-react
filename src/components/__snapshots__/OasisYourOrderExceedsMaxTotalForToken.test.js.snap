@@ -6,6 +6,10 @@ exports[`(Component) OasisYourOrderExceedsMaxTotalForToken should render 1`] = `
   color="danger"
   icon="warning"
 >
-  Your order total exceeds max order total set for this token
+  <span
+    className=""
+  >
+    Your order total exceeds max order total set for this token
+  </span>
 </InfoBoxWithIco>
 `;
