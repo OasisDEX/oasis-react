@@ -3,11 +3,12 @@ import createContractInstance from "../utils/contracts/createContractInstance";
 
 const config = require("./../configs");
 
-const erc20Abi = require("./../contracts/abi/standard-token/erc20.json");
-const WEthAbi = require("./../contracts/abi/standard-token/ds-eth-token.json");
-const TokenWrapperAbi = require("./../contracts/abi/token-wrapper/token-wrapper.json");
+const erc20Abi = require("./../contracts/abi/standard-token/erc20");
+const WEthAbi = require("./../contracts/abi/standard-token/ds-eth-token");
+const TokenWrapperAbi = require("./../contracts/abi/token-wrapper/token-wrapper");
 const MatchingMarketAbi = require("./../contracts/abi/maker-otc/matching-market");
 const DepositBrokerAbi = require("./../contracts/abi/token-wrapper/deposit-broker");
+const OTCSupportContractAbi = require("../contracts/abi/otc-support-methods/otc-support-methods");
 import { fromJS } from "immutable";
 import web3 from "./web3";
 import {
@@ -63,6 +64,12 @@ const init = networkName => {
     marketDeploymentAddress,
     true
   );
+
+  const OTCSupportMethods = loadContact(
+    OTCSupportContractAbi.interface,
+    config.otcSupportMethods[networkName].address
+  );
+
   // const WGNTNoProxy = loadContact(
   //   TokenWrapperAbi.interface,
   //   tokencontractsDeploymentAdressessList["W-GNT"],
@@ -73,7 +80,8 @@ const init = networkName => {
     erc20Abi,
     WEthAbi,
     TokenWrapperAbi,
-    DepositBrokerAbi
+    DepositBrokerAbi,
+    OTCSupportContractAbi
   });
 
   contracts = Object.freeze({
@@ -91,6 +99,7 @@ const init = networkName => {
       // [TOKEN_WRAPPED_GNT]: WGNTNoProxy
     },
     marketNoProxy,
+    OTCSupportMethods,
     abiList,
     createContractInstance
   });
@@ -128,6 +137,15 @@ const getMarketContractInstance = () => {
   }
 };
 
+const getOTCSupportMethodsContractInstance = () => {
+  if (contracts.OTCSupportMethods) {
+    return contracts.OTCSupportMethods;
+  } else {
+    throw Error(`Contract for *OTCSupportMethodsContract* not found!`);
+  }
+};
+
+
 const getTokenContractsList = () => contracts.tokens;
 
 const getMarketNoProxyContractInstance = () => contracts.marketNoProxy;
@@ -150,7 +168,8 @@ export {
   getMarketNoProxyContractInstance,
   getTokenNoProxyContractInstance,
   initDepositBrokerContract,
-  areContractsInitialized
+  areContractsInitialized,
+  getOTCSupportMethodsContractInstance
 };
 
 export default {

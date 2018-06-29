@@ -74,8 +74,8 @@ export const subscribeLatestBlockFilterEpic = () => async (
     dispatch(transactionsReducer.actions.getCurrentTxNonceEpic());
     dispatch(transactionsReducer.actions.getCurrentGasPrice());
     if (areContractsInitialized && tokens.activeTradingPair(getState())) {
-      dispatch(offersReducer.actions.getBestOfferIdsForActiveTradingPairEpic());
       if (offers.activeTradingPairOffersInitiallyLoaded(getState())) {
+        dispatch(offersReducer.actions.getBestOfferIdsForActiveTradingPairEpic());
         dispatch(
           balancesReducer.actions.syncTokenBalances(
             getTokenContractsList(),

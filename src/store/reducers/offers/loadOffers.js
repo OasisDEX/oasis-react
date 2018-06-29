@@ -1,8 +1,14 @@
 import { createPromiseActions } from "../../../utils/createPromiseActions";
 import { syncOffer } from "./syncOfferEpic";
-import { getBestOffer, getWorseOffer } from "./syncOffersEpic";
+import { getBestOffer } from "./syncOffersEpic";
 import { Map } from "immutable";
 import { SYNC_STATUS_COMPLETED, SYNC_STATUS_PENDING } from "../../../constants";
+import {
+  getMarketContractInstance,
+  getOTCSupportMethodsContractInstance,
+  getTokenContractInstance,
+} from '../../../bootstrap/contracts';
+import offersReducer from './index';
 
 export const loadSellOffers = createPromiseActions("OFFERS/LOAD_SELL_OFFERS");
 export const loadSellOffersEpic = (
@@ -10,23 +16,29 @@ export const loadSellOffersEpic = (
   sellToken,
   buyToken,
   {
+    // eslint-disable-next-line no-unused-vars
     doGetBestOffer = getBestOffer,
     doSyncOffer = syncOffer,
-    doGetWorseOffer = getWorseOffer
   } = {}
 ) => async dispatch => {
-  const sellOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
+  dispatch(offersReducer.actions.getBestOfferIdsForActiveTradingPairEpic());
   try {
+    const sellOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
+    const sellOffersLoadPromisesList = [];
+    getOTCSupportMethodsContractInstance().getOffers(
+      getMarketContractInstance().address,
+      getTokenContractInstance(sellToken).address,
+      getTokenContractInstance(buyToken).address,
+    ).then(
+      res => res.filter(offerId => offerId.gt(0) ? offerId: null).forEach(
+        offerId => dispatch(doSyncOffer(offerId.toString()))
+      )
+    );
     dispatch(loadSellOffers.pending(sellOffersTradingPair));
-    let currentSellOfferId = (await dispatch(
-      doGetBestOffer(sellToken, buyToken)
-    )).value.toNumber();
-    while (currentSellOfferId !== 0) {
-      dispatch(doSyncOffer(currentSellOfferId));
-      currentSellOfferId = (await dispatch(
-        doGetWorseOffer(currentSellOfferId)
-      )).value.toNumber();
-    }
+    Promise.all(sellOffersLoadPromisesList).then(
+      () => dispatch(loadSellOffers.fulfilled(sellOffersTradingPair))
+    );
+
     dispatch(loadSellOffers.fulfilled(sellOffersTradingPair));
     return loadSellOffers;
   } catch (e) {
@@ -40,25 +52,28 @@ export const loadBuyOffersEpic = (
   sellToken,
   buyToken,
   {
+// eslint-disable-next-line no-unused-vars
     doGetBestOffer = getBestOffer,
     doSyncOffer = syncOffer,
-    doGetWorseOffer = getWorseOffer
   } = {}
 ) => async dispatch => {
-  const buyOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
   try {
+    const buyOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
     dispatch(loadBuyOffers.pending(buyOffersTradingPair));
-    let currentBuyOfferId = (await dispatch(
-      doGetBestOffer(buyToken, sellToken)
-    )).value.toNumber();
-    while (currentBuyOfferId !== 0) {
-      dispatch(doSyncOffer(currentBuyOfferId));
-      currentBuyOfferId = (await dispatch(
-        doGetWorseOffer(currentBuyOfferId)
-      )).value.toNumber();
-    }
-    dispatch(loadBuyOffers.fulfilled(buyOffersTradingPair));
+    const buyOffersLoadPromisesList = [];
+    getOTCSupportMethodsContractInstance().getOffers(
+      getMarketContractInstance().address,
+      getTokenContractInstance(buyToken).address,
+      getTokenContractInstance(sellToken).address
+    ).then(
+      res => res.filter(offerId => offerId.gt(0) ? offerId : null).forEach(offerId => {
+        buyOffersLoadPromisesList.push(dispatch(doSyncOffer(offerId.toString())))
+      })
+    );
 
+    Promise.all(buyOffersLoadPromisesList).then(
+      () => dispatch(loadBuyOffers.fulfilled(buyOffersTradingPair))
+    );
     return loadBuyOffers;
   } catch (e) {
     dispatch(loadBuyOffers.rejected(e));

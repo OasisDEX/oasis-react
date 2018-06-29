@@ -26,7 +26,7 @@ export const  syncOffer = (
 ) => async (dispatch, getState) => {
   dispatch(doLoadOffer(offerId)).then(
     ({ value: offer }) => {
-
+      console.log({offer})
       const [
         sellHowMuch,
         sellWhichTokenAddress,
@@ -64,11 +64,10 @@ export const  syncOffer = (
             )
           )
         );
-
-        return {
+        Promise.resolve({
           offer,
           offerMeta: { baseToken, quoteToken, offerType }
-        };
+        });
       } else {
         dispatch(
           attemptToSyncRemovedOffer({ offerId, syncType, previousOfferState })
@@ -86,7 +85,6 @@ export const  syncOffer = (
           }
         );
       }
-
     }
   )
 };

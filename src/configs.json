@@ -23,6 +23,14 @@
       "blockNumber": 4751582
     }
   },
+  "otcSupportMethods": {
+    "kovan": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "main": {
+      "address": "0x3c48840b89a24dd6f540dd2e509c0db93d3fdfad"
+    }
+  },
   "tokens": {
     "kovan": {
       "W-ETH": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",

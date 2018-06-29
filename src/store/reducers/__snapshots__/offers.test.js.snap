@@ -1,12 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`load(Buy/Sell)OffersEpic buy(0) 1`] = `
-Object {
-  "fulfilled": [Function],
-  "pending": [Function],
-  "rejected": [Function],
-}
-`;
+exports[`load(Buy/Sell)OffersEpic buy(0) 1`] = `undefined`;
 
 exports[`load(Buy/Sell)OffersEpic buy(0) 2`] = `
 Array [
@@ -18,24 +12,16 @@ Array [
     "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
   },
   Object {
-    "payload": Object {
-      "baseToken": "MKR",
-      "quoteToken": "W-ETH",
-    },
+    "error": true,
+    "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
     "type": Array [
-      "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
+      "OFFERS/LOAD_BUY_OFFERS_REJECTED",
     ],
   },
 ]
 `;
 
-exports[`load(Buy/Sell)OffersEpic buy(1) 1`] = `
-Object {
-  "fulfilled": [Function],
-  "pending": [Function],
-  "rejected": [Function],
-}
-`;
+exports[`load(Buy/Sell)OffersEpic buy(1) 1`] = `undefined`;
 
 exports[`load(Buy/Sell)OffersEpic buy(1) 2`] = `
 Array [
@@ -47,30 +33,16 @@ Array [
     "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
   },
   Object {
-    "payload": Array [
-      900,
-    ],
-    "type": "MOCK___SYNC_OFFER",
-  },
-  Object {
-    "payload": Object {
-      "baseToken": "MKR",
-      "quoteToken": "W-ETH",
-    },
+    "error": true,
+    "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
     "type": Array [
-      "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
+      "OFFERS/LOAD_BUY_OFFERS_REJECTED",
     ],
   },
 ]
 `;
 
-exports[`load(Buy/Sell)OffersEpic buy(2) 1`] = `
-Object {
-  "fulfilled": [Function],
-  "pending": [Function],
-  "rejected": [Function],
-}
-`;
+exports[`load(Buy/Sell)OffersEpic buy(2) 1`] = `undefined`;
 
 exports[`load(Buy/Sell)OffersEpic buy(2) 2`] = `
 Array [
@@ -82,129 +54,52 @@ Array [
     "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
   },
   Object {
-    "payload": Array [
-      800,
-    ],
-    "type": "MOCK___SYNC_OFFER",
-  },
-  Object {
-    "payload": Array [
-      700,
-    ],
-    "type": "MOCK___SYNC_OFFER",
-  },
-  Object {
-    "payload": Object {
-      "baseToken": "MKR",
-      "quoteToken": "W-ETH",
-    },
+    "error": true,
+    "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
     "type": Array [
-      "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
+      "OFFERS/LOAD_BUY_OFFERS_REJECTED",
     ],
   },
 ]
 `;
 
-exports[`load(Buy/Sell)OffersEpic sell(0) 1`] = `
-Object {
-  "fulfilled": [Function],
-  "pending": [Function],
-  "rejected": [Function],
-}
-`;
+exports[`load(Buy/Sell)OffersEpic sell(0) 1`] = `undefined`;
 
 exports[`load(Buy/Sell)OffersEpic sell(0) 2`] = `
 Array [
   Object {
-    "payload": Object {
-      "baseToken": "MKR",
-      "quoteToken": "W-ETH",
-    },
-    "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
-  },
-  Object {
-    "payload": Object {
-      "baseToken": "MKR",
-      "quoteToken": "W-ETH",
-    },
+    "error": true,
+    "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
     "type": Array [
-      "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
+      "OFFERS/LOAD_SELL_OFFERS_REJECTED",
     ],
   },
 ]
 `;
 
-exports[`load(Buy/Sell)OffersEpic sell(1) 1`] = `
-Object {
-  "fulfilled": [Function],
-  "pending": [Function],
-  "rejected": [Function],
-}
-`;
+exports[`load(Buy/Sell)OffersEpic sell(1) 1`] = `undefined`;
 
 exports[`load(Buy/Sell)OffersEpic sell(1) 2`] = `
 Array [
   Object {
-    "payload": Object {
-      "baseToken": "MKR",
-      "quoteToken": "W-ETH",
-    },
-    "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
-  },
-  Object {
-    "payload": Array [
-      900,
-    ],
-    "type": "MOCK___SYNC_OFFER",
-  },
-  Object {
-    "payload": Object {
-      "baseToken": "MKR",
-      "quoteToken": "W-ETH",
-    },
+    "error": true,
+    "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
     "type": Array [
-      "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
+      "OFFERS/LOAD_SELL_OFFERS_REJECTED",
     ],
   },
 ]
 `;
 
-exports[`load(Buy/Sell)OffersEpic sell(2) 1`] = `
-Object {
-  "fulfilled": [Function],
-  "pending": [Function],
-  "rejected": [Function],
-}
-`;
+exports[`load(Buy/Sell)OffersEpic sell(2) 1`] = `undefined`;
 
 exports[`load(Buy/Sell)OffersEpic sell(2) 2`] = `
 Array [
   Object {
-    "payload": Object {
-      "baseToken": "MKR",
-      "quoteToken": "W-ETH",
-    },
-    "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
-  },
-  Object {
-    "payload": Array [
-      800,
-    ],
-    "type": "MOCK___SYNC_OFFER",
-  },
-  Object {
-    "payload": Array [
-      700,
-    ],
-    "type": "MOCK___SYNC_OFFER",
-  },
-  Object {
-    "payload": Object {
-      "baseToken": "MKR",
-      "quoteToken": "W-ETH",
-    },
+    "error": true,
+    "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
     "type": Array [
-      "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
+      "OFFERS/LOAD_SELL_OFFERS_REJECTED",
     ],
   },
 ]
