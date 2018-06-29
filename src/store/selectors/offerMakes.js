@@ -120,12 +120,12 @@ const activeOfferMakeSellToken = createSelector(activeOfferMakePure, state =>
 const isOfferMakeModalOpen = createSelector(
   offerMakes,
   reselect.getProps,
-  (state, offerMakeType) => {
-    return state.getIn([
+  (state) => memoize(offerMakeType =>
+    state.getIn([
       offerMakeToFormName(offerMakeType),
       "isOfferMakeModalOpen"
-    ]);
-  }
+    ])
+  )
 );
 
 const makeFormValuesSelector = formName => {

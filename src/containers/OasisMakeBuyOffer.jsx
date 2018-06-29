@@ -131,7 +131,7 @@ export function mapStateToProps(state) {
       tokens.activeTradingPair(state) && platform.contractsLoaded(state)
         ? offerMakes.canMakeOffer(state, MAKE_BUY_OFFER, true)
         : false,
-    isModalOpen: offerMakes.isOfferMakeModalOpen(state, MAKE_BUY_OFFER),
+    isModalOpen: offerMakes.isOfferMakeModalOpen(state)(MAKE_BUY_OFFER),
     activeTradingPair: tokens.activeTradingPair(state),
     contractsLoaded: platform.contractsLoaded(state),
     isPriceSet: offerMakes.isMakeBuyOfferPriceSet(state),
