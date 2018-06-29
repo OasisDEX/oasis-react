@@ -334,7 +334,7 @@ OfferMakeForm.defaultProps = defaultProps;
 
 export function mapStateToProps(state, props) {
   return {
-    currentFormValues: offerMakes.currentFormValues(state, props.form),
+    currentFormValues: offerMakes.currentFormValues(state)(props.form),
     activeTradingPairPrecision: tokens.precision(state),
     hasSufficientTokenAmount: offerMakes.hasSufficientTokenAmount(
       state,

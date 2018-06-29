@@ -118,16 +118,10 @@ const getOfferFormValuesByOfferType = createSelector((state, offerType) => {
       formValues = offerTakes.takeFormValuesSelector(state, ...fields);
       break;
     case MAKE_BUY_OFFER:
-      formValues = offerMakes.currentFormValues(
-        state,
-        MAKE_BUY_OFFER_FORM_NAME
-      );
+      formValues = offerMakes.currentFormValues(state)(MAKE_BUY_OFFER_FORM_NAME);
       break;
     case MAKE_SELL_OFFER:
-      formValues = offerMakes.currentFormValues(
-        state,
-        MAKE_SELL_OFFER_FORM_NAME
-      );
+      formValues = offerMakes.currentFormValues(state)(MAKE_SELL_OFFER_FORM_NAME);
       break;
   }
   return fromJS(formValues);

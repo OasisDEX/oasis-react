@@ -1,4 +1,4 @@
-import { createSelector } from "reselect";
+import { createSelector, createStructuredSelector } from "reselect";
 import { formValueSelector } from "redux-form/immutable";
 import balances from "./balances";
 import transactions from "./transactions";
@@ -17,13 +17,18 @@ import network from "./network";
 import { fromJS, Map } from "immutable";
 import limits from "./limits";
 import isNumeric from "../../utils/numbers/isNumeric";
+import {memoize} from 'lodash';
 
 const offerMakes = state => state.get("offerMakes");
 
+const formFields = createStructuredSelector({
+  [MAKE_BUY_OFFER_FORM_NAME]: reselect.formFieldsSelector(MAKE_BUY_OFFER_FORM_NAME, 'volume', 'price', 'total'),
+  [MAKE_SELL_OFFER_FORM_NAME]: reselect.formFieldsSelector(MAKE_SELL_OFFER_FORM_NAME, 'volume', 'price', 'total'),
+})
+
 const currentFormValues = createSelector(
-  (rootState, formName) =>
-    makeFormValuesSelector(formName)(rootState, "volume", "price", "total"),
-  formValues => formValues
+  formFields,
+  formValues => memoize(formName => formValues[formName])
 );
 
 //TODO: move to utils
@@ -53,7 +58,8 @@ const activeOfferMakePure = createSelector(
   tokens.activeTradingPair,
   network.tokenAddresses,
   currentFormValues,
-  (offerMakeFormName, activeTradingPair, tokenAddresses, { total, volume }) => {
+  (offerMakeFormName, activeTradingPair, tokenAddresses, currentFormValues) => {
+    const { total, volume } = currentFormValues(offerMakeFormName);
     const { baseToken, quoteToken } = activeTradingPair.toJS
       ? activeTradingPair.toJS()
       : activeTradingPair;
@@ -317,11 +323,11 @@ const getActiveOfferMakeAllowanceStatus = createSelector(
 );
 
 const isMakeBuyOfferPriceSet = createSelector(
-  rootState => currentFormValues(rootState, MAKE_BUY_OFFER_FORM_NAME),
+  rootState => currentFormValues(rootState)(MAKE_BUY_OFFER_FORM_NAME),
   ({ price }) => Boolean(price)
 );
 const isMakeSellOfferPriceSet = createSelector(
-  rootState => currentFormValues(rootState, MAKE_SELL_OFFER_FORM_NAME),
+  rootState => currentFormValues(rootState)(MAKE_SELL_OFFER_FORM_NAME),
   ({ price }) => Boolean(price)
 );
 

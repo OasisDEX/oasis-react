@@ -65,7 +65,7 @@ const sellMaxEpic = (
   const balance = activeBaseTokenBalance(getState());
   const formName = offerMakeToFormName(offerMakeType);
 
-  const { price } = currentFormValues(getState(), formName);
+  const { price } = currentFormValues(getState())(formName);
 
   const usersBaseTokenBalanceBN = web3.toBigNumber(web3.fromWei(balance));
   const priceBN = web3.toBigNumber(price.toString());
@@ -323,7 +323,7 @@ const getTransactionGasEstimate = createAction(
         convertToTokenPrecision(buyAmount, getTokenByAddress(buyToken)),
         buyToken,
         0,
-        true, // isCloseMatchingEnabled 
+        true, // isCloseMatchingEnabled
         { to: toAddress, gasLimit: DEFAULT_GAS_LIMIT },
         (e, estimation) => {
           if (e) {
