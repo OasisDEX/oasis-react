@@ -2,6 +2,7 @@ import { createSelector } from "reselect";
 import BigNumber from "bignumber.js";
 import reselect from "../../utils/reselect";
 import web3 from "../../bootstrap/web3";
+import {memoize} from "lodash";
 import {
   ETH_UNIT_ETHER,
   TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED,
@@ -33,6 +34,22 @@ const tokenBalance = createSelector(
       return null;
     }
   }
+);
+
+const tokenBalanceMemo = createSelector(
+  tokenBalances,
+  s => memoize((tokenName, balanceUnit = ETH_UNIT_ETHER, toBigNumber = true) => {
+    const tokenBalance = s.get(tokenName);
+    if (tokenBalance) {
+      if (toBigNumber) {
+        return web3.fromWei(new BigNumber(s.get(tokenName), 10), balanceUnit);
+      } else {
+        return web3.fromWei(s.get(tokenName), balanceUnit);
+      }
+    } else {
+      return null;
+    }
+  })
 );
 
 const tokenAllowanceTrustStatus = createSelector(
@@ -104,6 +121,7 @@ export default {
   tokenBalances,
   // tokenAllowance,
   tokenBalance,
+  tokenBalanceMemo,
   ethBalance,
   tokenAllowanceTrustStatus,
   activeBaseTokenBalance,

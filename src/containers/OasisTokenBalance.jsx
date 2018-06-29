@@ -41,7 +41,7 @@ export class OasisTokenBalanceWrapper extends PureComponent {
 
 export function mapStateToProps(state, { tokenName }) {
   return {
-    balance: balances.tokenBalance(state, { tokenName, balanceUnit: ETH_UNIT_ETHER, toBigNumber: false })
+    balance: balances.tokenBalanceMemo(state)(tokenName, ETH_UNIT_ETHER, false)
   };
 }
 export function mapDispatchToProps(dispatch) {
