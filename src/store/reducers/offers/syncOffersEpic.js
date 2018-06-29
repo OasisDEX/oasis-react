@@ -19,6 +19,7 @@ import { getTradingPairOfferCount } from "./getTradingPairOffersCount";
 import { Map } from "immutable";
 import network from "../../selectors/network";
 import { reSyncOffersEpic } from "./reSyncOffers";
+import offersReducer from './index';
 
 export const tradingPairOffersAlreadyLoaded = createAction(
   "OFFERS/TRADING_PAIR_ALREADY_LOADED"
@@ -67,6 +68,7 @@ export const syncOffersEpic = (
     doLoadSellOffersEpic = loadSellOffersEpic
   } = {}
 ) => async (dispatch, getState) => {
+  dispatch(offersReducer.actions.getBestOfferIdsForActiveTradingPairEpic());
   if (
     offers.activeTradingPairOffersInitialLoadStatus(getState()) !==
     SYNC_STATUS_PRISTINE

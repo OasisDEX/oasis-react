@@ -8,7 +8,7 @@
         { "name": "buyToken", "type": "address" }
       ],
       "name": "getOffers",
-      "outputs": [{ "name": "offers", "type": "uint256[100]" }],
+      "outputs": [{ "name": "offers", "type": "bytes32[500]" }],
       "payable": false,
       "stateMutability": "view",
       "type": "function"
@@ -37,7 +37,7 @@
         { "name": "lastOfferId", "type": "uint256" }
       ],
       "name": "getOffers",
-      "outputs": [{ "name": "offers", "type": "uint256[100]" }],
+      "outputs": [{ "name": "offers", "type": "bytes32[500]" }],
       "payable": false,
       "stateMutability": "view",
       "type": "function"

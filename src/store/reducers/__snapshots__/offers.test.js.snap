@@ -68,6 +68,13 @@ exports[`load(Buy/Sell)OffersEpic sell(0) 1`] = `undefined`;
 exports[`load(Buy/Sell)OffersEpic sell(0) 2`] = `
 Array [
   Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
+  },
+  Object {
     "error": true,
     "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
     "type": Array [
@@ -82,6 +89,13 @@ exports[`load(Buy/Sell)OffersEpic sell(1) 1`] = `undefined`;
 exports[`load(Buy/Sell)OffersEpic sell(1) 2`] = `
 Array [
   Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
+  },
+  Object {
     "error": true,
     "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
     "type": Array [
@@ -95,6 +109,13 @@ exports[`load(Buy/Sell)OffersEpic sell(2) 1`] = `undefined`;
 
 exports[`load(Buy/Sell)OffersEpic sell(2) 2`] = `
 Array [
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
+  },
   Object {
     "error": true,
     "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
@@ -627,6 +648,10 @@ exports[`syncOffersEpic main 1`] = `undefined`;
 exports[`syncOffersEpic main 2`] = `
 Array [
   Object {
+    "payload": Promise {},
+    "type": "OFFERS/GET_BEST_OFFER",
+  },
+  Object {
     "payload": Object {
       "syncStartBlockNumber": 1,
       "tradingPair": Object {
@@ -642,6 +667,10 @@ Array [
       "quoteToken": "W-ETH",
     },
     "type": "OFFERS/RESET_OFFERS",
+  },
+  Object {
+    "payload": Promise {},
+    "type": "OFFERS/GET_BEST_OFFER",
   },
   Object {
     "payload": Array [
