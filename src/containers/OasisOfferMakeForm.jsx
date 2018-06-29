@@ -336,10 +336,7 @@ export function mapStateToProps(state, props) {
   return {
     currentFormValues: offerMakes.currentFormValues(state)(props.form),
     activeTradingPairPrecision: tokens.precision(state),
-    hasSufficientTokenAmount: offerMakes.hasSufficientTokenAmount(
-      state,
-      props.offerMakeType
-    ),
+    hasSufficientTokenAmount: offerMakes.hasSufficientTokenAmount(state)(props.offerMakeType),
     activeBaseTokenBalance: balances.activeBaseTokenBalance(state),
     activeQuoteTokenBalance: balances.activeQuoteTokenBalance(state),
     globalFormLock: platform.globalFormLock(state)

@@ -175,7 +175,7 @@ const hasSufficientTokenAmountByOfferType = createSelector(
         return offerTakes.hasSufficientTokenAmount(state, offerType);
       case MAKE_BUY_OFFER:
       case MAKE_SELL_OFFER:
-        return offerMakes.hasSufficientTokenAmount(state, offerType);
+        return offerMakes.hasSufficientTokenAmount(state)(offerType);
     }
   },
   offerFormValues => offerFormValues

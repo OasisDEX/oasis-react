@@ -126,10 +126,7 @@ export function mapStateToProps(state) {
       state,
       MAKE_SELL_OFFER
     ),
-    hasSufficientTokenAmount: offerMakes.hasSufficientTokenAmount(
-      state,
-      MAKE_SELL_OFFER
-    ),
+    hasSufficientTokenAmount: offerMakes.hasSufficientTokenAmount(state)(MAKE_SELL_OFFER),
     canMakeOffer:
       tokens.activeTradingPair(state) && platform.contractsLoaded(state)
         ? offerMakes.canMakeOffer(state, MAKE_SELL_OFFER, true)

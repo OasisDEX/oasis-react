@@ -134,20 +134,14 @@ const makeFormValuesSelector = formName => {
 
 const hasSufficientTokenAmount = createSelector(
   balances.tokenBalances,
-  reselect.getProps,
-  (rootState, offerMakeType) =>
-    makeFormValuesSelector(offerMakeToFormName(offerMakeType))(
-      rootState,
-      "volume",
-      "total"
-    ),
+  currentFormValues,
   tokens.activeTradingPair,
   (
     tokenBalances,
-    activeOfferMakeType,
-    { total, volume },
+    currentFormValues,
     { baseToken, quoteToken }
-  ) => {
+  ) => memoize(activeOfferMakeType => {
+    const { total, volume } = currentFormValues(offerMakeToFormName(activeOfferMakeType));
     if (!volume) {
       return true;
     } else {
@@ -166,7 +160,7 @@ const hasSufficientTokenAmount = createSelector(
         }
       }
     }
-  }
+  })
 );
 
 const isVolumeOrPriceEmptyOrZero = createSelector(
@@ -269,6 +263,7 @@ const canMakeOffer = createSelector(
   isVolumeOrPriceEmptyOrZero,
   (rootState, offerMakeType) => isOfferBelowLimit(rootState, offerMakeType),
   isTotalOverTheTokenLimit,
+  (s, offerMakeType) => offerMakeType,
   (
     hasSufficientTokenAmount,
     canSendTransaction,
@@ -276,11 +271,12 @@ const canMakeOffer = createSelector(
     isTokenEnabled,
     isVolumeOrPriceEmptyOrZero,
     isBelowLimit,
-    isOverTheLimit
+    isOverTheLimit,
+    offerMakeType,
   ) => {
     if (
       isVolumeOrPriceEmptyOrZero ||
-      !hasSufficientTokenAmount ||
+      !hasSufficientTokenAmount(offerMakeType) ||
       // !canSendTransaction ||
       !isBuyEnabled ||
       !isTokenEnabled ||
@@ -289,7 +285,7 @@ const canMakeOffer = createSelector(
     ) {
       return false;
     } else {
-      return hasSufficientTokenAmount;
+      return hasSufficientTokenAmount(offerMakeType);
     }
   }
 );
