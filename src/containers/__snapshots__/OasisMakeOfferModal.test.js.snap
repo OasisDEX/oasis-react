@@ -107,6 +107,7 @@ Object {
   "hasExceededGasLimit": false,
   "isPriceSet": true,
   "isTokenTradingEnabled": false,
+  "isTotalOverTheTokenMax": undefined,
   "marketAddress": "0x8cf1cab422a0b6b554077a361f8419cdf122a9f9",
   "sellToken": "DAI",
 }

@@ -30,6 +30,7 @@ import OasisTransactionStatusWrapperInfoBox from "./OasisTransactionStatusInfoBo
 import { getActiveOfferAllowanceStatus, isPriceSet } from "../store/selectors";
 import OasisOfferBelowDustLimitWrapper from "./OasisOfferBelowDustLimit";
 import InfoBoxWithIco from "../components/InfoBoxWithIco";
+import OasisYourOrderExceedsMaxTotalForToken from "../components/OasisYourOrderExceedsMaxTotalForToken";
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -183,6 +184,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
       quoteToken,
       offerMakeType,
       form,
+      isTotalOverTheTokenMax,
       isTokenTradingEnabled
     } = this.props;
     const { newAllowanceStatus } = this.state;
@@ -196,14 +198,16 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
           disableForm={this.state.disableForm}
           onFormChange={this.onFormChange}
         />
-        <OasisOfferSummary
-          disableBalanceWarning={
-            this.isOfferMakeCompleted() ||
-            this.isTransactionPendingOrAwaitingAcceptance() ||
-            (false === isTokenTradingEnabled && !newAllowanceStatus)
-          }
-          offerType={offerMakeType}
-        />
+        {!isTotalOverTheTokenMax ? (
+          <OasisOfferSummary
+            disableBalanceWarning={
+              this.isOfferMakeCompleted() ||
+              this.isTransactionPendingOrAwaitingAcceptance() ||
+              (false === isTokenTradingEnabled && !newAllowanceStatus)
+            }
+            offerType={offerMakeType}
+          />
+        ) : null}
       </div>
     );
   }
@@ -244,6 +248,13 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
     );
   }
 
+  renderOverTheMaxTotalWarning() {
+    const { isTotalOverTheTokenMax } = this.props;
+    return isTotalOverTheTokenMax ? (
+      <OasisYourOrderExceedsMaxTotalForToken />
+    ) : null;
+  }
+
   render() {
     const { baseToken, offerMakeType, sellToken } = this.props;
 
@@ -279,6 +290,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
           </div>
           {this.renderTransactionStatus()}
           {this.renderSetTokenAllowance()}
+          {this.renderOverTheMaxTotalWarning()}
           <div className={styles.footer}>
             <OasisButton
               disabled={this.isTransactionPendingOrAwaitingAcceptance()}
@@ -305,6 +317,10 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
 
 export function mapStateToProps(state, props) {
   return {
+    isTotalOverTheTokenMax: offerMakes.isTotalOverTheTokenLimit(
+      state,
+      props.offerMakeType
+    ),
     isTokenTradingEnabled: getActiveOfferAllowanceStatus(
       state,
       props.offerMakeType

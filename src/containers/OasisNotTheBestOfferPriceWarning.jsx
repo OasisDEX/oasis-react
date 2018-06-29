@@ -15,7 +15,7 @@ const propTypes = PropTypes && {
 export class OasisNotTheBestOfferPriceWarningWrapper extends PureComponent {
   render() {
     const { isBestOffer } = this.props;
-    return !isBestOffer ? (
+    return false === isBestOffer ? (
       <InfoBoxWithIco color="danger" icon="warning">
           WARNING: You have not chosen the best price available. Review the order book to find a better trade.
       </InfoBoxWithIco>

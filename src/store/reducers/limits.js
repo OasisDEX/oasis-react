@@ -2,17 +2,16 @@ import { createAction, handleActions } from "redux-actions";
 import { fromJS } from "immutable";
 import { fulfilled } from "../../utils/store";
 import { convertTo18Precision } from "../../utils/conversion";
-import { TOKEN_DAI, TOKEN_DIGIX, TOKEN_MAKER, TOKEN_RHOC, TOKEN_WRAPPED_ETH, TOKEN_WRAPPED_GNT } from '../../constants';
+import { TOKEN_DAI, TOKEN_DIGIX, TOKEN_MAKER, TOKEN_RHOC, TOKEN_WRAPPED_ETH } from '../../constants';
 
 const initialState = fromJS({
   limitsLoaded: false,
   tokens: {
-    [TOKEN_WRAPPED_ETH]: { minSell: null },
-    [TOKEN_DAI]:         { minSell: null },
-    [TOKEN_MAKER]:       { minSell: null },
-    [TOKEN_DIGIX]:       { minSell: null },
-    [TOKEN_WRAPPED_GNT]: { minSell: null },
-    [TOKEN_RHOC]:        { minSell: null },
+    [TOKEN_WRAPPED_ETH]: { minSell: null, maxSell: "100000000000000000000000" },
+    [TOKEN_DAI]:         { minSell: null, maxSell: "100000000000000000000000000" },
+    [TOKEN_MAKER]:       { minSell: null, maxSell: "100000000000000000000000" },
+    [TOKEN_DIGIX]:       { minSell: null, maxSell: null },
+    [TOKEN_RHOC]:        { minSell: null, maxSell: null },
   }
 });
 

@@ -49,9 +49,7 @@ exports[`(Container) OasisTakeOfferModal should render 1`] = `
         </div>
       </div>
       <div />
-      <div>
-        <Connect(OasisNotTheBestOfferPriceWarning) />
-      </div>
+      <div />
     </div>
     <div>
       <OasisButton

@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisYourOrderExceedsMaxTotalForToken should render 1`] = `
+<InfoBoxWithIco
+  alignItems="center"
+  color="danger"
+  icon="warning"
+>
+  Your order total exceeds max order total set for this token
+</InfoBoxWithIco>
+`;

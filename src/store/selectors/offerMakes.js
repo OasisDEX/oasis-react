@@ -228,6 +228,23 @@ const isOfferBelowLimit = createSelector(
   }
 );
 
+const isTotalOverTheTokenLimit = createSelector(
+   limits.activeTradingPairQuoteTokenMaxLimitInWei,
+  (rootState, offerMakeType) =>
+    makeFormValuesSelector(offerMakeToFormName(offerMakeType))(
+      rootState, "total",
+    ),
+  (tokenMaxSellLimitInWei, total) => {
+    if (tokenMaxSellLimitInWei === null) {
+      return null;
+    } else if (
+      isNumeric(tokenMaxSellLimitInWei) && isNumeric(total) && parseFloat(total) > 0
+    ) {
+      return web3.toBigNumber(web3.fromWei(tokenMaxSellLimitInWei)).lte(total);
+    }
+  }
+);
+
 const canMakeOffer = createSelector(
   hasSufficientTokenAmount,
   rootState => transactions.canSendTransaction(rootState),
@@ -245,13 +262,15 @@ const canMakeOffer = createSelector(
   },
   isVolumeOrPriceEmptyOrZero,
   (rootState, offerMakeType) => isOfferBelowLimit(rootState, offerMakeType),
+  isTotalOverTheTokenLimit,
   (
     hasSufficientTokenAmount,
     canSendTransaction,
     isBuyEnabled,
     isTokenEnabled,
     isVolumeOrPriceEmptyOrZero,
-    isBelowLimit
+    isBelowLimit,
+    isOverTheLimit
   ) => {
     if (
       isVolumeOrPriceEmptyOrZero ||
@@ -259,7 +278,8 @@ const canMakeOffer = createSelector(
       // !canSendTransaction ||
       !isBuyEnabled ||
       !isTokenEnabled ||
-      isBelowLimit
+      isBelowLimit ||
+      isOverTheLimit
     ) {
       return false;
     } else {
@@ -305,6 +325,7 @@ const isMakeSellOfferPriceSet = createSelector(
   ({ price }) => Boolean(price)
 );
 
+
 export default {
   state: offerMakes,
   selector,
@@ -327,5 +348,6 @@ export default {
   isMakeBuyOfferPriceSet,
   isMakeSellOfferPriceSet,
   isOfferBelowLimit,
-  hasExceededGasLimit
+  hasExceededGasLimit,
+  isTotalOverTheTokenLimit
 };
