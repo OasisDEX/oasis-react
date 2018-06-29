@@ -46,7 +46,7 @@ export class OasisOfferBelowDustLimitWrapper extends PureComponent {
 
 export function mapStateToProps(state, { offerType, tokenName }) {
   return {
-    isOfferBelowLimit: offerMakes.isOfferBelowLimit(state, offerType),
+    isOfferBelowLimit: offerMakes.isOfferBelowLimit(state, offerType)(offerType),
     tokenMinLimit: limits.tokenMinSellLimitInEther(state)(tokenName)
   };
 }
