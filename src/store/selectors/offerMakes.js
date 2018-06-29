@@ -244,13 +244,13 @@ const isTotalOverTheTokenLimit = createSelector(
   }
 );
 
-const canMakeOffer = createSelector(
-  hasSufficientTokenAmount,
-  rootState => transactions.canSendTransaction(rootState),
-  markets.isBuyEnabled,
-  (rootState, offerType, noIsTokenEnabledCheck) => {
+const checkTokenEnabled = createSelector(
+  s => s,
+  (...args) => args[1],
+  (...args) => args[2],
+  (rootState, offerType, skipTokenEnabledCheck) => {
     return (
-      noIsTokenEnabledCheck ||
+      skipTokenEnabledCheck ||
       balances.tokenAllowanceStatusForActiveMarket(rootState, {
         tokenName: activeOfferMakeSellToken(
           rootState,
@@ -259,6 +259,13 @@ const canMakeOffer = createSelector(
       })
     );
   },
+);
+
+const canMakeOffer = createSelector(
+  hasSufficientTokenAmount,
+  rootState => transactions.canSendTransaction(rootState),
+  markets.isBuyEnabled,
+  checkTokenEnabled,
   isVolumeOrPriceEmptyOrZero,
   isOfferBelowLimit,
   isTotalOverTheTokenLimit,
