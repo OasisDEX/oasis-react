@@ -199,7 +199,7 @@ const isOfferBelowLimit = createSelector(
       default:
         throw new Error("No offer make type provided!");
     }
-    return limits.tokenMinSellLimitInWei(rootState, tokenName);
+    return limits.tokenMinSellLimitInWei(rootState)(tokenName);
   },
   (rootState, offerMakeType) =>
     makeFormValuesSelector(offerMakeToFormName(offerMakeType))(

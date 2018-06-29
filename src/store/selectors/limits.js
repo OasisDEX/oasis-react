@@ -2,8 +2,9 @@ import {createSelector } from 'reselect';
 import tokens from './tokens';
 import web3 from '../../bootstrap/web3';
 import reselect from '../../utils/reselect';
-const limits = s => s.get('limits');
+import {memoize} from 'lodash';
 
+const limits = s => s.get('limits');
 
 const tokenLimitsList = createSelector(
   limits,
@@ -13,8 +14,9 @@ const tokenLimitsList = createSelector(
 
 const tokenMinSellLimitInWei = createSelector(
   tokenLimitsList,
-  reselect.getProps,
-  (s, tokenName) => s.getIn([tokenName, 'minSell'])
+  s => memoize(tokenName =>
+    s.getIn([tokenName, 'minSell'])
+  )
 );
 
 const tokenMaxSellLimitInWei = createSelector(
@@ -44,8 +46,9 @@ const tokenMaxSellLimitInEther = createSelector(
 
 const tokenMinSellLimitInEther = createSelector(
   tokenLimitsList,
-  reselect.getProps,
-  (s, tokenName) => web3.fromWei(s.getIn([tokenName, 'minSell']))
+  s => memoize(tokenName =>
+    web3.fromWei(s.getIn([tokenName, 'minSell']))
+  )
 );
 
 
