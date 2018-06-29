@@ -105,7 +105,7 @@ export function mapStateToProps(state, { offerType }) {
       state,
       offerType
     ),
-    isVolumeOrPriceEmptyOrZero: isVolumeOrPriceEmptyOrZero(state, offerType),
+    isVolumeOrPriceEmptyOrZero: isVolumeOrPriceEmptyOrZero(state)(offerType),
     isTokenTradingEnabled: getActiveOfferAllowanceStatus(state, offerType)
   };
 }

@@ -3,20 +3,20 @@ import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from '../../constants';
 import offerMakes from './offerMakes';
 import offerTakes from './offerTakes';
 import { createSelector } from "reselect";
+import {memoize} from 'lodash';
 
 const isVolumeOrPriceEmptyOrZero = createSelector(
-
-  (
-    rootState, offerType
-  ) => {
+  offerTakes.isVolumeEmptyOrZero,
+  offerMakes.isVolumeOrPriceEmptyOrZero,
+  (isVolumeEmptyOrZero, isVolumeOrPriceEmptyOrZero) => memoize(offerType => {
     switch (offerType) {
       case TAKE_SELL_OFFER:
       case TAKE_BUY_OFFER:
-        return offerTakes.isVolumeEmptyOrZero(rootState);
+        return isVolumeEmptyOrZero;
       case MAKE_SELL_OFFER:
       case MAKE_BUY_OFFER:
-        return offerMakes.isVolumeOrPriceEmptyOrZero(rootState, offerType);
+        return isVolumeOrPriceEmptyOrZero(offerType);
     }
-  }, allowanceStatus => Boolean(allowanceStatus)
+  })
 );
 export default isVolumeOrPriceEmptyOrZero;

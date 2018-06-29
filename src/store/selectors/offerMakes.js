@@ -164,16 +164,13 @@ const hasSufficientTokenAmount = createSelector(
 );
 
 const isVolumeOrPriceEmptyOrZero = createSelector(
-  (rootState, offerMakeType) =>
-    makeFormValuesSelector(offerMakeToFormName(offerMakeType))(
-      rootState,
-      "volume",
-      "price"
-    ),
-  ({ volume, price } = {}) =>
-    !isNumeric(price) ||
+  currentFormValues,
+  (currentFormValues) => memoize(offerMakeType => {
+    const { volume, price } = currentFormValues(offerMakeToFormName(offerMakeType));
+    return !isNumeric(price) ||
     web3.toBigNumber(price).lte(0) ||
     (!isNumeric(volume) || web3.toBigNumber(volume).lte(0))
+  })
 );
 
 const isOfferBelowLimit = createSelector(
@@ -275,7 +272,7 @@ const canMakeOffer = createSelector(
     offerMakeType,
   ) => {
     if (
-      isVolumeOrPriceEmptyOrZero ||
+      isVolumeOrPriceEmptyOrZero(offerMakeType) ||
       !hasSufficientTokenAmount(offerMakeType) ||
       // !canSendTransaction ||
       !isBuyEnabled ||

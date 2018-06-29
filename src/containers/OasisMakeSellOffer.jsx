@@ -135,7 +135,7 @@ export function mapStateToProps(state) {
     activeTradingPair: tokens.activeTradingPair(state),
     contractsLoaded: platform.contractsLoaded(state),
     isPriceSet: offerMakes.isMakeSellOfferPriceSet(state),
-    isVolumeEmptyOrZero: isVolumeOrPriceEmptyOrZero(state, MAKE_SELL_OFFER),
+    isVolumeEmptyOrZero: isVolumeOrPriceEmptyOrZero(state)(MAKE_SELL_OFFER),
     globalFormLock: platform.globalFormLock(state)
   };
 }
