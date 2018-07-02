@@ -307,10 +307,9 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
                 localStatus={this.state.txStatus}
                 txType={TX_OFFER_TAKE}
               />
-            ) : (
-              <div>{this.renderNotTheBestOfferWarning()}</div>
-            )}
+            ) : null}
             {this.renderOfferTakeWarning()}
+            {!this.state.txStatus && this.renderNotTheBestOfferWarning()}
           </div>
           <div className={styles.footer}>
             <OasisButton
