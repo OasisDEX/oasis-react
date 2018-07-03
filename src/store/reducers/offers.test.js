@@ -3,7 +3,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import each from 'jest-each';
-import {mockAction} from '../../utils/testHelpers';
+import {mockAction, dispatchMockAction} from '../../utils/testHelpers';
 
 import BigNumber from 'bignumber.js';
 import {Map, List} from 'immutable';
@@ -160,6 +160,10 @@ describe('syncOffersEpic', () => {
     }));
 
     const promise = store.dispatch(offers.actions.syncOffersEpic({baseToken: "MKR", quoteToken: "W-ETH"}, {
+      doGetBestOffer: (t1, t2) => async () => {
+        dispatchMockAction('OFFERS/GET_BEST_OFFER', store.dispatch)(t1, t2);
+        return {value: {"MKR": "1000", "W-ETH": "2000"}[t1]};
+      },
       doGetTradingPairOfferCount: () => async () => ({value: 10}),
       doLoadBuyOffersEpic: mockAction('OFFERS/LOAD_BUY_OFFERS'),
       doLoadSellOffersEpic: mockAction('OFFERS/LOAD_SELL_OFFERS'),

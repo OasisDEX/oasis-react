@@ -65,10 +65,11 @@ export const syncOffersEpic = (
   {
     doGetTradingPairOfferCount = getTradingPairOfferCount,
     doLoadBuyOffersEpic = loadBuyOffersEpic,
-    doLoadSellOffersEpic = loadSellOffersEpic
+    doLoadSellOffersEpic = loadSellOffersEpic,
+    doGetBestOffer = null,
   } = {}
 ) => async (dispatch, getState) => {
-  dispatch(offersReducer.actions.getBestOfferIdsForActiveTradingPairEpic());
+  dispatch(offersReducer.actions.getBestOfferIdsForActiveTradingPairEpic(doGetBestOffer ? {doGetBestOffer} : {}));
   if (
     offers.activeTradingPairOffersInitialLoadStatus(getState()) !==
     SYNC_STATUS_PRISTINE
