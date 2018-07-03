@@ -1,6 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`load(Buy/Sell)OffersEpic buy(0) 1`] = `undefined`;
+exports[`load(Buy/Sell)OffersEpic buy(0) 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
 
 exports[`load(Buy/Sell)OffersEpic buy(0) 2`] = `
 Array [
@@ -12,16 +18,24 @@ Array [
     "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
   },
   Object {
-    "error": true,
-    "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
     "type": Array [
-      "OFFERS/LOAD_BUY_OFFERS_REJECTED",
+      "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
     ],
   },
 ]
 `;
 
-exports[`load(Buy/Sell)OffersEpic buy(1) 1`] = `undefined`;
+exports[`load(Buy/Sell)OffersEpic buy(1) 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
 
 exports[`load(Buy/Sell)OffersEpic buy(1) 2`] = `
 Array [
@@ -33,16 +47,38 @@ Array [
     "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
   },
   Object {
-    "error": true,
-    "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
+    "payload": Array [
+      Object {
+        "buyHowMuch": 2,
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "offerId": 900,
+        "owner": null,
+        "sellHowMuch": 1,
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "timestamp": null,
+      },
+    ],
+    "type": "MOCK___SYNC_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
     "type": Array [
-      "OFFERS/LOAD_BUY_OFFERS_REJECTED",
+      "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
     ],
   },
 ]
 `;
 
-exports[`load(Buy/Sell)OffersEpic buy(2) 1`] = `undefined`;
+exports[`load(Buy/Sell)OffersEpic buy(2) 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
 
 exports[`load(Buy/Sell)OffersEpic buy(2) 2`] = `
 Array [
@@ -54,16 +90,52 @@ Array [
     "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
   },
   Object {
-    "error": true,
-    "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
+    "payload": Array [
+      Object {
+        "buyHowMuch": 2,
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "offerId": 800,
+        "owner": null,
+        "sellHowMuch": 1,
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "timestamp": null,
+      },
+    ],
+    "type": "MOCK___SYNC_OFFER",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "buyHowMuch": 2,
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "offerId": 700,
+        "owner": null,
+        "sellHowMuch": 1,
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "timestamp": null,
+      },
+    ],
+    "type": "MOCK___SYNC_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
     "type": Array [
-      "OFFERS/LOAD_BUY_OFFERS_REJECTED",
+      "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
     ],
   },
 ]
 `;
 
-exports[`load(Buy/Sell)OffersEpic sell(0) 1`] = `undefined`;
+exports[`load(Buy/Sell)OffersEpic sell(0) 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
 
 exports[`load(Buy/Sell)OffersEpic sell(0) 2`] = `
 Array [
@@ -75,16 +147,24 @@ Array [
     "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
   },
   Object {
-    "error": true,
-    "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
     "type": Array [
-      "OFFERS/LOAD_SELL_OFFERS_REJECTED",
+      "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
     ],
   },
 ]
 `;
 
-exports[`load(Buy/Sell)OffersEpic sell(1) 1`] = `undefined`;
+exports[`load(Buy/Sell)OffersEpic sell(1) 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
 
 exports[`load(Buy/Sell)OffersEpic sell(1) 2`] = `
 Array [
@@ -96,16 +176,38 @@ Array [
     "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
   },
   Object {
-    "error": true,
-    "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
+    "payload": Array [
+      Object {
+        "buyHowMuch": 2,
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "offerId": 900,
+        "owner": null,
+        "sellHowMuch": 1,
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "timestamp": null,
+      },
+    ],
+    "type": "MOCK___SYNC_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
     "type": Array [
-      "OFFERS/LOAD_SELL_OFFERS_REJECTED",
+      "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
     ],
   },
 ]
 `;
 
-exports[`load(Buy/Sell)OffersEpic sell(2) 1`] = `undefined`;
+exports[`load(Buy/Sell)OffersEpic sell(2) 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
 
 exports[`load(Buy/Sell)OffersEpic sell(2) 2`] = `
 Array [
@@ -117,10 +219,40 @@ Array [
     "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
   },
   Object {
-    "error": true,
-    "payload": [Error: Contract for *OTCSupportMethodsContract* not found!],
+    "payload": Array [
+      Object {
+        "buyHowMuch": 2,
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "offerId": 800,
+        "owner": null,
+        "sellHowMuch": 1,
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "timestamp": null,
+      },
+    ],
+    "type": "MOCK___SYNC_OFFER",
+  },
+  Object {
+    "payload": Array [
+      Object {
+        "buyHowMuch": 2,
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "offerId": 700,
+        "owner": null,
+        "sellHowMuch": 1,
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "timestamp": null,
+      },
+    ],
+    "type": "MOCK___SYNC_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
     "type": Array [
-      "OFFERS/LOAD_SELL_OFFERS_REJECTED",
+      "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
     ],
   },
 ]

@@ -16,14 +16,14 @@ export const loadSellOffersEpic = (
   sellToken,
   buyToken,
   {
-    doGetBestOffer = getBestOffer,
-    doSyncOffer = syncOffer,
+    doGetOffers = getOTCSupportMethodsContractInstance().getOffers,
+    doSyncRawOffer = syncRawOffer,
   } = {}
 ) => async dispatch => {
   try {
     const sellOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
     dispatch(loadSellOffers.pending(sellOffersTradingPair));
-    getOTCSupportMethodsContractInstance().getOffers(
+    doGetOffers(
       getMarketContractInstance().address,
       getTokenContractInstance(sellToken).address,
       getTokenContractInstance(buyToken).address,
@@ -38,7 +38,7 @@ export const loadSellOffersEpic = (
             timestamp
           ] = res.slice(i, i+5);
           if (parseInt(offerId, 16)> 0 ) {
-            dispatch(syncRawOffer({
+            dispatch(doSyncRawOffer({
               offerId,
               sellHowMuch,
               sellWhichTokenAddress: getTokenContractInstance(sellToken).address,
@@ -64,14 +64,14 @@ export const loadBuyOffersEpic = (
   buyToken,
   sellToken,
   {
-    doGetBestOffer = getBestOffer,
-    doSyncOffer = syncOffer,
+    doGetOffers = getOTCSupportMethodsContractInstance().getOffers,
+    doSyncRawOffer = syncRawOffer,
   } = {}
 ) => async dispatch => {
   try {
     const buyOffersTradingPair = { baseToken: buyToken, quoteToken: sellToken };
     dispatch(loadBuyOffers.pending(buyOffersTradingPair));
-    getOTCSupportMethodsContractInstance().getOffers(
+    doGetOffers(
       getMarketContractInstance().address,
       getTokenContractInstance(sellToken).address,
       getTokenContractInstance(buyToken).address,
@@ -86,7 +86,7 @@ export const loadBuyOffersEpic = (
             timestamp
           ] = res.slice(i, i+5);
           if (parseInt(offerId, 16) > 0 ) {
-            dispatch(syncRawOffer({
+            dispatch(doSyncRawOffer({
               offerId,
               sellHowMuch,
               sellWhichTokenAddress: getTokenContractInstance(sellToken).address,

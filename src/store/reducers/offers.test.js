@@ -7,6 +7,7 @@ import {mockAction, dispatchMockAction} from '../../utils/testHelpers';
 
 import BigNumber from 'bignumber.js';
 import {Map, List} from 'immutable';
+import _ from 'lodash';
 
 import config from '../../configs';
 import offers from './offers';
@@ -122,14 +123,12 @@ each([
 
   test(description, async () => {
     const store = configureMockStore([thunk])({
-      network: Map({ latestBlockNumber: 1})
+      network: Map({latestBlockNumber: 1})
     });
 
-    const getOfferIds = offerIds.reduce((a, id) => a.mockReturnValueOnce(id), jest.fn()).mockReturnValue(0);
     const promise = store.dispatch(action({buyOfferCount: 100, sellOfferCount: 100}, "MKR", "W-ETH", {
-      doGetBestOffer: () => async () => ({value: new BigNumber(getOfferIds())}),
-      doSyncOffer: mockAction('SYNC_OFFER'),
-      doGetWorseOffer: () => async () => ({value: new BigNumber(getOfferIds())}),
+      doGetOffers: async () => _.flatten(offerIds.map(id => [id, 1, 2, null, null])),
+      doSyncRawOffer: mockAction('SYNC_OFFER'),
     }));
 
     const result = await promise;

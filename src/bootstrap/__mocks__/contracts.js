@@ -138,8 +138,8 @@ const getMarketContractInstance = () => {
 };
 
 const getOTCSupportMethodsContractInstance = () => {
-  if (contracts.OTCSupportMehods) {
-    return contracts.OTCSupportMehods;
+  if (contracts.OTCSupportMethods) {
+    return contracts.OTCSupportMethods;
   } else {
     throw Error(`Contract for *OTCSupportMethodsContract* not found!`);
   }
