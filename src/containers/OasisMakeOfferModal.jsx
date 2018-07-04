@@ -31,6 +31,7 @@ import { getActiveOfferAllowanceStatus, isPriceSet } from "../store/selectors";
 import OasisOfferBelowDustLimitWrapper from "./OasisOfferBelowDustLimit";
 import InfoBoxWithIco from "../components/InfoBoxWithIco";
 import OasisYourOrderExceedsMaxTotalForToken from "../components/OasisYourOrderExceedsMaxTotalForToken";
+import OasisOfferTakeWarningBox from '../components/OasisOfferTakeWarningBox';
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -255,6 +256,11 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
     ) : null;
   }
 
+  renderOfferTakeWarning() {
+    const { canMakeOffer } = this.props;
+    return canMakeOffer ? <OasisOfferTakeWarningBox/> : null;
+  }
+
   render() {
     const { baseToken, offerMakeType, sellToken } = this.props;
 
@@ -291,6 +297,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
           {this.renderTransactionStatus()}
           {this.renderSetTokenAllowance()}
           {this.renderOverTheMaxTotalWarning()}
+          {this.renderOfferTakeWarning()}
           <div className={styles.footer}>
             <OasisButton
               disabled={this.isTransactionPendingOrAwaitingAcceptance()}
