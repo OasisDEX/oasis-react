@@ -25,7 +25,7 @@ export const  syncOffer = (
     doSetOfferEpic = setOfferEpic
   } = {}
 ) => async (dispatch, getState) => {
-  dispatch(doLoadOffer(offerId)).then(
+  return dispatch(doLoadOffer(offerId)).then(
     ({ value: offer }) => {
       console.log({offer})
       const [
@@ -65,10 +65,10 @@ export const  syncOffer = (
             )
           )
         );
-        Promise.resolve({
+        return {
           offer,
           offerMeta: { baseToken, quoteToken, offerType }
-        });
+        };
       } else {
         dispatch(
           attemptToSyncRemovedOffer({ offerId, syncType, previousOfferState })
