@@ -228,12 +228,14 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
 
   renderSetTokenAllowanceWrapper() {
     const {
+      isVolumeGreaterThanOfferMax,
       activeMarketAddress,
       sellToken,
+      hasSufficientTokenAmount,
       actions: { getTransactionGasCostEstimate }
     } = this.props;
 
-    return (!this.shouldDisableMinorWarnings() || this.state.txStatus) ? (
+    return (!isVolumeGreaterThanOfferMax && hasSufficientTokenAmount) || this.state.txStatus ? (
       <SetTokenAllowanceTrustWrapper
         onTransactionPending={() => this.setState({ lockCancelButton: true })}
         onTransactionCompleted={newAllowanceStatus => {
