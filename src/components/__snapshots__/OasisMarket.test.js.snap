@@ -10,7 +10,12 @@ exports[`(Component) OasisMarket should render 1`] = `
   <div
     styleName="OasisMarketAddress"
   >
-    <span />
+    <a
+      href="https://kovan.etherscan.io/address/0x1234"
+      target="_blank"
+    >
+      0x1234
+    </a>
   </div>
 </div>
 `;

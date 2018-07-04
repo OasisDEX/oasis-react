@@ -11,8 +11,9 @@ import OasisMarket from '../components/OasisMarket';
 import OasisAccount from '../components/OasisAccount';
 import OasisExpirationDate from '../components/OasisExpirationDate';
 
-import markets from './../store/selectors/markets'
+import markets from './../store/selectors/markets';
 import accounts from '../store/selectors/accounts';
+import network from '../store/selectors/network';
 
 import styles from './OasisHeader.scss';
 import OasisAppLoadProgressWrapper  from './OasisAppLoadProgress';
@@ -27,7 +28,8 @@ export class OasisHeaderWrapper extends PureComponent {
     const {
       marketCloseTime,
       marketAddress,
-      accounts
+      accounts,
+      networkName,
     } = this.props;
 
     return (
@@ -57,7 +59,7 @@ export class OasisHeaderWrapper extends PureComponent {
           </div>
           <div styleName="row" className="row">
             <div className="col-md-12">
-              <OasisMarket marketAddress={marketAddress}/>
+              <OasisMarket marketAddress={marketAddress} networkName={networkName} />
             </div>
           </div>
         </div>
@@ -71,7 +73,8 @@ export function mapStateToProps(state) {
     accounts: accounts.accounts(state),
     marketCloseTime: markets.marketCloseTime(state),
     defaultAccount: accounts.defaultAccount(state),
-    marketAddress: markets.activeMarketAddress(state)
+    marketAddress: markets.activeMarketAddress(state),
+    networkName: network.activeNetworkName(state),
   };
 }
 

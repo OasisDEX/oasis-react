@@ -66,6 +66,7 @@ exports[`(Container) OasisHeader should render 1`] = `
       >
         <OasisMarket
           marketAddress="0x3aa927a97594c3ab7d7bf0d47c71c3877d1de4a1"
+          networkName="main"
         />
       </div>
     </div>
@@ -87,5 +88,6 @@ Object {
   "defaultAccount": "0x777f9200d6ccdde25b79e1ba028d6fb12637f765",
   "marketAddress": "0x3aa927a97594c3ab7d7bf0d47c71c3877d1de4a1",
   "marketCloseTime": 1536662916,
+  "networkName": "main",
 }
 `;

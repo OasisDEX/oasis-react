@@ -12,4 +12,16 @@ const createEtherscanTransactionLink = ({
   }
 };
 
+export const createEtherscanAddressLink = ({
+  networkName,
+  address,
+}) => {
+  switch (networkName) {
+    case KOVAN:
+      return `https://${networkName}.etherscan.io/address/${address}`;
+    default:
+      return `https://etherscan.io/address/${address}`;
+  }
+};
+
 export default createEtherscanTransactionLink;
