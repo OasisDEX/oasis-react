@@ -19,7 +19,7 @@ export class OasisMarket extends PureComponent {
       <div styleName="OasisMarket">
         <span> Market: </span>
         <div styleName="OasisMarketAddress">
-          <a target="_blank" href={createEtherscanAddressLink({networkName, address: marketAddress})}>{marketAddress}</a>
+          <a target="_blank" rel="noopener noreferrer" href={createEtherscanAddressLink({networkName, address: marketAddress})}>{marketAddress}</a>
         </div>
       </div>
     );
