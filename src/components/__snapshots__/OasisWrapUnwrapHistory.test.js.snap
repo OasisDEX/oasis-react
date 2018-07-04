@@ -4,7 +4,13 @@ exports[`(Component) OasisWrapUnwrapHistory should render 1`] = `
 <OasisWidgetFrame
   className=""
   heading="History"
-  loadProgressSection={null}
+  isLoadingData={true}
+  loadProgressSection={
+    <OasisLoadingIndicator
+      size="sm"
+    />
+  }
+  loadingDataText="wrap & unwrap history"
 >
   <div>
     <OasisTable

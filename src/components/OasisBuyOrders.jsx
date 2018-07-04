@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
 import styles from "./OasisBuyOrders.scss";
 import CSSModules from "react-css-modules";
-// import ImmutablePropTypes from 'react-immutable-proptypes';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import OasisWidgetFrame from "../containers/OasisWidgetFrame";
 import OasisTable from "./OasisTable";
@@ -13,11 +13,15 @@ import { OFFER_STATUS_INACTIVE } from "../store/reducers/offers";
 import { OasisSignificantDigitsWrapper } from "../containers/OasisSignificantDigits";
 import { ETH_UNIT_ETHER } from '../constants';
 
-const propTypes = PropTypes && {
+const propTypes =  {
   onSetOfferTakeModalOpen: PropTypes.func.isRequired,
   onSetActiveOfferTakeOfferId: PropTypes.func.isRequired,
   onCheckOfferIsActive: PropTypes.func.isRequired,
-  onResetCompletedOfferCheck: PropTypes.func.isRequired
+  onResetCompletedOfferCheck: PropTypes.func.isRequired,
+  loadingBuyOffers: PropTypes.bool,
+  activeTradingPair: PropTypes.object,
+  buyOffers: ImmutablePropTypes.list,
+  buyOfferCount: PropTypes.number
 };
 
 const defaultProps = {};
@@ -74,15 +78,17 @@ class OasisBuyOrders extends PureComponent {
       activeTradingPair: { baseToken, quoteToken },
       buyOffers = [],
       buyOfferCount,
-      cancelOffer
+      loadingBuyOffers
     } = this.props;
-    const orderActions = { cancelOffer };
+    const orderActions = {};
     const rows = buyOffers
       .filter(offer => offer.status !== OFFER_STATUS_INACTIVE)
       .sort((p, c) => (p.bid_price_sort < c.bid_price_sort ? 1 : -1))
       .map(toDisplayFormat);
     return (
       <OasisWidgetFrame
+        isLoadingData={loadingBuyOffers}
+        loadingDataText={"buy orders"}
         heading={`BUY ORDERS`}
         loadProgressSection={
           <LoadProgressSection

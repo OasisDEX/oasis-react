@@ -23,6 +23,8 @@ exports[`(Component) OasisMyOrders should render 1`] = `
       </option>
     </OasisSelect>
   }
+  isLoadingData={true}
+  loadingDataText="Your active orders"
 >
   <div>
     <div>

@@ -48,7 +48,7 @@ export function mapStateToProps(state) {
     contractsLoaded: platform.contractsLoaded(state),
     latestBlockNumber: network.latestBlockNumber(state),
     wrapUnwrapHistoryList: wrapUnwrapHistory.tokenWrapUnwrapHistory(state),
-    isTokenWrapUnwrapHistoryLoading: wrapUnwrapHistory.isTokenWrapUnwrapHistoryLoading(
+    isTokenWrapUnwrapHistoryLoaded: wrapUnwrapHistory.isTokenWrapUnwrapHistoryLoaded(
       state
     ),
     hasAccountEntry: wrapUnwrapHistory.hasAccountEntry(

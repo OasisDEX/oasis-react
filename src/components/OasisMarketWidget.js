@@ -17,10 +17,11 @@ import {
 import CSSModules from "react-css-modules";
 import styles from "./OasisMarketWidget.scss";
 import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
-import { ETH_UNIT_ETHER, TOKEN_DAI } from '../constants';
+import { ETH_UNIT_ETHER, TOKEN_DAI } from "../constants";
 import moment from "moment-timezone";
 import OasisLinkLikeButton from "./OasisLinkLikeButton";
-import tokensReducer from '../store/reducers/tokens';
+import tokensReducer from "../store/reducers/tokens";
+import OasisLoadingIndicator from "./OasisLoadingIndicator";
 
 const periodHeading = {
   [DAY]: "daily",
@@ -28,27 +29,45 @@ const periodHeading = {
   [MONTH]: "monthly"
 };
 
-const tradingPairPriceTemplate = row =>
-  row.tradingPairPrice ? (
-    <OasisSignificantDigitsWrapper
-      fractionalZerosGrey={false}
-      fullPrecisionAmount={row.tradingPairPriceFullPrecision}
-      amount={row.tradingPairPrice}
-    />
-  ) : (
-    "N/A"
-  );
-const volumeTemplate = row =>
-  row.volume ? (
-    <OasisSignificantDigitsWrapper
-      fullPrecisionUnit={ETH_UNIT_ETHER}
-      fullPrecisionAmount={row.volumeFullPrecision}
-      amount={row.volume}
-      fractionalZerosGrey={false}
-    />
-  ) : (
-    "N/A"
-  );
+const tradingPairPriceTemplate = row => {
+  if (row && row.initialMarketHistoryLoaded) {
+    return row.tradingPairPrice ? (
+      <OasisSignificantDigitsWrapper
+        fractionalZerosGrey={false}
+        fullPrecisionAmount={row.tradingPairPriceFullPrecision}
+        amount={row.tradingPairPrice}
+      />
+    ) : (
+      "N/A"
+    );
+  } else {
+    return (
+      <span style={{ position: "relative", right: "10px" }}>
+        <OasisLoadingIndicator size="sm" />
+      </span>
+    );
+  }
+};
+const volumeTemplate = row => {
+  if (row && row.initialMarketHistoryLoaded) {
+    return row.volume ? (
+      <OasisSignificantDigitsWrapper
+        fullPrecisionUnit={ETH_UNIT_ETHER}
+        fullPrecisionAmount={row.volumeFullPrecision}
+        amount={row.volume}
+        fractionalZerosGrey={false}
+      />
+    ) : (
+      "N/A"
+    );
+  } else {
+    return (
+      <span style={{ position: "relative", right: "20px" }}>
+        <OasisLoadingIndicator size="sm" />
+      </span>
+    );
+  }
+};
 
 const colDefinition = period => {
   return [
@@ -82,7 +101,7 @@ class OasisMarketWidget extends PureComponent {
   }
 
   transformRow(row) {
-    const { marketData = List() } = this.props;
+    const { marketData = List(), initialMarketHistoryLoaded } = this.props;
     const [baseToken, quoteToken] = [row.get("base"), row.get("quote")];
 
     const pair = (
@@ -113,6 +132,7 @@ class OasisMarketWidget extends PureComponent {
         ? price(weeklyTradingPairTrades.last(), baseToken, quoteToken)
         : null;
       return {
+        initialMarketHistoryLoaded,
         isActive: isCurrentRowActive(
           this.props.activeTradingPair,
           baseToken,
@@ -123,14 +143,15 @@ class OasisMarketWidget extends PureComponent {
         volumeFullPrecision: tradingPairVolume,
         tradingPairPrice: formatPrice(tradingPairPrice),
         tradingPairPriceFullPrecision: tradingPairPrice,
-        rawTradingPair: { baseToken: baseToken, quoteToken: quoteToken }
+        rawTradingPair: { baseToken, quoteToken }
       };
     } else {
       return {
+        initialMarketHistoryLoaded,
         tradingPair: pair,
         volume: null,
         tradingPairPrice: null,
-        rawTradingPair: { baseToken: baseToken, quoteToken: quoteToken }
+        rawTradingPair: { baseToken, quoteToken }
       };
     }
   }
@@ -140,7 +161,7 @@ class OasisMarketWidget extends PureComponent {
     const { baseToken, quoteToken } = rowData.rawTradingPair;
     setActiveTradingPair({ baseToken, quoteToken });
     changeRoute(`/trade/${baseToken}/${quoteToken}`);
-    tokensReducer.actions.getActiveTradingPairAllowanceStatus()
+    tokensReducer.actions.getActiveTradingPairAllowanceStatus();
   }
 
   render() {
@@ -154,14 +175,16 @@ class OasisMarketWidget extends PureComponent {
       />
     );
 
-    const activeTradingPairIncludesDAI = (
+    const activeTradingPairIncludesDAI =
       activeTradingPair &&
-      [activeTradingPair.baseToken, activeTradingPair.quoteToken].includes(TOKEN_DAI)
-    );
+      [activeTradingPair.baseToken, activeTradingPair.quoteToken].includes(
+        TOKEN_DAI
+      );
     return (
       <OasisWidgetFrame
         heading="MARKETS"
-        headingChildren={activeTradingPairIncludesDAI ? daiButton : null}>
+        headingChildren={activeTradingPairIncludesDAI ? daiButton : null}
+      >
         <OasisTable
           onRowClick={this.onTableRowClick}
           className={styles.marketTable}
@@ -181,6 +204,8 @@ class OasisMarketWidget extends PureComponent {
 OasisMarketWidget.displayName = "OasisMarketWidget";
 OasisMarketWidget.propTypes = PropTypes && {
   tradedTokens: PropTypes.object.isRequired,
-  marketData: ImmutablePropTypes.list
+  marketData: ImmutablePropTypes.list,
+  loadingTradeHistory: PropTypes.bool,
+  initialMarketHistoryLoaded: PropTypes.bool
 };
 export default CSSModules(OasisMarketWidget, styles, { allowMultiple: true });

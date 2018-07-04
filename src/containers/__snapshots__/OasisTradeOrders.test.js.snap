@@ -28,6 +28,7 @@ exports[`(Container) OasisTradeOrders should render 1`] = `
       ]
     }
     cancelOffer={[Function]}
+    loadingBuyOffers={true}
     onCheckOfferIsActive={[Function]}
     onResetCompletedOfferCheck={[Function]}
     onSetActiveOfferTakeOfferId={[Function]}
@@ -41,6 +42,7 @@ exports[`(Container) OasisTradeOrders should render 1`] = `
       }
     }
     cancelOffer={[Function]}
+    loadingSellOffers={true}
     onCheckOfferIsActive={[Function]}
     onResetCompletedOfferCheck={[Function]}
     onSetActiveOfferTakeOfferId={[Function]}
@@ -96,6 +98,8 @@ Object {
   "defaultAccount": "0x0000000000000000000000000000000000000000",
   "initialMarketHistoryLoaded": true,
   "isOfferTakeModalOpen": true,
+  "loadingBuyOffers": true,
+  "loadingSellOffers": true,
   "loadingUserMarketHistory": false,
   "marketData": Immutable.List [
 ],

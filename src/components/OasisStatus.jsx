@@ -3,13 +3,15 @@ import CSSModules from "react-css-modules";
 import { PropTypes } from "prop-types";
 import styles from "./OasisStatus.scss";
 import { ONLINE, OUT_OF_SYNC, CLOSED, CONNECTING } from "../constants";
-import OasisLoadingIndicator from './OasisLoadingIndicator';
-import isNumeric from '../utils/numbers/isNumeric';
+import OasisLoadingIndicator from "./OasisLoadingIndicator";
+import isNumeric from "../utils/numbers/isNumeric";
 
 const propTypes = PropTypes && {
   status: PropTypes.string.isRequired,
   name: PropTypes.string,
-  offersLoadingProgress: PropTypes.number
+  offersLoadingProgress: PropTypes.number,
+  offersInitiallyLoaded: PropTypes.bool,
+  initialMarketHistoryLoaded: PropTypes.bool
 };
 
 const defaultProps = {};
@@ -22,51 +24,76 @@ const INDICATORS = {
 };
 
 export class OasisStatus extends PureComponent {
-
   renderOffersLoadProgress() {
     const { offersLoadProgress } = this.props;
     if (offersLoadProgress >= 0 && offersLoadProgress < 100) {
       return (
-        <span styleName="OffersLoadProgress">
-          <OasisLoadingIndicator marginRight={'3px'}/>
+        <span className={styles.offersLoadProgress}>
+          <OasisLoadingIndicator marginRight={"3px"} />
           <span>offers</span>
-          <span>({isNumeric(offersLoadProgress) ? offersLoadProgress: '0' }%)</span>
+          <span>
+            ({isNumeric(offersLoadProgress) ? offersLoadProgress : "0"}%)
+          </span>
         </span>
       );
     } else {
       return null;
     }
-
   }
 
   statusIndicator() {
     const { status } = this.props;
     return (
-      <div styleName={`StatusIndicator NetworkStatus ${INDICATORS[status].class}`}>
+      <div
+        styleName={`StatusIndicator NetworkStatus ${INDICATORS[status].class}`}
+      >
         {INDICATORS[status].text}
       </div>
     );
   }
 
+  getTradesLoadProgress() {
+    const { initialMarketHistoryLoaded } = this.props;
+    return initialMarketHistoryLoaded !==true ? 0: 100;
+  }
+
+  renderTradesHistoryLoadProgress() {
+    const { initialMarketHistoryLoaded } = this.props;
+    return initialMarketHistoryLoaded!==true ? (
+      <span>
+        <OasisLoadingIndicator marginRight={"3px"} />
+        <span className={styles.tradesLoadProgress}>
+          history <span>({this.getTradesLoadProgress()}%)</span>
+        </span>
+      </span>
+    ): null;
+  }
+
   renderNetworkName() {
     const { name } = this.props;
-    if (name === '-') {
-      return  (
+    if (name === "-") {
+      return (
         <div>
-          <OasisLoadingIndicator size={'sm'} marginRight={'10px'}/> <span>{name}</span>
+          <OasisLoadingIndicator size={"sm"} marginRight={"10px"} />{" "}
+          <span>{name}</span>
         </div>
-      )
+      );
     } else {
       return name;
     }
   }
 
   render() {
+    const { activeTradingPairOffersInitiallyLoaded } = this.props;
     return (
       <div styleName="OasisStatus">
         <div>{this.renderNetworkName()}</div>
         <div>
-          {this.renderOffersLoadProgress() || this.statusIndicator()}
+          {
+            this.renderOffersLoadProgress() ||
+            activeTradingPairOffersInitiallyLoaded && this.renderTradesHistoryLoadProgress() ||
+            this.statusIndicator()
+          }
         </div>
       </div>
     );

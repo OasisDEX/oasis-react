@@ -17,7 +17,7 @@ exports[`(Container) OasisTrade should render 1`] = `
       }
     }
     defaultPeriod="TIME_SPAN/WEEK"
-    loadingTradeHistory={false}
+    initialMarketHistoryLoaded={true}
     marketData={
       Immutable.List [
       ]
@@ -136,7 +136,9 @@ exports[`(Container) OasisTrade should render 1`] = `
       ]
     }
   />
-  <Connect(OasisChart) />
+  <Connect(OasisChart)
+    initialMarketHistoryLoaded={true}
+  />
   <Connect(OasisTradeOrders) />
 </FlexBox>
 `;
@@ -158,7 +160,7 @@ Object {
     "quoteToken": "DAI",
   },
   "defaultPeriod": "TIME_SPAN/WEEK",
-  "loadingTradeHistory": false,
+  "initialMarketHistoryLoaded": true,
   "marketsData": Immutable.List [
 ],
   "offersInitialized": undefined,

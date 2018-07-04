@@ -15,7 +15,7 @@ import OasisLoadingIndicator from "./OasisLoadingIndicator";
 import openEtherscanTransactionLink from "../utils/openEtherscanTransactionLink";
 
 const propTypes = PropTypes && {
-  isTokenWrapUnwrapHistoryLoading: PropTypes.bool
+  isTokenWrapUnwrapHistoryLoaded: PropTypes.bool
 };
 
 const amountTemplate = row => (
@@ -46,13 +46,15 @@ export class OasisWrapUnwrapHistory extends PureComponent {
     const {
       wrapUnwrapHistoryList = fromJS([]),
       activeNetworkName,
-      isTokenWrapUnwrapHistoryLoading
+      isTokenWrapUnwrapHistoryLoaded
     } = this.props;
     return (
       <OasisWidgetFrame
+        isLoadingData={!isTokenWrapUnwrapHistoryLoaded}
+        loadingDataText={"wrap & unwrap history"}
         heading="History"
         loadProgressSection={
-          isTokenWrapUnwrapHistoryLoading ? (
+          !isTokenWrapUnwrapHistoryLoaded ? (
             <OasisLoadingIndicator size="sm" />
           ) : null
         }

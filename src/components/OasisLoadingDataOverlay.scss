@@ -1,0 +1,24 @@
+.base {
+  z-index: 10;
+  flex-wrap: wrap;
+  pointer-events: none;
+  background-color: rgba(256,256, 256, .7);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  div {
+    padding-left: 10px;
+    color: rgba(79, 83, 98, 0.8);
+    text-align: center;
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+}

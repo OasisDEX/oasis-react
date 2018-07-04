@@ -43,7 +43,14 @@
 
 }
 
-.OffersLoadProgress {
+.offersLoadProgress {
+  position: relative;
+  top: 4px;
+  font-size: 11px;
+}
+
+
+.tradesLoadProgress {
   position: relative;
   top: 4px;
   font-size: 11px;

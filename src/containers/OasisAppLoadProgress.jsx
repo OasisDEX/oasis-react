@@ -8,6 +8,7 @@ import { appLoadProgress } from "../store/selectors";
 import offers from "../store/selectors/offers";
 import OasisStatus from "../components/OasisStatus";
 import network from "../store/selectors/network";
+import trades from "../store/selectors/trades";
 
 const propTypes = PropTypes && {
   actions: PropTypes.object.isRequired
@@ -15,11 +16,21 @@ const propTypes = PropTypes && {
 
 export class OasisAppLoadProgressWrapper extends PureComponent {
   networkStatus() {
-    const { offersLoadProgress, networkStatus, networkName } = this.props;
+    const {
+      loadProgress,
+      activeTradingPairOffersInitiallyLoaded,
+      offersLoadProgress,
+      networkStatus,
+      networkName,
+      initialMarketHistoryLoaded
+    } = this.props;
     return (
       <OasisStatus
         offersLoadProgress={offersLoadProgress}
         status={networkStatus}
+        loadProgress={loadProgress}
+        activeTradingPairOffersInitiallyLoaded={activeTradingPairOffersInitiallyLoaded}
+        initialMarketHistoryLoaded={initialMarketHistoryLoaded}
         name={networkName}
       />
     );
@@ -32,9 +43,11 @@ export class OasisAppLoadProgressWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
+    activeTradingPairOffersInitiallyLoaded: offers.activeTradingPairOffersInitiallyLoaded(state),
     networkStatus: network.status(state),
     networkName: network.activeNetworkName(state),
     loadProgress: appLoadProgress(state),
+    initialMarketHistoryLoaded: trades.initialMarketHistoryLoaded(state),
     offersLoadProgress: offers.activeTradingPairOffersLoadProgress(state)
   };
 }

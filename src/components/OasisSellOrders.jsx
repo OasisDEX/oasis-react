@@ -11,14 +11,17 @@ import CSSModules from "react-css-modules";
 import { OFFER_STATUS_INACTIVE } from "../store/reducers/offers";
 import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
 import { ETH_UNIT_ETHER } from '../constants';
-// import ImmutablePropTypes from 'react-immutable-proptypes';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
-const propTypes = PropTypes && {
+const propTypes = {
   onSetOfferTakeModalOpen: PropTypes.func.isRequired,
   onSetActiveOfferTakeOfferId: PropTypes.func.isRequired,
   onCheckOfferIsActive: PropTypes.func.isRequired,
   onResetCompletedOfferCheck: PropTypes.func.isRequired,
-  loadingSellOffers: PropTypes.bool
+  loadingSellOffers: PropTypes.bool,
+  activeTradingPair: PropTypes.object,
+  sellOffers: ImmutablePropTypes.list,
+  sellOfferCount: PropTypes.number,
 };
 
 const defaultProps = {};
@@ -76,15 +79,17 @@ class OasisSellOrders extends PureComponent {
       activeTradingPair: { baseToken, quoteToken },
       sellOffers,
       sellOfferCount,
-      cancelOffer
+      loadingSellOffers,
     } = this.props;
-    const orderActions = { cancelOffer };
+    const orderActions = {};
     const rows = sellOffers
       .filter(offer => offer.status !== OFFER_STATUS_INACTIVE)
       .sort((p, c) => (p.ask_price_sort > c.ask_price_sort ? 1 : -1))
       .map(toDisplayFormat);
     return (
       <OasisWidgetFrame
+        isLoadingData={loadingSellOffers}
+        loadingDataText={"sell orders"}
         heading={`SELL ORDERS`}
         loadProgressSection={
           <LoadProgressSection

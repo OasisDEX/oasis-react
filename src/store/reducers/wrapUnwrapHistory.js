@@ -286,12 +286,12 @@ const loadGNTWrapUnwrapsHistoryEpic = (address, config) => async (
 
 const loadWrapUnwrapsHistoryEpic = () => (dispatch, getState) => {
   const defaultAccount = accounts.defaultAccount(getState());
+  dispatch(loadingWrapUnwrapHistorySetPending());
   if (false === wrapUnwrapHistory.hasAccountEntry(getState(), defaultAccount)) {
     dispatch(initializeAccountList(defaultAccount));
   } else {
     return;
   }
-  dispatch(loadingWrapUnwrapHistorySetPending());
   dispatch(loadEtherWrapUnwrapsHistoryEpic());
   // dispatch(loadGNTWrapUnwrapsHistoryEpic());
   dispatch(loadingWrapUnwrapHistorySetInitiallyLoaded());

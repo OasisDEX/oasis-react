@@ -9,7 +9,7 @@ const transferHistory = s => s.get("transferHistory");
 const getTokenTransferHistoryStatus = createSelector(
   transferHistory,
   reselect.getProps,
-  (s, tokeName) => s.getIn(["tokensLoadingStatus", tokeName])
+  (s, tokeName) => s.getIn(["tokensLoadingStatus", tokeName, "status"])
 );
 
 const isTokenTransferHistoryLoading = createSelector(

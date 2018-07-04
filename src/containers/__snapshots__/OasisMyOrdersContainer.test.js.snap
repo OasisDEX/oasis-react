@@ -9,6 +9,7 @@ exports[`(Container) OasisMyOrdersContainer should render 1`] = `
       "quoteToken": "DAI",
     }
   }
+  activeTradingPairOffersInitiallyLoaded={false}
   buyOffers={
     Immutable.List [
     ]
@@ -45,6 +46,7 @@ Object {
     "baseToken": "MKR",
     "quoteToken": "DAI",
   },
+  "activeTradingPairOffersInitiallyLoaded": false,
   "buyOfferCount": undefined,
   "buyOffers": Immutable.List [
 ],
