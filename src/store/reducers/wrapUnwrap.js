@@ -124,9 +124,8 @@ const loadGNTBrokerAddressEpic = () => async (dispatch, getState) =>
 
 const createGNTDepositBroker = createAction(
   "WRAP_UNWRAP/CREATE_DEPOSIT_BROKER",
-  ({ gasLimit = DEFAULT_GAS_LIMIT, gasPrice = DEFAULT_GAS_PRICE } = {}) =>
+  ({ gasPrice = DEFAULT_GAS_PRICE } = {}) =>
     getTokenContractInstance(TOKEN_WRAPPED_GNT).createBroker({
-      gas: gasLimit,
       gasPrice
     })
 );
@@ -164,12 +163,10 @@ const wrapEther = createAction(
   WRAP_ETHER,
   ({
     amountInWei,
-    gasLimit = DEFAULT_GAS_LIMIT,
     gasPrice = DEFAULT_GAS_PRICE
   }) =>
     getTokenContractInstance(TOKEN_WRAPPED_ETH).deposit({
       value: amountInWei,
-      gas: gasLimit,
       gasPrice
     })
 );
@@ -197,10 +194,9 @@ const unwrapEther = createAction(
   UNWRAP_ETHER,
   async (
     amountInWei,
-    { gasLimit = DEFAULT_GAS_LIMIT, gasPrice = DEFAULT_GAS_PRICE } = {}
+    { gasPrice = DEFAULT_GAS_PRICE } = {}
   ) =>
     getTokenContractInstance(TOKEN_WRAPPED_ETH).withdraw(amountInWei, {
-      gas: gasLimit,
       gasPrice
     })
 );
@@ -228,11 +224,9 @@ const wrapGNTTokenAction = createAction(
   async ({
     brokerAddress,
     amountInWei,
-    gasLimit = DEFAULT_GAS_LIMIT,
     gasPrice = DEFAULT_GAS_PRICE
   }) =>
     getTokenContractInstance(TOKEN_GOLEM).transfer(brokerAddress, amountInWei, {
-      gas: gasLimit,
       gasPrice
     })
 );
@@ -370,10 +364,9 @@ const clearDepositBroker = createAction(
   "WRAP_UNWRAP/CLEAR_DEPOSIT_BROKER",
   (
     tokenName,
-    { gasPrice = DEFAULT_GAS_PRICE, gasLimit = DEFAULT_GAS_LIMIT } = {}
+    { gasPrice = DEFAULT_GAS_PRICE } = {}
   ) =>
     getDepositBrokerContractInstance(tokenName).clear({
-      gas: gasLimit,
       gasPrice
     })
 );
@@ -394,12 +387,10 @@ const clearDepositBrokerEpic = (tokenName, withCallbacks) => dispatch => {
 const unwrapGNTToken = createAction(
   UNWRAP_TOKEN_WRAPPER,
   async ({
-    gasLimit = DEFAULT_GAS_LIMIT,
     gasPrice = DEFAULT_GAS_PRICE,
     amountInWei
   }) =>
     getTokenContractInstance(TOKEN_WRAPPED_GNT).withdraw(amountInWei, {
-      gas: gasLimit,
       gasPrice
     })
 );

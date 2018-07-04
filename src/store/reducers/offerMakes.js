@@ -91,7 +91,6 @@ const makeOfferTransaction = createAction(
     buyAmount,
     buyToken,
     isCloseMatchingEnabled,
-    gasLimit = DEFAULT_GAS_LIMIT,
     gasPrice = DEFAULT_GAS_PRICE
   }) => {
 
@@ -106,7 +105,6 @@ const makeOfferTransaction = createAction(
         0,
         isCloseMatchingEnabled,
         {
-          gas: gasLimit,
           gasPrice
         },
         (err, res) =>
@@ -324,7 +322,7 @@ const getTransactionGasEstimate = createAction(
         buyToken,
         0,
         true, // isCloseMatchingEnabled
-        { to: toAddress, gasLimit: DEFAULT_GAS_LIMIT },
+        { to: toAddress },
         (e, estimation) => {
           if (e) {
             reject({

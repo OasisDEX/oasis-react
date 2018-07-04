@@ -102,11 +102,9 @@ const sendBuyTransaction = createAction(
   (
     offerId,
     amount,
-    gasLimit = DEFAULT_GAS_LIMIT,
     gasPrice = DEFAULT_GAS_PRICE
   ) =>
     getMarketContractInstance().buy(offerId, amount, {
-      gas: gasLimit,
       gasPrice
     })
 );
@@ -323,7 +321,7 @@ const getTransactionGasCostEstimate = createAction(
       getMarketNoProxyContractInstance().buy.estimateGas(
         offerId,
         amount,
-        { to: offerOwner, gasLimit: DEFAULT_GAS_LIMIT },
+        { to: offerOwner },
         (e, estimation) => {
           if (e) {
             console.log("gas estimation failed!");

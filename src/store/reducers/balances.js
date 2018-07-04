@@ -258,12 +258,10 @@ const setAllowance = createAction(
     tokenName,
     spenderAddress,
     newAllowance,
-    gasLimit = DEFAULT_GAS_LIMIT,
     gasPrice = DEFAULT_GAS_PRICE
   ) =>
     getTokenContractInstance(tokenName).approve(spenderAddress, newAllowance, {
       gasPrice,
-      gas: gasLimit
     })
 );
 
@@ -277,7 +275,6 @@ const setTokenTrustAddressEnabled = createAction(
   ) =>
     getTokenContractInstance(tokenName).approve(spenderAddress, -1, {
       gasPrice,
-      gas: gasLimit
     })
 );
 
@@ -286,7 +283,6 @@ const setTokenTrustAddressDisabled = createAction(
   (
     tokenName,
     spenderAddress,
-    gasLimit = DEFAULT_GAS_LIMIT,
     gasPrice = DEFAULT_GAS_PRICE
   ) =>
     getTokenContractInstance(tokenName).approve(
@@ -294,7 +290,6 @@ const setTokenTrustAddressDisabled = createAction(
       TOKEN_ALLOWANCE_TRUST_STATUS_DISABLED_MIN_MAX,
       {
         gasPrice,
-        gas: gasLimit
       }
     )
 );
