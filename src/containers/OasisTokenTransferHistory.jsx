@@ -7,7 +7,9 @@ import { bindActionCreators } from "redux";
 import OasisWidgetFrame from "../containers/OasisWidgetFrame";
 import OasisTable from "../components/OasisTable";
 import transfers from "../store/selectors/transfers";
-import transferHistoryReducer from "../store/reducers/transferHistory";
+import transferHistoryReducer, {
+  TRANSFER_HISTORY_LOAD_STATUS_COMPLETED,
+} from '../store/reducers/transferHistory';
 import platform from "../store/selectors/platform";
 import network from "../store/selectors/network";
 import transferHistory from "../store/selectors/transferHistory";
@@ -78,12 +80,15 @@ export class OasisTokenTransferHistoryWrapper extends PureComponent {
 
   render() {
     const {
+      tokenTransferHistoryStatus,
       transferHistoryList = Map(),
       activeNetworkName,
       isTokenTransferHistoryLoading
     } = this.props;
     return (
       <OasisWidgetFrame
+        isLoadingData={tokenTransferHistoryStatus !== TRANSFER_HISTORY_LOAD_STATUS_COMPLETED}
+        loadingDataText={"Your transfer history"}
         loadProgressSection={
           isTokenTransferHistoryLoading ? (
             <OasisLoadingIndicator size={"md"} />

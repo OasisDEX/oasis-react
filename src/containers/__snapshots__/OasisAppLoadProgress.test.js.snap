@@ -2,6 +2,9 @@
 
 exports[`(Container) OasisAppLoadProgress should render 1`] = `
 <OasisStatus
+  activeTradingPairOffersInitiallyLoaded={false}
+  initialMarketHistoryLoaded={true}
+  loadProgress={66.66666666666666}
   name="kovan"
   offersLoadProgress="NaN"
   status="NETWORK/ONLINE"
@@ -16,7 +19,9 @@ Object {
 
 exports[`(Container) OasisAppLoadProgress will receive right props 1`] = `
 Object {
-  "loadProgress": NaN,
+  "activeTradingPairOffersInitiallyLoaded": false,
+  "initialMarketHistoryLoaded": true,
+  "loadProgress": 66.66666666666666,
   "networkName": "kovan",
   "networkStatus": "NETWORK/ONLINE",
   "offersLoadProgress": "NaN",

@@ -22,6 +22,8 @@ exports[`(Component) OasisChart should render 1`] = `
       </option>
     </OasisSelect>
   }
+  isLoadingData={true}
+  loadingDataText="loading trades"
   spaceForContent={true}
 >
   <Connect(OasisChartPrice)

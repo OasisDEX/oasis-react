@@ -1,6 +1,9 @@
 import { createSelector } from 'reselect';
 import { fromJS } from 'immutable';
-import { WRAP_UNWRAP_HISTORY_LOAD_STATUS_PENDING } from '../reducers/wrapUnwrapHistory';
+import {
+  WRAP_UNWRAP_HISTORY_LOAD_STATUS_LOAD_STATUS_INITIALLY_LOADED,
+  WRAP_UNWRAP_HISTORY_LOAD_STATUS_PENDING,
+} from '../reducers/wrapUnwrapHistory';
 import accounts from './accounts';
 import reselect from '../../utils/reselect';
 
@@ -16,6 +19,11 @@ const isTokenWrapUnwrapHistoryLoading = createSelector(
   s => s.get('historyLoadingStatus') === WRAP_UNWRAP_HISTORY_LOAD_STATUS_PENDING
 );
 
+const isTokenWrapUnwrapHistoryLoaded = createSelector(
+  wrapUnwrapHistory,
+  s => s.get('historyLoadingStatus') === WRAP_UNWRAP_HISTORY_LOAD_STATUS_LOAD_STATUS_INITIALLY_LOADED
+
+);
 
 const hasAccountEntry = createSelector(
   wrapUnwrapHistory,
@@ -39,5 +47,6 @@ export default {
   hasAccountEntry,
   getTokenWrapUnwrapHistoryStatus,
   isTokenWrapUnwrapHistoryLoading,
+  isTokenWrapUnwrapHistoryLoaded,
   tokenWrapUnwrapHistory
 }

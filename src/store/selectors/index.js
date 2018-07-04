@@ -225,7 +225,7 @@ const appLoadProgress = createSelector(
       offersLoaded
     ];
     return (
-      statuses.filter(status => [SYNC_STATUS_COMPLETED, true].includes(status) ) / statuses.length
+      statuses.filter(status => [SYNC_STATUS_COMPLETED, true].includes(status) ).length / statuses.length
     ) * 100;
 
   }

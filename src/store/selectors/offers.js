@@ -10,15 +10,19 @@ import { OFFER_STATUS_INACTIVE } from '../reducers/offers';
 
 const offers = state => state.get('offers');
 
-// const loadingBuyOffers = createSelector(
-//   offers,
-//   state => state.get('loadingBuyOffers')
-// );
-//
-// const loadingSellOffers = createSelector(
-//   offers,
-//   state => state.get('loadingSellOffers')
-// );
+const loadingBuyOffers = createSelector(
+  offers,
+  tokens.activeTradingPair,
+  (state, atp) => {
+    return state.getIn(["offers", Map(atp), "loadingBuyOffers"]) !== SYNC_STATUS_COMPLETED
+  }
+);
+
+const loadingSellOffers = createSelector(
+  offers,
+  tokens.activeTradingPair,
+  (state, atp) => state.getIn(["offers", Map(atp), 'loadingSellOffers']) !== SYNC_STATUS_COMPLETED
+);
 
 const activeTradingPairBuyOffers = createSelector(
   offers,
@@ -146,8 +150,8 @@ const reSyncOffersSet = createSelector(
 export default {
   state: offers,
   offersInitialized,
-  // loadingBuyOffers,
-  // loadingSellOffers,
+  loadingBuyOffers,
+  loadingSellOffers,
   activeTradingPairBuyOffers,
   activeTradingPairSellOffers,
   activeTradingPairBuyOfferCount,

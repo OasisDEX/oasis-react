@@ -13,6 +13,7 @@ exports[`(Component) OasisSellOrders should render 1`] = `
       offersTotalCount={undefined}
     />
   }
+  loadingDataText="sell orders"
 >
   <OasisTable
     col={

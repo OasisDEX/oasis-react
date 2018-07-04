@@ -4,7 +4,9 @@ exports[`(Component) OasisMarketHistory should render 1`] = `
 <OasisWidgetFrame
   className=""
   heading="MARKET HISTORY"
-  loadProgressSection={null}
+  isLoadingData={true}
+  loadProgressSection={<OasisLoadingIndicator />}
+  loadingDataText="loading trades history"
 >
   <OasisTable
     col={

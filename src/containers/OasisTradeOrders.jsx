@@ -49,6 +49,8 @@ export class OasisTradeOrdersWrapper extends PureComponent {
       sellOfferCount,
       buyOffers,
       sellOffers,
+      loadingBuyOffers,
+      loadingSellOffers,
       activeNetworkName,
       actions: {
         cancelOffer,
@@ -65,6 +67,7 @@ export class OasisTradeOrdersWrapper extends PureComponent {
         <OasisMakeSellOfferWrapper />
         <div>{this.offerTakeModal()}</div>
         <OasisBuyOrders
+          loadingBuyOffers={loadingBuyOffers}
           onSetOfferTakeModalOpen={setOfferTakeModalOpen}
           activeTradingPair={activeTradingPair}
           buyOfferCount={buyOfferCount}
@@ -75,6 +78,7 @@ export class OasisTradeOrdersWrapper extends PureComponent {
           onResetCompletedOfferCheck={resetCompletedOfferCheck}
         />
         <OasisSellOrders
+          loadingSellOffers={loadingSellOffers}
           onSetOfferTakeModalOpen={setOfferTakeModalOpen}
           activeTradingPair={activeTradingPair}
           sellOfferCount={sellOfferCount}
@@ -105,8 +109,8 @@ export function mapStateToProps(state) {
     initialMarketHistoryLoaded: tradesSelectors.initialMarketHistoryLoaded(
       state
     ),
-    // loadingBuyOffers: offers.loadingBuyOffers(state),
-    // loadingSellOffers: offers.loadingSellOffers(state),
+    loadingBuyOffers: offers.loadingBuyOffers(state),
+    loadingSellOffers: offers.loadingSellOffers(state),
     buyOfferCount: offers.activeTradingPairBuyOfferCount(state),
     sellOfferCount: offers.activeTradingPairSellOfferCount(state),
     buyOffers: offers.activeTradingPairBuyOffers(state),

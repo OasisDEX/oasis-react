@@ -61,7 +61,7 @@ export class OasisTradeWrapper extends PureComponent {
       tradedTokens,
       marketsData,
       defaultPeriod,
-      loadingTradeHistory,
+      initialMarketHistoryLoaded,
       activeTradingPair = paramsTradePair,
       actions: {
         setActiveTradingPairEpic,
@@ -78,9 +78,11 @@ export class OasisTradeWrapper extends PureComponent {
           tradedTokens={tradedTokens}
           marketData={marketsData}
           defaultPeriod={defaultPeriod}
-          loadingTradeHistory={loadingTradeHistory}
+          initialMarketHistoryLoaded={initialMarketHistoryLoaded}
         />
-        <OasisChart/>
+        <OasisChart
+          initialMarketHistoryLoaded={initialMarketHistoryLoaded}
+        />
         {this.props.activeTradingPair && <OasisTradeOrdersWrapper/>}
       </FlexBox>
     );
@@ -91,13 +93,14 @@ export function mapStateToProps(state) {
   return {
 
     validBaseTokensList: tokens.validBaseTokensList(state),
-    loadingTradeHistory: !trades.initialMarketHistoryLoaded(state),
+    initialMarketHistoryLoaded: trades.initialMarketHistoryLoaded(state),
     validQuoteTokensList: tokens.validQuoteTokensList(state),
     marketsData: trades.marketsData(state),
     activeTradingPair: tokens.activeTradingPair(state),
     tradedTokens: tokens.tradingPairs(state),
     defaultPeriod: platform.defaultPeriod(state),
-    offersInitialized: offers.offersInitialized(state)
+    offersInitialized: offers.offersInitialized(state),
+
   };
 }
 

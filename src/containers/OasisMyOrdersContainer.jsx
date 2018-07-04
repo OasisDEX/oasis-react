@@ -29,6 +29,7 @@ export class OasisMyOrdersContainerWrapper extends PureComponent {
       userTradesList,
       loadingUserMarketHistory,
       defaultAccount,
+      activeTradingPairOffersInitiallyLoaded,
       actions: {
         cancelOffer,
         fetchAndSubscribeUserTradesHistory,
@@ -38,6 +39,7 @@ export class OasisMyOrdersContainerWrapper extends PureComponent {
 
     return (
       <OasisMyOrders
+        activeTradingPairOffersInitiallyLoaded={activeTradingPairOffersInitiallyLoaded}
         defaultAccount={defaultAccount}
         activeNetworkName={activeNetworkName}
         sellOffers={sellOffers}
@@ -60,6 +62,7 @@ export function mapStateToProps(state) {
   return {
     defaultAccount: accounts.defaultAccount(state),
     activeTradingPair: tokens.activeTradingPair(state),
+    activeTradingPairOffersInitiallyLoaded: offers.activeTradingPairOffersInitiallyLoaded(state),
     initialMarketHistoryLoaded: tradesSelectors.initialMarketHistoryLoaded(
       state
     ),

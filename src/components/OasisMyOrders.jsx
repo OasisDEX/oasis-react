@@ -69,13 +69,19 @@ const tradesHistoryColsDefinition = (baseToken, quoteToken) => [
   }
 ];
 
-const propTypes = PropTypes && {
+const propTypes = {
   trades: ImmutablePropTypes.list,
   onFetchAndSubscribeUserTradesHistory: PropTypes.func.isRequired,
   activeNetworkName: PropTypes.string,
   removeOrderCancelledByTheOwner: PropTypes.func,
   initialMarketHistoryLoaded: PropTypes.bool,
-  loadingUserMarketHistory: PropTypes.bool
+  loadingUserMarketHistory: PropTypes.bool,
+  activeTradingPairOffersInitiallyLoaded: PropTypes.bool,
+  activeTradingPair: PropTypes.object,
+  sellOffers: PropTypes.object,
+  buyOffers: PropTypes.object,
+  cancelOffer: PropTypes.func,
+  defaultAccount: PropTypes.string
 };
 const defaultProps = {};
 
@@ -290,10 +296,21 @@ class OasisMyOrders extends PureComponent {
     );
   }
 
+  getLoadingText() {
+    if (this.state.viewType=== VIEW_TYPE_MARKET_HISTORY) {
+      return "Your trades history"
+    } else if (this.state.viewType=== VIEW_TYPE_OPEN_OFFERS) {
+      return "Your active orders";
+    }
+  }
+
   render() {
     const { offerToCancel } = this.state;
+    const { loadingUserMarketHistory, activeTradingPairOffersInitiallyLoaded } = this.props;
     return (
       <OasisWidgetFrame
+        isLoadingData={!activeTradingPairOffersInitiallyLoaded || loadingUserMarketHistory}
+        loadingDataText={this.getLoadingText()}
         heading={"MY ORDERS"}
         headingChildren={this.renderSelect()}
       >

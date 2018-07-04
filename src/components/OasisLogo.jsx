@@ -8,7 +8,7 @@ import CSSModules from 'react-css-modules';
 const propTypes = PropTypes && {};
 const defaultProps = {};
 
-class OasisLogo extends PureComponent {
+export class OasisLogo extends PureComponent {
   render() {
     return (
       <a rel="noopener noreferrer" styleName='OasisLogoWrapper' href="http://oasisdex.com">

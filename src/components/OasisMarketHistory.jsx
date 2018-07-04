@@ -102,7 +102,7 @@ class OasisMarketHistory extends PureComponent {
       activeNetworkName,
       trades,
       activeTradingPair: { baseToken, quoteToken },
-      loadingTradeHistory
+      initialMarketHistoryLoaded
     } = this.props;
     const sortedTrades = orderByTimestamp(trades.toJSON(), DESCENDING);
 
@@ -110,8 +110,10 @@ class OasisMarketHistory extends PureComponent {
 
     return (
       <OasisWidgetFrame
+        isLoadingData={!initialMarketHistoryLoaded}
+        loadingDataText={"loading trades history"}
         loadProgressSection={
-          loadingTradeHistory ? <OasisLoadingIndicator /> : null
+          !initialMarketHistoryLoaded ? <OasisLoadingIndicator /> : null
         }
         heading={`MARKET HISTORY`}
       >

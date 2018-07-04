@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisLoadingDataOverlay should render 1`] = `
+<div>
+  <div
+    style={
+      Object {
+        "textAlign": "center",
+      }
+    }
+  >
+    <OasisLoadingIndicator
+      size="xlg"
+    />
+    <span
+      style={
+        Object {
+          "display": "inline-block",
+          "marginLeft": "20px",
+        }
+      }
+    />
+  </div>
+</div>
+`;
