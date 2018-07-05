@@ -12,6 +12,7 @@ exports[`(Component) OasisMarket should render 1`] = `
   >
     <a
       href="https://kovan.etherscan.io/address/0x1234"
+      rel="noopener noreferrer"
       target="_blank"
     >
       0x1234

@@ -30,7 +30,14 @@ export class OasisOfferSummary extends PureComponent {
   renderGasEstimate() {
     const { gasEstimateInfo, isVolumeOrPriceEmptyOrZero } = this.props;
     if (isVolumeOrPriceEmptyOrZero) {
-      return (null);
+      return (
+        <OasisGasPriceWrapper
+          gasEstimateError={null}
+          gasEstimatePending={false}
+          transactionGasCostEstimate={'0'}
+          className={styles.detailsTradingCol}
+        />
+      );
     } else {
       const gasEstimatePending = gasEstimateInfo.get("isGasEstimatePending");
       const transactionGasCostEstimate = gasEstimateInfo.get(
@@ -46,7 +53,6 @@ export class OasisOfferSummary extends PureComponent {
         />
       );
     }
-
   }
 
   static renderGasEstimateNotEnabledInfo() {
