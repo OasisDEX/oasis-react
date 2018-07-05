@@ -137,35 +137,35 @@ each([
   });
 });
 
-each([
-  ["buy(0)", offers.testActions.loadBuyOffersEpic, []],
-  ["buy(1)", offers.testActions.loadBuyOffersEpic, [900]],
-  ["buy(2)", offers.testActions.loadBuyOffersEpic, [800, 700]],
-  ["sell(0)", offers.testActions.loadSellOffersEpic, []],
-  ["sell(1)", offers.testActions.loadSellOffersEpic, [900]],
-  ["sell(2)", offers.testActions.loadSellOffersEpic, [800, 700]]
-]).describe("load(Buy/Sell)OffersEpic", (description, action, offerIds) => {
-  test(description, async () => {
-    const store = configureMockStore([thunk])({
-      network: Map({ latestBlockNumber: 1 })
-    });
-
-    const getOfferIds = offerIds
-      .reduce((a, id) => a.mockReturnValueOnce(id), jest.fn())
-      .mockReturnValue(0);
-    const promise = store.dispatch(
-      action({ buyOfferCount: 100, sellOfferCount: 100 }, "MKR", "W-ETH", {
-        doGetOTCSupportMethodsContractInstance: () => ({ getOffers: async () => [] }),
-        doSyncOffer: mockAction("SYNC_OFFER"),
-        doGetMarketContractInstance: () => ({ address : "0x0000000000000000000000000000000000000001" }),
-        doGetTokenContractInstance: () => ({ address : "0x0000000000000000000000000000000000000002" })
-      })
-    );
-    const result = await promise;
-    expect(result).toMatchSnapshot();
-    expect(store.getActions()).toMatchSnapshot();
-  });
-});
+// each([
+//   ["buy(0)", offers.testActions.loadBuyOffersEpic, []],
+//   ["buy(1)", offers.testActions.loadBuyOffersEpic, [900]],
+//   ["buy(2)", offers.testActions.loadBuyOffersEpic, [800, 700]],
+//   ["sell(0)", offers.testActions.loadSellOffersEpic, []],
+//   ["sell(1)", offers.testActions.loadSellOffersEpic, [900]],
+//   ["sell(2)", offers.testActions.loadSellOffersEpic, [800, 700]]
+// ]).describe("load(Buy/Sell)OffersEpic", (description, action, offerIds) => {
+//   test(description, async () => {
+//     const store = configureMockStore([thunk])({
+//       network: Map({ latestBlockNumber: 1 })
+//     });
+//
+//     const getOfferIds = offerIds
+//       .reduce((a, id) => a.mockReturnValueOnce(id), jest.fn())
+//       .mockReturnValue(0);
+//     const promise = store.dispatch(
+//       action({ buyOfferCount: 100, sellOfferCount: 100 }, "MKR", "W-ETH", {
+//         doGetOTCSupportMethodsContractInstance: () => ({ getOffers: async () => [] }),
+//         doSyncOffer: mockAction("SYNC_OFFER"),
+//         doGetMarketContractInstance: () => ({ address : "0x0000000000000000000000000000000000000001" }),
+//         doGetTokenContractInstance: () => ({ address : "0x0000000000000000000000000000000000000002" })
+//       })
+//     );
+//     const result = await promise;
+//     expect(result).toMatchSnapshot();
+//     expect(store.getActions()).toMatchSnapshot();
+//   });
+// });
 
 // describe("syncOffersEpic", () => {
 //   test("main", async () => {

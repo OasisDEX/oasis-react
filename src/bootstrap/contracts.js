@@ -70,6 +70,13 @@ const init = networkName => {
     config.otcSupportMethods[networkName].address
   );
 
+  const OTCSupportMethodsNoProxy = loadContact(
+    OTCSupportContractAbi.interface,
+    config.otcSupportMethods[networkName].address,
+    true
+  );
+
+
   // const WGNTNoProxy = loadContact(
   //   TokenWrapperAbi.interface,
   //   tokencontractsDeploymentAdressessList["W-GNT"],
@@ -100,6 +107,7 @@ const init = networkName => {
     },
     marketNoProxy,
     OTCSupportMethods,
+    OTCSupportMethodsNoProxy,
     abiList,
     createContractInstance
   });
@@ -145,6 +153,13 @@ const getOTCSupportMethodsContractInstance = () => {
   }
 };
 
+const getOTCSupportMethodsNoProxyContractInstance = () => {
+  if (contracts.OTCSupportMethodsNoProxy) {
+    return contracts.OTCSupportMethodsNoProxy;
+  } else {
+    throw Error(`Contract for *OTCSupportMethodsContract* not found!`);
+  }
+};
 
 const getTokenContractsList = () => contracts.tokens;
 
@@ -169,7 +184,8 @@ export {
   getTokenNoProxyContractInstance,
   initDepositBrokerContract,
   areContractsInitialized,
-  getOTCSupportMethodsContractInstance
+  getOTCSupportMethodsContractInstance,
+  getOTCSupportMethodsNoProxyContractInstance
 };
 
 export default {

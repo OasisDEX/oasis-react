@@ -5,7 +5,6 @@ import { createAction } from "redux-actions";
 import getTokenByAddress from "../../../utils/tokens/getTokenByAddress";
 import { getMarketContractInstance } from "../../../bootstrap/contracts";
 import { fulfilled, pending } from "../../../utils/store";
-import BigNumber from 'bignumber.js';
 
 const attemptToSyncRemovedOffer = createAction(
   "OFFERS/ATTEMPT_TO_SYNC_REMOVED_OFFER",
@@ -105,13 +104,13 @@ export const  syncRawOffer = (
           { buyWhichTokenAddress, sellWhichTokenAddress, OFFER_SYNC_TYPE_INITIAL },
           getState()
         );
-        const id = parseInt(offerId, 16).toString();
+        const id = offerId.toString();
         dispatch(
           doSetOfferEpic({
             id,
-            sellHowMuch: new BigNumber(sellHowMuch),
+            sellHowMuch,
             sellWhichTokenAddress,
-            buyHowMuch: new BigNumber(buyHowMuch),
+            buyHowMuch,
             buyWhichTokenAddress,
             owner,
             timestamp,
