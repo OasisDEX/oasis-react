@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-vars */
 import { createPromiseActions } from "../../../utils/createPromiseActions";
 import { syncRawOffer } from "./syncOfferEpic";
-import BigNumber from "bignumber.js";
 import { Map } from "immutable";
 import { SYNC_STATUS_COMPLETED, SYNC_STATUS_PENDING } from "../../../constants";
 import {
@@ -12,7 +10,6 @@ import {
 } from "../../../bootstrap/contracts";
 import promisify from "../../../utils/promisify";
 
-const OFFER_SIZE = 5;
 const PAGE_SIZE = 100;
 
 const OFFER_ID_IDX = 0;
