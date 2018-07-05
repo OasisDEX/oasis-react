@@ -21,8 +21,6 @@ const BUY_AMOUNT_IDX = 2;
 const OFFER_OWNER_IDX = 3;
 const TIMESTAMP_IDX = 4;
 
-export const loadSellOffers = createPromiseActions("OFFERS/LOAD_SELL_OFFERS");
-
 const parsePayload = (payload, pageIdx, { sellToken, buyToken }) => {
   const [offerId, sellHowMuch, buyHowMuch, owner, timestamp] = [
     payload[OFFER_ID_IDX][pageIdx],
@@ -64,8 +62,8 @@ const parseAndSyncOffersPage = (
       dispatch(syncRawOffer(currentParsedOffer));
       if (pageIdx === PAGE_SIZE - 1) {
         return {
-          backtrackOfferId: backtrackOfferId,
           lastOfferId: currentParsedOffer.offerId,
+          backtrackOfferId: backtrackOfferId,
           hasFullPage: true
         };
       }
@@ -73,12 +71,13 @@ const parseAndSyncOffersPage = (
       return {
         lastOfferId: null,
         backtrackOfferId: backtrackOfferId,
-        shouldBackTrack: pageIdx === 0
+        shouldBacktrack: pageIdx === 0
       };
     }
   }
 };
 
+export const loadSellOffers = createPromiseActions("OFFERS/LOAD_SELL_OFFERS");
 export const loadSellOffersEpic = (
   offersLoadMeta,
   sellToken,
@@ -86,23 +85,18 @@ export const loadSellOffersEpic = (
 ) => async dispatch => {
   try {
     const OTCMarketAddress = getMarketContractInstance().address;
-    const sellOffersTradingPair = {
-      baseToken: sellToken,
-      quoteToken: buyToken
-    };
+    const sellOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
     dispatch(loadSellOffers.pending(sellOffersTradingPair));
     const rawOffersPayload = await getOTCSupportMethodsContractInstance().getOffers(
-      getMarketContractInstance().address,
+      OTCMarketAddress,
       getTokenContractInstance(sellToken).address,
       getTokenContractInstance(buyToken).address
     );
-
-    let firstPageParseResult = parseAndSyncOffersPage(rawOffersPayload, {
+    const firstPageParseResult = parseAndSyncOffersPage(rawOffersPayload, {
       dispatch,
       sellToken,
       buyToken
     });
-
     if (
       firstPageParseResult.lastOfferId &&
       firstPageParseResult.lastOfferId.gt(0)
@@ -120,15 +114,14 @@ export const loadSellOffersEpic = (
         );
         lastSellOfferId = !eachNextPageParseResult.shouldBacktrack
           ? eachNextPageParseResult.lastOfferId
-          : eachNextPageParseResult.backtrackOfferId ||
-            lastSellOfferId === firstPageParseResult.lastOfferId
-            ? firstPageBacktrackOfferId
-            : null;
+          : (lastSellOfferId !== firstPageParseResult.lastOfferId ? firstPageBacktrackOfferId : undefined);
       }
-      dispatch(loadSellOffers.fulfilled(sellOffersTradingPair));
-    } else {
-      dispatch(loadSellOffers.fulfilled(sellOffersTradingPair));
+      if (lastSellOfferId === undefined) {
+        dispatch(loadSellOffers.fulfilled(sellOffersTradingPair));
+        return dispatch(loadSellOffersEpic(offersLoadMeta, sellToken, buyToken));
+      }
     }
+    dispatch(loadSellOffers.fulfilled(sellOffersTradingPair));
     return loadSellOffers;
   } catch (e) {
     dispatch(loadSellOffers.rejected(e));
@@ -168,23 +161,18 @@ export const loadBuyOffersEpic = (
           await promisify(
             getOTCSupportMethodsNoProxyContractInstance()
               .getOffers["address,uint256"])(OTCMarketAddress, lastBuyOfferId.toString()),
-          {
-            dispatch,
-            sellToken,
-            buyToken
-          }
+          { dispatch, sellToken, buyToken }
         );
         lastBuyOfferId = !eachNextPageParseResult.shouldBacktrack
           ? eachNextPageParseResult.lastOfferId
-          : eachNextPageParseResult.backtrackOfferId ||
-            lastBuyOfferId === firstPageParseResult.lastOfferId
-            ? firstPageBacktrackOfferId
-            : null;
+          : (lastBuyOfferId !== firstPageParseResult.lastOfferId ? firstPageBacktrackOfferId : undefined);
       }
-      dispatch(loadBuyOffers.fulfilled(buyOffersTradingPair));
-    } else {
-      dispatch(loadBuyOffers.fulfilled(buyOffersTradingPair));
+      if (lastBuyOfferId === undefined) {
+        dispatch(loadBuyOffers.fulfilled(buyOffersTradingPair));
+        return dispatch(loadBuyOffersEpic(offersLoadMeta, buyToken, sellToken));
+      }
     }
+    dispatch(loadBuyOffers.fulfilled(buyOffersTradingPair));
     return loadBuyOffers;
   } catch (e) {
     dispatch(loadBuyOffers.rejected(e));
