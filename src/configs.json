@@ -25,10 +25,10 @@
   },
   "otcSupportMethods": {
     "kovan": {
-      "address": "0xe0f5709ddc19bca1646b35c327da9f5acb10a328"
+      "address": "0x303f2bf24d98325479932881657f45567b3e47a8"
     },
     "main": {
-      "address": "0x5bb547998a3c8b872dab8a6848d2d80f603e74d1"
+      "address": "0x9b3f075b12513afe56ca2ed838613b7395f57839"
     }
   },
   "tokens": {

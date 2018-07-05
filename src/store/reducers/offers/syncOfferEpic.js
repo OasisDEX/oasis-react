@@ -5,7 +5,6 @@ import { createAction } from "redux-actions";
 import getTokenByAddress from "../../../utils/tokens/getTokenByAddress";
 import { getMarketContractInstance } from "../../../bootstrap/contracts";
 import { fulfilled, pending } from "../../../utils/store";
-import web3 from '../../../bootstrap/web3';
 
 const attemptToSyncRemovedOffer = createAction(
   "OFFERS/ATTEMPT_TO_SYNC_REMOVED_OFFER",
@@ -27,7 +26,6 @@ export const  syncOffer = (
 ) => async (dispatch, getState) => {
   return dispatch(doLoadOffer(offerId)).then(
     ({ value: offer }) => {
-      console.log({offer})
       const [
         sellHowMuch,
         sellWhichTokenAddress,
@@ -90,42 +88,42 @@ export const  syncOffer = (
   )
 };
 
-export const syncRawOffer = (
+export const  syncRawOffer = (
   offer, { doSetOfferEpic = setOfferEpic } = {}
 ) => async (dispatch, getState) => {
-  const {
-    offerId,
-    sellHowMuch,
-    sellWhichTokenAddress,
-    buyHowMuch,
-    buyWhichTokenAddress,
-    owner,
-    timestamp
-  } = offer;
-  const { baseToken, quoteToken, offerType } = getOfferTradingPairAndType(
-    { buyWhichTokenAddress, sellWhichTokenAddress, OFFER_SYNC_TYPE_INITIAL },
-    getState()
-  );
-  const id = web3.toBigNumber(offerId).toString();
-  dispatch(
-    doSetOfferEpic({
-      id,
-      sellHowMuch: web3.toBigNumber(sellHowMuch),
-      sellWhichTokenAddress,
-      buyHowMuch: web3.toBigNumber(buyHowMuch),
-      buyWhichTokenAddress,
-      owner,
-      timestamp,
-      offerType,
-      tradingPair: { baseToken, quoteToken },
-      syncType: OFFER_SYNC_TYPE_INITIAL
-    })
-  );
-  return {
-    offer,
-    offerMeta: { baseToken, quoteToken, offerType }
-  };
+      const {
+        offerId,
+        sellHowMuch,
+        sellWhichTokenAddress,
+        buyHowMuch,
+        buyWhichTokenAddress,
+        owner,
+        timestamp
+      } = offer;
+        const { baseToken, quoteToken, offerType } = getOfferTradingPairAndType(
+          { buyWhichTokenAddress, sellWhichTokenAddress, OFFER_SYNC_TYPE_INITIAL },
+          getState()
+        );
+        const id = offerId.toString();
+        dispatch(
+          doSetOfferEpic({
+            id,
+            sellHowMuch,
+            sellWhichTokenAddress,
+            buyHowMuch,
+            buyWhichTokenAddress,
+            owner,
+            timestamp,
+            offerType,
+            tradingPair: { baseToken, quoteToken },
+            syncType: OFFER_SYNC_TYPE_INITIAL
+          })
+        );
+        return {
+          offer, offerMeta: { baseToken, quoteToken, offerType }
+        };
 };
+
 
 
 export const reducer = {
