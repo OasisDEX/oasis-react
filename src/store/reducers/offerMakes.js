@@ -19,7 +19,7 @@ import {
   getMarketContractInstance,
   getMarketNoProxyContractInstance
 } from "../../bootstrap/contracts";
-import { DEFAULT_GAS_LIMIT, DEFAULT_GAS_PRICE } from "../../constants";
+import { DEFAULT_GAS_PRICE } from "../../constants";
 import transactions from "../selectors/transactions";
 import isNumericAndGreaterThanZero from "../../utils/numbers/isNumericAndGreaterThanZero";
 import getTokenByAddress from "../../utils/tokens/getTokenByAddress";

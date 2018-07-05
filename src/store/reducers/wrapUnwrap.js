@@ -3,7 +3,6 @@ import { fromJS } from "immutable";
 import { reset, formValueSelector, change } from "redux-form/immutable";
 
 import {
-  DEFAULT_GAS_LIMIT,
   DEFAULT_GAS_PRICE,
   ETH_UNIT_ETHER,
   TOKEN_ETHER,

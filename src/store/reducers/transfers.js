@@ -7,7 +7,6 @@ import { reset } from "redux-form/immutable";
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import transfers from "../selectors/transfers";
 import {
-  DEFAULT_GAS_LIMIT,
   DEFAULT_GAS_PRICE,
   ETH_UNIT_ETHER
 } from "../../constants";
