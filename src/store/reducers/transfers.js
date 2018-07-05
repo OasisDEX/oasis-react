@@ -27,7 +27,6 @@ const transferTransaction = createAction(
     tokenName,
     recipientAddress,
     tokenAmountInEther,
-    gasLimit = DEFAULT_GAS_LIMIT,
     gasPrice = DEFAULT_GAS_PRICE
   ) => {
     const contractInstance = getTokenContractInstance(tokenName);
@@ -39,7 +38,6 @@ const transferTransaction = createAction(
       recipientAddress,
       tokenAmountInTokenPrecisionWei,
       {
-        gas: gasLimit,
         gasPrice
       }
     );
