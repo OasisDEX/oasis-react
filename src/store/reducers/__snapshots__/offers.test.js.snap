@@ -567,3 +567,79 @@ Array [
   },
 ]
 `;
+
+exports[`syncOffersEpic main 1`] = `undefined`;
+
+exports[`syncOffersEpic main 2`] = `
+Array [
+  Object {
+    "payload": Array [
+      "W-ETH",
+      "MKR",
+    ],
+    "type": "MOCK___OFFERS/GET_BEST_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "syncStartBlockNumber": 1,
+      "tradingPair": Object {
+        "baseToken": "MKR",
+        "quoteToken": "W-ETH",
+      },
+    },
+    "type": "OFFERS/SYNC_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/RESET_OFFERS",
+  },
+  Object {
+    "payload": Array [
+      "MKR",
+      "W-ETH",
+    ],
+    "type": "MOCK___OFFERS/GET_BEST_OFFER",
+  },
+  Object {
+    "payload": Array [
+      10,
+      "MKR",
+      "W-ETH",
+    ],
+    "type": "MOCK___OFFERS/LOAD_BUY_OFFERS",
+  },
+  Object {
+    "payload": Array [
+      10,
+      "MKR",
+      "W-ETH",
+    ],
+    "type": "MOCK___OFFERS/LOAD_SELL_OFFERS",
+  },
+  Object {
+    "payload": Object {
+      "bestBuyOfferId": "2000",
+      "bestSellOfferId": "1000",
+    },
+    "type": "OFFERS/SET_ACTIVE_TRADING_PAIR_BEST_OFFER_IDS",
+  },
+  Object {
+    "payload": Object {
+      "syncEndBlockNumber": 1,
+      "tradingPair": Object {
+        "baseToken": "MKR",
+        "quoteToken": "W-ETH",
+      },
+    },
+    "type": Array [
+      "OFFERS/SYNC_OFFERS_FULFILLED",
+    ],
+  },
+  Object {
+    "type": "RE_SYNC_OFFERS/RE_SYNC_OFFERS_PENDING",
+  },
+]
+`;

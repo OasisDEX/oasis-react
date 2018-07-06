@@ -3,7 +3,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import each from "jest-each";
-import { mockAction } from "../../utils/testHelpers";
+import { mockAction, dispatchMockAction } from "../../utils/testHelpers";
 
 import BigNumber from "bignumber.js";
 import { Map, List } from "immutable";
@@ -167,45 +167,49 @@ each([
 //   });
 // });
 
-// describe("syncOffersEpic", () => {
-//   test("main", async () => {
-//     const store = configureMockStore([thunk])(
-//       Map({
-//         network: Map({ latestBlockNumber: 1 }),
-//         tokens: Map({
-//           activeTradingPair: Map({
-//             baseToken: "MKR",
-//             quoteToken: "W-ETH"
-//           })
-//         }),
-//         offers: Map({
-//           offers: Map().set(
-//             Map({ baseToken: "MKR", quoteToken: "W-ETH" }),
-//             Map({
-//               initialSyncStatus: SYNC_STATUS_PRISTINE
-//             })
-//           )
-//         })
-//       })
-//     );
-//
-//     const promise = store.dispatch(
-//       offers.actions.syncOffersEpic(
-//         { baseToken: "MKR", quoteToken: "W-ETH" },
-//         {
-//           doGetTradingPairOfferCount: () => async () => ({ value: 10 }),
-//           doLoadBuyOffersEpic: mockAction("OFFERS/LOAD_BUY_OFFERS"),
-//           doLoadSellOffersEpic: mockAction("OFFERS/LOAD_SELL_OFFERS")
-//         }
-//       )
-//     );
-//
-//     const result = await promise;
-//
-//     expect(result).toMatchSnapshot();
-//     expect(store.getActions()).toMatchSnapshot();
-//   });
-// });
+describe("syncOffersEpic", () => {
+  test("main", async () => {
+    const store = configureMockStore([thunk])(
+      Map({
+        network: Map({ latestBlockNumber: 1 }),
+        tokens: Map({
+          activeTradingPair: Map({
+            baseToken: "MKR",
+            quoteToken: "W-ETH"
+          })
+        }),
+        offers: Map({
+          offers: Map().set(
+            Map({ baseToken: "MKR", quoteToken: "W-ETH" }),
+            Map({
+              initialSyncStatus: SYNC_STATUS_PRISTINE
+            })
+          )
+        })
+      })
+    );
+
+    const promise = store.dispatch(
+      offers.actions.syncOffersEpic(
+        { baseToken: "MKR", quoteToken: "W-ETH" },
+        {
+          doGetBestOffer: (t1, t2) => async () => {
+            dispatchMockAction('OFFERS/GET_BEST_OFFER', store.dispatch)(t1, t2);
+            return {value: {"MKR": "1000", "W-ETH": "2000"}[t1]};
+          },
+          doGetTradingPairOfferCount: () => async () => ({ value: 10 }),
+          doLoadBuyOffersEpic: mockAction("OFFERS/LOAD_BUY_OFFERS"),
+          doLoadSellOffersEpic: mockAction("OFFERS/LOAD_SELL_OFFERS")
+        }
+      )
+    );
+
+    const result = await promise;
+
+    expect(result).toMatchSnapshot();
+    expect(store.getActions()).toMatchSnapshot();
+  });
+});
 
 describe("subscribeNewOffersFilledInEpic", () => {
   test("main", async () => {
