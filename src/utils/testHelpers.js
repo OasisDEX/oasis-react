@@ -36,6 +36,13 @@ export function dispatchMockAction(name, dispatch) {
   );
 }
 
+export function mockEpic(name, dispatch) {
+  return (f) => (...args) => async () => {
+    dispatch(createAction('MOCK___' + name, (...args) => args)(...args));
+    return f(...args);
+  };
+}
+
 export function wei(x) {
   return new BigNumber(1000000000000000000).mul(x).toString();
 }
