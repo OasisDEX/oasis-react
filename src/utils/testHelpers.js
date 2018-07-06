@@ -43,6 +43,10 @@ export function mockEpic(name, dispatch) {
   };
 }
 
+export function asyncMock(mock) {
+  return async (...args) => mock(...args);
+}
+
 export function wei(x) {
   return new BigNumber(1000000000000000000).mul(x).toString();
 }

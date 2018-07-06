@@ -43,11 +43,14 @@ const parsePayload = (payload, pageIdx, { sellToken, buyToken }) => {
 
 const parseAndSyncOffersPage = (
   rawOffersPayload,
-  { dispatch, sellToken, buyToken }
+  { dispatch, sellToken, buyToken },
+  {
+    pageSize = PAGE_SIZE,
+  } = {}
 ) => {
   let backtrackOfferId = null;
   let currentParsedOffer = null;
-  for (let pageIdx = 0; pageIdx < PAGE_SIZE; ++pageIdx) {
+  for (let pageIdx = 0; pageIdx < pageSize; ++pageIdx) {
     if (pageIdx) {
       backtrackOfferId = currentParsedOffer.offerId;
     }
@@ -57,7 +60,7 @@ const parseAndSyncOffersPage = (
     });
     if (currentParsedOffer) {
       dispatch(syncRawOffer(currentParsedOffer));
-      if (pageIdx === PAGE_SIZE - 1) {
+      if (pageIdx === pageSize - 1) {
         return {
           lastOfferId: currentParsedOffer.offerId,
           backtrackOfferId: backtrackOfferId,
@@ -78,22 +81,28 @@ export const loadSellOffers = createPromiseActions("OFFERS/LOAD_SELL_OFFERS");
 export const loadSellOffersEpic = (
   offersLoadMeta,
   sellToken,
-  buyToken
-) => async dispatch => {
-  try {
-    const OTCMarketAddress = getMarketContractInstance().address;
-    const sellOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
-    dispatch(loadSellOffers.pending(sellOffersTradingPair));
-    const rawOffersPayload = await getOTCSupportMethodsContractInstance().getOffers(
-      OTCMarketAddress,
+  buyToken, {
+    firstPage = (sellToken, buyToken) => getOTCSupportMethodsContractInstance().getOffers(
+      getMarketContractInstance().address,
       getTokenContractInstance(sellToken).address,
       getTokenContractInstance(buyToken).address
-    );
+    ),
+    nextPage = (lastSellOfferId) => promisify(getOTCSupportMethodsNoProxyContractInstance().getOffers["address,uint256"])(
+      getMarketContractInstance().address,
+      lastSellOfferId.toString()
+    ),
+    pageSize = PAGE_SIZE,
+  } = {}
+) => async dispatch => {
+  try {
+    const sellOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
+    dispatch(loadSellOffers.pending(sellOffersTradingPair));
+    const rawOffersPayload = await firstPage(sellToken, buyToken);
     const firstPageParseResult = parseAndSyncOffersPage(rawOffersPayload, {
       dispatch,
       sellToken,
       buyToken
-    });
+    }, { pageSize });
     if (
       firstPageParseResult.lastOfferId &&
       firstPageParseResult.lastOfferId.gt(0)
@@ -104,10 +113,9 @@ export const loadSellOffersEpic = (
       } = firstPageParseResult;
       while (lastSellOfferId) {
         const eachNextPageParseResult = parseAndSyncOffersPage(
-          await promisify(
-            getOTCSupportMethodsNoProxyContractInstance()
-              .getOffers["address,uint256"])(OTCMarketAddress, lastSellOfferId.toString()),
-          { dispatch, sellToken, buyToken }
+          await nextPage(lastSellOfferId),
+          { dispatch, sellToken, buyToken },
+          { pageSize }
         );
         lastSellOfferId = !eachNextPageParseResult.shouldBacktrack
           ? eachNextPageParseResult.lastOfferId
@@ -115,12 +123,13 @@ export const loadSellOffersEpic = (
       }
       if (lastSellOfferId === undefined) {
         dispatch(loadSellOffers.fulfilled(sellOffersTradingPair));
-        return dispatch(loadSellOffersEpic(offersLoadMeta, sellToken, buyToken));
+        return dispatch(loadSellOffersEpic(offersLoadMeta, sellToken, buyToken, {firstPage, nextPage, pageSize}));
       }
     }
     dispatch(loadSellOffers.fulfilled(sellOffersTradingPair));
     return loadSellOffers;
   } catch (e) {
+    console.log(e)
     dispatch(loadSellOffers.rejected(e));
   }
 };
@@ -129,22 +138,28 @@ export const loadBuyOffers = createPromiseActions("OFFERS/LOAD_BUY_OFFERS");
 export const loadBuyOffersEpic = (
   offersLoadMeta,
   buyToken,
-  sellToken
-) => async dispatch => {
-  try {
-    const OTCMarketAddress = getMarketContractInstance().address;
-    const buyOffersTradingPair = { baseToken: buyToken, quoteToken: sellToken };
-    dispatch(loadBuyOffers.pending(buyOffersTradingPair));
-    const rawOffersPayload = await getOTCSupportMethodsContractInstance().getOffers(
-      OTCMarketAddress,
+  sellToken, {
+    firstPage = (sellToken, buyToken) => getOTCSupportMethodsContractInstance().getOffers(
+      getMarketContractInstance().address,
       getTokenContractInstance(sellToken).address,
       getTokenContractInstance(buyToken).address
-    );
+    ),
+    nextPage = (lastSellOfferId) => promisify(getOTCSupportMethodsNoProxyContractInstance().getOffers["address,uint256"])(
+      getMarketContractInstance().address,
+      lastSellOfferId.toString()
+    ),
+    pageSize = PAGE_SIZE,
+  } = {}
+) => async dispatch => {
+  try {
+    const buyOffersTradingPair = { baseToken: buyToken, quoteToken: sellToken };
+    dispatch(loadBuyOffers.pending(buyOffersTradingPair));
+    const rawOffersPayload = await firstPage(sellToken, buyToken);
     const firstPageParseResult = parseAndSyncOffersPage(rawOffersPayload, {
       dispatch,
       sellToken,
       buyToken
-    });
+    }, { pageSize });
     if (
       firstPageParseResult.lastOfferId &&
       firstPageParseResult.lastOfferId.gt(0)
@@ -155,10 +170,9 @@ export const loadBuyOffersEpic = (
       } = firstPageParseResult;
       while (lastBuyOfferId) {
         const eachNextPageParseResult = parseAndSyncOffersPage(
-          await promisify(
-            getOTCSupportMethodsNoProxyContractInstance()
-              .getOffers["address,uint256"])(OTCMarketAddress, lastBuyOfferId.toString()),
-          { dispatch, sellToken, buyToken }
+          await nextPage(lastBuyOfferId),
+          { dispatch, sellToken, buyToken },
+          { pageSize }
         );
         lastBuyOfferId = !eachNextPageParseResult.shouldBacktrack
           ? eachNextPageParseResult.lastOfferId
@@ -166,12 +180,13 @@ export const loadBuyOffersEpic = (
       }
       if (lastBuyOfferId === undefined) {
         dispatch(loadBuyOffers.fulfilled(buyOffersTradingPair));
-        return dispatch(loadBuyOffersEpic(offersLoadMeta, buyToken, sellToken));
+        return dispatch(loadBuyOffersEpic(offersLoadMeta, buyToken, sellToken, {firstPage, nextPage, pageSize}));
       }
     }
     dispatch(loadBuyOffers.fulfilled(buyOffersTradingPair));
     return loadBuyOffers;
   } catch (e) {
+    console.log(e)
     dispatch(loadBuyOffers.rejected(e));
   }
 };

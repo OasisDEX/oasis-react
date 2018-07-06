@@ -1,5 +1,927 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`loadSellOffersEpic buy empty 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
+
+exports[`loadSellOffersEpic buy empty 2`] = `
+Array [
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": Array [
+      "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
+    ],
+  },
+]
+`;
+
+exports[`loadSellOffersEpic buy one page 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
+
+exports[`loadSellOffersEpic buy one page 2`] = `
+Array [
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "MKR",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "1",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "W-ETH",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_BUY",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": Array [
+      "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
+    ],
+  },
+]
+`;
+
+exports[`loadSellOffersEpic buy removed from first page 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
+
+exports[`loadSellOffersEpic buy removed from first page 2`] = `
+Array [
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "MKR",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "1",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "W-ETH",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_BUY",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "MKR",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "2",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "W-ETH",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_BUY",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": Array [
+      "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
+    ],
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "200",
+        "buyHowMuch_filter": 200,
+        "buyWhichToken": "MKR",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "1",
+        "owner": undefined,
+        "sellHowMuch": "200",
+        "sellHowMuch_filter": 200,
+        "sellWhichToken": "W-ETH",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_BUY",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": Array [
+      "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
+    ],
+  },
+]
+`;
+
+exports[`loadSellOffersEpic buy removed from next page 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
+
+exports[`loadSellOffersEpic buy removed from next page 2`] = `
+Array [
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "MKR",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "1",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "W-ETH",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_BUY",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "MKR",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "2",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "W-ETH",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_BUY",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "200",
+        "buyHowMuch_filter": 200,
+        "buyWhichToken": "MKR",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "2",
+        "owner": undefined,
+        "sellHowMuch": "200",
+        "sellHowMuch_filter": 200,
+        "sellWhichToken": "W-ETH",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_BUY",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "MKR",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "3",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "W-ETH",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_BUY",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "300",
+        "buyHowMuch_filter": 300,
+        "buyWhichToken": "MKR",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "2",
+        "owner": undefined,
+        "sellHowMuch": "300",
+        "sellHowMuch_filter": 300,
+        "sellWhichToken": "W-ETH",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_BUY",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": Array [
+      "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
+    ],
+  },
+]
+`;
+
+exports[`loadSellOffersEpic buy two pages 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
+
+exports[`loadSellOffersEpic buy two pages 2`] = `
+Array [
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "MKR",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "1",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "W-ETH",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_BUY",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "MKR",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "2",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "W-ETH",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_BUY",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "200",
+        "buyHowMuch_filter": 200,
+        "buyWhichToken": "MKR",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "2",
+        "owner": undefined,
+        "sellHowMuch": "200",
+        "sellHowMuch_filter": 200,
+        "sellWhichToken": "W-ETH",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_BUY",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": Array [
+      "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
+    ],
+  },
+]
+`;
+
+exports[`loadSellOffersEpic sell empty 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
+
+exports[`loadSellOffersEpic sell empty 2`] = `
+Array [
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": Array [
+      "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
+    ],
+  },
+]
+`;
+
+exports[`loadSellOffersEpic sell one page 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
+
+exports[`loadSellOffersEpic sell one page 2`] = `
+Array [
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "W-ETH",
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "id": "1",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "MKR",
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_SELL",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": Array [
+      "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
+    ],
+  },
+]
+`;
+
+exports[`loadSellOffersEpic sell removed from first page 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
+
+exports[`loadSellOffersEpic sell removed from first page 2`] = `
+Array [
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "W-ETH",
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "id": "1",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "MKR",
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_SELL",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "W-ETH",
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "id": "2",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "MKR",
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_SELL",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": Array [
+      "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
+    ],
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "200",
+        "buyHowMuch_filter": 200,
+        "buyWhichToken": "W-ETH",
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "id": "1",
+        "owner": undefined,
+        "sellHowMuch": "200",
+        "sellHowMuch_filter": 200,
+        "sellWhichToken": "MKR",
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_SELL",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": Array [
+      "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
+    ],
+  },
+]
+`;
+
+exports[`loadSellOffersEpic sell removed from next page 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
+
+exports[`loadSellOffersEpic sell removed from next page 2`] = `
+Array [
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "W-ETH",
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "id": "1",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "MKR",
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_SELL",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "W-ETH",
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "id": "2",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "MKR",
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_SELL",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "200",
+        "buyHowMuch_filter": 200,
+        "buyWhichToken": "W-ETH",
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "id": "2",
+        "owner": undefined,
+        "sellHowMuch": "200",
+        "sellHowMuch_filter": 200,
+        "sellWhichToken": "MKR",
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_SELL",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "W-ETH",
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "id": "3",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "MKR",
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_SELL",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "300",
+        "buyHowMuch_filter": 300,
+        "buyWhichToken": "W-ETH",
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "id": "2",
+        "owner": undefined,
+        "sellHowMuch": "300",
+        "sellHowMuch_filter": 300,
+        "sellWhichToken": "MKR",
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_SELL",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": Array [
+      "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
+    ],
+  },
+]
+`;
+
+exports[`loadSellOffersEpic sell two pages 1`] = `
+Object {
+  "fulfilled": [Function],
+  "pending": [Function],
+  "rejected": [Function],
+}
+`;
+
+exports[`loadSellOffersEpic sell two pages 2`] = `
+Array [
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "W-ETH",
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "id": "1",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "MKR",
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_SELL",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "100",
+        "buyHowMuch_filter": 100,
+        "buyWhichToken": "W-ETH",
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "id": "2",
+        "owner": undefined,
+        "sellHowMuch": "100",
+        "sellHowMuch_filter": 100,
+        "sellWhichToken": "MKR",
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_SELL",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "200",
+        "buyHowMuch_filter": 200,
+        "buyWhichToken": "W-ETH",
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "id": "2",
+        "owner": undefined,
+        "sellHowMuch": "200",
+        "sellHowMuch_filter": 200,
+        "sellWhichToken": "MKR",
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_SELL",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": Array [
+      "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
+    ],
+  },
+]
+`;
+
 exports[`setOfferEpic initial sync / set 1`] = `undefined`;
 
 exports[`setOfferEpic initial sync / set 2`] = `

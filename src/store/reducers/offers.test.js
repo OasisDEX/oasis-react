@@ -3,7 +3,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import each from "jest-each";
-import { mockAction, mockEpic } from "../../utils/testHelpers";
+import { mockAction, mockEpic, asyncMock } from "../../utils/testHelpers";
 
 import BigNumber from "bignumber.js";
 import { Map, List } from "immutable";
@@ -137,35 +137,118 @@ each([
   });
 });
 
-// each([
-//   ["buy(0)", offers.testActions.loadBuyOffersEpic, []],
-//   ["buy(1)", offers.testActions.loadBuyOffersEpic, [900]],
-//   ["buy(2)", offers.testActions.loadBuyOffersEpic, [800, 700]],
-//   ["sell(0)", offers.testActions.loadSellOffersEpic, []],
-//   ["sell(1)", offers.testActions.loadSellOffersEpic, [900]],
-//   ["sell(2)", offers.testActions.loadSellOffersEpic, [800, 700]]
-// ]).describe("load(Buy/Sell)OffersEpic", (description, action, offerIds) => {
-//   test(description, async () => {
-//     const store = configureMockStore([thunk])({
-//       network: Map({ latestBlockNumber: 1 })
-//     });
-//
-//     const getOfferIds = offerIds
-//       .reduce((a, id) => a.mockReturnValueOnce(id), jest.fn())
-//       .mockReturnValue(0);
-//     const promise = store.dispatch(
-//       action({ buyOfferCount: 100, sellOfferCount: 100 }, "MKR", "W-ETH", {
-//         doGetOTCSupportMethodsContractInstance: () => ({ getOffers: async () => [] }),
-//         doSyncOffer: mockAction("SYNC_OFFER"),
-//         doGetMarketContractInstance: () => ({ address : "0x0000000000000000000000000000000000000001" }),
-//         doGetTokenContractInstance: () => ({ address : "0x0000000000000000000000000000000000000002" })
-//       })
-//     );
-//     const result = await promise;
-//     expect(result).toMatchSnapshot();
-//     expect(store.getActions()).toMatchSnapshot();
-//   });
-// });
+each([
+  [
+    "buy empty",
+    offers.testActions.loadBuyOffersEpic,
+    [[{id: 0, sell: 0, buy: 0}]],
+    [[{id: 0, sell: 0, buy: 0}]],
+  ],
+  [
+    "buy one page",
+    offers.testActions.loadBuyOffersEpic,
+    [[{id: 1, sell: 100, buy: 100}, {id: 0, sell: 0, buy: 0}]],
+    [[{id: 0, sell: 0, buy: 0}]],
+  ],
+  [
+    "buy two pages",
+    offers.testActions.loadBuyOffersEpic,
+    [[{id: 1, sell: 100, buy: 100}, {id: 2, sell: 100, buy: 100}]],
+    [[{id: 2, sell: 200, buy: 200}, {id: 0, sell: 0, buy: 0}]],
+  ],
+  [
+    "buy removed from first page",
+    offers.testActions.loadBuyOffersEpic,
+    [[{id: 1, sell: 100, buy: 100}, {id: 2, sell: 100, buy: 100}], [{id: 1, sell: 200, buy: 200}, {id: 0, sell: 0, buy: 0}]],
+    [[{id: 0, sell: 0, buy: 0}]]
+  ],
+  [
+    "buy removed from next page",
+    offers.testActions.loadBuyOffersEpic,
+    [[{id: 1, sell: 100, buy: 100}, {id: 2, sell: 100, buy: 100}]],
+    [[{id: 2, sell: 200, buy: 200}, {id: 3, sell: 100, buy: 100}], [{id: 0, sell: 0, buy: 0}], [{id: 2, sell: 300, buy: 300}, {id: 0, sell: 0, buy: 0}]],
+  ],
+  [
+    "sell empty",
+    offers.testActions.loadSellOffersEpic,
+    [[{id: 0, sell: 0, buy: 0}]],
+    [[{id: 0, sell: 0, buy: 0}]],
+  ],
+  [
+    "sell one page",
+    offers.testActions.loadSellOffersEpic,
+    [[{id: 1, sell: 100, buy: 100}, {id: 0, sell: 0, buy: 0}]],
+    [[{id: 0, sell: 0, buy: 0}]],
+  ],
+  [
+    "sell two pages",
+    offers.testActions.loadSellOffersEpic,
+    [[{id: 1, sell: 100, buy: 100}, {id: 2, sell: 100, buy: 100}]],
+    [[{id: 2, sell: 200, buy: 200}, {id: 0, sell: 0, buy: 0}]],
+  ],
+  [
+    "sell removed from first page",
+    offers.testActions.loadSellOffersEpic,
+    [[{id: 1, sell: 100, buy: 100}, {id: 2, sell: 100, buy: 100}], [{id: 1, sell: 200, buy: 200}, {id: 0, sell: 0, buy: 0}]],
+    [[{id: 0, sell: 0, buy: 0}]]
+  ],
+  [
+    "sell removed from next page",
+    offers.testActions.loadSellOffersEpic,
+    [[{id: 1, sell: 100, buy: 100}, {id: 2, sell: 100, buy: 100}]],
+    [[{id: 2, sell: 200, buy: 200}, {id: 3, sell: 100, buy: 100}], [{id: 0, sell: 0, buy: 0}], [{id: 2, sell: 300, buy: 300}, {id: 0, sell: 0, buy: 0}]],
+  ],
+]).describe("loadSellOffersEpic", (description, action, firstCalls, nextCalls) => {
+  test(description, async () => {
+    const store = configureMockStore([thunk])(
+      Map({
+        tokens: Map({
+          precision: 18,
+          tokenSpecs: Map({
+            MKR: Map({
+              precision: 18,
+            }),
+            "W-ETH": Map({
+              precision: 18,
+            })
+          }),
+          tradingPairs: List([
+            Map({
+              base: "MKR",
+              quote: "W-ETH",
+            })
+          ]),
+        }),
+        offers: Map({
+          offers: Map().set(
+            Map({ baseToken: "MKR", quoteToken: "W-ETH" }),
+            Map({
+              buyOfferCount: 0,
+              buyOffers: List(),
+            })
+          ),
+        }),
+      })
+    );
+
+    const obj2web3 = o => o.map(c => [
+      c.map(v => new BigNumber(v.id)),
+      c.map(v => new BigNumber(v.sell)),
+      c.map(v => new BigNumber(v.buy)),
+      [],
+      [],
+    ]);
+    const promise = store.dispatch(action(null, 'MKR', 'W-ETH', {
+      firstPage: asyncMock(obj2web3(firstCalls).reduce((a, e) => a.mockReturnValueOnce(e), jest.fn())),
+      nextPage: asyncMock(obj2web3(nextCalls).reduce((a, e) => a.mockReturnValueOnce(e), jest.fn())),
+      pageSize: 2,
+    }));
+
+    const result = await promise;
+    expect(result).toMatchSnapshot();
+    expect(store.getActions()).toMatchSnapshot();
+  });
+});
 
 describe("syncOffersEpic", () => {
   test("main", async () => {
