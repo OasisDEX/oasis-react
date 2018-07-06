@@ -59,9 +59,7 @@ exports[`(Component) OasisMyOrders should render 1`] = `
         emptyFallback={
           <div
             className={undefined}
-          >
-            You currently have no active offers
-          </div>
+          />
         }
         metadata={
           Object {

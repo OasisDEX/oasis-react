@@ -189,7 +189,8 @@ class OasisMyOrders extends PureComponent {
       sellOffers = [],
       buyOffers = [],
       cancelOffer,
-      activeNetworkName
+      activeNetworkName,
+      activeTradingPairOffersInitiallyLoaded
     } = this.props;
     const orderActions = { cancelOffer };
     const myOpenOffers = sellOffers
@@ -214,7 +215,9 @@ class OasisMyOrders extends PureComponent {
       .map(myOffersDisplayFormat);
 
     const emptyTableFallback = (
-      <div className={styles.info}>You currently have no active offers</div>
+      <div className={styles.info}>
+        {activeTradingPairOffersInitiallyLoaded ? 'You currently have no active offers': ''}
+      </div>
     );
     return (
       <div>
