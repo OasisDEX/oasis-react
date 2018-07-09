@@ -153,22 +153,6 @@ Array [
   Object {
     "payload": Object {
       "baseToken": "MKR",
-      "quoteToken": "W-ETH",
-    },
-    "type": Array [
-      "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
-    ],
-  },
-  Object {
-    "payload": Object {
-      "baseToken": "MKR",
-      "quoteToken": "W-ETH",
-    },
-    "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
-  },
-  Object {
-    "payload": Object {
-      "baseToken": "MKR",
       "offer": Object {
         "ask_price": "1",
         "ask_price_sort": 1,
@@ -311,6 +295,56 @@ Array [
         "owner": undefined,
         "sellHowMuch": "100",
         "sellHowMuch_filter": 100,
+        "sellWhichToken": "W-ETH",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_BUY",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "150",
+        "buyHowMuch_filter": 150,
+        "buyWhichToken": "MKR",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "1",
+        "owner": undefined,
+        "sellHowMuch": "150",
+        "sellHowMuch_filter": 150,
+        "sellWhichToken": "W-ETH",
+        "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_BUY",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "250",
+        "buyHowMuch_filter": 250,
+        "buyWhichToken": "MKR",
+        "buyWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "id": "2",
+        "owner": undefined,
+        "sellHowMuch": "250",
+        "sellHowMuch_filter": 250,
         "sellWhichToken": "W-ETH",
         "sellWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
         "status": undefined,
@@ -614,22 +648,6 @@ Array [
   Object {
     "payload": Object {
       "baseToken": "MKR",
-      "quoteToken": "W-ETH",
-    },
-    "type": Array [
-      "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
-    ],
-  },
-  Object {
-    "payload": Object {
-      "baseToken": "MKR",
-      "quoteToken": "W-ETH",
-    },
-    "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
-  },
-  Object {
-    "payload": Object {
-      "baseToken": "MKR",
       "offer": Object {
         "ask_price": "1",
         "ask_price_sort": 1,
@@ -772,6 +790,56 @@ Array [
         "owner": undefined,
         "sellHowMuch": "100",
         "sellHowMuch_filter": 100,
+        "sellWhichToken": "MKR",
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_SELL",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "150",
+        "buyHowMuch_filter": 150,
+        "buyWhichToken": "W-ETH",
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "id": "1",
+        "owner": undefined,
+        "sellHowMuch": "150",
+        "sellHowMuch_filter": 150,
+        "sellWhichToken": "MKR",
+        "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+        "status": undefined,
+      },
+      "offerType": "OFFERS/TYPE_SELL",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "offer": Object {
+        "ask_price": "1",
+        "ask_price_sort": 1,
+        "bid_price": "1",
+        "bid_price_sort": 1,
+        "buyHowMuch": "250",
+        "buyHowMuch_filter": 250,
+        "buyWhichToken": "W-ETH",
+        "buyWhichTokenAddress": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+        "id": "2",
+        "owner": undefined,
+        "sellHowMuch": "250",
+        "sellHowMuch_filter": 250,
         "sellWhichToken": "MKR",
         "sellWhichTokenAddress": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
         "status": undefined,

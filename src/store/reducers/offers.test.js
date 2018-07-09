@@ -165,7 +165,7 @@ each([
   [
     "buy removed from next page",
     offers.testActions.loadBuyOffersEpic,
-    [[{id: 1, sell: 100, buy: 100}, {id: 2, sell: 100, buy: 100}]],
+    [[{id: 1, sell: 100, buy: 100}, {id: 2, sell: 100, buy: 100}], [{id: 1, sell: 150, buy: 150}, {id: 2, sell: 250, buy: 250}]],
     [[{id: 2, sell: 200, buy: 200}, {id: 3, sell: 100, buy: 100}], [{id: 0, sell: 0, buy: 0}], [{id: 2, sell: 300, buy: 300}, {id: 0, sell: 0, buy: 0}]],
   ],
   [
@@ -195,7 +195,7 @@ each([
   [
     "sell removed from next page",
     offers.testActions.loadSellOffersEpic,
-    [[{id: 1, sell: 100, buy: 100}, {id: 2, sell: 100, buy: 100}]],
+    [[{id: 1, sell: 100, buy: 100}, {id: 2, sell: 100, buy: 100}], [{id: 1, sell: 150, buy: 150}, {id: 2, sell: 250, buy: 250}]],
     [[{id: 2, sell: 200, buy: 200}, {id: 3, sell: 100, buy: 100}], [{id: 0, sell: 0, buy: 0}], [{id: 2, sell: 300, buy: 300}, {id: 0, sell: 0, buy: 0}]],
   ],
 ]).describe("loadSellOffersEpic", (description, action, firstCalls, nextCalls) => {

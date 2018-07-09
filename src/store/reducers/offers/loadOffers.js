@@ -97,35 +97,19 @@ export const loadSellOffersEpic = (
   try {
     const sellOffersTradingPair = { baseToken: sellToken, quoteToken: buyToken };
     dispatch(loadSellOffers.pending(sellOffersTradingPair));
-    const rawOffersPayload = await firstPage(sellToken, buyToken);
-    const firstPageParseResult = parseAndSyncOffersPage(rawOffersPayload, {
-      dispatch,
-      sellToken,
-      buyToken
-    }, { pageSize });
-    if (
-      firstPageParseResult.lastOfferId &&
-      firstPageParseResult.lastOfferId.gt(0)
-    ) {
-      let {
-        lastOfferId: lastSellOfferId,
-        backtrackOfferId: firstPageBacktrackOfferId
-      } = firstPageParseResult;
-      while (lastSellOfferId) {
-        const eachNextPageParseResult = parseAndSyncOffersPage(
-          await nextPage(lastSellOfferId),
-          { dispatch, sellToken, buyToken },
-          { pageSize }
-        );
-        lastSellOfferId = !eachNextPageParseResult.shouldBacktrack
-          ? eachNextPageParseResult.lastOfferId
-          : (lastSellOfferId !== firstPageParseResult.lastOfferId ? firstPageBacktrackOfferId : undefined);
-      }
-      if (lastSellOfferId === undefined) {
-        dispatch(loadSellOffers.fulfilled(sellOffersTradingPair));
-        return dispatch(loadSellOffersEpic(offersLoadMeta, sellToken, buyToken, {firstPage, nextPage, pageSize}));
-      }
+
+    let currentOfferId = undefined;
+    while (currentOfferId !== null) {
+      const page = currentOfferId ? nextPage(currentOfferId) : firstPage(sellToken, buyToken);
+      const pageResult = parseAndSyncOffersPage(await page,
+        { dispatch, sellToken, buyToken },
+        { pageSize }
+      );
+      let {lastOfferId, shouldBacktrack} = pageResult;
+      currentOfferId = !shouldBacktrack ? lastOfferId :
+        (currentOfferId ? undefined : null);
     }
+
     dispatch(loadSellOffers.fulfilled(sellOffersTradingPair));
     return loadSellOffers;
   } catch (e) {
@@ -154,35 +138,19 @@ export const loadBuyOffersEpic = (
   try {
     const buyOffersTradingPair = { baseToken: buyToken, quoteToken: sellToken };
     dispatch(loadBuyOffers.pending(buyOffersTradingPair));
-    const rawOffersPayload = await firstPage(sellToken, buyToken);
-    const firstPageParseResult = parseAndSyncOffersPage(rawOffersPayload, {
-      dispatch,
-      sellToken,
-      buyToken
-    }, { pageSize });
-    if (
-      firstPageParseResult.lastOfferId &&
-      firstPageParseResult.lastOfferId.gt(0)
-    ) {
-      let {
-        lastOfferId: lastBuyOfferId,
-        backtrackOfferId: firstPageBacktrackOfferId
-      } = firstPageParseResult;
-      while (lastBuyOfferId) {
-        const eachNextPageParseResult = parseAndSyncOffersPage(
-          await nextPage(lastBuyOfferId),
-          { dispatch, sellToken, buyToken },
-          { pageSize }
-        );
-        lastBuyOfferId = !eachNextPageParseResult.shouldBacktrack
-          ? eachNextPageParseResult.lastOfferId
-          : (lastBuyOfferId !== firstPageParseResult.lastOfferId ? firstPageBacktrackOfferId : undefined);
-      }
-      if (lastBuyOfferId === undefined) {
-        dispatch(loadBuyOffers.fulfilled(buyOffersTradingPair));
-        return dispatch(loadBuyOffersEpic(offersLoadMeta, buyToken, sellToken, {firstPage, nextPage, pageSize}));
-      }
+
+    let currentOfferId = undefined;
+    while (currentOfferId !== null) {
+      const page = currentOfferId ? nextPage(currentOfferId) : firstPage(sellToken, buyToken);
+      const pageResult = parseAndSyncOffersPage(await page,
+        { dispatch, sellToken, buyToken },
+        { pageSize }
+      );
+      let {lastOfferId, shouldBacktrack} = pageResult;
+      currentOfferId = !shouldBacktrack ? lastOfferId :
+        (currentOfferId ? undefined : null);
     }
+
     dispatch(loadBuyOffers.fulfilled(buyOffersTradingPair));
     return loadBuyOffers;
   } catch (e) {
