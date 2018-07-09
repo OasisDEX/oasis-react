@@ -22,6 +22,13 @@ Array [
       "baseToken": "MKR",
       "quoteToken": "W-ETH",
     },
+    "type": "OFFERS/RESET_BUY_OFFERS",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
     "type": Array [
       "OFFERS/LOAD_BUY_OFFERS_FULFILLED",
     ],
@@ -45,6 +52,13 @@ Array [
       "quoteToken": "W-ETH",
     },
     "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/RESET_BUY_OFFERS",
   },
   Object {
     "payload": Object {
@@ -103,6 +117,13 @@ Array [
   Object {
     "payload": Object {
       "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/RESET_BUY_OFFERS",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
       "offer": Object {
         "ask_price": "1",
         "ask_price_sort": 1,
@@ -149,6 +170,13 @@ Array [
       "quoteToken": "W-ETH",
     },
     "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/RESET_BUY_OFFERS",
   },
   Object {
     "payload": Object {
@@ -203,6 +231,13 @@ Array [
       "quoteToken": "W-ETH",
     },
     "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/RESET_BUY_OFFERS",
   },
   Object {
     "payload": Object {
@@ -307,6 +342,13 @@ Array [
   Object {
     "payload": Object {
       "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/RESET_BUY_OFFERS",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
       "offer": Object {
         "ask_price": "1",
         "ask_price_sort": 1,
@@ -407,6 +449,13 @@ Array [
       "quoteToken": "W-ETH",
     },
     "type": "OFFERS/LOAD_BUY_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/RESET_BUY_OFFERS",
   },
   Object {
     "payload": Object {
@@ -517,6 +566,13 @@ Array [
       "baseToken": "MKR",
       "quoteToken": "W-ETH",
     },
+    "type": "OFFERS/RESET_SELL_OFFERS",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
     "type": Array [
       "OFFERS/LOAD_SELL_OFFERS_FULFILLED",
     ],
@@ -540,6 +596,13 @@ Array [
       "quoteToken": "W-ETH",
     },
     "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/RESET_SELL_OFFERS",
   },
   Object {
     "payload": Object {
@@ -598,6 +661,13 @@ Array [
   Object {
     "payload": Object {
       "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/RESET_SELL_OFFERS",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
       "offer": Object {
         "ask_price": "1",
         "ask_price_sort": 1,
@@ -644,6 +714,13 @@ Array [
       "quoteToken": "W-ETH",
     },
     "type": "OFFERS/SET_OFFER",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/RESET_SELL_OFFERS",
   },
   Object {
     "payload": Object {
@@ -698,6 +775,13 @@ Array [
       "quoteToken": "W-ETH",
     },
     "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/RESET_SELL_OFFERS",
   },
   Object {
     "payload": Object {
@@ -802,6 +886,13 @@ Array [
   Object {
     "payload": Object {
       "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/RESET_SELL_OFFERS",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
       "offer": Object {
         "ask_price": "1",
         "ask_price_sort": 1,
@@ -902,6 +993,13 @@ Array [
       "quoteToken": "W-ETH",
     },
     "type": "OFFERS/LOAD_SELL_OFFERS_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "baseToken": "MKR",
+      "quoteToken": "W-ETH",
+    },
+    "type": "OFFERS/RESET_SELL_OFFERS",
   },
   Object {
     "payload": Object {
@@ -1578,13 +1676,6 @@ Array [
       },
     },
     "type": "OFFERS/SYNC_OFFERS_PENDING",
-  },
-  Object {
-    "payload": Object {
-      "baseToken": "MKR",
-      "quoteToken": "W-ETH",
-    },
-    "type": "OFFERS/RESET_OFFERS",
   },
   Object {
     "payload": Array [

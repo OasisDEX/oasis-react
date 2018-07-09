@@ -1,5 +1,6 @@
 import { createPromiseActions } from "../../../utils/createPromiseActions";
 import { syncRawOffer } from "./syncOfferEpic";
+import { resetBuyOffers, resetSellOffers } from "./syncOffersEpic";
 import { Map } from "immutable";
 import { SYNC_STATUS_COMPLETED, SYNC_STATUS_PENDING } from "../../../constants";
 import {
@@ -100,6 +101,8 @@ export const loadSellOffersEpic = (
 
     let currentOfferId = undefined;
     while (currentOfferId !== null) {
+      if (!currentOfferId)
+        dispatch(resetSellOffers(sellOffersTradingPair));
       const page = currentOfferId ? nextPage(currentOfferId) : firstPage(sellToken, buyToken);
       const pageResult = parseAndSyncOffersPage(await page,
         { dispatch, sellToken, buyToken },
@@ -141,6 +144,8 @@ export const loadBuyOffersEpic = (
 
     let currentOfferId = undefined;
     while (currentOfferId !== null) {
+      if (!currentOfferId)
+        dispatch(resetBuyOffers(buyOffersTradingPair));
       const page = currentOfferId ? nextPage(currentOfferId) : firstPage(sellToken, buyToken);
       const pageResult = parseAndSyncOffersPage(await page,
         { dispatch, sellToken, buyToken },

@@ -16,7 +16,7 @@ import { handleTransaction } from "../../../utils/transactions/handleTransaction
 import { TX_OFFER_CANCEL } from "../transactions";
 import { CANCEL_GAS } from "../offers";
 import { getTradingPairOfferCount } from "./getTradingPairOffersCount";
-import { Map } from "immutable";
+import { Map, List } from "immutable";
 import network from "../../selectors/network";
 import { reSyncOffersEpic } from "./reSyncOffers";
 import offersReducer from './index';
@@ -25,8 +25,13 @@ export const tradingPairOffersAlreadyLoaded = createAction(
   "OFFERS/TRADING_PAIR_ALREADY_LOADED"
 );
 
-const resetOffers = createAction(
-  "OFFERS/RESET_OFFERS",
+export const resetBuyOffers = createAction(
+  "OFFERS/RESET_BUY_OFFERS",
+  ({ baseToken, quoteToken }) => ({ baseToken, quoteToken })
+);
+
+export const resetSellOffers = createAction(
+  "OFFERS/RESET_SELL_OFFERS",
   ({ baseToken, quoteToken }) => ({ baseToken, quoteToken })
 );
 
@@ -83,7 +88,6 @@ export const syncOffersEpic = (
       syncStartBlockNumber: network.latestBlockNumber(getState())
     })
   );
-  dispatch(resetOffers({ baseToken, quoteToken }));
   const offerCount = (await dispatch(
     doGetTradingPairOfferCount(baseToken, quoteToken)
   )).value;
@@ -132,8 +136,18 @@ export const reducer = {
     state.updateIn(
       ["offers", Map(payload), "initialSyncStatus"],
       () => SYNC_STATUS_ERROR
-    )
+    ),
   // [pending(syncOffers)]: state => state.set('initialSyncStatus', SYNC_STATUS_PENDING),
   // [fulfilled(syncOffers)]: state => state.set('initialSyncStatus', SYNC_STATUS_COMPLETED),
   // [rejected(syncOffers)]: state => state.set('initialSyncStatus', SYNC_STATUS_ERROR),
+  'OFFERS/RESET_BUY_OFFERS': (state, { payload }) =>
+    state.updateIn(
+      ["offers", Map(payload), "buyOffers"],
+      () => List()
+    ),
+  'OFFERS/RESET_SELL_OFFERS': (state, { payload }) =>
+    state.updateIn(
+      ["offers", Map(payload), "sellOffers"],
+      () => List()
+    ),
 };
