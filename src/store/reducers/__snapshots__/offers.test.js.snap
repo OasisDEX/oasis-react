@@ -1729,6 +1729,9 @@ Array [
     "type": "OFFERS/SET_ACTIVE_TRADING_PAIR_BEST_OFFER_IDS",
   },
   Object {
+    "type": "RE_SYNC_OFFERS/RE_SYNC_OFFERS_PENDING",
+  },
+  Object {
     "payload": Object {
       "syncEndBlockNumber": 1,
       "tradingPair": Object {
@@ -1739,9 +1742,6 @@ Array [
     "type": Array [
       "OFFERS/SYNC_OFFERS_FULFILLED",
     ],
-  },
-  Object {
-    "type": "RE_SYNC_OFFERS/RE_SYNC_OFFERS_PENDING",
   },
 ]
 `;
