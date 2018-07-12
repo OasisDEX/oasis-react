@@ -34,6 +34,9 @@ const globalFormLock = createSelector(platform, s => s.get("globalFormLock"));
 
 const isAppLoading = createSelector(platform, s => s.get("isAppLoading"));
 
+const isMarketInitialized = createSelector(platform, s => s.get("marketInitialized"));
+
+
 const allInitialSubscriptionsRegistered = createSelector(platform, s =>
   s.get("allInitialSubscriptionsRegistered")
 );
@@ -89,5 +92,6 @@ export default {
   allInitialSubscriptionsRegistered,
   canRegisterInitialSubscriptions,
   canRegisterSubscription,
-  isSubscriptionRegistered
+  isSubscriptionRegistered,
+  isMarketInitialized
 };

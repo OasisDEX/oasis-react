@@ -18,6 +18,7 @@ import {
 import { TYPE_BUY_OFFER } from "./offers";
 import conversion from "../../utils/conversion";
 import { SYNC_STATUS_PRISTINE } from "../../constants";
+import { getMarketContractInstance } from '../../bootstrap/contracts';
 
 const TOKEN_ADDRS = config.tokens.kovan;
 
@@ -59,7 +60,8 @@ each([
             new BigNumber("0")
           ]
         }),
-        doSetOfferEpic: mockAction("OFFERS/SET_OFFER")
+        doSetOfferEpic: mockAction("OFFERS/SET_OFFER"),
+        doGetTradingPairOfferCount:  mockAction('OFFERS/GET_TRADING_PAIR_OFFERS_COUNT')
       })
     );
 

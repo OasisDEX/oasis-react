@@ -12,12 +12,16 @@ const propTypes = PropTypes && {
   col: PropTypes.arrayOf(PropTypes.object).isRequired,
   onRowClick: PropTypes.func,
   emptyFallback: PropTypes.node,
+  isInitializing: PropTypes.bool,
+  isInitializingText: PropTypes.string,
+  rowHoverText: PropTypes.string
 };
 
 const defaultProps = {
   collapseRowNumber: 4,
   collapseInitial: false,
-  collapseEnabled: false
+  collapseEnabled: false,
+  rowHoverText: ''
 };
 
 
@@ -77,11 +81,22 @@ export class OasisTable extends PureComponent {
   }
 
   renderRows() {
-    const { rows, onRowClick } = this.props;
+    const {
+      rows,
+      onRowClick,
+      isInitializing,
+      isInitializingText,
+      rowHoverText
+    } = this.props;
     return rows.map( (row, i) => {
+      let rowClassNames = '';
+        rowClassNames += isInitializing ? styles.isInitializing: '';
+        rowClassNames += onRowClick ? styles.clickable : '';
+        rowClassNames += row.isActive ? ` ${styles.active}`: '';
       return this.hideRow(i) ? null : (
         <tr
-          className={`${row.isActive ? styles.active: ''} ${onRowClick ? styles.clickable : ''}`}
+          title={ !isInitializing ? rowHoverText : isInitializingText}
+          className={rowClassNames}
           key={i}
           data-tradingpair={row.tradingPair}
           onClick={this.rowClickHandler.bind(null, row)}

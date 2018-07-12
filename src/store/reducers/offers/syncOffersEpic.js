@@ -102,6 +102,7 @@ export const syncOffersEpic = (
       })
     );
     dispatch(reSyncOffersEpic({ baseToken, quoteToken }));
+    doGetTradingPairOfferCount(baseToken, quoteToken);
   });
 };
 

@@ -26,6 +26,7 @@ exports[`(Component) OasisWrapUnwrapBalances should render 1`] = `
     collapseInitial={false}
     collapseRowNumber={4}
     onRowClick={[Function]}
+    rowHoverText=""
     rows={Array []}
   />
 </OasisWidgetFrame>
