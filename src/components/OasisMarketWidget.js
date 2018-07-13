@@ -157,15 +157,25 @@ class OasisMarketWidget extends PureComponent {
   }
 
   onTableRowClick(rowData) {
-    const { setActiveTradingPair, changeRoute } = this.props;
+    const {
+      setActiveTradingPair,
+      changeRoute,
+      updateTradingPairOfferCount
+    } = this.props;
     const { baseToken, quoteToken } = rowData.rawTradingPair;
     setActiveTradingPair({ baseToken, quoteToken });
     changeRoute(`/trade/${baseToken}/${quoteToken}`);
+    updateTradingPairOfferCount(baseToken, quoteToken);
     tokensReducer.actions.getActiveTradingPairAllowanceStatus();
   }
 
   render() {
-    const { activeTradingPair, tradedTokens, defaultPeriod } = this.props;
+    const {
+      activeTradingPair,
+      tradedTokens,
+      defaultPeriod,
+      isMarketInitialized
+    } = this.props;
     const daiButton = (
       <OasisLinkLikeButton
         href="https://dai.makerdao.com/"
@@ -186,7 +196,9 @@ class OasisMarketWidget extends PureComponent {
         headingChildren={activeTradingPairIncludesDAI ? daiButton : null}
       >
         <OasisTable
-          onRowClick={this.onTableRowClick}
+          isInitializing={!isMarketInitialized}
+          isInitializingText={"Market contract is initializing..."}
+          onRowClick={isMarketInitialized ? this.onTableRowClick: null}
           className={styles.marketTable}
           col={colDefinition(defaultPeriod)}
           rows={tradedTokens.map(
@@ -206,6 +218,8 @@ OasisMarketWidget.propTypes = PropTypes && {
   tradedTokens: PropTypes.object.isRequired,
   marketData: ImmutablePropTypes.list,
   loadingTradeHistory: PropTypes.bool,
-  initialMarketHistoryLoaded: PropTypes.bool
+  initialMarketHistoryLoaded: PropTypes.bool,
+  updateTradingPairOfferCount: PropTypes.func,
+  isMarketInitialized: PropTypes.bool
 };
 export default CSSModules(OasisMarketWidget, styles, { allowMultiple: true });

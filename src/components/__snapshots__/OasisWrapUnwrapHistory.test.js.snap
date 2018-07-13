@@ -43,6 +43,7 @@ exports[`(Component) OasisWrapUnwrapHistory should render 1`] = `
         }
       }
       onRowClick={[Function]}
+      rowHoverText=""
       rows={Array []}
     />
   </div>

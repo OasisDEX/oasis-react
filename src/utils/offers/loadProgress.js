@@ -10,9 +10,8 @@ const loadProgress = (loadedOffersList, offersTotalCount) => {
   return progress <= 100 ?  progress: 100;
 };
 
-const style = (loadedOffersList, offersTotalCount) => {
-  const progress = loadProgress(loadedOffersList, offersTotalCount);
-
+const style = (loadedOffersList, offersTotalCount, showPercent) => {
+  const progress = showPercent ? loadProgress(loadedOffersList, offersTotalCount) : 100;
   return {
     background: `linear-gradient(90deg, #F8F7F5 ${
       progress ? progress : 0
@@ -32,7 +31,7 @@ const style = (loadedOffersList, offersTotalCount) => {
   };
 };
 
-const LoadProgressSection = ({ loadedOffersList, offersTotalCount }) => {
+const LoadProgressSection = ({ loadedOffersList, offersTotalCount, showPercent }) => {
   const loaded = loadProgress(loadedOffersList, offersTotalCount);
   return offersTotalCount == null ? (
     <span style={{ float: "right" }}>
@@ -47,7 +46,7 @@ const LoadProgressSection = ({ loadedOffersList, offersTotalCount }) => {
         <OasisIcon icon="loading" />
       </span>
       <span hidden={loaded == null}>
-        {loaded}% / {offersTotalCount}
+        {showPercent ? `${loaded}% / `: null}  {offersTotalCount}
       </span>
       <span hidden={loaded != null && offersTotalCount != null}>
         {offersTotalCount === 0 ? 'no orders' : offersTotalCount }
@@ -58,6 +57,7 @@ const LoadProgressSection = ({ loadedOffersList, offersTotalCount }) => {
 
 LoadProgressSection.propTypes = {
   loadedOffersList: ImmutablePropTypes.list,
-  offersTotalCount: PropTypes.number
+  offersTotalCount: PropTypes.number,
+  showPercent: PropTypes.bool
 };
 export { loadProgress, LoadProgressSection };

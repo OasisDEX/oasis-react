@@ -109,3 +109,7 @@ tr.collapseRow {
     @include singleColumnRow;
   }
 }
+
+.isInitializing {
+  cursor: not-allowed !important;
+}

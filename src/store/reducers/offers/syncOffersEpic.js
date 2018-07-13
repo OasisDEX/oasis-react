@@ -94,14 +94,15 @@ export const syncOffersEpic = (
   return Promise.all([
     dispatch(doLoadBuyOffersEpic(offerCount, baseToken, quoteToken)),
     dispatch(doLoadSellOffersEpic(offerCount, baseToken, quoteToken))
-  ]).then(() => {
+  ]).then(async () => {
+    dispatch(reSyncOffersEpic({ baseToken, quoteToken }));
+    await doGetTradingPairOfferCount(baseToken, quoteToken);
     dispatch(
       syncOffers.fulfilled({
         tradingPair: { baseToken, quoteToken },
         syncEndBlockNumber: network.latestBlockNumber(getState())
       })
     );
-    dispatch(reSyncOffersEpic({ baseToken, quoteToken }));
   });
 };
 

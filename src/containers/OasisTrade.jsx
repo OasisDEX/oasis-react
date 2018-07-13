@@ -18,6 +18,7 @@ import OasisTradeOrdersWrapper from './OasisTradeOrders';
 import offers from '../store/selectors/offers';
 import platformReducer from '../store/reducers/platform';
 import {FlexBox} from "../components/FlexBox";
+import { getTradingPairOfferCount } from '../store/reducers/offers/getTradingPairOffersCount';
 
 const propTypes = PropTypes && {
   actions: PropTypes.object,
@@ -62,22 +63,26 @@ export class OasisTradeWrapper extends PureComponent {
       marketsData,
       defaultPeriod,
       initialMarketHistoryLoaded,
+      isMarketInitialized,
       activeTradingPair = paramsTradePair,
       actions: {
         setActiveTradingPairEpic,
-        changeRouteEpic
+        changeRouteEpic,
+        updateTradingPairOfferCount
       }
     } = this.props;
 
     return this.redirect() || (
       <FlexBox wrap>
         <OasisMarketWidget
+          isMarketInitialized={isMarketInitialized}
           activeTradingPair={activeTradingPair}
           setActiveTradingPair={setActiveTradingPairEpic}
           changeRoute={changeRouteEpic}
           tradedTokens={tradedTokens}
           marketData={marketsData}
           defaultPeriod={defaultPeriod}
+          updateTradingPairOfferCount={updateTradingPairOfferCount}
           initialMarketHistoryLoaded={initialMarketHistoryLoaded}
         />
         <OasisChart
@@ -100,7 +105,7 @@ export function mapStateToProps(state) {
     tradedTokens: tokens.tradingPairs(state),
     defaultPeriod: platform.defaultPeriod(state),
     offersInitialized: offers.offersInitialized(state),
-
+    isMarketInitialized: platform.isMarketInitialized(state)
   };
 }
 
@@ -109,6 +114,7 @@ export function mapDispatchToProps(dispatch) {
     setActiveTradingPairEpic: tokensReducer.actions.setActiveTradingPairEpic,
     changeRouteEpic: platformReducer.actions.changeRouteEpic,
     denotePrecision: tokensReducer.actions.denotePrecision,
+    updateTradingPairOfferCount: getTradingPairOfferCount
   };
   return { actions: bindActionCreators(actions, dispatch) };
 }

@@ -18,6 +18,7 @@ exports[`(Container) OasisTrade should render 1`] = `
     }
     defaultPeriod="TIME_SPAN/WEEK"
     initialMarketHistoryLoaded={true}
+    isMarketInitialized={true}
     marketData={
       Immutable.List [
       ]
@@ -149,6 +150,7 @@ Object {
     "changeRouteEpic": [Function],
     "denotePrecision": [Function],
     "setActiveTradingPairEpic": [Function],
+    "updateTradingPairOfferCount": [Function],
   },
 }
 `;
@@ -161,6 +163,7 @@ Object {
   },
   "defaultPeriod": "TIME_SPAN/WEEK",
   "initialMarketHistoryLoaded": true,
+  "isMarketInitialized": true,
   "marketsData": Immutable.List [
 ],
   "offersInitialized": undefined,

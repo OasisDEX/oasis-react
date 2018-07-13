@@ -27,6 +27,7 @@ const initialState = fromJS({
   defaultUnit: ETH_UNIT_WEI,
   globalFormLock: true,
   isAppLoading: true,
+  marketInitialized: false,
   allInitialSubscriptionsRegistered: null,
   subscriptionsRegistered: {
     globalInitial: {

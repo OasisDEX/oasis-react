@@ -83,18 +83,20 @@ export class OasisStatus extends PureComponent {
     }
   }
 
-  render() {
+  renderContent() {
     const { activeTradingPairOffersInitiallyLoaded } = this.props;
+    if(!activeTradingPairOffersInitiallyLoaded) {
+      return this.renderOffersLoadProgress()
+    } else {
+      return  this.renderTradesHistoryLoadProgress() || this.statusIndicator();
+    }
+  }
+
+  render() {
     return (
       <div styleName="OasisStatus">
         <div>{this.renderNetworkName()}</div>
-        <div>
-          {
-            this.renderOffersLoadProgress() ||
-            activeTradingPairOffersInitiallyLoaded && this.renderTradesHistoryLoadProgress() ||
-            this.statusIndicator()
-          }
-        </div>
+        <div>{this.renderContent()}</div>
       </div>
     );
   }

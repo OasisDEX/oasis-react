@@ -5,6 +5,7 @@ import { createAction } from "redux-actions";
 import getTokenByAddress from "../../../utils/tokens/getTokenByAddress";
 import { getMarketContractInstance } from "../../../bootstrap/contracts";
 import { fulfilled, pending } from "../../../utils/store";
+import { getTradingPairOfferCount } from './getTradingPairOffersCount';
 
 const attemptToSyncRemovedOffer = createAction(
   "OFFERS/ATTEMPT_TO_SYNC_REMOVED_OFFER",
@@ -21,7 +22,8 @@ export const  syncOffer = (
   previousOfferState,
   {
     doLoadOffer = loadOffer,
-    doSetOfferEpic = setOfferEpic
+    doSetOfferEpic = setOfferEpic,
+    doGetTradingPairOfferCount = getTradingPairOfferCount
   } = {}
 ) => async (dispatch, getState) => {
   return dispatch(doLoadOffer(offerId)).then(
@@ -44,6 +46,9 @@ export const  syncOffer = (
           getState()
         );
         const id = offerId.toString();
+        dispatch(
+          doGetTradingPairOfferCount(baseToken, quoteToken)
+        );
         dispatch(
           doSetOfferEpic(
             Object.assign(

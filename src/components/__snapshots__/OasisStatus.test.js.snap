@@ -5,12 +5,6 @@ exports[`(Component) OasisStatus should render 1`] = `
   styleName="OasisStatus"
 >
   <div />
-  <div>
-    <div
-      styleName="StatusIndicator NetworkStatus StatusIndicator--Online"
-    >
-      Connected
-    </div>
-  </div>
+  <div />
 </div>
 `;
