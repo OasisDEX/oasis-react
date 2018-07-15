@@ -2,8 +2,7 @@
 
 exports[`(Container) OasisFooter should render 1`] = `
 <div
-  className="row"
-  styleName="OasisFooter"
+  className="row undefined "
 >
   <div
     key="0"
@@ -11,19 +10,14 @@ exports[`(Container) OasisFooter should render 1`] = `
     <div
       className="row"
     >
-      <div
-        styleName="LinksSection"
-      >
-        <h4
-          styleName="Heading"
-        >
+      <div>
+        <h4>
           Information
         </h4>
         <a
           href="https://github.com/MakerDAO/maker-market/wiki"
           key="0"
           rel="noopener noreferrer"
-          styleName="Link"
           target="_blank"
         >
           Documentation
@@ -32,7 +26,6 @@ exports[`(Container) OasisFooter should render 1`] = `
           href="https://makerdao.github.io/markets/"
           key="1"
           rel="noopener noreferrer"
-          styleName="Link"
           target="_blank"
         >
           Market Data
@@ -46,19 +39,14 @@ exports[`(Container) OasisFooter should render 1`] = `
     <div
       className="row"
     >
-      <div
-        styleName="LinksSection"
-      >
-        <h4
-          styleName="Heading"
-        >
+      <div>
+        <h4>
           MakerDAO
         </h4>
         <a
           href="https://chat.makerdao.com/"
           key="0"
           rel="noopener noreferrer"
-          styleName="Link"
           target="_blank"
         >
           Chat
@@ -67,7 +55,6 @@ exports[`(Container) OasisFooter should render 1`] = `
           href="https://www.reddit.com/r/MakerDAO/"
           key="1"
           rel="noopener noreferrer"
-          styleName="Link"
           target="_blank"
         >
           Reddit
@@ -81,19 +68,14 @@ exports[`(Container) OasisFooter should render 1`] = `
     <div
       className="row"
     >
-      <div
-        styleName="LinksSection"
-      >
-        <h4
-          styleName="Heading"
-        >
+      <div>
+        <h4>
           OasisDex
         </h4>
         <a
           href="https://github.com/OasisDEX/oasis/issues/new"
           key="0"
           rel="noopener noreferrer"
-          styleName="Link"
           target="_blank"
         >
           Report Issues
@@ -102,7 +84,6 @@ exports[`(Container) OasisFooter should render 1`] = `
           href="https://github.com/OasisDEX/oasis/projects/1"
           key="1"
           rel="noopener noreferrer"
-          styleName="Link"
           target="_blank"
         >
           Project

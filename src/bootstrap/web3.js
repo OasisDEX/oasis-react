@@ -4,8 +4,8 @@ import platformReducer from "../store/reducers/platform";
 import {
   SUBSCRIPTIONS_TOKEN_TRANSFER_EVENTS,
   SUBSCRIPTIONS_TOKEN_TRANSFER_HISTORY_EVENTS,
-  SUBSCRIPTIONS_USER_LOG_TAKE_EVENTS
-} from "../constants";
+  SUBSCRIPTIONS_USER_LOG_TAKE_EVENTS,
+} from '../constants';
 import { solSha3 } from '../utils/solSha3';
 
 const web3 = new Web3();
@@ -147,7 +147,6 @@ const init = () => {
       .catch(() => console.info("Cant connect to local node!"));
   }
 };
-
 window.solSha3 = solSha3;
 
 export {

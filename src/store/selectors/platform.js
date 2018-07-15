@@ -7,7 +7,7 @@ import { subscriptionGroupToKeyMap } from "../../constants";
 const platform = state => state.get("platform");
 
 const isAccountLocked = createSelector(platform, state =>
-  state.get("metamaskLocked")
+  state.get("accountLocked")
 );
 
 const defaultPeriod = createSelector(platform, state =>
@@ -79,6 +79,11 @@ const canRegisterInitialSubscriptions = createSelector(
   (isSyncing, asr) => !isSyncing && !asr
 );
 
+const activeProviderType = createSelector(
+  platform,
+  s => s.get("activeProviderType")
+);
+
 export default {
   state: platform,
   isAccountLocked,
@@ -92,6 +97,7 @@ export default {
   allInitialSubscriptionsRegistered,
   canRegisterInitialSubscriptions,
   canRegisterSubscription,
+  isMarketInitialized,
   isSubscriptionRegistered,
-  isMarketInitialized
+  activeProviderType
 };

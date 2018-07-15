@@ -38,11 +38,11 @@ const defaultAccountChanged = createAction(
 
 const checkAccountsEpic = () => async (dispatch, getState) => {
   const userAccounts = (await dispatch(checkAccounts())).value;
-  const isMetamaskLocked = getState().getIn(['platform', 'metamaskLocked']);
+  const isMetamaskLocked = getState().getIn(['platform', 'accountLocked']);
   const hasUserAccounts = userAccounts.length;
   if(!hasUserAccounts) {
     if(!isMetamaskLocked) {
-      dispatch(platformReducer.actions.metamaskLocked());
+      dispatch(platformReducer.actions.accountLocked());
     }
     web3.eth.defaultAccount = undefined;
     return false;
@@ -54,7 +54,7 @@ const checkAccountsEpic = () => async (dispatch, getState) => {
     dispatch(setAccounts(userAccounts));
 
     if(isMetamaskLocked) {
-      dispatch(platformReducer.actions.metamaskUnlocked())
+      dispatch(platformReducer.actions.accountUnlocked())
     } else {
       dispatch(platformReducer.actions.setGlobalFormLockEnabled());
     }
