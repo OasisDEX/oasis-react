@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="140px" height="140px" viewBox="0 0 140 140" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="100%" x2="50%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#6885A1" offset="0%"></stop>
+            <stop stop-color="#4A688F" offset="43.8205478%"></stop>
+            <stop stop-color="#29467C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Widgets/Metamask-Copy-2" transform="translate(-181.000000, -137.000000)">
+            <g id="Group-2" transform="translate(112.000000, 137.000000)">
+                <g id="Group" transform="translate(69.000000, 0.000000)">
+                    <circle id="Oval-9" stroke="#E3E0DF" stroke-width="1.26126126" fill="url(#linearGradient-1)" transform="translate(70.000000, 70.000000) scale(1, -1) translate(-70.000000, -70.000000) " cx="70" cy="70" r="69.3693694"></circle>
+                    <g id="Group-Copy" transform="translate(39.000000, 20.000000)">
+                        <polygon id="Rectangle-8-Copy" fill="#EAEAEA" points="30.2252252 0 61 50.273224 30.2252252 68.852459 0 50.273224"></polygon>
+                        <polygon id="Rectangle-8-Copy-4" fill="#DADDE0" points="30.2252252 0 61 50.273224 30.2252252 68.852459"></polygon>
+                        <polygon id="Rectangle-8-Copy-5" fill="#E5E6E8" points="30.2252252 36.6120219 60 49.726776 30.2252252 67.7595628 1 49.5"></polygon>
+                        <polygon id="Rectangle-8-Copy-6" fill="#D2D8DE" points="30.2252252 36.6120219 60.4504505 49.726776 30.2252252 67.7595628"></polygon>
+                        <polygon id="Rectangle-8-Copy-2" fill="#E6DFE0" points="30.2252252 100 61 56.284153 30.2252252 75.4098361 0 56.284153"></polygon>
+                        <polygon id="Rectangle-8-Copy-3" fill="#D2D4DA" points="30.2252252 100 61 56.284153 30.2252252 75.4098361"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

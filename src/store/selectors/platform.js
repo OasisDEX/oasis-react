@@ -79,9 +79,9 @@ const canRegisterInitialSubscriptions = createSelector(
   (isSyncing, asr) => !isSyncing && !asr
 );
 
-const activeProviderType = createSelector(
+const activeNodeType = createSelector(
   platform,
-  s => s.get("activeProviderType")
+  s => s.get("activeNodeType")
 );
 
 export default {
@@ -99,5 +99,5 @@ export default {
   canRegisterSubscription,
   isMarketInitialized,
   isSubscriptionRegistered,
-  activeProviderType
+  activeNodeType
 };
