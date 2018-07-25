@@ -39,11 +39,11 @@ export class OasisAppWrapper extends PureComponent {
   }
 
   accountLocked() {
-    const { isAccountLocked } = this.props;
+    const { isAccountLocked, activeNodeType } = this.props;
     return isAccountLocked ? (
       <div styleName="container" className="container">
         {" "}
-        <Locked />{" "}
+        <Locked activeNodeType={activeNodeType}/>{" "}
       </div>
     ) : null;
   }
@@ -93,6 +93,7 @@ export class OasisAppWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
+    activeNodeType: platform.activeNodeType(state),
     isAppLoading: platform.isAppLoading(state),
     isAccountLocked: platform.isAccountLocked(state),
     noProviderConnected: network.noProviderConnected(state),

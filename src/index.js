@@ -12,26 +12,14 @@ import * as Network from "./bootstrap/network";
 import configureStore from "./store";
 import platformReducer from "./store/reducers/platform";
 import networkReducer from "./store/reducers/network";
-import accountsReducer from "./store/reducers/accounts";
-import { HAS_ACCOUNTS, SUBSCRIPTIONS_GROUP_GLOBAL_INITIAL, SUBSCRIPTIONS_LATEST_BLOCK } from './constants';
-import { Session } from "./utils/session";
-import accounts from "./store/selectors/accounts";
 import period from "./utils/period";
 import conversion from "./utils/conversion";
-// import { errorHandler } from "./utils/errorHandlers";
 import sak from "./utils/sak";
 import Raven from "raven-js";
 import version from "./version";
-import network from "./store/selectors/network";
-import { CheckNetworkAction } from "./store/reducers/network/CheckNetworkAction";
-import { web3p } from "./bootstrap/web3";
-import {
-  setLastNetworkCheckEndAt,
-  setLastNetworkCheckStartAt
-} from "./store/reducers/network/onNetworkCheckEndEpic";
-import { subscribeLatestBlockFilterEpic } from "./store/reducers/network/subscribeLatestBlockFilterEpic";
-import { checkIfOutOfSyncEpic } from "./store/reducers/network/checkIfOutOfSync";
-import { registerSubscription } from "./utils/subscriptions/registerSubscription";
+import { healthCheck } from "./bootstrap/healthcheck";
+import promisify from './utils/promisify';
+import { web3p } from './bootstrap/web3';
 
 //sentry.io configuration
 if (version.env === "production" && version.branch !== "master") {
@@ -41,135 +29,66 @@ if (version.env === "production" && version.branch !== "master") {
     environment: version.env
   }).install();
 }
+export const HEALTHCHECK_INTERVAL_MS = 6000;
 
 const { store, history } = configureStore();
-
-sak(store);
-
-export const HEALTHCHECK_INTERVAL_MS = 6000;
 const PENDING_INITIAL_NETWORK_CHECK = "PENDING_INITIAL_NETWORK_CHECK";
 
-const healthCheck = (dispatch, getState, isInitialHealthcheck = false) => {
-  if (network.isNetworkCheckPending(getState()) === true) {
-    return;
-  }
+let isCheckingConnectivityPromise = null;
+let networkCheckIntervalId = null;
+let checkIfInitiallyLockedIntervalId = null;
 
-  dispatch(setLastNetworkCheckStartAt());
-
-  if (isInitialHealthcheck) {
-    dispatch(platformReducer.actions.setGlobalFormLockEnabled());
-    dispatch(networkReducer.actions.connecting());
-  }
-
-  Promise.all([Network.checkConnectivity()])
-    .then(async providerType => {
-      const connectedNetworkId = await dispatch(
-        networkReducer.actions.getConnectedNetworkId()
-      );
-
-      if (isInitialHealthcheck) {
-        await dispatch(checkIfOutOfSyncEpic());
-        // console.log("connectedTo:", network.activeNetworkMeta(getState()).get('name'));
-        Raven.setTagsContext({
-          network: network.activeNetworkMeta(getState()).get("name")
-        });
-      }
-
-      if (providerType && connectedNetworkId.value) {
-        dispatch(networkReducer.actions.connected());
-        if (isInitialHealthcheck) {
-          /**
-           * We only do this once, since later we subscribe to 'latest' filter
-           * to get notified on new block resolved
-           */
-          dispatch(networkReducer.actions.getLatestBlockNumber());
-          registerSubscription(
-            SUBSCRIPTIONS_LATEST_BLOCK,
-            () => {
-              dispatch(subscribeLatestBlockFilterEpic());
-            },
-            { dispatch, getState },
-            SUBSCRIPTIONS_GROUP_GLOBAL_INITIAL
-          );
-        }
-        const previousDefaultAccount = accounts.defaultAccount(getState());
-        if (
-          HAS_ACCOUNTS ===
-          (await dispatch(accountsReducer.actions.checkAccountsEpic()))
-        ) {
-          try {
-            /**
-             *  Initialize session on first run of the healthcheck or when default address changes
-             */
-            if (
-              isInitialHealthcheck ||
-              previousDefaultAccount !== accounts.defaultAccount(getState())
-            ) {
-              Session.init(dispatch, getState);
-            }
-          } catch (e) {
-            console.error("SESSION:INIT", e);
-          }
-          await dispatch(
-            isInitialHealthcheck
-              ? networkReducer.actions.checkNetworkInitialEpic()
-              : networkReducer.actions.checkNetworkEpic(
-                  previousDefaultAccount !== accounts.defaultAccount(getState())
-                )
-          );
-        } else {
-          dispatch(CheckNetworkAction.fulfilled());
-          dispatch(setLastNetworkCheckEndAt());
-        }
-      }
-    })
-    .catch(error => {
-      console.debug("Error in healthCheck!", error);
-      dispatch(networkReducer.actions.disconnected());
-      dispatch(CheckNetworkAction.fulfilled());
-      dispatch(setLastNetworkCheckEndAt());
-      // errorHandler.handle(error);
-    });
-};
+sak(store);
 
 const bootstrap = async () => {
   const { dispatch, getState } = store;
   period.init(getState);
   conversion.init(getState);
-  await dispatch(platformReducer.actions.web3Initialized(web3.init()));
-  let networkCheckIntervalId = null;
-  let checkingConnectivity = null;
-  const checkIfInitiallyLocked = setInterval(() => {
-    if (
-      !checkingConnectivity &&
-      networkCheckIntervalId !== PENDING_INITIAL_NETWORK_CHECK
-    ) {
-      checkingConnectivity = true;
-      Network.checkConnectivity()
-        .then(async () => {
-          dispatch(networkReducer.actions.setNoProviderConnected(false));
-          if (web3p.eth.accounts.length) {
-            networkCheckIntervalId = PENDING_INITIAL_NETWORK_CHECK;
-            clearInterval(checkIfInitiallyLocked);
-            await healthCheck(dispatch, getState, true);
-            networkCheckIntervalId = setInterval(
-              await healthCheck.bind(null, dispatch, getState),
-              HEALTHCHECK_INTERVAL_MS
-            );
-          } else {
-            dispatch(platformReducer.actions.metamaskLocked());
-          }
-          checkingConnectivity = false;
-        })
-        .catch(error => {
-          console.debug("Error in healthCheck!", error);
-          dispatch(networkReducer.actions.setNoProviderConnected(true));
-          dispatch(networkReducer.actions.disconnected());
-          // errorHandler.handle(error);
-          setTimeout(() => location.reload(true), 5000);
-        });
+
+  await dispatch(
+    platformReducer.actions.web3Initialized(
+      web3.init()
+    )
+  );
+  const onSuccessfulCheck = async ({ dispatch, getState }) => {
+    const accountsList = await promisify(web3p.eth.getAccounts).call();
+    dispatch(
+      networkReducer.actions.setNoProviderConnected(false)
+    );
+    if (accountsList && accountsList.length) {
+      networkCheckIntervalId = PENDING_INITIAL_NETWORK_CHECK;
+      clearInterval(checkIfInitiallyLockedIntervalId);
+      await healthCheck(dispatch, getState, true);
+      networkCheckIntervalId = setInterval(
+        await healthCheck.bind(null, dispatch, getState),
+        HEALTHCHECK_INTERVAL_MS
+      );
+    } else {
+      dispatch(platformReducer.actions.accountLocked());
     }
-  }, 1000);
+    isCheckingConnectivityPromise = null;
+  };
+
+  checkIfInitiallyLockedIntervalId = setInterval(async (dispatch, getState) => {
+    try {
+      if (
+        isCheckingConnectivityPromise === null &&
+        networkCheckIntervalId !== PENDING_INITIAL_NETWORK_CHECK
+      ) {
+        isCheckingConnectivityPromise = true;
+        const nodeType = await Network.checkConnectivity();
+        dispatch(
+          platformReducer.actions.setActiveNodeType(nodeType)
+        );
+        await onSuccessfulCheck({ dispatch, getState });
+      }
+    } catch (error) {
+      console.debug("Error in healthCheck!", error.toString());
+      dispatch(networkReducer.actions.setNoProviderConnected(true));
+      dispatch(networkReducer.actions.disconnected());
+      setTimeout(() => location.reload(true), 5000);
+    }
+  }, 1000, dispatch, getState);
 };
 
 Raven.context(function() {
