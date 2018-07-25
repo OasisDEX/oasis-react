@@ -95,14 +95,21 @@ export const syncOffersEpic = (
     dispatch(doLoadBuyOffersEpic(offerCount, baseToken, quoteToken)),
     dispatch(doLoadSellOffersEpic(offerCount, baseToken, quoteToken))
   ]).then(async () => {
-    dispatch(reSyncOffersEpic({ baseToken, quoteToken }));
-    await doGetTradingPairOfferCount(baseToken, quoteToken);
-    dispatch(
-      syncOffers.fulfilled({
-        tradingPair: { baseToken, quoteToken },
-        syncEndBlockNumber: network.latestBlockNumber(getState())
-      })
-    );
+    const reSyncRetryIntervalId =setInterval(async () => {
+      try {
+        dispatch(reSyncOffersEpic({ baseToken, quoteToken }));
+        await doGetTradingPairOfferCount(baseToken, quoteToken);
+        dispatch(
+          syncOffers.fulfilled({
+            tradingPair: { baseToken, quoteToken },
+            syncEndBlockNumber: network.latestBlockNumber(getState())
+          })
+        );
+        clearInterval(reSyncRetryIntervalId);
+      } catch (e) {
+        console.warn("Disconnected while re-syncing offers. Will try reconnect in 1s.", e.toString())
+      }
+    }, 1000)
   });
 };
 

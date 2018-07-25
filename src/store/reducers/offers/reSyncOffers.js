@@ -32,9 +32,11 @@ export const reSyncOffersEpic = tradingPair => async (dispatch, getState) => {
         }
       )
       .get((err, logUpdateList) => {
-        logUpdateList.forEach(({ args: { id } }) =>
-          dispatch(syncOffer(id.toString()))
-        );
+        if (!err) {
+          logUpdateList.forEach(({ args: { id } }) =>
+            dispatch(syncOffer(id.toString()))
+          );
+        }
       });
   } catch (e) {
     dispatch(reSyncOffers.rejected(e));
