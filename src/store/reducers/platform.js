@@ -10,6 +10,7 @@ import {
   subscriptionTypeToKeyMap
 } from "../../constants";
 import web3 from "../../bootstrap/web3";
+import Promise  from 'bluebird';
 
 const initialState = fromJS({
   // sids: [], // currently running setIntevals cancel ids
@@ -19,7 +20,8 @@ const initialState = fromJS({
   ordersLoadStatus: false,
   tradeHistoryLoadStatus: false,
   marketVolumeLoadStatus: false,
-  metamaskLocked: false,
+  accountLocked: false,
+  activeNodeType: null,
   lastNetworkSwitchAt: null,
   defaultTradingPair: { baseToken: "MKR", quoteToken: "W-ETH" },
   defaultPeriod: WEEK,
@@ -41,35 +43,41 @@ const initialState = fromJS({
   }
 });
 
-const Init = createAction("PLATFORM/INIT", async () => null);
-
+const Init = createAction("PLATFORM/INIT");
 const platformInitEpic = () => async dispatch => {
   dispatch(Init());
 };
 
 const setPlatformErrors = createAction("PLATFORM/SET_PLATFORM_ERRORS");
-
 const resetPlatformErrors = createAction("PLATFORM/RESET_PLATFORM_ERRORS");
 
-const web3Initialized = createAction("PLATFORM/WEB3_INITIALIZED", p => p);
+const setActiveNodeType = createAction('PLATFORM/SET_ACTIVE_PROVIDER_TYPE');
 
-const web3Reset = createAction("PLATFORM/WEB3_RESET", () => web3.reset());
+const web3Initialized = createAction("PLATFORM/WEB3_INITIALIZED");
+const web3Reset = createAction("PLATFORM/WEB3_RESET", () => {
+  try {
+    web3.reset(false);
+  } catch (e) {
+    Promise.promisify(web3.reset).call(false);
+  }
+});
 
-const web3ResetKeepSync = createAction("PLATFORM/WEB3_RESET_KEEP_SYNC", () =>
-  web3.reset(true)
-);
+const web3ResetKeepSync = createAction("PLATFORM/WEB3_RESET_KEEP_SYNC", () => {
+  try {
+    web3.reset(true);
+  } catch (e) {
+    Promise.promisify(web3.reset).call(true);
+  }
+});
 
-const contractsLoaded = createAction("PLATFORM/CONTRACTS_LOADED", p => p);
-
+const contractsLoaded = createAction("PLATFORM/CONTRACTS_LOADED");
 const contractsReloaded = createAction("PLATFORM/CONTRACTS_RELOADED");
 
 const marketInitialized = createAction("PLATFORM/MARKET_INITIALIZED");
-
 const marketReinitialized = createAction("PLATFORM/MARKET_REINITIALIZED");
 
-const metamaskLocked = createAction("PLATFORM/METAMASK_LOCKED");
-
-const metamaskUnlocked = createAction("PLATFORM/METAMASK_UNLOCKED");
+const accountLocked = createAction("PLATFORM/ACCOUNT_LOCKED");
+const accountUnlocked = createAction("PLATFORM/ACCOUNT_UNLOCKED");
 
 const networkChanged = createAction("PLATFORM/ACTIVE_NETWORK_CHANGED");
 
@@ -142,8 +150,8 @@ const actions = {
   marketReinitialized,
   setPlatformErrors,
   resetPlatformErrors,
-  metamaskLocked,
-  metamaskUnlocked,
+  accountLocked,
+  accountUnlocked,
   networkChanged,
   dismissMessage,
   changeRouteEpic,
@@ -155,7 +163,8 @@ const actions = {
   setAllInitialSubscriptionsRegisteredDisabled,
   registerSubscriptionByTypeAndGroup,
   unregisterSubscriptionByType,
-  resetSubscriptionsState
+  resetSubscriptionsState,
+  setActiveNodeType
 };
 
 const reducer = handleActions(
@@ -163,8 +172,8 @@ const reducer = handleActions(
     [contractsLoaded]: state => state.set("contractsLoaded", true),
     [marketInitialized]: state => state.set("marketInitialized", true),
     [web3Initialized]: state => state.set("web3Initialized", true),
-    [metamaskLocked]: state => state.set("metamaskLocked", true),
-    [metamaskUnlocked]: state => state.set("metamaskLocked", false),
+    [accountLocked]: state => state.set("accountLocked", true),
+    [accountUnlocked]: state => state.set("accountLocked", false),
     [networkChanged]: state => state.set("lastNetworkSwitchAt", Date.now()),
     [setGlobalFormLockEnabled]: state => state.set("globalFormLock", true),
     [setGlobalFormLockDisabled]: state => state.set("globalFormLock", false),
@@ -203,7 +212,8 @@ const reducer = handleActions(
             tokenTransfers: null
           }
         })
-      )
+      ),
+    [setActiveNodeType]: (state, { payload }) => state.set('activeNodeType', payload)
   },
   initialState
 );
