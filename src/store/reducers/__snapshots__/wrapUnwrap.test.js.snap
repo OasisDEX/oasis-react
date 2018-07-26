@@ -380,7 +380,7 @@ Array [
     "payload": Array [
       Object {
         "txHash": "0xabcd",
-        "txStartTimestamp": 1532510126533,
+        "txStartTimestamp": 1528329600000,
       },
     ],
     "type": "MOCK___onPending",

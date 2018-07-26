@@ -1722,26 +1722,11 @@ Array [
     "type": "MOCK___OFFERS/LOAD_SELL_OFFERS",
   },
   Object {
-    "type": "RE_SYNC_OFFERS/RE_SYNC_OFFERS_PENDING",
-  },
-  Object {
     "payload": Object {
       "bestBuyOfferId": "2000",
       "bestSellOfferId": "1000",
     },
     "type": "OFFERS/SET_ACTIVE_TRADING_PAIR_BEST_OFFER_IDS",
-  },
-  Object {
-    "payload": Object {
-      "syncEndBlockNumber": 1,
-      "tradingPair": Object {
-        "baseToken": "MKR",
-        "quoteToken": "W-ETH",
-      },
-    },
-    "type": Array [
-      "OFFERS/SYNC_OFFERS_FULFILLED",
-    ],
   },
 ]
 `;
