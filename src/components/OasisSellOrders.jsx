@@ -3,7 +3,7 @@ import { PropTypes } from "prop-types";
 import OasisWidgetFrame from "../containers/OasisWidgetFrame";
 import OasisTable from "./OasisTable";
 import { toDisplayFormat } from "../utils/orders";
-import { LoadProgressSection } from "../utils/offers/loadProgress";
+import LoadProgressSection from "./OasisLoadProgressSection";
 import { TAKE_SELL_OFFER } from "../store/reducers/offerTakes";
 
 import styles from "./OasisSellOrders.scss";

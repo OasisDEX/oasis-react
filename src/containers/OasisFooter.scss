@@ -1,9 +1,14 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/typography";
 
 .OasisFooter {
   margin-top: 16px;
   padding: 40px 80px;
   justify-content: space-evenly;
+  @media(max-width: $xxs) {
+    padding: 0;
+    justify-content: space-around;
+  }
 }
 
 .MistBrowser {
@@ -16,7 +21,7 @@
   & .Heading {
     margin: 16px 0;
 
-    @include text(16px, 400);
+    @include text(13px, 400);
     text-transform: uppercase;
     color: #4A4A4A;
   }
@@ -24,9 +29,13 @@
   & .Link {
     margin: 16px 0;
 
-    @include text(14px, 700);
+    @include text(12px, 700);
     color: #546979;
     cursor: pointer;
+
+    @media(max-width: $xxs) {
+      margin: 10px 0;
+    }
 
     &:hover, &:active, &:focus {
       text-decoration: none;

@@ -1,0 +1,18 @@
+@import "../styles/modules/breakpoints";
+.LoadProgress {
+  border: 1px solid #b1b1b3;
+  color: #68686C;
+  font-size: 11px;
+  padding: 5px 0;
+  float: right;
+  font-weight: bold;
+  border-radius: 7%;
+  width: 130px;
+  @media (max-width: $xs) {
+    width: 100px;
+  }
+  text-align: center;
+  letter-spacing: normal;
+  position: relative;
+  top: 1px
+}

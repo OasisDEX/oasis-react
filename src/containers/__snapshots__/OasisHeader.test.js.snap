@@ -3,32 +3,34 @@
 exports[`(Container) OasisHeader should render 1`] = `
 <div
   className="row"
-  styleName="row-header"
+  styleName="headerMainSection"
 >
   <div
-    className="col-md-6"
+    className="col-sm-6"
+    styleName="leftColumn"
   >
     <div
       className="row"
     >
       <div
-        className="col-md-3"
+        className="col-3 col-sm-3"
       >
         <OasisLogo />
       </div>
       <div
-        className="col-md-9"
+        className="col-9"
+        styleName="infoSection"
       >
         <div
           className="row"
         >
           <div
-            className="col-md-6"
+            className="col-6"
           >
             <Connect(OasisAppLoadProgress) />
           </div>
           <div
-            className="col-md-6"
+            className="col-6"
           >
             <OasisExpirationDate
               timestamp={1536662916}
@@ -39,14 +41,14 @@ exports[`(Container) OasisHeader should render 1`] = `
     </div>
   </div>
   <div
-    className="col-md-6"
+    className="col col-sm-6"
   >
     <div
       className="row"
       styleName="row"
     >
       <div
-        className="col-md-12"
+        className="col-sm-12"
       >
         <OasisAccount
           accounts={
@@ -62,7 +64,7 @@ exports[`(Container) OasisHeader should render 1`] = `
       styleName="row"
     >
       <div
-        className="col-md-12"
+        className="col-sm-12"
       >
         <OasisMarket
           marketAddress="0x3aa927a97594c3ab7d7bf0d47c71c3877d1de4a1"

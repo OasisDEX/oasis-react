@@ -7,7 +7,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import OasisWidgetFrame from "../containers/OasisWidgetFrame";
 import OasisTable from "./OasisTable";
 import { toDisplayFormat } from "../utils/orders";
-import { LoadProgressSection } from "../utils/offers/loadProgress";
+import LoadProgressSection from "./OasisLoadProgressSection";
 import { TAKE_BUY_OFFER } from "../store/reducers/offerTakes";
 import { OFFER_STATUS_INACTIVE } from "../store/reducers/offers";
 import { OasisSignificantDigitsWrapper } from "../containers/OasisSignificantDigits";

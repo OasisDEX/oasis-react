@@ -1,6 +1,14 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/constants";
 
-.base {}
+.base {
+  @media (max-width: $xxs) {
+    width: 100%;
+    border-bottom: 1px solid #F8F7F5;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+}
 
 .icon {
   margin-right: 1em;
@@ -18,7 +26,22 @@
 }
 
 .buying {
+  font-size: 12px !important;
   margin-bottom: 0.75em;
+  @media (max-width: $xxs) {
+    display: inline-block;
+    width: 50%;
+  }
+}
+.selling {
+  font-size: 12px !important;
+  @media (max-width: $xxs) {
+    text-align: right;
+    padding-left: 5px;
+    align-content: right;
+    display: inline-block;
+    width: 50%;
+  }
 }
 
 .detailsAmountCol {

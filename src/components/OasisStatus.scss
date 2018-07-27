@@ -1,3 +1,4 @@
+@import '../styles/modules/breakpoints';
 @import '../styles/modules/typography';
 
 .StatusIndicator {
@@ -22,6 +23,10 @@
   display: inline-block;
   margin-right: 5px;
   vertical-align: sub;
+  @media (max-width: $xs) {
+    width: 9px;
+    height: 9px;
+  }
 }
 
 .OasisStatus {

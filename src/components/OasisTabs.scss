@@ -1,3 +1,4 @@
+@import '../styles/modules/breakpoints';
 @import '../styles/modules/constants';
 @import '../styles/modules/grid';
 @import '../styles/modules/typography';
@@ -7,8 +8,9 @@
   justify-content: center;
   align-items: center;
   margin: 60px 0;
-
-
+  @media (max-width: $sm) {
+    margin: 20px 0;
+  }
   &:before , &:after{
     content: '';
     width: calc((100% - #{$tabs-width}) / 2);
@@ -19,9 +21,11 @@
 
 .tabs {
   display: flex;
-
+  @media (max-width: $sm) {
+    position: sticky !important;
+    top: 10px;
+  }
   width: $tabs-width;
-
   border: 1px solid $gray;
   border-radius: 100px;
 
@@ -68,6 +72,10 @@
       color: $gray-blueish;
     }
 
+    @media (max-width: $xxs) {
+      font-size: 11px;
+    }
+
   }
 
   &.active {
@@ -76,7 +84,6 @@
       color: #4F5362;
     }
   }
-
 }
 
 .tabBig {

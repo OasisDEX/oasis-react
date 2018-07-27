@@ -1,21 +1,30 @@
+@import "./../styles/modules/breakpoints";
 .marketTable {
-
   th:first-child,
   td:first-child {
     flex-basis: 148px;
     text-align: center;
+    @media (max-width: $xxs){
+      flex-basis: 108px;
+    }
   }
 
   th:nth-child(2),
   td:nth-child(2) {
-    flex-basis: 78px;
+    flex-basis: 70px;
     text-align: right;
+    @media (max-width: $xxs){
+      flex-basis: 60px;
+    }
   }
 
   th:nth-child(3),
   td:nth-child(3) {
     flex-basis: 123px;
     text-align: right;
+    @media (max-width: $xxs){
+      flex-basis: 80px;
+    }
   }
 
 }

@@ -1,10 +1,27 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/grid";
-
 .row {
   @extend .row;
 }
 
-.row-header {
+.headerMainSection {
   margin-bottom: 30px;
   align-items: center;
 }
+
+.leftColumn {
+  @media (max-width: $xs) {
+    * {
+      font-size: 9px !important;
+    }
+    margin-bottom: 15px;
+  }
+  .infoSection {
+    @media (max-width: $xs) {
+      position: relative;
+      top: 5px;
+    }
+  }
+}
+
+

@@ -1,23 +1,32 @@
+@import "./../styles/modules/breakpoints";
 
 .table {
-
-
+  max-width: 100%;
   th:first-child,
   td:first-child {
     flex-basis: 78px;
     text-align: right;
+    @media (max-width: $xxs) {
+      flex-basis: 50px;
+    }
   }
 
   th:nth-child(2),
   td:nth-child(2) {
     flex-basis: 128px;
     text-align: right;
+    @media (max-width: $xxs) {
+      flex-basis: 95px;
+    }
   }
 
   th:nth-child(3),
   td:nth-child(3) {
     flex-basis: 128px;
     text-align: right;
+    @media (max-width: $xxs) {
+      flex-basis: 100px;
+    }
   }
 
 }

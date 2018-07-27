@@ -1,7 +1,8 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/typography";
 
 table.table {
-
+  max-width: 100%;
   td, th {
     text-align: right;
     margin-left: 8px;
@@ -15,6 +16,9 @@ table.table {
   th:first-child,
   td:first-child {
     flex-basis: 72px;
+    @media (max-width: $xs) {
+      flex-basis: 65px;
+    }
     text-align: center;
   }
 
@@ -27,23 +31,32 @@ table.table {
   td:nth-child(2) {
     flex-basis: 41px;
     text-align: center;
+    @media (max-width: $xxs) {
+      flex-basis: 40px;
+    }
   }
 
   th:nth-child(3),
   td:nth-child(3) {
     flex-basis: 82px;
     text-align: right;
+    @media (max-width: $xxs) {
+      flex-basis: 60px;
+    }
   }
 
   th:nth-child(4),
   td:nth-child(4) {
     flex-basis: 82px;
     text-align: right;
+    @media (max-width: $xxs) {
+      flex-basis: 40px;
+    }
   }
 
   th:nth-child(5),
   td:nth-child(5) {
-    flex-basis: 55px;
+    flex-basis: 40px;
     text-align: right;
   }
 

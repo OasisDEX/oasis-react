@@ -60,6 +60,7 @@ export class OasisChart extends PureComponent {
 
     return (
       <OasisWidgetFrame
+        noContentPaddingXXS
         loadingDataText={"loading trades"}
         isLoadingData={!initialMarketHistoryLoaded}
         heading="Charts"

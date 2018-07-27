@@ -4,11 +4,18 @@ import { PropTypes } from "prop-types";
 import styles from "./FlexBox.scss";
 import CSSModules from "react-css-modules/dist/index";
 
-const propTypes = PropTypes && {
+const propTypes = {
   children: PropTypes.node,
   justifyContent: PropTypes.string,
   vertical: PropTypes.bool,
-  wrap: PropTypes.bool
+  wrap: PropTypes.bool,
+  wrapXXS: PropTypes.bool,
+  inlineXXS: PropTypes.bool,
+  alignItems: PropTypes.string,
+  className: PropTypes.string,
+  alignContent: PropTypes.string,
+  additionalStyles: PropTypes.string,
+  hidden: PropTypes.bool
 };
 
 const defaultProps = {
@@ -29,7 +36,9 @@ export class FlexBox extends PureComponent {
       alignItems,
       alignContent,
       className,
-      additionalStyles
+      additionalStyles,
+      wrapXXS,
+      inlineXXS
     } = this.props;
 
     const inlineStyles = {
@@ -43,6 +52,8 @@ export class FlexBox extends PureComponent {
       ${styles.box}
       ${vertical ? styles.vertical : styles.horizontal}
       ${wrap ? styles.wrap : ""}
+      ${wrapXXS ? styles.wrapXXS: ""}
+      ${inlineXXS ? styles.inlineXXS : ""}
       ${className}
     `;
     return (

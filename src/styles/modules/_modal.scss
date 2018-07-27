@@ -1,3 +1,4 @@
+@import "breakpoints";
 .modal {
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
@@ -16,6 +17,9 @@
   max-width: 549px;
   padding: 30px 30px 20px 30px;
   width: 490px;
+  @media (max-width: $xs) {
+    max-width: 100%;
+  }
 }
 
 .closeModalBtn {

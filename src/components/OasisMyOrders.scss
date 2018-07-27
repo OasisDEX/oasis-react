@@ -12,8 +12,8 @@
 }
 
 .openOffers {
-
-  td, th {
+  td,
+  th {
     text-align: right;
   }
 
@@ -25,40 +25,57 @@
   td:first-child {
     flex-basis: 58px;
     text-align: right;
+    @media (max-width: $xxs) {
+      flex-basis: 45px;
+    }
   }
-
 
   th:nth-child(2),
   td:nth-child(2) {
     flex-basis: 68px;
     text-align: right;
+    @media (max-width: $xxs) {
+      flex-basis: 50px;
+    }
   }
 
   th:nth-child(3),
   td:nth-child(3) {
     flex-basis: 60px;
     text-align: right;
+    @media (max-width: $xxs) {
+      flex-basis: 40px;
+    }
   }
 
   th:nth-child(4),
   td:nth-child(4) {
     flex-basis: 60px;
     text-align: right;
+    @media (max-width: $xxs) {
+      flex-basis: 40px;
+    }
   }
 
   th:nth-child(5),
   td:nth-child(5) {
     flex-basis: 68px;
     text-align: right;
+    @media (max-width: $xxs) {
+      button {
+        font-size: 9px !important;
+        padding-bottom: 4px;
+        padding-top: 4px;
+      }
+      flex-basis: 50px;
+    }
   }
 }
-
 
 .info {
   padding: 0 30px;
   @include muted();
 }
-
 
 .cancelButton.cancelButton {
   font-weight: 400;

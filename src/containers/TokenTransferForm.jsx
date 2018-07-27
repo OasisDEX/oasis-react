@@ -127,7 +127,6 @@ export class TokenTransferFormWrapper extends PureComponent {
               >
                 <div className={tableStyles.inputGroup}>
                   <OasisButton
-                    style={{ fontSize: "10px" }}
                     hidden={!this.state.showMaxButton}
                     type="button"
                     onClick={actions.transferMax}
@@ -137,7 +136,7 @@ export class TokenTransferFormWrapper extends PureComponent {
                     className={tableStyles.inputBtn}
                     disabled={disabled || globalFormLock}
                   >
-                    transfer max
+                    <span className="d-none d-sm-block">transfer</span> max
                   </OasisButton>
                   <div
                     className={tableStyles.inputGroupEventHandlerChild}

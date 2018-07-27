@@ -1,3 +1,4 @@
+@import "./breakpoints";
 @import "./constants";
 @import "./typography";
 
@@ -9,18 +10,23 @@
   table-layout: fixed;
 
   th {
-    width: 80px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
-    font-size: 13px;
+    color: #818181;
     background-color: $table-header-bg;
+    border-left: 1px $table-border solid;
+    border-top: 1px $table-border solid;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
     padding: 10px;
     text-align: center;
-    border-top: 1px $table-border solid;
-    border-left: 1px $table-border solid;
-    color: #818181;
+    width: 80px;
 
     text-transform: uppercase;
+    @media (max-width: $xxs) {
+      font-size: 12px;
+      padding: 5px;
+      width: 70px;
+    }
   }
 
   td {

@@ -4,7 +4,9 @@ exports[`(Component) OasisMarket should render 1`] = `
 <div
   styleName="OasisMarket"
 >
-  <span>
+  <span
+    styleName="label"
+  >
      Market: 
   </span>
   <div

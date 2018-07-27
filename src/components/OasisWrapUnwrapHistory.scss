@@ -1,12 +1,14 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/typography";
 
 .table {
-
-
   th:first-child,
   td:first-child {
     flex-basis: 78px;
     text-align: right;
+    @media (max-width: $xxs) {
+      flex-basis: 70px;
+    }
   }
 
   td:first-child {
@@ -17,18 +19,27 @@
   td:nth-child(2) {
     flex-basis: 78px;
     text-align: right;
+    @media (max-width: $xxs) {
+      flex-basis: 50px;
+    }
   }
 
   th:nth-child(3),
   td:nth-child(3) {
     flex-basis: 78px;
     text-align: right;
+    @media (max-width: $xxs) {
+      flex-basis: 40px;
+    }
   }
 
   th:nth-child(4),
   td:nth-child(4) {
     flex-basis: 78px;
     text-align: right;
+    @media (max-width: $xxs) {
+      flex-basis: 60px;
+    }
   }
 
 }

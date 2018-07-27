@@ -5,7 +5,7 @@ import styles from "./InfoBox.scss";
 import CSSModules from "react-css-modules/dist/index";
 import FlexBox from "./FlexBox";
 
-const propTypes = PropTypes && {
+const propTypes =  {
   children: PropTypes.node,
   color: PropTypes.string,
   size: PropTypes.string,
@@ -14,7 +14,9 @@ const propTypes = PropTypes && {
   fullWidth: PropTypes.bool,
   noBorder: PropTypes.bool,
   hidden: PropTypes.bool,
-  additionalStyles: PropTypes.object
+  additionalStyles: PropTypes.object,
+  className: PropTypes.string,
+  wrapXXS: PropTypes.bool
 };
 
 const defaultProps = {

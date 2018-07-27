@@ -1,3 +1,5 @@
+@import "./../styles/modules/breakpoints";
+
 .OasisLogoWrapper {
   display: flex;
   align-items: center;
@@ -13,5 +15,9 @@
   background-size: 100%;
   &:hover {
     background-image: url("./../assets/logo-oasis-hover.png");
+  }
+
+  @media (max-width: $xxs) {
+    background-size: 97%;
   }
 }

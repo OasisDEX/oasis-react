@@ -1,10 +1,14 @@
 import React, { PureComponent } from "react";
 import { PropTypes } from "prop-types";
 import { List } from "immutable";
+import moment from "moment-timezone";
 import ImmutablePropTypes from "react-immutable-proptypes";
+import CSSModules from "react-css-modules";
 
+import { TOKEN_DAI } from "../constants";
 import OasisWidgetFrame from "../containers/OasisWidgetFrame";
 import { OasisTable } from "./OasisTable";
+
 import { DAY, MONTH, WEEK } from "../utils/period";
 import {
   trades,
@@ -14,14 +18,11 @@ import {
   formatVolume
 } from "../utils/tokens/pair";
 
-import CSSModules from "react-css-modules";
-import styles from "./OasisMarketWidget.scss";
-import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
-import { ETH_UNIT_ETHER, TOKEN_DAI } from "../constants";
-import moment from "moment-timezone";
 import OasisLinkLikeButton from "./OasisLinkLikeButton";
 import tokensReducer from "../store/reducers/tokens";
-import OasisLoadingIndicator from "./OasisLoadingIndicator";
+import { OasisMarketWidgetVolumeTemplate } from "./OasisMarketWidgetVolumeTemplate";
+import { OasisMarketWidgetTradingPairPriceTemplate } from "./OasisMarketWidgetTradingPairPriceTemplate";
+import styles from "./OasisMarketWidget.scss";
 
 const periodHeading = {
   [DAY]: "daily",
@@ -29,51 +30,14 @@ const periodHeading = {
   [MONTH]: "monthly"
 };
 
-const tradingPairPriceTemplate = row => {
-  if (row && row.initialMarketHistoryLoaded) {
-    return row.tradingPairPrice ? (
-      <OasisSignificantDigitsWrapper
-        fractionalZerosGrey={false}
-        fullPrecisionAmount={row.tradingPairPriceFullPrecision}
-        amount={row.tradingPairPrice}
-      />
-    ) : (
-      "N/A"
-    );
-  } else {
-    return (
-      <span style={{ position: "relative", right: "10px" }}>
-        <OasisLoadingIndicator size="sm" />
-      </span>
-    );
-  }
-};
-const volumeTemplate = row => {
-  if (row && row.initialMarketHistoryLoaded) {
-    return row.volume ? (
-      <OasisSignificantDigitsWrapper
-        fullPrecisionUnit={ETH_UNIT_ETHER}
-        fullPrecisionAmount={row.volumeFullPrecision}
-        amount={row.volume}
-        fractionalZerosGrey={false}
-      />
-    ) : (
-      "N/A"
-    );
-  } else {
-    return (
-      <span style={{ position: "relative", right: "20px" }}>
-        <OasisLoadingIndicator size="sm" />
-      </span>
-    );
-  }
-};
-
 const colDefinition = period => {
   return [
     { heading: "pairs", key: "tradingPair" },
-    { heading: "price", template: tradingPairPriceTemplate },
-    { heading: `${periodHeading[period]} volume`, template: volumeTemplate }
+    { heading: "price", template: OasisMarketWidgetTradingPairPriceTemplate },
+    {
+      heading: `${periodHeading[period]} volume`,
+      template: OasisMarketWidgetVolumeTemplate
+    }
   ];
 };
 
@@ -87,6 +51,15 @@ const isCurrentRowActive = (activeTradingPair, baseToken, quoteToken) => {
     );
   }
 };
+
+const daiButton = (
+  <OasisLinkLikeButton
+    href="https://dai.makerdao.com/"
+    caption="CREATE DAI"
+    target="_blank"
+    className={styles.createDaiBtn}
+  />
+);
 
 class OasisMarketWidget extends PureComponent {
   constructor(props) {
@@ -131,6 +104,7 @@ class OasisMarketWidget extends PureComponent {
       const tradingPairPrice = tradingPairVolume.toNumber()
         ? price(weeklyTradingPairTrades.last(), baseToken, quoteToken)
         : null;
+
       return {
         initialMarketHistoryLoaded,
         isActive: isCurrentRowActive(
@@ -176,15 +150,6 @@ class OasisMarketWidget extends PureComponent {
       defaultPeriod,
       isMarketInitialized
     } = this.props;
-    const daiButton = (
-      <OasisLinkLikeButton
-        href="https://dai.makerdao.com/"
-        caption="CREATE DAI"
-        target="_blank"
-        className={styles.createDaiBtn}
-      />
-    );
-
     const activeTradingPairIncludesDAI =
       activeTradingPair &&
       [activeTradingPair.baseToken, activeTradingPair.quoteToken].includes(
@@ -198,7 +163,7 @@ class OasisMarketWidget extends PureComponent {
         <OasisTable
           isInitializing={!isMarketInitialized}
           isInitializingText={"Market contract is initializing..."}
-          onRowClick={isMarketInitialized ? this.onTableRowClick: null}
+          onRowClick={isMarketInitialized ? this.onTableRowClick : null}
           className={styles.marketTable}
           col={colDefinition(defaultPeriod)}
           rows={tradedTokens.map(

@@ -1,9 +1,22 @@
+@import "./../styles/modules/breakpoints";
 .box {
   display: flex;
+  max-width: 100%;
 }
 
 .wrap {
   flex-wrap: wrap;
+}
+
+.wrapXXS {
+  @media (max-width: $xxs) {
+    flex-wrap: wrap;
+  }
+}
+.inlineXXS {
+  @media (max-width: $xxs) {
+    display: inline-flex;
+  }
 }
 
 .vertical {

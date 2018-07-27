@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`(Component) OasisLoadProgressSection should render 1`] = `
+<span
+  style={
+    Object {
+      "float": "right",
+    }
+  }
+>
+  <OasisIcon
+    className=""
+    icon="loading"
+    size="lg"
+  />
+</span>
+`;
