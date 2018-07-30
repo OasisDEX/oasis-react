@@ -1,3 +1,5 @@
+@import "./../styles/modules/breakpoints";
+
 .accordionHeading {
   min-height: 34px;
   flex-grow: 1;
@@ -10,4 +12,9 @@
 .smallAccordion {
   padding-top: 13px;
   padding-bottom: 13px;
+}
+.infoText {
+  @media (max-width: $xxs) {
+    max-width: 100px;
+  }
 }

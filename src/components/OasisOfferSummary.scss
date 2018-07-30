@@ -1,6 +1,13 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/constants";
 
 .base {
+  @media (max-width: $xxs) {
+    flex-wrap: wrap;
+  }
+  hr {
+    display: none;
+  }
 }
 
 .red {
@@ -25,17 +32,30 @@
 
 .detailsAmountCol {
   flex-basis: 45%;
+  @media (max-width: $xxs) {
+    flex-basis: 100%;
+  }
 }
 
 .detailsTradingCol {
+
   flex-basis: 65%;
+  @media (max-width: $xxs) {
+    flex-basis: 100%;
+  }
 }
 
 .detailsTradingFirstCol {
   flex-basis: 55%;
+  @media (max-width: $xxs) {
+    flex-basis: 100%;
+  }
 }
 .detailsTradingSecCol {
   flex-basis: 45%;
+  @media (max-width: $xxs) {
+    flex-basis: 100%;
+  }
 }
 
 .tradingStatus {
@@ -47,3 +67,5 @@
   width: 92px;
   text-align: center;
 }
+
+.isTokenEnabledSection {}

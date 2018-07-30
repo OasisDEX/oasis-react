@@ -1,6 +1,10 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/typography";
 
 .link {
   @include ellipsis(150px);
+  @media (max-width: $xxs) {
+    @include ellipsis(70px);
+  }
   font-weight: 600;
 }

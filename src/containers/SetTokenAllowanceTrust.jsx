@@ -250,7 +250,7 @@ export class SetTokenAllowanceTrustWrapper extends PureComponent {
         alignItems="center"
         className={styles.accordionHeading}
       >
-        <div>
+        <div className={styles.infoText}>
           {prefix} <b>{this.props.tokenName}</b> for trading
         </div>
         <div

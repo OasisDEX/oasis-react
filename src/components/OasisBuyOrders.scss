@@ -1,8 +1,8 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/constants";
 @import "../styles/modules/grid";
 
 .table {
-
   td, th {
     text-align: right;
   }
@@ -14,6 +14,9 @@
   th:first-child,
   td:first-child {
     flex-basis: 148px;
+    @media (max-width: $sm){
+      flex-basis: 80px;
+    }
     text-align: right;
   }
 
@@ -25,12 +28,18 @@
   td:nth-child(2) {
     flex-basis: 88px;
     text-align: right;
+    @media (max-width: $xxs){
+      flex-basis: 75px;
+    }
   }
 
   th:nth-child(3),
   td:nth-child(3) {
     flex-basis: 88px;
     text-align: right;
+    @media (max-width: $xxs){
+      flex-basis: 75px;
+    }
   }
 
   th:last-child,

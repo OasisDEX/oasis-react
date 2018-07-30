@@ -1,3 +1,4 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/grid";
 
 .container {
@@ -6,6 +7,9 @@
 
 .FooterSeparator {
   margin-top: 50px;
+  @media (max-width: $xxs) {
+    margin-top: 0;
+  }
   margin-bottom: 0;
   border-top: 1px solid #eee;
 }

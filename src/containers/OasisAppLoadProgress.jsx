@@ -29,7 +29,9 @@ export class OasisAppLoadProgressWrapper extends PureComponent {
         offersLoadProgress={offersLoadProgress}
         status={networkStatus}
         loadProgress={loadProgress}
-        activeTradingPairOffersInitiallyLoaded={activeTradingPairOffersInitiallyLoaded}
+        activeTradingPairOffersInitiallyLoaded={
+          activeTradingPairOffersInitiallyLoaded
+        }
         initialMarketHistoryLoaded={initialMarketHistoryLoaded}
         name={networkName}
       />
@@ -43,7 +45,9 @@ export class OasisAppLoadProgressWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
-    activeTradingPairOffersInitiallyLoaded: offers.activeTradingPairOffersInitiallyLoaded(state),
+    activeTradingPairOffersInitiallyLoaded: offers.activeTradingPairOffersInitiallyLoaded(
+      state
+    ),
     networkStatus: network.status(state),
     networkName: network.activeNetworkName(state),
     loadProgress: appLoadProgress(state),

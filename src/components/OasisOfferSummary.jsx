@@ -8,11 +8,9 @@ import CSSModules from "react-css-modules/dist/index";
 import OasisSoldReceivedAmounts from "./OasisSoldReceivedAmounts";
 import OasisIsTokenTradingEnabledByUserWrapper from "../containers/OasisIsTokenTradingEnabledByUser";
 import InfoBox from "./InfoBox";
-import OasisIcon from './OasisIcon';
-// import tokenToBeAllowedForOffer from "../utils/offers/tokenToBeAllowedForOffer";
-// import { isVolumeOrPriceEmptyOrZero } from '../store/selectors';
+import OasisIcon from "./OasisIcon";
 
-const propTypes = PropTypes && {
+const propTypes = {
   offerType: PropTypes.string.isRequired,
   sellToken: PropTypes.string.isRequired,
   buyToken: PropTypes.string.isRequired,
@@ -23,8 +21,7 @@ const propTypes = PropTypes && {
   isVolumeOrPriceEmptyOrZero: PropTypes.bool,
   contractsLoaded: PropTypes.bool
 };
-const defaultProps = {
-};
+const defaultProps = {};
 
 export class OasisOfferSummary extends PureComponent {
   renderGasEstimate() {
@@ -34,7 +31,7 @@ export class OasisOfferSummary extends PureComponent {
         <OasisGasPriceWrapper
           gasEstimateError={null}
           gasEstimatePending={false}
-          transactionGasCostEstimate={'0'}
+          transactionGasCostEstimate={"0"}
           className={styles.detailsTradingCol}
         />
       );
@@ -43,7 +40,9 @@ export class OasisOfferSummary extends PureComponent {
       const transactionGasCostEstimate = gasEstimateInfo.get(
         "transactionGasCostEstimate"
       );
-      const gasEstimateError = gasEstimateInfo.get("transactionGasCostEstimateError");
+      const gasEstimateError = gasEstimateInfo.get(
+        "transactionGasCostEstimateError"
+      );
       return (
         <OasisGasPriceWrapper
           gasEstimateError={gasEstimateError}
@@ -56,19 +55,21 @@ export class OasisOfferSummary extends PureComponent {
   }
 
   static renderGasEstimateNotEnabledInfo() {
-    return (<div>Enable trading to unlock gas est.</div>);
+    return <div>Enable trading to unlock gas est.</div>;
   }
 
   renderIsTokenEnabledSection() {
     const { sellToken, contractsLoaded } = this.props;
     return contractsLoaded ? (
-      <OasisIsTokenTradingEnabledByUserWrapper
-        tokenName={sellToken}
-      />
+      <OasisIsTokenTradingEnabledByUserWrapper tokenName={sellToken} />
     ) : (
-      <div style={{ marginBottom: '4px' }}><OasisIcon icon="loading"/>
-      <span style={{ marginLeft:'5px', display: 'inline-block' }}>Loading market contracts...</span></div>
-    )
+      <div style={{ marginBottom: "4px" }}>
+        <OasisIcon icon="loading" />
+        <span style={{ marginLeft: "5px", display: "inline-block" }}>
+          Loading market contracts...
+        </span>
+      </div>
+    );
   }
   render() {
     const {
@@ -76,26 +77,26 @@ export class OasisOfferSummary extends PureComponent {
       buyToken,
       amountSold,
       amountReceived,
-      // offerType,
       isTokenTradingEnabled
     } = this.props;
 
     return (
       <div className={styles.base}>
-        <InfoBox>
-              <OasisSoldReceivedAmounts
-                sellToken={sellToken}
-                buyToken={buyToken}
-                amountSold={amountSold}
-                amountReceived={amountReceived}
-                className={styles.detailsAmountCol}
-              />
-              <div className={styles.detailsTradingCol}>
-                {this.renderIsTokenEnabledSection()}
-                {isTokenTradingEnabled
-                  ? this.renderGasEstimate()
-                  : OasisOfferSummary.renderGasEstimateNotEnabledInfo()}
-              </div>
+        <InfoBox wrapXXS>
+          <OasisSoldReceivedAmounts
+            sellToken={sellToken}
+            buyToken={buyToken}
+            amountSold={amountSold}
+            amountReceived={amountReceived}
+            className={styles.detailsAmountCol}
+          />
+
+          <div className={styles.detailsTradingCol}>
+            {this.renderIsTokenEnabledSection()}
+            {isTokenTradingEnabled
+              ? this.renderGasEstimate()
+              : OasisOfferSummary.renderGasEstimateNotEnabledInfo()}
+          </div>
         </InfoBox>
       </div>
     );

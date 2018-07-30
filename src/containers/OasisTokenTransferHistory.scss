@@ -1,11 +1,15 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/typography";
 @import "../styles/modules/grid";
 
 $recipientAddressWidth: 100px;
+$recipientAddressWidthXXS: 50px;
 
 .recipientAddress {
   @include ellipsis($recipientAddressWidth);
-
+  @media (max-width: $xxs) {
+    @include ellipsis($recipientAddressWidthXXS);
+  }
 }
 
 .frame {
@@ -13,8 +17,8 @@ $recipientAddressWidth: 100px;
 }
 
 .table {
-
-  td, th {
+  td,
+  th {
     text-align: right;
   }
 
@@ -39,11 +43,17 @@ $recipientAddressWidth: 100px;
     padding-right: 0;
     text-align: center;
     text-transform: uppercase;
+    @media (max-width: $xxs) {
+      flex-basis: 35px;
+    }
   }
 
   th:nth-child(3),
   td:nth-child(3) {
     flex-basis: $recipientAddressWidth;
+    @media (max-width: $xxs) {
+      flex-basis: $recipientAddressWidthXXS;
+    }
     flex-grow: 0;
     text-align: left;
     height: 19px;
@@ -53,6 +63,9 @@ $recipientAddressWidth: 100px;
   td:nth-child(4) {
     flex-basis: 46px;
     text-align: center;
+    @media (max-width: $xxs) {
+      flex-basis: 35px;
+    }
   }
 
   th:nth-child(5),
@@ -60,6 +73,4 @@ $recipientAddressWidth: 100px;
     flex-basis: 58px;
     text-align: right;
   }
-
-
 }

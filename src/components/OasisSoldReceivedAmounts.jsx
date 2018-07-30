@@ -37,7 +37,7 @@ TokenAmount.propTypes = {
   tokenName: PropTypes.string,
   tokenAmount: PropTypes.string,
   icon: PropTypes.string,
-  tokenAmountFullPrecision: PropTypes.string
+  tokenAmountFullPrecision: PropTypes.string,
 };
 
 const TokenReceivedAmount = ({ tokenName, tokenAmount, ...props }) => (
@@ -51,11 +51,12 @@ const TokenReceivedAmount = ({ tokenName, tokenAmount, ...props }) => (
 
 TokenReceivedAmount.propTypes = {
   tokenName: PropTypes.string,
-  tokenAmount: PropTypes.string
+  tokenAmount: PropTypes.string,
 };
 
 const TokenSoldAmount = ({ tokenName, tokenAmount, ...props }) => (
   <TokenAmount
+    style={{width: '130px', display: 'inline-block'}}
     tokenName={tokenName}
     tokenAmount={tokenAmount}
     icon="subtract"
@@ -89,8 +90,8 @@ export class OasisSoldReceivedAmounts extends PureComponent {
       ...props
     } = this.props;
     return (
-      <div {...props}>
-        <FlexBox className={styles.buying}>
+      <div {...props} className={styles.base}>
+        <FlexBox inline className={styles.buying}>
           <TokenReceivedAmount
             tokenAmount={amountReceived}
             tokenAmountfullPrecision={amountReceivedFullPrecision}
@@ -98,7 +99,7 @@ export class OasisSoldReceivedAmounts extends PureComponent {
             className={styles.detailsAmountCol}
           />
         </FlexBox>
-        <FlexBox>
+        <FlexBox inline className={styles.selling}>
           <TokenSoldAmount
             tokenAmount={amountSold}
             tokenAmountFullPrecision={amountSoldFullPrecision}

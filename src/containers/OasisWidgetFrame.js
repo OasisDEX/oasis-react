@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import styles from "./OasisWidgetFrame.scss";
 import CSSModules from "react-css-modules";
-import OasisLoadingDataOverlay from '../components/OasisLoadingDataOverlay';
+import OasisLoadingDataOverlay from "../components/OasisLoadingDataOverlay";
 
 const OasisWidgetFrame = properties => {
   const {
@@ -15,37 +15,47 @@ const OasisWidgetFrame = properties => {
     headingChildren,
     isLoadingData,
     loadingDataText,
+    noContentPaddingXXS,
     ...props
   } = properties;
   return (
-    <section styleName="OasisWidgetFrame" {...props}>
+    <section styleName={"OasisWidgetFrame"} {...props}>
       <div className="row">
-        <div className="col-md-12">
+        <div className="col-12">
           <h4 styleName="Heading" className={headingClassName}>
-            {heading} {loadProgressSection}
+            <span styleName="HeadingText">
+              {heading}
+            </span>
+            {loadProgressSection}
             {headingChildren}
           </h4>
+          <hr />
         </div>
       </div>
 
-      <div styleName={spaceForContent ? "OasisWidgetContent" : ""}>
-        {isLoadingData && <OasisLoadingDataOverlay loadingText={loadingDataText}/>}
+      <div
+        styleName={spaceForContent ? "OasisWidgetContent" : ""}
+        className={noContentPaddingXXS ? styles.NoContentPaddingXXS: ""}
+      >
+        {isLoadingData && (
+          <OasisLoadingDataOverlay loadingText={loadingDataText} />
+        )}
         {children}
       </div>
     </section>
   );
 };
 
-OasisWidgetFrame.propTypes =
-  {
-    heading: PropTypes.string.isRequired,
-    loadProgressSection: PropTypes.node,
-    spaceForContent: PropTypes.bool,
-    headingChildren: PropTypes.node,
-    children: PropTypes.node,
-    isLoadingData: PropTypes.bool,
-    loadingDataText: PropTypes.string
-  } && {};
+OasisWidgetFrame.propTypes = {
+  noContentPaddingXXS: PropTypes.bool,
+  heading: PropTypes.string.isRequired,
+  loadProgressSection: PropTypes.node,
+  spaceForContent: PropTypes.bool,
+  headingChildren: PropTypes.node,
+  children: PropTypes.node,
+  isLoadingData: PropTypes.bool,
+  loadingDataText: PropTypes.string
+};
 
 const defaultProps = {
   className: ""

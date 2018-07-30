@@ -24,9 +24,11 @@ export class OasisMessagesSectionWrapper extends PureComponent {
       <div>
         <div className="row" style={{ marginBottom: "20px" }}>
           <div className="col-md-7">
-            {!messages[MSGTYPE_INFO].dismissed && (
-              <OasisWelcomeMessageWrapper />
-            )}
+            <div className={styles.InfoMessagesSection}>
+              {!messages[MSGTYPE_INFO].dismissed && (
+                <OasisWelcomeMessageWrapper />
+              )}
+            </div>
           </div>
           <div
             className={

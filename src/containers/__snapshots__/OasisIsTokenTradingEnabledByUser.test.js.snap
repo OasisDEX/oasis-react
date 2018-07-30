@@ -4,7 +4,7 @@ exports[`(Container) OasisIsTokenTradingEnabledByUser should render 1`] = `
 <FlexBox
   alignContent="stretch"
   alignItems="stretch"
-  className="undefined undefined"
+  className="undefined undefined undefined"
   justifyContent="normal"
   vertical={false}
   wrap={false}

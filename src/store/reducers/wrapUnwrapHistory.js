@@ -1,6 +1,7 @@
 import { createAction, handleActions } from "redux-actions";
 import { fromJS } from "immutable";
 import accounts from "../selectors/accounts";
+const { market: marketConfig } = require("./../../../src/configs");
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import period from "../../utils/period";
 import network from "../selectors/network";
@@ -68,7 +69,6 @@ const loadingWrapUnwrapHistorySetInitiallyLoaded = createAction(
   "WRAP_UNWRAP_HISTORY/LOADING_WRAP_UNWRAP_HISTORY_SET_INITIALLY_LOADED"
 );
 
-
 const loadingWrapUnwrapHistorySetPaused = createAction(
   "WRAP_UNWRAP_HISTORY/LOADING_WRAP_UNWRAP_HISTORY_SET_PAUSED"
 );
@@ -93,9 +93,12 @@ const loadEtherWrapUnwrapsHistoryEpic = (address, config) => async (
   const tokenName = TOKEN_ETHER;
   const filterAddress = address || accounts.defaultAccount(getState());
   const tokenContract = getTokenContractInstance(TOKEN_WRAPPED_ETH);
-  console.log("loadEtherWrapUnwrapsHistoryEpic", filterAddress);
   const currentLatestBlock = network.latestBlockNumber(getState());
-  const fromBlock = currentLatestBlock - period.avgBlockPerActivePeriod();
+  const activeMarketConfig =
+    marketConfig[network.activeNetworkName(getState())];
+  const fromBlock = activeMarketConfig
+    ? marketConfig[network.activeNetworkName(getState())].blockNumber
+    : currentLatestBlock - period.avgBlockPerDefaultPeriod();
   const toBlock = "latest";
 
   const filterConfig = config ? config : { fromBlock, toBlock };
@@ -120,13 +123,6 @@ const loadEtherWrapUnwrapsHistoryEpic = (address, config) => async (
                 false
               )
             );
-            dispatch(
-              balancesReducer.actions.syncTokenBalanceEpic({
-                tokenName: TOKEN_WRAPPED_GNT,
-                accountAddress: filterAddress
-              })
-            );
-
           }
           dispatch(
             tokenWrapEvent(
@@ -161,9 +157,7 @@ const loadEtherWrapUnwrapsHistoryEpic = (address, config) => async (
               )
             );
 
-            dispatch(
-              balancesReducer.actions.getDefaultAccountEthBalance()
-            );
+            dispatch(balancesReducer.actions.getDefaultAccountEthBalance());
           }
           dispatch(
             tokenUnwrapEvent(

@@ -6,6 +6,7 @@ exports[`(Component) OasisOfferSummary should render 1`] = `
     className=""
     color="default"
     size="md"
+    wrapXXS={true}
   >
     <OasisSoldReceivedAmounts
       amountReceived="1"

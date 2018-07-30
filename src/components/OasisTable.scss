@@ -1,3 +1,4 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/typography";
 
 $hover-border-color: #DCDDE0;
@@ -9,7 +10,6 @@ thead {
 
   line-height: 2;
   text-transform: uppercase;
-
   opacity: 0.68;
   color: #222228;
   background-color: #F8F7F5;
@@ -112,4 +112,20 @@ tr.collapseRow {
 
 .isInitializing {
   cursor: not-allowed !important;
+}
+
+.dateHeading {
+  @media (max-width: $xxs) {
+    flex-basis: 35px !important;
+  }
+}
+
+.dateCell {
+  @media (max-width: $xxs) {
+    position: relative !important;
+    bottom: 4px !important;
+    text-align: center !important;
+    line-height: 14px !important;
+    flex-basis: 35px !important;
+  }
 }

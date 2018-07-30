@@ -1,18 +1,25 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/typography";
 
 .OasisMarket {
   @include text(13px);
   text-align: right;
-
   & .OasisMarketAddress {
     border: 1px solid rgba(211, 213, 220, 0.68);
     border-radius: 100px;
     font-size: 10px;
     background-color: transparent;
     margin-left: 25px;
-    display: inline-block;
+    display: inline-flex;
     padding: 0 17px 0 10px;
     width: 330px;
+    @media (max-width: $xxs) {
+      margin-left: 0;
+      align-content: flex-start;
+      width: 100%;
+      padding-right: 0;
+    }
+
 
     & * {
       color: #D0D0D0;
@@ -20,11 +27,32 @@
       padding: 13px 17px;
       display: inline-block;
       font-family: 'Montserrat', sans-serif;
-      font-size: 10px;
+      @media (max-width: $xxs) {
+        @include text(9px);
+      }
       -moz-user-select: none;
       -webkit-user-select: none;
       -ms-user-select: none;
       user-select: none;
     }
+
+    & a {
+      padding-left: 45px;
+      max-width: 100%;
+      @media (max-width: $xxs) {
+        padding-left: 87px;
+        letter-spacing: 0.25px;
+      }
+    }
+
   }
+    & > .label {
+      @media (max-width: $xxs) {
+        position: absolute;
+        top: 9px;
+        letter-spacing: 1.3px;
+        left: 30px;
+      }
+    }
+
 }

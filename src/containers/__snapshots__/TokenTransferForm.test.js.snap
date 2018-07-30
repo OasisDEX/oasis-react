@@ -46,14 +46,16 @@ exports[`(Container) TokenTransferForm should render 1`] = `
               onClick={[Function]}
               onFocus={[Function]}
               size="xs"
-              style={
-                Object {
-                  "fontSize": "10px",
-                }
-              }
               type="button"
             >
-              transfer max
+              <span>
+                <span
+                  className="d-none d-sm-block"
+                >
+                  transfer
+                </span>
+                 max
+              </span>
             </OasisButton>
             <div
               onBlur={[Function]}

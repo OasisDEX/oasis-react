@@ -23,7 +23,6 @@ import {
 import OasisSignificantDigitsWrapper from "../containers/OasisSignificantDigits";
 import OasisButton from "./OasisButton";
 import openEtherscanTransactionLink from "../utils/openEtherscanTransactionLink";
-import OasisIcon from "./OasisIcon";
 import { myOffersDisplayFormat } from "../utils/offers/myOffersDisplayFormat";
 import { toHistoricalTrades } from "../utils/offers/toHistoricalTrades";
 
@@ -265,10 +264,7 @@ class OasisMyOrders extends PureComponent {
         className={styles.tradesHistory}
         emptyFallback={
           [true, null].includes(this.props.loadingUserMarketHistory) ? (
-            <div className={styles.info}>
-              {" "}
-              <OasisIcon icon="loading" /> Your trades history is loading
-            </div>
+            <div className={styles.info}/>
           ) : (
             <div className={styles.info}>Your trades history is empty</div>
           )
