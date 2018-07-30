@@ -28,15 +28,19 @@
 .buying {
   font-size: 12px !important;
   margin-bottom: 0.75em;
+  text-align: right;
+  padding-right: 20px;
   @media (max-width: $xxs) {
     display: inline-block;
     width: 50%;
+    text-align: left !important;
   }
 }
 .selling {
   font-size: 12px !important;
+  text-align: right;
+  padding-right: 20px;
   @media (max-width: $xxs) {
-    text-align: right;
     padding-left: 5px;
     align-content: right;
     display: inline-block;
