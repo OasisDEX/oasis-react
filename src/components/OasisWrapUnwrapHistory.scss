@@ -6,9 +6,6 @@
   td:first-child {
     flex-basis: 78px;
     text-align: right;
-    @media (max-width: $xxs) {
-      flex-basis: 70px;
-    }
   }
 
   td:first-child {

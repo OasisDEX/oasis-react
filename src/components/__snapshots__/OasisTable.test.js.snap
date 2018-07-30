@@ -8,16 +8,19 @@ exports[`(Component) OasisTable should render with example props 1`] = `
     <thead>
       <tr>
         <th
+          className=""
           key="0"
         >
           Pair
         </th>
         <th
+          className=""
           key="1"
         >
           Price
         </th>
         <th
+          className=""
           key="2"
         >
           Weekly volume
@@ -27,22 +30,24 @@ exports[`(Component) OasisTable should render with example props 1`] = `
     <tbody>
       <tr
         className=""
-        data-tradingpair="MKR / W-ETH"
         key="0"
         onClick={[Function]}
         title=""
       >
         <td
+          className=""
           key="0"
         >
           MKR / W-ETH
         </td>
         <td
+          className=""
           key="1"
         >
           N/A
         </td>
         <td
+          className=""
           key="2"
         >
           0.00
@@ -50,22 +55,24 @@ exports[`(Component) OasisTable should render with example props 1`] = `
       </tr>
       <tr
         className=""
-        data-tradingpair="W-ETH / SAI"
         key="1"
         onClick={[Function]}
         title=""
       >
         <td
+          className=""
           key="0"
         >
           W-ETH / SAI
         </td>
         <td
+          className=""
           key="1"
         >
           0.52
         </td>
         <td
+          className=""
           key="2"
         >
           2.43
@@ -73,22 +80,24 @@ exports[`(Component) OasisTable should render with example props 1`] = `
       </tr>
       <tr
         className=""
-        data-tradingpair="MKR / SAI"
         key="2"
         onClick={[Function]}
         title=""
       >
         <td
+          className=""
           key="0"
         >
           MKR / SAI
         </td>
         <td
+          className=""
           key="1"
         >
           1.12
         </td>
         <td
+          className=""
           key="2"
         >
           0.00

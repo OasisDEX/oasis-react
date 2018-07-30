@@ -32,7 +32,7 @@ table.table {
     flex-basis: 41px;
     text-align: center;
     @media (max-width: $xxs) {
-      flex-basis: 40px;
+      flex-basis: 35px;
     }
   }
 
@@ -50,13 +50,13 @@ table.table {
     flex-basis: 82px;
     text-align: right;
     @media (max-width: $xxs) {
-      flex-basis: 40px;
+      flex-basis: 50px;
     }
   }
 
   th:nth-child(5),
   td:nth-child(5) {
-    flex-basis: 40px;
+    flex-basis: 50px;
     text-align: right;
   }
 

@@ -48,12 +48,14 @@ exports[`(Container) TokenTransferForm should render 1`] = `
               size="xs"
               type="button"
             >
-              <span
-                className="d-none d-sm-block"
-              >
-                transfer
+              <span>
+                <span
+                  className="d-none d-sm-block"
+                >
+                  transfer
+                </span>
+                 max
               </span>
-               max
             </OasisButton>
             <div
               onBlur={[Function]}

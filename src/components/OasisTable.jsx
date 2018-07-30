@@ -1,11 +1,10 @@
-import React, { PureComponent } from 'react';
-import { PropTypes } from 'prop-types';
-import CSSModules from 'react-css-modules';
+import React, { PureComponent } from "react";
+import { PropTypes } from "prop-types";
+import CSSModules from "react-css-modules";
 
 // import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import styles from './OasisTable.scss';
-
+import styles from "./OasisTable.scss";
 
 const propTypes = PropTypes && {
   rows: PropTypes.any.isRequired,
@@ -21,20 +20,18 @@ const defaultProps = {
   collapseRowNumber: 4,
   collapseInitial: false,
   collapseEnabled: false,
-  rowHoverText: ''
+  rowHoverText: ""
 };
 
-
 const getColTemplate = (rowDef, row) => {
-  if(rowDef.template) {
+  if (rowDef.template) {
     return rowDef.template.call(null, row);
   } else {
-    return (<span style={{fontSize: '10px'}}>N/A</span>);
+    return <span style={{ fontSize: "10px" }}>N/A</span>;
   }
 };
 
 export class OasisTable extends PureComponent {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -44,7 +41,7 @@ export class OasisTable extends PureComponent {
   }
 
   toggleCollapse() {
-    this.setState({isCollapsed: !this.state.isCollapsed})
+    this.setState({ isCollapsed: !this.state.isCollapsed });
   }
 
   rowClickHandler(rowData) {
@@ -52,32 +49,39 @@ export class OasisTable extends PureComponent {
     onRowClick && onRowClick(rowData, metadata);
   }
 
-  rowContent(row) {
-    const { col } = this.props;
-    return col.map(
-      (rowDef, i) => {
-        return (
-          <td key={i}>
-            { row[rowDef.key] || getColTemplate(rowDef, row) }
-          </td>
-        )
-      }
-    );
-  }
-
   renderTHeadContent() {
     const { col } = this.props;
     return (
       <tr>
-        {col.map( (col, i) => (<th key={i}>{col.heading}</th>) )}
+        {col.map((col, i) => {
+          const classNames = col.heading === "date" ? styles.dateHeading : "";
+          return (
+            <th className={classNames} key={i}>
+              {col.heading}
+            </th>
+          );
+        })}
       </tr>
-    )
+    );
   }
 
+  rowContent(row) {
+    const { col } = this.props;
+    return col.map((rowDef, i) => {
+      const classNames = rowDef.heading === "date" ? styles.dateCell : "";
+      return (
+        <td key={i} className={classNames}>
+          {row[rowDef.key] || getColTemplate(rowDef, row)}
+        </td>
+      );
+    });
+  }
   hideRow(i) {
-    return this.props.collapseEnabled
-      && this.state.isCollapsed
-      && this.props.collapseRowNumber < i + 1;
+    return (
+      this.props.collapseEnabled &&
+      this.state.isCollapsed &&
+      this.props.collapseRowNumber < i + 1
+    );
   }
 
   renderRows() {
@@ -88,28 +92,26 @@ export class OasisTable extends PureComponent {
       isInitializingText,
       rowHoverText
     } = this.props;
-    return rows.map( (row, i) => {
-      let rowClassNames = '';
-        rowClassNames += isInitializing ? styles.isInitializing: '';
-        rowClassNames += onRowClick ? styles.clickable : '';
-        rowClassNames += row.isActive ? ` ${styles.active}`: '';
+    return rows.map((row, i) => {
+      let rowClassNames = "";
+      rowClassNames += isInitializing ? styles.isInitializing : "";
+      rowClassNames += onRowClick ? styles.clickable : "";
+      rowClassNames += row.isActive ? ` ${styles.active}` : "";
       return this.hideRow(i) ? null : (
         <tr
-          title={ !isInitializing ? rowHoverText : isInitializingText}
+          title={!isInitializing ? rowHoverText : isInitializingText}
           className={rowClassNames}
           key={i}
-          data-tradingpair={row.tradingPair}
           onClick={this.rowClickHandler.bind(null, row)}
         >
           {this.rowContent(row)}
         </tr>
-      )
-    }
-    );
+      );
+    });
   }
 
   renderCollapseRow() {
-    const {collapseEnabled, col, rows, collapseRowNumber} = this.props;
+    const { collapseEnabled, col, rows, collapseRowNumber } = this.props;
     if (!collapseEnabled || rows.size <= collapseRowNumber) {
       return null;
     }
@@ -122,29 +124,25 @@ export class OasisTable extends PureComponent {
           {this.state.isCollapsed ? "Show more" : "Show less"}
         </td>
       </tr>
-    )
+    );
   }
-
 
   render() {
     return (
       <div>
-        <table className={`${styles.scrolling} ${this.props.className || ''}`}>
-          <thead>
-            {this.renderTHeadContent()}
-          </thead>
+        <table className={`${styles.scrolling} ${this.props.className || ""}`}>
+          <thead>{this.renderTHeadContent()}</thead>
           <tbody>
             {this.renderRows()}
             {this.renderCollapseRow()}
-            {!this.props.rows.length && this.props.emptyFallback && (
-              <tr className={styles.emptyFallback}>
-                <td colSpan={this.props.col.length}>
-                  {this.props.emptyFallback}
-                </td>
-              </tr>
-            ) }
-
-
+            {!this.props.rows.length &&
+              this.props.emptyFallback && (
+                <tr className={styles.emptyFallback}>
+                  <td colSpan={this.props.col.length}>
+                    {this.props.emptyFallback}
+                  </td>
+                </tr>
+              )}
           </tbody>
         </table>
       </div>
@@ -152,7 +150,7 @@ export class OasisTable extends PureComponent {
   }
 }
 
-OasisTable.displayName = 'OasisTable';
+OasisTable.displayName = "OasisTable";
 OasisTable.propTypes = propTypes;
 OasisTable.defaultProps = defaultProps;
 export default CSSModules(OasisTable, styles, { allowMultiple: true });

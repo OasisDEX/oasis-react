@@ -15,7 +15,9 @@ exports[`(Container) SetTokenAllowanceTrust should render 1`] = `
         vertical={false}
         wrap={false}
       >
-        <div>
+        <div
+          className={undefined}
+        >
           Enable
            
           <b>

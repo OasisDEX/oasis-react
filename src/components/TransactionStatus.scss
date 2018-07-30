@@ -1,5 +1,6 @@
-.base {
-}
+@import "../styles/modules/breakpoints";
+
+.base {}
 
 .imgRight {
   margin-left: 0.5em;
@@ -18,4 +19,7 @@
   max-width: 70px;
   overflow: hidden;
   text-overflow: ellipsis;
+  @media (max-width: $xxs) {
+    max-width: 35px;
+  }
 }

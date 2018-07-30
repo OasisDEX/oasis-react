@@ -24,9 +24,9 @@
   th:first-child,
   td:first-child {
     flex-basis: 58px;
-    text-align: right;
+    text-align: center;
     @media (max-width: $xxs) {
-      flex-basis: 45px;
+      flex-basis: 40px;
     }
   }
 

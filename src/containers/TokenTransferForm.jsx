@@ -136,7 +136,9 @@ export class TokenTransferFormWrapper extends PureComponent {
                     className={tableStyles.inputBtn}
                     disabled={disabled || globalFormLock}
                   >
-                    <span className="d-none d-sm-block">transfer</span> max
+                    <span className={styles.transferMaxButton}>
+                      <span className="d-none d-sm-block">transfer</span> max
+                    </span>
                   </OasisButton>
                   <div
                     className={tableStyles.inputGroupEventHandlerChild}
