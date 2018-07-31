@@ -101,8 +101,7 @@ const NoConnection = () => {
             href="https://github.com/OasisDEX/oasis/wiki#network"
             rel="noopener noreferrer"
             target="_blank"
-          >
-            OasisDEX documentation
+          >{" "}OasisDEX documentation
           </a>{" "}
           for instructions.
         </p>

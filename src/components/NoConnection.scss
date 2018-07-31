@@ -1,8 +1,12 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/constants";
 
 .NoEthereumSection {
   max-width: 980px;
   margin: 0 auto;
+  @media (max-width: $xxs) {
+    max-width: 100%;
+  }
 
   text-align: center;
   font-family: 'Montserrat', sans-serif;
@@ -36,6 +40,10 @@
   .PNotFound {
     opacity: 0.50;
     width: 925px;
+    @media (max-width: $xxs) {
+      max-width: 100%;
+      padding: 0 10px;
+    }
     display: inline-block;
     margin-top: 50px;
     margin-bottom: 70px;
@@ -46,6 +54,10 @@
     display: inline-block;
     color: #546979;
     font-weight: 700;
+    @media (max-width: $xxs) {
+      max-width: 100%;
+      padding: 0 10px;
+    }
   }
 
   .PConnectGeth {
@@ -54,16 +66,29 @@
     color: #4F5362;
     display: inline-block;
     letter-spacing: 0.6px;
+    @media (max-width: $xxs) {
+      max-width: 100%;
+      padding: 0 10px;
+    }
   }
 
   .DivClients {
-    height: 360px;
-    display: flex;
-    justify-content: center;
-    font-size: 21px;
     color: $gray-blueish;
+    display: flex;
+    font-size: 21px;
+    height: 360px;
+    justify-content: center;
     margin-bottom: 50px;
     margin-top: 50px;
+    @media (max-width: $xxs) {
+      max-width: 100%;
+      padding: 0 10px;
+      height: auto;
+      flex-wrap: wrap;
+      > div:first-of-type {
+        margin-bottom: 20px;
+      }
+    }
   }
 
   .DivMetamask,

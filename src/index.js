@@ -86,7 +86,7 @@ const bootstrap = async () => {
       console.debug("Error in healthCheck!", error.toString());
       dispatch(networkReducer.actions.setNoProviderConnected(true));
       dispatch(networkReducer.actions.disconnected());
-      setTimeout(() => location.reload(true), 5000);
+      // setTimeout(() => location.reload(true), 5000);
     }
   }, 1000, dispatch, getState);
 };
