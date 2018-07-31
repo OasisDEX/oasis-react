@@ -106,6 +106,9 @@ $color-cancel-order: #a8acb9;
 body {
   background-color: $background-color;
   margin-top: 40px;
+  @media (max-width: $xxs) {
+    margin-top: 12px;
+  }
   font-family: "Roboto", sans-serif;
 }
 
@@ -128,6 +131,12 @@ table {
 
 .no-padding {
   padding: 0;
+}
+
+:global {
+  .ReactModal__Body--open {
+    overflow-y: hidden !important;
+  }
 }
 
 @media (min-width: $xxs) {

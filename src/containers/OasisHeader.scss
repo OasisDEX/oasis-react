@@ -6,6 +6,9 @@
 
 .headerMainSection {
   margin-bottom: 30px;
+  @media (max-width: $xxs) {
+    margin-bottom: 0;
+  }
   align-items: center;
 }
 
