@@ -21,7 +21,7 @@ export class OasisMessagesSectionWrapper extends PureComponent {
   render() {
     const { messages, isSessionInitialized } = this.props;
     return isSessionInitialized ? (
-      <div>
+      <div className={styles.base}>
         <div className="row" style={{ marginBottom: "20px" }}>
           <div className="col-md-7">
             <div className={styles.InfoMessagesSection}>

@@ -19,7 +19,7 @@ export class OasisLoadingDataOverlay extends PureComponent {
         <div className={styles.base}>
           <div style={{ textAlign: 'center' }}>
             <OasisLoadingIndicator size="xlg"/>
-            <span style={{ display: 'inline-block', marginLeft: '20px'}}>
+            <span className={styles.loadingText}>
               {loadingText}
             </span>
             </div>

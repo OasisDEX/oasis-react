@@ -53,11 +53,12 @@ export class OasisTable extends PureComponent {
     const { col } = this.props;
     return (
       <tr>
-        {col.map((col, i) => {
-          const classNames = col.heading === "date" ? styles.dateHeading : "";
+        {col.map((colDef, i) => {
+          let classNames = colDef.heading === "date" ? styles.dateHeading : "";
+          classNames += colDef.twoRowsInCell ? ` ${styles.dateHeadingTwoRows}` : "";
           return (
             <th className={classNames} key={i}>
-              {col.heading}
+              {colDef.heading}
             </th>
           );
         })}
@@ -68,7 +69,8 @@ export class OasisTable extends PureComponent {
   rowContent(row) {
     const { col } = this.props;
     return col.map((rowDef, i) => {
-      const classNames = rowDef.heading === "date" ? styles.dateCell : "";
+      let classNames = rowDef.heading === "date" ? styles.dateCell : "";
+      classNames += rowDef.twoRowsInCell ? ` ${styles.twoRows}` : "";
       return (
         <td key={i} className={classNames}>
           {row[rowDef.key] || getColTemplate(rowDef, row)}

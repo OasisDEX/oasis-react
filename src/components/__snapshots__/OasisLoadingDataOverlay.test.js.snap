@@ -12,14 +12,7 @@ exports[`(Component) OasisLoadingDataOverlay should render 1`] = `
     <OasisLoadingIndicator
       size="xlg"
     />
-    <span
-      style={
-        Object {
-          "display": "inline-block",
-          "marginLeft": "20px",
-        }
-      }
-    />
+    <span />
   </div>
 </div>
 `;

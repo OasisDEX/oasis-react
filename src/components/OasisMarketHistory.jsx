@@ -46,7 +46,7 @@ const priceTemplate = row => (
 
 const colsDefinition = (baseToken, quoteToken) => {
   return [
-    { heading: "date", key: "date" },
+    { heading: "date", key: "date", twoRowsInCell: true },
     { heading: "action", key: "tradeType" },
     { heading: `price`, template: priceTemplate },
     { heading: `${quoteToken}`, template: quoteTokenTemplate },

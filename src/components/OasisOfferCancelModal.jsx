@@ -112,7 +112,7 @@ class OasisOfferCancelModal extends PureComponent {
       >
         <div>
           <div>
-            <h4 className={styles.heading}>Cancel Offer</h4>
+            <h4 className={modalStyles.heading}>Cancel Offer</h4>
             {!this.isTransactionPendingOrAwaitingAcceptance() ? (
               <button
                 className={modalStyles.closeModalBtn}

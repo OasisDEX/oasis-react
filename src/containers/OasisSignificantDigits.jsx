@@ -8,7 +8,7 @@ import { Popper, Manager, Reference } from "react-popper";
 import web3 from "../bootstrap/web3";
 
 const splitPattern = /^(\d+[,\d]*\d*).(\d*[1-9]+|0)?(\d*)$/;
-const popperStyle = (style) => ({
+const popperStyle = style => ({
   ...style,
   padding: "10px",
   background: "#000",
@@ -16,8 +16,9 @@ const popperStyle = (style) => ({
   zIndex: "100"
 });
 
-import styles from './OasisSignificantDigits.scss';
-import CSSModules from 'react-css-modules';
+import styles from "./OasisSignificantDigits.scss";
+import CSSModules from "react-css-modules";
+import { isXXS } from "../utils/ui/responsive";
 
 const propTypes = PropTypes && {
   integralColor: PropTypes.string,
@@ -39,7 +40,12 @@ export class OasisSignificantDigitsWrapper extends PureComponent {
     this.state = {};
   }
   render() {
-    const { amount, fullPrecisionAmount, fullPrecisionUnit, fractionalZerosGrey } = this.props;
+    const {
+      amount,
+      fullPrecisionAmount,
+      fullPrecisionUnit,
+      fractionalZerosGrey
+    } = this.props;
     const matches = amount.toString().match(splitPattern);
     if (!matches) {
       console.log(amount);
@@ -48,7 +54,7 @@ export class OasisSignificantDigitsWrapper extends PureComponent {
       ,
       integralPart,
       fractionalPartWitOptionalLeadingZeroes,
-      fractionalPartZeroes,
+      fractionalPartZeroes
     ] = matches;
     return (
       <Manager>
@@ -64,29 +70,36 @@ export class OasisSignificantDigitsWrapper extends PureComponent {
               {fractionalPartWitOptionalLeadingZeroes ? (
                 <span>{fractionalPartWitOptionalLeadingZeroes}</span>
               ) : null}
-              <span className={fractionalZerosGrey ? styles.paleSignificantDigit : ''} >{fractionalPartZeroes}</span>
+              <span
+                className={
+                  fractionalZerosGrey ? styles.paleSignificantDigit : ""
+                }
+              >
+                {fractionalPartZeroes}
+              </span>
             </span>
           )}
         </Reference>
-        {this.state.showPopup && (
-          <Popper placement="top">
-            {({ ref, style, placement }) => (
-              <div
-                ref={ref}
-                style={popperStyle(style)}
-                data-placement={placement}
-              >
-                {web3
-                  .toBigNumber(
-                    fullPrecisionUnit
-                      ? web3.fromWei(fullPrecisionAmount)
-                      : amount.replace(/,/g, '') // TODO: Ugly fix, component should never be given formated string
-                  )
-                  .toFormat()}
-              </div>
-            )}
-          </Popper>
-        )}
+        {this.state.showPopup &&
+          !isXXS() && (
+            <Popper placement="top">
+              {({ ref, style, placement }) => (
+                <div
+                  ref={ref}
+                  style={popperStyle(style)}
+                  data-placement={placement}
+                >
+                  {web3
+                    .toBigNumber(
+                      fullPrecisionUnit
+                        ? web3.fromWei(fullPrecisionAmount)
+                        : amount.replace(/,/g, "") // TODO: Ugly fix, component should never be given formated string
+                    )
+                    .toFormat()}
+                </div>
+              )}
+            </Popper>
+          )}
       </Manager>
     );
   }

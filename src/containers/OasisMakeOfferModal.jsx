@@ -270,7 +270,7 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
         isOpen={true}
         className={modalStyles.modal}
       >
-        <h4 className={styles.heading}>{getOfferTitle(offerMakeType)}</h4>
+        <h4 className={modalStyles.heading}>{getOfferTitle(offerMakeType)}</h4>
         {!this.isTransactionPendingOrAwaitingAcceptance() ? (
           <button className={modalStyles.closeModalBtn} onClick={this.onCancel}>
             ×

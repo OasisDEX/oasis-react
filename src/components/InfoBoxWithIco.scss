@@ -1,6 +1,11 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/typography";
 
 .infoText {
   @include text();
   margin-left: 5px;
+  @media (max-width: $xxs) {
+    @include text(10px);
+    margin-left: 15px;
+  }
 }

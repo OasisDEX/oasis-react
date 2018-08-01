@@ -108,6 +108,7 @@ body {
   margin-top: 40px;
   @media (max-width: $xxs) {
     margin-top: 12px;
+
   }
   font-family: "Roboto", sans-serif;
 }
@@ -135,7 +136,11 @@ table {
 
 :global {
   .ReactModal__Body--open {
-    overflow-y: hidden !important;
+    overflow-y: hidden;
+    touch-action: none;
+    @media (max-width: $xxs) {
+      position: fixed;
+    }
   }
 }
 

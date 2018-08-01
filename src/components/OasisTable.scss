@@ -116,11 +116,22 @@ tr.collapseRow {
 
 .dateHeading {
   @media (max-width: $xxs) {
-    flex-basis: 35px !important;
+    flex-basis: 70px !important;
   }
 }
 
 .dateCell {
+  @media (max-width: $xxs) {
+    flex-basis: 70px !important;
+  }
+}
+.dateHeadingTwoRows {
+  @media (max-width: $xxs) {
+    flex-basis: 35px !important;
+  }
+}
+
+.twoRows {
   @media (max-width: $xxs) {
     position: relative !important;
     bottom: 4px !important;

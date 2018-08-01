@@ -14,6 +14,7 @@ exports[`(Component) OasisMarketHistory should render 1`] = `
         Object {
           "heading": "date",
           "key": "date",
+          "twoRowsInCell": true,
         },
         Object {
           "heading": "action",
