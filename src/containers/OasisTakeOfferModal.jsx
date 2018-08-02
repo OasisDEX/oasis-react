@@ -91,7 +91,9 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
   }
 
   componentDidMount() {
-    this.props.actions.checkIfOfferIsActive();
+  this.selectedElement = document.querySelector("body");
+  this.currentScrollOffset = window.pageYOffset;
+  this.selectedElement.classList.add('fixed');
   }
 
   onCancel() {
@@ -358,7 +360,9 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
   }
 
   componentWillUnmount() {
+    window.scrollTo(0, this.currentScrollOffset);
     this.componentUnmounted = true;
+
   }
 }
 

@@ -7,6 +7,10 @@ table.table {
     text-align: right;
     margin-left: 8px;
     margin-right: 8px;
+    @media (max-width: $xs) {
+      margin-left: 6px;
+      margin-right: 6px;
+    }
   }
 
   td {
@@ -29,10 +33,10 @@ table.table {
 
   th:nth-child(2),
   td:nth-child(2) {
-    flex-basis: 41px;
+    flex-basis: 34px;
     text-align: center;
     @media (max-width: $xxs) {
-      flex-basis: 35px;
+      flex-basis: 24px;
     }
   }
 
@@ -50,7 +54,7 @@ table.table {
     flex-basis: 82px;
     text-align: right;
     @media (max-width: $xxs) {
-      flex-basis: 50px;
+      flex-basis: 40px;
     }
   }
 

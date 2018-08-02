@@ -103,12 +103,15 @@ $color-cancel-order: #a8acb9;
   box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
+
+
 body {
   background-color: $background-color;
   margin-top: 40px;
   @media (max-width: $xxs) {
     margin-top: 12px;
-
+    hr {
+    }
   }
   font-family: "Roboto", sans-serif;
 }
@@ -134,18 +137,33 @@ table {
   padding: 0;
 }
 
-:global {
-  .ReactModal__Body--open {
-    overflow-y: hidden;
-    touch-action: none;
-    @media (max-width: $xxs) {
-      position: fixed;
-    }
-  }
-}
 
 @media (min-width: $xxs) {
   hr {
     display: none !important;
   }
+}
+
+:global {
+  @media (max-width: $xxs) {
+    #root {
+      width: 100vw;
+      height: 100vh;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    html,
+    body {
+      -webkit-overflow-scrolling: touch !important;
+    }
+  }
+  .ReactModal__Body--open {
+    @media (max-width: $xxs) {
+      position: fixed;
+      overflow: hidden !important;
+    }
+  }
+
+
 }

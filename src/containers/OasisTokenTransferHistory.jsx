@@ -43,7 +43,6 @@ const amountTemplate = ({ tokenAmount }) => (
 const transferHistoryColsDefinition = () => [
   {
     heading: "date",
-    twoRowsInCell: true,
     template: ({ timestamp }) => moment.unix(timestamp).format("DD-MM HH:mm")
   },
   { heading: "action", key: "action" },

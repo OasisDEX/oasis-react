@@ -30,6 +30,7 @@
   text-align: right;
   padding-right: 20px;
   @media (max-width: $xxs) {
+    font-size: 10px !important;
     display: inline-block;
     width: 50%;
     text-align: left !important;
@@ -40,6 +41,7 @@
   text-align: right;
   padding-right: 20px;
   @media (max-width: $xxs) {
+    font-size: 10px !important;
     align-content: right;
     display: inline-block;
     padding-left: 5px;
@@ -82,6 +84,11 @@
 
   position: relative;
   top: -1px;
+  @media (max-width: $xxs) {
+    font-size: 10px;
+    top: -3px;
+    height: 18px;
+  }
 }
 
 .active {

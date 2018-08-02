@@ -15,6 +15,14 @@ thead {
   background-color: #F8F7F5;
 }
 
+th, td {
+  @media (max-width: $xxs) {
+    font-size: 10px !important;
+    margin-left: 4px;
+    margin-right: 4px;
+    padding: 5px 6px;
+  }
+}
 
 tbody {
   font-family: 'Roboto', sans-serif;
@@ -63,6 +71,15 @@ table.scrolling {
     display: block;
     padding: 0;
     margin: $td-space;
+    @media (max-width: $xxs) {
+      font-size: 10px !important;
+      margin-left: 8px !important;
+      margin-right: 8px !important;
+      line-height: 26px;
+      vertical-align: middle;
+      margin-bottom: 0;
+      margin-top: 2px;
+    }
   }
 
   tbody {
@@ -72,6 +89,9 @@ table.scrolling {
     margin-top: 10px;
     height: $tbody-height;
     width: 98%;
+    @media (max-width: $xxs) {
+      width: 100%;
+    }
   }
 }
 
@@ -116,13 +136,15 @@ tr.collapseRow {
 
 .dateHeading {
   @media (max-width: $xxs) {
-    flex-basis: 70px !important;
+    flex-basis: 60px !important;
   }
 }
 
 .dateCell {
   @media (max-width: $xxs) {
-    flex-basis: 70px !important;
+    flex-basis: 60px !important;
+    position: relative !important;
+    top: 3px !important;
   }
 }
 .dateHeadingTwoRows {

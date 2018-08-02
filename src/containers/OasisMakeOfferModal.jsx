@@ -78,6 +78,9 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
     this.onFormChange = this.onFormChange.bind(this);
     this.onBuyOffer = this.onBuyOffer.bind(this);
     this.onCancel = this.onCancel.bind(this);
+    this.selectedElement = document.querySelector("body");
+    this.currentScrollOffset = window.pageYOffset;
+    this.selectedElement.classList.add('fixed');
   }
 
   onCancel() {
@@ -320,6 +323,12 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
       </ReactModal>
     );
   }
+
+  componentWillUnmount() {
+    window.scrollTo(0, this.currentScrollOffset);
+    this.selectedElement.classList.remove('fixed');
+  }
+
 }
 
 export function mapStateToProps(state, props) {
