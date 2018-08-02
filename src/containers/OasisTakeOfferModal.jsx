@@ -91,7 +91,9 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
   }
 
   componentDidMount() {
-    this.props.actions.checkIfOfferIsActive();
+  this.selectedElement = document.querySelector("body");
+  this.currentScrollOffset = window.pageYOffset;
+  this.selectedElement.classList.add('fixed');
   }
 
   onCancel() {
@@ -274,7 +276,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
         isOpen={true}
         className={modalStyles.modal}
       >
-        <h4 className={styles.heading}>{getOfferTitle(offerTakeType)}</h4>
+        <h4 className={modalStyles.heading}>{getOfferTitle(offerTakeType)}</h4>
         {!this.isTransactionPendingOrAwaitingAcceptance() ? (
           <button className={modalStyles.closeModalBtn} onClick={this.onCancel}>
             <span>×</span>
@@ -358,7 +360,9 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
   }
 
   componentWillUnmount() {
+    window.scrollTo(0, this.currentScrollOffset);
     this.componentUnmounted = true;
+
   }
 }
 

@@ -79,7 +79,6 @@ export class OasisAppWrapper extends PureComponent {
     if (noProviderConnected) {
       return <NoConnection />;
     }
-
     return (
       this.accountLocked() || (
         <div className={classes({ isAppLoading, globalFormLock })}>

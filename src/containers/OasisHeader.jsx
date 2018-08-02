@@ -50,9 +50,9 @@ export class OasisHeaderWrapper extends PureComponent {
             </div>
           </div>
         </div>
-        <div className="col col-sm-6">
+        <div className="col-sm-6">
           <div styleName="row" className="row">
-            <div className="col-sm-12">
+            <div className="col-12">
               <OasisAccount accounts={accounts} />
             </div>
           </div>

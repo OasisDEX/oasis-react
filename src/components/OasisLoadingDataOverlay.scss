@@ -1,3 +1,5 @@
+@import "./../styles/modules/breakpoints";
+
 .base {
   z-index: 10;
   flex-wrap: wrap;
@@ -20,5 +22,15 @@
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 2px;
+    @media (max-width: $xxs) {
+      padding-left: 0;
+      letter-spacing: 1px;
+      font-size: 15px;
+    }
   }
+}
+
+.loadingText {
+  display: inline-block;
+  margin-left: 20px;
 }

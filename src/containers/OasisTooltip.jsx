@@ -36,8 +36,8 @@ export class OasisTooltip extends PureComponent {
     this.state = {};
   }
   render() {
-
     const { placement, children, text } = this.props;
+    const isXXS = window.innerWidth < 440;
     return (
       <Manager>
         <Reference>
@@ -50,7 +50,7 @@ export class OasisTooltip extends PureComponent {
             </span>
           )}
         </Reference>
-        {this.state.showPopup && (
+        {(this.state.showPopup && !isXXS) && (
           <Popper placement={placement}>
             {({ ref, style, placement }) => (
               <div

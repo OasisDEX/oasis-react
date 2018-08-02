@@ -7,9 +7,16 @@
   text-transform: uppercase;
   font-size: 15px;
   color: #818181;
+  @media (max-width: $xxs) {
+    font-size: 14px;
+    margin-bottom: 17px;
+  }
 }
 
 .summaryLabel {
   position: relative;
   top: 4px;
+  @media (max-width: $xxs) {
+    font-size: 14px;
+  }
 }

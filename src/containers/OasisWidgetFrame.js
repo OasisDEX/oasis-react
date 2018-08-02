@@ -26,7 +26,9 @@ const OasisWidgetFrame = properties => {
             <span styleName="HeadingText">
               {heading}
             </span>
-            {loadProgressSection}
+            <span>
+              {loadProgressSection}
+            </span>
             {headingChildren}
           </h4>
           <hr />

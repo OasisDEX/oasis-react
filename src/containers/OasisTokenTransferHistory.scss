@@ -3,7 +3,7 @@
 @import "../styles/modules/grid";
 
 $recipientAddressWidth: 100px;
-$recipientAddressWidthXXS: 50px;
+$recipientAddressWidthXXS: 40px;
 
 .recipientAddress {
   @include ellipsis($recipientAddressWidth);
@@ -30,6 +30,9 @@ $recipientAddressWidthXXS: 50px;
   td:first-child {
     flex-basis: 70px;
     text-align: right;
+    @media (max-width: $xxs) {
+      flex-basis: 60px;
+    }
   }
 
   td:first-child {

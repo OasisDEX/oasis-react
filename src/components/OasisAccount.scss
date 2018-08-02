@@ -24,7 +24,7 @@
   border-radius: 100px;
 
   margin-left: 25px;
-  padding: 0 16px 0 10px;
+  padding: 0 16px 0 2px;
 
   font-size: 10px;
   @media (max-width: $xxs) {
@@ -47,7 +47,7 @@
     cursor: pointer;
     @include text(10px);
     @media (max-width: $xxs) {
-      letter-spacing: 0.12px;
+      letter-spacing: 0.25px;
       padding-right: 10px;
       @include text(9px);
     }

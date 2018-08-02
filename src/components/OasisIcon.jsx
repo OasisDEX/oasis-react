@@ -1,9 +1,8 @@
-import React, { PureComponent } from "react";
-import { PropTypes } from "prop-types";
-import CSSModules from "react-css-modules";
+import React, { PureComponent } from 'react';
+import { PropTypes } from 'prop-types';
+import CSSModules from 'react-css-modules';
+import styles from './OasisIcon.scss';
 // import ImmutablePropTypes from 'react-immutable-proptypes';
-
-import styles from "./OasisIcon.scss";
 
 const failedIcon = require("../assets/od-icons/icon-failed.svg");
 const loadingIcon = require("../assets/od-icons/icon-loading.svg");
@@ -17,7 +16,6 @@ const infoIcon = require("../assets/od-icons/icon-info.svg");
 const warningIcon = require("../assets/od-icons/icon-warning.svg");
 const addIcon = require("../assets/ic_add_circle_24px.svg");
 const subtractIcon = require("../assets/ic_remove_24px.svg");
-
 
 const propTypes = PropTypes && {
   icon: PropTypes.oneOf([
@@ -40,7 +38,7 @@ const propTypes = PropTypes && {
 
 const defaultProps = {
   size: "lg",
-  className: ''
+  className: ""
 };
 
 const icons = {
@@ -52,7 +50,7 @@ const icons = {
   arrowLeft: arrowLeftIcon,
   arrowRight: arrowRightIcon,
   idle: idleIcon,
-  info:infoIcon,
+  info: infoIcon,
   warning: warningIcon,
   add: addIcon,
   subtract: subtractIcon
@@ -72,11 +70,15 @@ const sizes = {
 export class OasisIcon extends PureComponent {
   render() {
     const { size, icon, color, onClick, className, ...props } = this.props;
+    const classNames = `${styles.base} ${className} ${onClick ? styles.clickable : ""}`;
+    const height = `${sizes[size]}px`;
     return (
-      <div onClick={onClick} className={`${styles.base} ${onClick ? styles.clickable: '' } ${className}`} {...props}>
+      <div
+        onClick={onClick} className={classNames} {...props}
+      >
         <img
-          className={`${ color ? colors[color] : '' }`}
-          style={{ width: `${sizes[size]}px`, height: `${sizes[size]}px` }}
+          className={`${color ? colors[color] : ""}`}
+          style={{ width: height, height }}
           src={icons[icon]}
         />
       </div>

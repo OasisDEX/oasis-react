@@ -32,12 +32,14 @@
 .OasisStatus {
   @include text(12px);
   padding-left: 20px;
-
   color: #4F5362;
 
   letter-spacing: 1.3px;
   text-transform: uppercase;
-
+  @media (max-width: $xxs) {
+    padding-left: 15px;
+    letter-spacing: 1px;
+  }
   & .NetworkStatus {
     display: flex;
     margin-top: 5px;

@@ -1,13 +1,20 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/typography";
 
 .available {
   display: inline-block;
   float: right;
+  @media (max-width: $xxs) {
+    margin-top: 4px;
+  }
 }
 
 .available-amount {
   @include mainInput;
   display: inline-block;
+  @media (max-width: $xxs) {
+    font-size: 16px;
+  }
 }
 
 .available-currency {
@@ -15,7 +22,6 @@
   display: inline-block;
 }
 
-
 .loading {
-  float:right;
+  float: right;
 }

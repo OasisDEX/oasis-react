@@ -11,6 +11,7 @@
   padding-right: 20px;
   @media (max-width: $xxs) {
     text-align: left;
+    font-size: 10px;
   }
 }
 
@@ -22,9 +23,9 @@
 }
 
 .estimateUSD {
-  background-color: #F9F8F8;
+  background-color: #f9f8f8;
   border-radius: 6px;
-  border: 1px solid #EFEFEF;
+  border: 1px solid #efefef;
   color: #939194;
   display: inline-block;
   font-size: 12px;
@@ -34,5 +35,10 @@
   text-align: center;
   vertical-align: middle;
   width: 92px;
+  @media (max-width: $xxs) {
+    font-size: 10px;
+    height: 18px;
+    line-height: 18px;
+    vertical-align: middle;
+  }
 }
-
