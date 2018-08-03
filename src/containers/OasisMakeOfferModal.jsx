@@ -32,6 +32,8 @@ import OasisOfferBelowDustLimitWrapper from "./OasisOfferBelowDustLimit";
 import InfoBoxWithIco from "../components/InfoBoxWithIco";
 import OasisYourOrderExceedsMaxTotalForToken from "../components/OasisYourOrderExceedsMaxTotalForToken";
 import OasisOfferTakeWarningBox from '../components/OasisOfferTakeWarningBox';
+import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
+import { isXXS } from '../utils/ui/responsive';
 
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
@@ -81,6 +83,9 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
     this.selectedElement = document.querySelector("body");
     this.currentScrollOffset = window.pageYOffset;
     this.selectedElement.classList.add('fixed');
+    if (isXXS()) {
+      disableBodyScroll(document.querySelector(".ReactModalPortal"))
+    }
   }
 
   onCancel() {
@@ -326,6 +331,9 @@ export class OasisMakeOfferModalWrapper extends PureComponent {
 
   componentWillUnmount() {
     window.scrollTo(0, this.currentScrollOffset);
+    if (isXXS()) {
+      enableBodyScroll(document.querySelector(".ReactModalPortal"));
+    }
     this.selectedElement.classList.remove('fixed');
   }
 
