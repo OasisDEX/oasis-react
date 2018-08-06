@@ -17,8 +17,6 @@ import {
 } from "../store/reducers/transactions";
 import OasisTransactionStatusWrapperInfoBox from "../containers/OasisTransactionStatusInfoBox";
 import OasisCantCancelOffer from "./OasisCantCancelOffer";
-import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
-import { isXXS } from '../utils/ui/responsive';
 const propTypes = PropTypes && {
   onCloseModal: PropTypes.func,
   localStatus: PropTypes.any,
@@ -38,9 +36,6 @@ class OasisOfferCancelModal extends PureComponent {
     super(props);
     this.onCancelOffer = this.onCancelOffer.bind(this);
     this.onCloseModal = this.onCloseModal.bind(this);
-    if (isXXS()) {
-      disableBodyScroll(document.querySelector(".ReactModalPortal"));
-    }
   }
 
   onCancelOffer() {
@@ -147,12 +142,6 @@ class OasisOfferCancelModal extends PureComponent {
         </div>
       </ReactModal>
     );
-  }
-
-  componentWillUnmount() {
-    if (isXXS()) {
-      enableBodyScroll(document.querySelector(".ReactModalPortal"));
-    }
   }
 }
 

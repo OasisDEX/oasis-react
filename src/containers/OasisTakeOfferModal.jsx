@@ -38,9 +38,6 @@ import {
   hasSufficientTokenAmountByOfferType
 } from "../store/selectors";
 
-import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
-import { isXXS } from '../utils/ui/responsive';
-
 const propTypes = PropTypes && {
   isOpen: PropTypes.bool,
   offerTakeType: PropTypes.oneOf([TAKE_BUY_OFFER, TAKE_SELL_OFFER]).isRequired,
@@ -94,13 +91,6 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
   }
 
   componentDidMount() {
-  this.selectedElement = document.querySelector("body");
-  this.currentScrollOffset = window.pageYOffset;
-  if(isXXS()) {
-
-    disableBodyScroll(document.querySelector(".ReactModalPortal"));
-  }
-  this.selectedElement.classList.add('fixed');
   }
 
   onCancel() {
@@ -367,12 +357,7 @@ export class OasisTakeOfferModalWrapper extends PureComponent {
   }
 
   componentWillUnmount() {
-    window.scrollTo(0, this.currentScrollOffset);
-    if (isXXS()) {
-      enableBodyScroll(document.querySelector(".ReactModalPortal"));
-    }
     this.componentUnmounted = true;
-
   }
 }
 

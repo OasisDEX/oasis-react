@@ -145,23 +145,10 @@ table {
 }
 
 :global {
-  @media (max-width: $xxs) {
-    #root {
-      width: 100vw;
-      height: 100vh;
-      overflow-y: scroll;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    html,
-    body {
-      -webkit-overflow-scrolling: touch !important;
-    }
-  }
   .ReactModal__Body--open {
     @media (max-width: $xxs) {
-      position: fixed;
-      overflow: hidden !important;
+      overflow-y: hidden !important;
+      max-height: 100vh;
     }
   }
 
