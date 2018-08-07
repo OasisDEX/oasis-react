@@ -32,6 +32,10 @@ table.table {
       flex-basis: 14% !important;
     }
     text-align: center;
+
+    @media (min-width: $xs) and (max-width: $lg) {
+      flex-basis: 100px;
+    }
   }
 
   td:first-child {
@@ -53,6 +57,11 @@ table.table {
     @media (max-width: $xxxs) {
       flex-basis: 14% !important;
     }
+
+    @media (min-width: $xs) and (max-width: $lg) {
+      flex-basis: 50px;
+    }
+
   }
 
   th:nth-child(3),
@@ -64,6 +73,10 @@ table.table {
     }
     @media (max-width: $xxxs) {
       flex-basis: 14% !important;
+    }
+
+    @media (min-width: $xs) and (max-width: $lg) {
+      flex-basis: 16%;
     }
   }
 
@@ -77,6 +90,9 @@ table.table {
     @media (max-width: $xxxs) {
       flex-basis: 14% !important;
     }
+    @media (min-width: $xs) and (max-width: $lg) {
+      flex-basis: 16%;
+    }
   }
 
   th:nth-child(5),
@@ -85,6 +101,9 @@ table.table {
     text-align: right;
     @media (max-width: $xxxs) {
       flex-basis: 14% !important;
+    }
+    @media (min-width: $xs) and (max-width: $lg) {
+      flex-basis: 16%;
     }
   }
 

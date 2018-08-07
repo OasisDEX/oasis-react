@@ -6,7 +6,7 @@ exports[`(Container) OasisHeader should render 1`] = `
   styleName="headerMainSection"
 >
   <div
-    className="col-sm-6"
+    className="col-lg-6"
     styleName="leftColumn"
   >
     <div
@@ -41,7 +41,7 @@ exports[`(Container) OasisHeader should render 1`] = `
     </div>
   </div>
   <div
-    className="col-sm-6"
+    className="col-lg-6"
   >
     <div
       className="row"

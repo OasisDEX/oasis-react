@@ -33,7 +33,7 @@ export class OasisHeaderWrapper extends PureComponent {
 
     return (
       <div styleName="headerMainSection" className="row">
-        <div className="col-sm-6" styleName="leftColumn">
+        <div className="col-lg-6" styleName="leftColumn">
           <div className="row">
             <div className="col-3 col-sm-3">
               <OasisLogo />
@@ -50,7 +50,7 @@ export class OasisHeaderWrapper extends PureComponent {
             </div>
           </div>
         </div>
-        <div className="col-sm-6">
+        <div className="col-lg-6">
           <div styleName="row" className="row">
             <div className="col-12">
               <OasisAccount accounts={accounts} />

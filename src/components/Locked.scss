@@ -5,6 +5,9 @@
 //TODO: (georgi) Clean up this and NoConnection.scss
 
 .LockedAccountSection {
+  * {
+    max-width: 100% !important;
+  }
   @media (max-width: $xs) {
     max-width: 100% !important;
   }
@@ -38,5 +41,8 @@
     margin-top: 50px;
     margin-bottom: 70px;
     letter-spacing: 0.6px;
+    @media (max-width: $lg) {
+      @include text(16px);
+    }
   }
 }

@@ -4,6 +4,7 @@
 @import '../styles/modules/typography';
 
 .rowTabs {
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,6 +17,9 @@
     width: calc((100% - #{$tabs-width}) / 2);
     border-top:0.5px solid $gray;
     border-bottom:0.5px solid $gray;
+  }
+  @media (min-width: $xxs) and (max-width: $lg) {
+    margin-bottom: 20px;
   }
 }
 

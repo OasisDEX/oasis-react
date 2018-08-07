@@ -5,6 +5,9 @@
   @include text(13px);
   text-align: right;
   & .OasisMarketAddress {
+    @media (min-width: $xs) and (max-width: $lg) {
+      width: 80%;
+    }
     border: 1px solid rgba(211, 213, 220, 0.68);
     border-radius: 100px;
     font-size: 10px;
@@ -20,13 +23,12 @@
       padding-right: 0;
     }
 
-
     & * {
-      color: #D0D0D0;
+      color: #d0d0d0;
       transform: translateX(-10px);
       padding: 13px 17px;
       display: inline-block;
-      font-family: 'Montserrat', sans-serif;
+      font-family: "Montserrat", sans-serif;
       @media (max-width: $xxs) {
         @include text(9px);
       }
@@ -39,22 +41,25 @@
     & a {
       padding-left: 36px;
       max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
       @media (max-width: $xxs) {
         padding-left: 76px;
         letter-spacing: 0.25px;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
     }
 
+    @media (min-width: $xs) and (max-width: $lg) {
+      @include text(13px);
+      letter-spacing: 0.6px;
+    }
   }
-    & > .label {
-      @media (max-width: $xxs) {
-        position: absolute;
-        top: 9px;
-        letter-spacing: 1.3px;
-        left: 30px;
-      }
+  & > .label {
+    @media (max-width: $xxs) {
+      position: absolute;
+      top: 9px;
+      letter-spacing: 1.3px;
+      left: 30px;
     }
-
+  }
 }

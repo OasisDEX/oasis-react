@@ -19,6 +19,9 @@
 .AccountSelection {
   display: inline-block;
   width: 330px;
+  @media (min-width: $xs) and (max-width: $lg) {
+    width: 80%;
+  }
 
   border: 1px solid #D3D5DC;
   border-radius: 100px;
@@ -31,6 +34,7 @@
     margin-left: 0;
     width: 100%;
   }
+
   & select {
     width: 100%;
     -webkit-appearance: none;
@@ -51,7 +55,10 @@
       padding-right: 10px;
       @include text(9px);
     }
-
+    @media (min-width: $xs) and (max-width: $lg) {
+      @include text(13px, 400);
+      letter-spacing: 0.6px;
+    }
     & option {
       @include text(10px, 400);
     }
@@ -60,5 +67,6 @@
   & .glyphicon {
     color: #D3D5DC;
   }
+
 
 }

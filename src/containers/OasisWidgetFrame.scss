@@ -17,7 +17,7 @@ $widget-vertical-space: 30px;
   max-width: 100%;
   min-height: 305px;
   margin: 0 16px 36px 16px; // 0 17px 35px 17px
-  @media (max-width: $xs) {
+  @media (max-width: $xxs) {
     margin: 12px 0; // 0 17px 35px 17px
   }
   @media (max-width: $xxxs) {
@@ -58,6 +58,9 @@ $widget-vertical-space: 30px;
 
 .OasisWidgetContent {
   padding: 0 $widget-vertical-space;
+  @media (min-width: $xxs) and (max-width: $lg) {
+    margin-bottom: 20px;
+  }
 }
 
 .WidgetFloatRightButton {

@@ -24,6 +24,10 @@
       font-size: 7px !important;
     }
   }
+
+  @media (min-width: $xs) and (max-width: $lg) {
+    margin-bottom: 20px;
+  }
   .infoSection {
     @media (max-width: $xs) {
       position: relative;
@@ -31,9 +35,16 @@
     }
     @media (max-width: $xxxs) {
       position: relative;
-      top: 3px;
+      top: 4px;
     }
   }
+  @media (min-width: $xs) and (max-width: $sm) {
+    * {
+      font-size: 12px !important;
+    }
+  }
+
+
 }
 
 

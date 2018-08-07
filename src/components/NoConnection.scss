@@ -15,6 +15,7 @@
   font-size: 24px;
 
   h2 {
+    max-width: 100%;
     font-weight: 700;
     opacity: 0.8;
     color: #222228;
@@ -40,6 +41,9 @@
   .PNotFound {
     opacity: 0.50;
     width: 925px;
+    @media (min-width: $xxs) and (max-width: $lg) {
+      max-width: 100% !important;
+    }
     @media (max-width: $xxs) {
       max-width: 100%;
       padding: 0 10px;
@@ -67,9 +71,9 @@
     display: inline-block;
     letter-spacing: 0.6px;
     @media (max-width: $xxs) {
-      max-width: 100%;
       padding: 0 10px;
     }
+    max-width: 100%;
   }
 
   .DivClients {

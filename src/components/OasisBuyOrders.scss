@@ -2,7 +2,9 @@
 @import "../styles/modules/constants";
 @import "../styles/modules/grid";
 
+
 .table {
+
   td, th {
     text-align: right;
   }
@@ -14,10 +16,10 @@
   th:first-child,
   td:first-child {
     flex-basis: 148px;
-    @media (max-width: $sm){
+    text-align: right;
+    @media (max-width: $xxs){
       flex-basis: 80px;
     }
-    text-align: right;
     @media (max-width: $xxxs){
       flex-basis: 70px;
     }

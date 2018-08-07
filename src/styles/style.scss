@@ -103,8 +103,6 @@ $color-cancel-order: #a8acb9;
   box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
-
-
 body {
   background-color: $background-color;
   margin-top: 40px;
@@ -137,14 +135,19 @@ table {
   padding: 0;
 }
 
-
-@media (min-width: $xxs) {
+@media (min-width: $lg) {
   hr {
     display: none !important;
   }
 }
 
-@media (max-width: $xxxs) {
+@media (min-width: $xs) and (max-width: $sm) {
+  :global {
+    body {
+      margin-left: 15%;
+      margin-right: 15%;
+    }
+  }
 }
 
 :global {
@@ -154,6 +157,4 @@ table {
       max-height: 100vh;
     }
   }
-
-
 }
