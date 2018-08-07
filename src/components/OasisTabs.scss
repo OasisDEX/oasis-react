@@ -24,7 +24,9 @@
   @media (max-width: $sm) {
     position: sticky !important;
     top: 10px;
+    font-size: 14px;
   }
+
   width: $tabs-width;
   border: 1px solid $gray;
   border-radius: 100px;
@@ -74,6 +76,10 @@
 
     @media (max-width: $xxs) {
       font-size: 11px;
+    }
+
+    @media (max-width: $xxxs) {
+      font-size: 9px;
     }
 
   }

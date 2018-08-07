@@ -1,0 +1,7 @@
+@import "./../styles/modules/breakpoints";
+
+.base {
+  @media (max-width: $xxxs) {
+    padding-right: 10px;
+  }
+}

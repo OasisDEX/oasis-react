@@ -144,6 +144,9 @@ table {
   }
 }
 
+@media (max-width: $xxxs) {
+}
+
 :global {
   .ReactModal__Body--open {
     @media (max-width: $xxs) {

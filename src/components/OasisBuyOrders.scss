@@ -18,6 +18,9 @@
       flex-basis: 80px;
     }
     text-align: right;
+    @media (max-width: $xxxs){
+      flex-basis: 70px;
+    }
   }
 
   td:first-child {

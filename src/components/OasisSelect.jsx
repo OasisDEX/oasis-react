@@ -17,7 +17,7 @@ class OasisSelect extends PureComponent {
   render() {
     const { disabled, size, selectClassName, className, onChange, value } = this.props;
     return (
-      <span className={`${styles.selectContainer} ${styles[size]} ${className}`}>
+      <span className={`${styles.selectContainer} selectContainer ${styles[size]} ${className}`}>
         <select
             onChange={onChange}
             value={value}

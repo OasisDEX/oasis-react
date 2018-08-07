@@ -1,3 +1,4 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/constants";
 
 .box {
@@ -12,6 +13,9 @@
 .sm {
   padding: 7px 16px;
   font-size: 13px;
+  @media (max-width: $xxxs) {
+    font-size: 11px !important;
+  }
 
 }
 

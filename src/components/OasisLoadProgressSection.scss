@@ -11,8 +11,13 @@
   @media (max-width: $xs) {
     width: 100px;
   }
+
   text-align: center;
   letter-spacing: normal;
   position: relative;
-  top: 1px
+  top: 1px;
+  @media (max-width: $xxxs) {
+    width: 60px;
+    padding: 2px 0;
+  }
 }

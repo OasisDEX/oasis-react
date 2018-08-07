@@ -12,6 +12,15 @@
 .icon {
   margin-right: 1em;
   margin-top: -2px;
+  img {
+    height: 18px;
+    width: 18px;
+    @media (max-width: $xxxs) {
+      height: 12px!important;
+      width: 12px!important;
+    }
+  }
+
 }
 
 .baseText {

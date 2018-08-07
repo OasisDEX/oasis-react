@@ -1,7 +1,11 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/typography";
 
 .base {
   @include text();
+  @media  (max-width: $xxxs){
+    @include text(9px);
+  }
 }
 
 .infoText {

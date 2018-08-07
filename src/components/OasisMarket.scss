@@ -37,11 +37,13 @@
     }
 
     & a {
-      padding-left: 45px;
+      padding-left: 36px;
       max-width: 100%;
       @media (max-width: $xxs) {
-        padding-left: 80px;
+        padding-left: 76px;
         letter-spacing: 0.25px;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
 

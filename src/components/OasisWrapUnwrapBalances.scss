@@ -9,6 +9,9 @@
     @media (max-width: $xxs) {
       flex-basis: 50px;
     }
+    @media (max-width: $xxxs) {
+      flex-basis: 15%;
+    }
   }
 
   th:nth-child(2),
@@ -17,6 +20,9 @@
     text-align: right;
     @media (max-width: $xxs) {
       flex-basis: 95px;
+    }
+    @media (max-width: $xxxs) {
+      flex-basis: 20%;
     }
   }
 

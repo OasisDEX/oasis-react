@@ -8,6 +8,11 @@
   hr {
     display: none;
   }
+  @media (max-width: $xxxs) {
+    span {
+      font-size: 8px !important;
+    }
+  }
 }
 
 .red {
@@ -66,6 +71,9 @@
   display: inline-block;
   width: 92px;
   text-align: center;
+  @media (max-width: $xxxs) {
+    height: 17px;
+  }
 }
 
 .isTokenEnabledSection {}

@@ -28,6 +28,9 @@
     @media (max-width: $xxs) {
       flex-basis: 50px;
     }
+    @media (max-width: $xxxs) {
+      flex-basis: 10% !important;
+    }
   }
 
   th:nth-child(2),
@@ -36,6 +39,9 @@
     text-align: right;
     @media (max-width: $xxs) {
       flex-basis: 60px;
+    }
+    @media (max-width: $xxxs) {
+      flex-basis: 17% !important;
     }
   }
 
@@ -46,6 +52,9 @@
     @media (max-width: $xxs) {
       flex-basis: 40px;
     }
+    @media (max-width: $xxxs) {
+      flex-basis: 13% !important;
+    }
   }
 
   th:nth-child(4),
@@ -54,6 +63,9 @@
     text-align: right;
     @media (max-width: $xxs) {
       flex-basis: 40px;
+    }
+    @media (max-width: $xxxs) {
+      flex-basis: 13% !important;
     }
   }
 
@@ -69,6 +81,12 @@
       }
       flex-basis: 50px;
     }
+    @media (max-width: $xxxs) {
+      flex-basis: 15% !important;
+      button {
+        font-size: 7px !important;
+      }
+    }
   }
 }
 
@@ -82,4 +100,7 @@
   padding-left: 12px;
   padding-right: 12px;
   font-size: 10px;
+  @media (max-width: $xxxs) {
+    font-size: 9px;
+  }
 }

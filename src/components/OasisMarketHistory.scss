@@ -11,11 +11,16 @@ table.table {
       margin-left: 6px;
       margin-right: 6px;
     }
+    @media (max-width: $xxxs) {
+      margin: 0;
+      flex-basis: 14% !important;
+    }
   }
 
   td {
     font-weight: 500;
   }
+
 
   th:first-child,
   td:first-child {
@@ -23,11 +28,18 @@ table.table {
     @media (max-width: $xs) {
       flex-basis: 65px;
     }
+    @media (max-width: $xxxs) {
+      flex-basis: 14% !important;
+    }
     text-align: center;
   }
 
   td:first-child {
     @include muted;
+    @media (max-width: $xxxs) {
+      line-height: 14px;
+      margin: 2px 0;
+    }
   }
 
 
@@ -38,6 +50,9 @@ table.table {
     @media (max-width: $xxs) {
       flex-basis: 24px;
     }
+    @media (max-width: $xxxs) {
+      flex-basis: 14% !important;
+    }
   }
 
   th:nth-child(3),
@@ -46,6 +61,9 @@ table.table {
     text-align: right;
     @media (max-width: $xxs) {
       flex-basis: 60px;
+    }
+    @media (max-width: $xxxs) {
+      flex-basis: 14% !important;
     }
   }
 
@@ -56,12 +74,18 @@ table.table {
     @media (max-width: $xxs) {
       flex-basis: 40px;
     }
+    @media (max-width: $xxxs) {
+      flex-basis: 14% !important;
+    }
   }
 
   th:nth-child(5),
   td:nth-child(5) {
     flex-basis: 50px;
     text-align: right;
+    @media (max-width: $xxxs) {
+      flex-basis: 14% !important;
+    }
   }
 
 

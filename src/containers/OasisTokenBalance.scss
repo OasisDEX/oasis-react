@@ -7,6 +7,9 @@
   @media (max-width: $xxs) {
     margin-top: 4px;
   }
+  @media (max-width: $xxxs) {
+    margin-top: 2px;
+  }
 }
 
 .available-amount {
@@ -14,6 +17,12 @@
   display: inline-block;
   @media (max-width: $xxs) {
     font-size: 16px;
+  }
+  @media (max-width: $xxs) {
+    font-size: 14px;
+  }
+  @media (max-width: $xxxs) {
+    font-size: 12px;
   }
 }
 

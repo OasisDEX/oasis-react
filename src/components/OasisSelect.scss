@@ -1,3 +1,4 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/constants";
 
 .selectContainer {
@@ -43,6 +44,10 @@
     margin-right: -20px;
     padding: 8px 30px 8px 10px;
     font-size: 12px;
+    @media (max-width: $xxxs) {
+      padding: 5px 20px 5px 10px;
+      font-size: 10px;
+    }
   }
 }
 

@@ -20,6 +20,9 @@
     @media (max-width: $xxs){
       flex-basis: 80px;
     }
+    @media (max-width: $xxxs){
+      flex-basis: 70px;
+    }
   }
 
   td:first-child {

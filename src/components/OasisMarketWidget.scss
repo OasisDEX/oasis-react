@@ -7,6 +7,9 @@
     @media (max-width: $xxs){
       flex-basis: 100px;
     }
+    @media (max-width: $xxxs) {
+      flex-basis: 28% !important;
+    }
   }
 
   th:nth-child(2),
@@ -16,6 +19,9 @@
     @media (max-width: $xxs){
       flex-basis: 60px;
     }
+    @media (max-width: $xxxs) {
+      flex-basis: 23% !important;
+    }
   }
 
   th:nth-child(3),
@@ -24,6 +30,11 @@
     text-align: right;
     @media (max-width: $xxs){
       flex-basis: 100px;
+    }
+    @media (max-width: $xxxs) {
+      line-height: 16px;
+      margin: 3px 0;
+      flex-basis: 29% !important;
     }
   }
 
@@ -48,5 +59,10 @@
 
 .createDaiBtn {
   float: right;
+  @media (max-width: $xxxs) {
+    position: relative;
+    bottom: 7px;
+    font-size: 12px;
+  }
   margin-top: -1px;
 }

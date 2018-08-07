@@ -63,6 +63,9 @@
     //padding-right: 10px;
     max-width: 100%;
     //background: none;
+    @media (max-width: $xxxs) {
+      font-size: 15px;
+    }
 
     &::placeholder {
       color: rgba(104,104,108,0.4);

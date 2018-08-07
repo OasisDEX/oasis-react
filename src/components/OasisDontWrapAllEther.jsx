@@ -20,7 +20,7 @@ class OasisDontWrapAllEther extends PureComponent {
         icon="warning"
         {...props}
       >
-        <span>
+        <span className={styles.base}>
           Do not wrap all of your <b>{tokenName}</b>!
         </span>
       </InfoBoxWithIco>

@@ -1,9 +1,13 @@
+@import "../styles/modules/breakpoints";
 @import "../styles/modules/typography";
 @import "../styles/modules/constants";
 
 //TODO: (georgi) Clean up this and NoConnection.scss
 
 .LockedAccountSection {
+  @media (max-width: $xs) {
+    max-width: 100% !important;
+  }
   text-align: center;
   color: $blue-darkish;
 

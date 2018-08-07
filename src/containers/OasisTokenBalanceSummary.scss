@@ -11,6 +11,10 @@
     font-size: 14px;
     margin-bottom: 17px;
   }
+  @media (max-width: $xxxs) {
+    font-size: 12px;
+    margin-bottom: 15px;
+  }
 }
 
 .summaryLabel {
@@ -18,5 +22,8 @@
   top: 4px;
   @media (max-width: $xxs) {
     font-size: 14px;
+  }
+  @media (max-width: $xxxs) {
+    font-size: 12px;
   }
 }
