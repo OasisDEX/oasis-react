@@ -1,6 +1,6 @@
 {
   "name": "oasis-dex",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "private": true,
   "dependencies": {
     "autoprefixer": "7.1.2",
