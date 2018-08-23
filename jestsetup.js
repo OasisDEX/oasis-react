@@ -147,7 +147,6 @@ global.storeMock = {
       }
     },
   },
-  orders: {},
   accounts: {
     defaultAccount: '0x0000000000000000000000000000000000000000',
     accounts: [
@@ -735,8 +734,7 @@ global.storeMock = {
           }
         },
       },
-      // 'Map { "baseToken": "MKR", "quoteToken": "DAI" }': {
-       [Map({ "baseToken": "MKR", "quoteToken": "DAI" })]: {
+       [Map({ baseToken: "MKR", quoteToken: "DAI" })]: {
         buyOfferCount: 1,
         sellOfferCount: 1,
         buyOffers: [

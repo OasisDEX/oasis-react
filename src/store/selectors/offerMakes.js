@@ -11,13 +11,18 @@ import {
   MAKE_SELL_OFFER_FORM_NAME
 } from "../../constants";
 import reselect from "../../utils/reselect";
-import offerMakeToFormName from "../../utils/offers/offerMakeToFormName";
+import {
+  offerMakeToFormName,
+  formNameToOfferMake
+} from '../../utils/offers/offerMakeToFormName'
 import tokens from "./tokens";
 import network from "./network";
 import { fromJS, Map } from "immutable";
 import limits from "./limits";
 import isNumeric from "../../utils/numbers/isNumeric";
 import {memoize} from 'lodash';
+import { offerMakeTypeToOfferListName } from '../../utils/offers/offerMakeTypeToOfferListName'
+import { getOfferPrice } from '../../utils/offers/getOfferPrice'
 
 const offerMakes = state => state.get("offerMakes");
 
@@ -34,9 +39,9 @@ const currentFormValues = createSelector(
 //TODO: move to utils
 const toWeiString = amount =>
   web3
-    .toBigNumber(web3.toWei(amount))
-    .ceil()
-    .toString();
+  .toBigNumber(web3.toWei(amount))
+  .ceil()
+  .toString();
 
 const selector = createSelector(
   state => state.a,
@@ -53,26 +58,84 @@ const hasExceededGasLimit = createSelector(
 );
 
 
+const activeTradingPairOffersData = createSelector(
+  rootState => rootState.get("offers"),
+  tokens.activeTradingPair,
+  (state, activeTradingPair) => state.getIn(["offers", Map(activeTradingPair)])
+);
+
+const getNewOfferRankIndex = createSelector(
+  (...args) => args[1],
+  currentFormValues,
+  activeTradingPairOffersData,
+  (
+    offerFormName,
+    currentFormValues,
+    currentTradingPairOffersData = fromJS({ buyOffers: [], sellOffers: [] })
+  ) => {
+    const { price } = currentFormValues(offerFormName);
+    if (!parseFloat(String(price))) {
+      return;
+    }
+
+    const priceBN = web3.toBigNumber(price);
+    const formMakeType = formNameToOfferMake(offerFormName);
+    const offersSortedByPriceAsc = currentTradingPairOffersData
+    .get(offerMakeTypeToOfferListName(formMakeType))
+    .map(offer => ({
+      price: getOfferPrice(offer, formMakeType),
+      offerId: offer.id
+    }))
+    .sort(
+      ({ price: priceA }, { price: priceB }) => (priceA.gte(priceB) ? 1 : -1)
+    )
+    .map((d, idx) => ({ ...d, idx }));
+    for (const { price, offerId, idx } of offersSortedByPriceAsc) {
+      switch (priceBN.comparedTo(price)) {
+        case -1:
+          return offerId;
+        case 0: {
+          if (offersSortedByPriceAsc.count() > 0) {
+            const { offerId } = offersSortedByPriceAsc.get(idx - 1);
+            return offerId;
+          } else {
+            const { offerId } = offersSortedByPriceAsc.first();
+            return offerId;
+          }
+        }
+      }
+    }
+    if (offersSortedByPriceAsc.count()) {
+      return offersSortedByPriceAsc.last().offerId;
+    } else {
+      return 0;
+    }
+  }
+);
+
 const activeOfferMakePure = createSelector(
   (...args) => args[1], //provides original selector argument
   tokens.activeTradingPair,
   network.tokenAddresses,
   currentFormValues,
-  (offerMakeFormName, activeTradingPair, tokenAddresses, currentFormValues) => {
+  (rootState, offerMakeFormName) =>
+    getNewOfferRankIndex(rootState, offerMakeFormName),
+  (
+    offerMakeFormName,
+    activeTradingPair,
+    tokenAddresses,
+    currentFormValues,
+    newOfferRankIndex
+  ) => {
     const { total, volume } = currentFormValues(offerMakeFormName);
     const { baseToken, quoteToken } = activeTradingPair.toJS
       ? activeTradingPair.toJS()
       : activeTradingPair;
-    const offerMakeType = {
-      makeBuyOffer: MAKE_BUY_OFFER,
-      makeSellOffer: MAKE_SELL_OFFER
-    }[offerMakeFormName];
-
+    const offerMakeType = formNameToOfferMake(offerMakeFormName);
     console.assert(
       offerMakeType,
       `Wrong offerMakeFormName: ${offerMakeFormName}`
     );
-
     const buyToken = offerMakeType === MAKE_BUY_OFFER ? baseToken : quoteToken;
     const sellToken = offerMakeType === MAKE_BUY_OFFER ? quoteToken : baseToken;
 
@@ -81,6 +144,7 @@ const activeOfferMakePure = createSelector(
       quoteToken,
       buyToken,
       sellToken,
+      newOfferRankIndex,
       sellTokenAddress: tokenAddresses.get(sellToken),
       buyTokenAddress: tokenAddresses.get(buyToken),
       offerData: {
@@ -94,6 +158,7 @@ const activeOfferMakePure = createSelector(
     });
   }
 );
+
 
 // const activeOfferMake = activeOfferMakePure;
 
@@ -168,8 +233,8 @@ const isVolumeOrPriceEmptyOrZero = createSelector(
   (currentFormValues) => memoize(offerMakeType => {
     const { volume, price } = currentFormValues(offerMakeToFormName(offerMakeType));
     return !isNumeric(price) ||
-    web3.toBigNumber(price).lte(0) ||
-    (!isNumeric(volume) || web3.toBigNumber(volume).lte(0))
+      web3.toBigNumber(price).lte(0) ||
+      (!isNumeric(volume) || web3.toBigNumber(volume).lte(0))
   })
 );
 
@@ -178,23 +243,23 @@ const tokenMinSellLimitInWeiByOfferType = createSelector(
   tokens.activeTradingPair,
   limits.tokenMinSellLimitInWei,
   (activeTradingPair, tokenMinSellLimitInWei) => memoize(offerMakeType => {
-  let tokenName = null;
-  const activeTradingPairMap = Map(activeTradingPair);
-  if (!activeTradingPairMap.has('baseToken') && activeTradingPairMap.has('quoteToken')) {
-    return null
-  }
-  switch (offerMakeType) {
-    case MAKE_BUY_OFFER:
-      tokenName = activeTradingPairMap.get("quoteToken");
-      break;
-    case MAKE_SELL_OFFER:
-      tokenName = activeTradingPairMap.get("baseToken");
-      break;
-    default:
-      throw new Error("No offer make type provided!");
-  }
-  return tokenMinSellLimitInWei(tokenName);
-}));
+    let tokenName = null;
+    const activeTradingPairMap = Map(activeTradingPair);
+    if (!activeTradingPairMap.has('baseToken') && activeTradingPairMap.has('quoteToken')) {
+      return null
+    }
+    switch (offerMakeType) {
+      case MAKE_BUY_OFFER:
+        tokenName = activeTradingPairMap.get("quoteToken");
+        break;
+      case MAKE_SELL_OFFER:
+        tokenName = activeTradingPairMap.get("baseToken");
+        break;
+      default:
+        throw new Error("No offer make type provided!");
+    }
+    return tokenMinSellLimitInWei(tokenName);
+  }));
 
 const isOfferBelowLimit = createSelector(
   tokenMinSellLimitInWeiByOfferType,
@@ -228,7 +293,7 @@ const isOfferBelowLimit = createSelector(
 );
 
 const isTotalOverTheTokenLimit = createSelector(
-   limits.activeTradingPairQuoteTokenMaxLimitInWei,
+  limits.activeTradingPairQuoteTokenMaxLimitInWei,
   (rootState, offerMakeType) =>
     makeFormValuesSelector(offerMakeToFormName(offerMakeType))(
       rootState, "total",
