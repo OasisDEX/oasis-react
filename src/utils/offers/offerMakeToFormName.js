@@ -9,4 +9,15 @@ const offerMakeToFormName = (offerMakeType) => {
   }
 };
 
-export default offerMakeToFormName;
+const formNameToOfferMake = (formName) => {
+  switch (formName) {
+    case "makeBuyOffer": return MAKE_BUY_OFFER;
+    case "makeSellOffer": return MAKE_SELL_OFFER;
+    default: throw  new Error(`Wrong formName: ${formName}!`)
+  }
+};
+
+export {
+  offerMakeToFormName,
+  formNameToOfferMake
+};

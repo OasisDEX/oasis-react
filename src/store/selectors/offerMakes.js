@@ -11,13 +11,18 @@ import {
   MAKE_SELL_OFFER_FORM_NAME
 } from "../../constants";
 import reselect from "../../utils/reselect";
-import offerMakeToFormName from "../../utils/offers/offerMakeToFormName";
+import {
+  offerMakeToFormName,
+  formNameToOfferMake
+} from '../../utils/offers/offerMakeToFormName'
 import tokens from "./tokens";
 import network from "./network";
 import { fromJS, Map } from "immutable";
 import limits from "./limits";
 import isNumeric from "../../utils/numbers/isNumeric";
 import {memoize} from 'lodash';
+import { offerMakeTypeToOfferListName } from '../../utils/offers/offerMakeTypeToOfferListName'
+import { getOfferPrice } from '../../utils/offers/getOfferPrice'
 
 const offerMakes = state => state.get("offerMakes");
 
@@ -53,26 +58,84 @@ const hasExceededGasLimit = createSelector(
 );
 
 
+const activeTradingPairOffersData = createSelector(
+  rootState => rootState.get("offers"),
+  tokens.activeTradingPair,
+  (state, activeTradingPair) => state.getIn(["offers", Map(activeTradingPair)])
+);
+
+const getNewOfferRankIndex = createSelector(
+  (...args) => args[1],
+  currentFormValues,
+  activeTradingPairOffersData,
+  (
+    offerFormName,
+    currentFormValues,
+    currentTradingPairOffersData = fromJS({ buyOffers: [], sellOffers: [] })
+  ) => {
+    const { price } = currentFormValues(offerFormName);
+    if (!parseFloat(String(price))) {
+      return;
+    }
+
+    const priceBN = web3.toBigNumber(price);
+    const formMakeType = formNameToOfferMake(offerFormName);
+    const offersSortedByPriceAsc = currentTradingPairOffersData
+    .get(offerMakeTypeToOfferListName(formMakeType))
+    .map(offer => ({
+      price: getOfferPrice(offer, formMakeType, { asBigNumber: true }).asBN,
+      offerId: offer.id
+    }))
+    .sort(
+      ({ price: priceA }, { price: priceB }) => (priceA.gte(priceB) ? 1 : -1)
+    )
+    .map((d, idx) => ({ ...d, idx }));
+    for (const { price, offerId, idx } of offersSortedByPriceAsc) {
+      switch (priceBN.comparedTo(price)) {
+        case -1:
+          return offerId;
+        case 0: {
+          if (offersSortedByPriceAsc.count() > 0) {
+            const { offerId } = offersSortedByPriceAsc.get(idx - 1);
+            return offerId;
+          } else {
+            const { offerId } = offersSortedByPriceAsc.first();
+            return offerId;
+          }
+        }
+      }
+    }
+    if (offersSortedByPriceAsc.count()) {
+      return offersSortedByPriceAsc.last().offerId;
+    } else {
+      return 0;
+    }
+  }
+);
+
 const activeOfferMakePure = createSelector(
   (...args) => args[1], //provides original selector argument
   tokens.activeTradingPair,
   network.tokenAddresses,
   currentFormValues,
-  (offerMakeFormName, activeTradingPair, tokenAddresses, currentFormValues) => {
+  (rootState, offerMakeFormName) =>
+    getNewOfferRankIndex(rootState, offerMakeFormName),
+  (
+    offerMakeFormName,
+    activeTradingPair,
+    tokenAddresses,
+    currentFormValues,
+    newOfferRankIndex
+  ) => {
     const { total, volume } = currentFormValues(offerMakeFormName);
     const { baseToken, quoteToken } = activeTradingPair.toJS
       ? activeTradingPair.toJS()
       : activeTradingPair;
-    const offerMakeType = {
-      makeBuyOffer: MAKE_BUY_OFFER,
-      makeSellOffer: MAKE_SELL_OFFER
-    }[offerMakeFormName];
-
+    const offerMakeType = formNameToOfferMake(offerMakeFormName);
     console.assert(
       offerMakeType,
       `Wrong offerMakeFormName: ${offerMakeFormName}`
     );
-
     const buyToken = offerMakeType === MAKE_BUY_OFFER ? baseToken : quoteToken;
     const sellToken = offerMakeType === MAKE_BUY_OFFER ? quoteToken : baseToken;
 
@@ -81,6 +144,7 @@ const activeOfferMakePure = createSelector(
       quoteToken,
       buyToken,
       sellToken,
+      newOfferRankIndex,
       sellTokenAddress: tokenAddresses.get(sellToken),
       buyTokenAddress: tokenAddresses.get(buyToken),
       offerData: {
@@ -94,6 +158,7 @@ const activeOfferMakePure = createSelector(
     });
   }
 );
+
 
 // const activeOfferMake = activeOfferMakePure;
 
