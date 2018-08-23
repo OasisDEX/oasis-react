@@ -11,7 +11,7 @@ import {
   MAKE_SELL_OFFER,
   MAKE_SELL_OFFER_FORM_NAME, SYNC_STATUS_COMPLETED,
 } from '../../constants';
-import offerMakeToFormName from "../../utils/offers/offerMakeToFormName";
+import { offerMakeToFormName } from "../../utils/offers/offerMakeToFormName";
 import trades from './trades';
 import platform from './platform';
 import offers from './offers';
