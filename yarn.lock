@@ -1148,7 +1148,7 @@ big.js@^3.1.3:
   resolved "git+https://github.com/frozeman/bignumber.js-nolookahead.git#57692b3ecfc98bbdd6b3a516cb2353652ea49934"
 
 bignumber@^1.1.0:
-  version v1.1.0
+  version "1.1.0"
   resolved "https://registry.yarnpkg.com/bignumber/-/bignumber-1.1.0.tgz#e6ab0a743da5f3ea018e5c17597d121f7868c159"
 
 binary-extensions@^1.0.0:
@@ -1183,10 +1183,6 @@ body-parser@1.18.2:
     qs "6.5.1"
     raw-body "2.3.2"
     type-is "~1.6.15"
-
-body-scroll-lock@^2.4.6:
-  version "2.4.6"
-  resolved "https://registry.yarnpkg.com/body-scroll-lock/-/body-scroll-lock-2.4.6.tgz#3ab8f6aff309cc5ce5ad7702f58308f755e262f3"
 
 bonjour@^3.5.0:
   version "3.5.0"
