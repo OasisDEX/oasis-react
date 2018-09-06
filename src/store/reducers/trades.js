@@ -160,13 +160,13 @@ const isDustTrade = ({ sellWhichToken, buyWhichToken, buyHowMuch, sellHowMuch },
 };
 
 const subscribeLogTakeEventsAction = createPromiseActions(SUBSCRIBE_LOG_TAKE_EVENTS);
-const subscribeLogTakeEventsEpic = (fromBlock) => dispatch => {
+const subscribeLogTakeEventsEpic = (fromBlock) => (dispatch, getState) => {
   dispatch(subscribeLogTakeEventsAction.pending());
   getMarketContractInstance().LogTake(
     {}, { fromBlock: fromBlock, toBlock: 'latest' },
   ).then((err, logTake) => {
     const trade = logTakeToTrade(logTake);
-    if (!isDustTrade(trade, limits.tokenLimitsList)) {
+    if (!isDustTrade(trade, limits.tokenLimitsList(getState()))) {
       dispatch(addTradeHistoryEntry(trade))
     }
   } );
