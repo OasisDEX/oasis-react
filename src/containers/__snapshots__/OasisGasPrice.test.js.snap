@@ -14,7 +14,6 @@ Object {
 
 exports[`(Container) OasisGasPrice will receive right props 1`] = `
 Object {
-  "currentGasPrice": "30000000000",
   "latestBlockNumber": 6716998,
   "latestEthereumPrice": Immutable.Map {
     percent_change_7d: "-16.34",
