@@ -90,24 +90,31 @@ const getNewOfferRankIndex = createSelector(
       ({ price: priceA }, { price: priceB }) => (priceA.gte(priceB) ? 1 : -1)
     )
     .map((d, idx) => ({ ...d, idx }));
+
     for (const { price, offerId, idx } of offersSortedByPriceAsc) {
       switch (priceBN.comparedTo(price)) {
         case -1:
+          // console.log('offerId', offerId.toString());
           return offerId;
         case 0: {
-          if (offersSortedByPriceAsc.count() > 0) {
+          if (idx > 0) {
             const { offerId } = offersSortedByPriceAsc.get(idx - 1);
+            // console.log('offerId', offerId.toString());
             return offerId;
           } else {
             const { offerId } = offersSortedByPriceAsc.first();
+            // console.log('offerId', offerId.toString());
             return offerId;
           }
         }
       }
     }
+
     if (offersSortedByPriceAsc.count()) {
+      // console.log('last', offersSortedByPriceAsc.last().offerId.toString());
       return offersSortedByPriceAsc.last().offerId;
     } else {
+      // console.log('last', 0);
       return 0;
     }
   }

@@ -9,6 +9,6 @@ export const getOfferPrice = (
     case MAKE_BUY_OFFER:
       return web3.toBigNumber(offer.bid_price);
     case MAKE_SELL_OFFER:
-      return web3.toBigNumber(offer.bid_price);
+      return web3.toBigNumber(offer.ask_price);
   }
 };
