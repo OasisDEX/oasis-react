@@ -97,7 +97,7 @@ const getNewOfferRankIndex = createSelector(
           // console.log('offerId', offerId.toString());
           return offerId;
         case 0: {
-          if (offersSortedByPriceAsc.count() > 1) {
+          if (idx > 0) {
             const { offerId } = offersSortedByPriceAsc.get(idx - 1);
             // console.log('offerId', offerId.toString());
             return offerId;
