@@ -4,10 +4,9 @@ import { PropTypes } from "prop-types";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import transactions from "../store/selectors/transactions";
 import network from "../store/selectors/network";
 import web3 from "../bootstrap/web3";
-import { ETH_UNIT_ETHER } from "../constants";
+import { DEFAULT_GAS_PRICE, ETH_UNIT_ETHER } from '../constants'
 import { formatAmount } from "../utils/tokens/pair";
 import { FlexBox } from "../components/FlexBox";
 
@@ -23,11 +22,10 @@ const propTypes = PropTypes && {
 export class OasisGasPriceWrapper extends PureComponent {
   getGasCostEstimate() {
     const {
-      currentGasPrice,
       latestEthereumPrice,
       transactionGasCostEstimate
     } = this.props;
-    const currentGasPriceBN = web3.toBigNumber(currentGasPrice);
+    const currentGasPriceBN = web3.toBigNumber(DEFAULT_GAS_PRICE);
     if (transactionGasCostEstimate && latestEthereumPrice) {
       const cost = web3.fromWei(
         currentGasPriceBN.mul(transactionGasCostEstimate),
@@ -75,7 +73,6 @@ export class OasisGasPriceWrapper extends PureComponent {
 
 export function mapStateToProps(state) {
   return {
-    currentGasPrice: transactions.currentGasPriceWei(state),
     latestEthereumPrice: network.latestEthereumPrice(state),
     latestBlockNumber: network.latestBlockNumber(state)
   };

@@ -92,7 +92,9 @@ each([[MAKE_BUY_OFFER], [MAKE_SELL_OFFER]]).test("sellMaxEpic", (offerMakeType) 
 });
 
 each([[true], [false]]).test("updateTransactionGasCostEstimateEpic", (canMakeOffer) => {
-  const store = configureMockStore([thunk2Data(), thunk])({});
+  const store = configureMockStore([thunk2Data(), thunk])(
+    fromJS({ transactions: {}})
+  );
 
   store.dispatch(offerMakes.actions.updateTransactionGasCostEstimateEpic(
     MAKE_BUY_OFFER,

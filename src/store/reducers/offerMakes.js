@@ -1,5 +1,8 @@
 import { createAction, handleActions } from "redux-actions";
 import { fromJS } from "immutable";
+import throttle from "lodash/throttle";
+import { defer } from "../deferredThunk";
+
 import { createPromiseActions } from "../../utils/createPromiseActions";
 import offerMakes from "../selectors/offerMakes";
 import { change, formValueSelector, initialize } from "redux-form/immutable";
@@ -7,19 +10,17 @@ import { TX_OFFER_MAKE } from "./transactions";
 import web3 from "../../bootstrap/web3";
 import balances from "../selectors/balances";
 import { fulfilled, pending, rejected } from "../../utils/store";
-import offerMakeToFormName from "../../utils/offers/offerMakeToFormName";
-
-import throttle from "lodash/throttle";
-
-import { defer } from "../deferredThunk";
-
-import { MAKE_BUY_OFFER, MAKE_SELL_OFFER } from "constants";
+import { offerMakeToFormName } from "../../utils/offers/offerMakeToFormName";
+import {
+  MAKE_BUY_OFFER,
+  MAKE_SELL_OFFER,
+  DEFAULT_GAS_PRICE
+} from "./../../constants";
 import { handleTransaction } from "../../utils/transactions/handleTransaction";
 import {
   getMarketContractInstance,
   getMarketNoProxyContractInstance
 } from "../../bootstrap/contracts";
-import { DEFAULT_GAS_PRICE } from "../../constants";
 import transactions from "../selectors/transactions";
 import isNumericAndGreaterThanZero from "../../utils/numbers/isNumericAndGreaterThanZero";
 import getTokenByAddress from "../../utils/tokens/getTokenByAddress";
@@ -91,6 +92,7 @@ const makeOfferTransaction = createAction(
     buyAmount,
     buyToken,
     isCloseMatchingEnabled,
+    rankIndex,
     gasPrice = DEFAULT_GAS_PRICE
   }) => {
 
@@ -102,7 +104,7 @@ const makeOfferTransaction = createAction(
         payToken,
         buyAmount,
         buyToken,
-        0,
+        rankIndex,
         isCloseMatchingEnabled,
         {
           gasPrice
@@ -134,6 +136,7 @@ const makeOfferEpic = (offerMakeType, withCallbacks = {}) => async (
   );
 
   const makeOfferPayload = {
+    rankIndex: activeOfferMake.get('newOfferRankIndex'),
     payAmount: convertToTokenPrecision(
       activeOfferMake.getIn(["offerData", "payAmount"]),
       activeOfferMake.get("sellToken")
@@ -207,7 +210,8 @@ const setOfferMakeModalClosedEpic = offerMakeType => dispatch => {
 };
 
 const localFormValueSelector = offerMakeType =>
-  formValueSelector(offerMakeToFormName(offerMakeType));
+  formValueSelector(offerMakeToFormName(offerMakeType)
+);
 
 const localChange = (offerMakeType, ...args) =>
   change(offerMakeToFormName(offerMakeType), ...args);

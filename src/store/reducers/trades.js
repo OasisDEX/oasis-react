@@ -9,6 +9,8 @@ import first  from 'lodash/first';
 import { fulfilled } from '../../utils/store';
 import { web3p } from '../../bootstrap/web3';
 import { getMarketContractInstance } from '../../bootstrap/contracts';
+import limits from '../selectors/limits';
+import web3 from '../../bootstrap/web3';
 
 const initialState = fromJS({
   volumes: null,
@@ -92,13 +94,15 @@ const getTradeHistoryStartingBlockTimestamp = createAction(
 
 const loadInitialTradeHistory = createAction(
   'TRADES/LOAD_INITIAL_TRADE_HISTORY',
-  takeEventsList => takeEventsList.map(logTakeToTrade),
+  (takeEventsList, limitsList) =>
+    takeEventsList.map(logTakeToTrade).filter(
+      trade => !isDustTrade(trade, limitsList)
+    )
 );
 
 
 const addTradeHistoryEntry = createAction(
   'TRADES/ADD_HISTORY_ENTRY',
-  takeEvent => logTakeToTrade(takeEvent),
 );
 
 const loadingTradeHistory = createAction(
@@ -116,7 +120,7 @@ const updateTradingPairVolume = createAction(
 );
 
 const fetchLogTakeEventsAction = createPromiseActions(FETCH_LOG_TAKE_EVENTS);
-const fetchLogTakeEventsEpic = ({ fromBlock, toBlock }) => (dispatch) => {
+const fetchLogTakeEventsEpic = ({ fromBlock, toBlock }) => (dispatch, getState) => {
   dispatch(fetchLogTakeEventsAction.pending());
   return new Promise((resolve, reject) => {
     dispatch(loadingTradeHistory(true));
@@ -136,18 +140,36 @@ const fetchLogTakeEventsEpic = ({ fromBlock, toBlock }) => (dispatch) => {
             getTradeHistoryStartingBlockTimestamp(first(logTakesList).blockNumber)
           );
         }
-        dispatch(loadInitialTradeHistory(logTakesList));
+        dispatch(
+          loadInitialTradeHistory(
+            logTakesList, limits.tokenLimitsList(getState())
+          )
+        );
         resolve(toBlock);
       });
   });
 };
 
+const isDustTrade = ({ sellWhichToken, buyWhichToken, buyHowMuch, sellHowMuch }, limitsList) => {
+
+  const buyTokenLimitInWei = web3.toBigNumber(limitsList.getIn([buyWhichToken, 'minSell'])).div(10000);
+  const sellTokenLimitInWei = web3.toBigNumber(limitsList.getIn([sellWhichToken, 'minSell'])).div(10000);
+  return Boolean(
+    web3.toBigNumber(buyHowMuch).lt(buyTokenLimitInWei) || web3.toBigNumber(sellHowMuch).lt(sellTokenLimitInWei)
+  )
+};
+
 const subscribeLogTakeEventsAction = createPromiseActions(SUBSCRIBE_LOG_TAKE_EVENTS);
-const subscribeLogTakeEventsEpic = (fromBlock) => dispatch => {
+const subscribeLogTakeEventsEpic = (fromBlock) => (dispatch, getState) => {
   dispatch(subscribeLogTakeEventsAction.pending());
   getMarketContractInstance().LogTake(
     {}, { fromBlock: fromBlock, toBlock: 'latest' },
-  ).then((err, logTake) => dispatch(addTradeHistoryEntry(logTake)) );
+  ).then((err, logTake) => {
+    const trade = logTakeToTrade(logTake);
+    if (!isDustTrade(trade, limits.tokenLimitsList(getState()))) {
+      dispatch(addTradeHistoryEntry(trade))
+    }
+  } );
   dispatch(subscribeLogTakeEventsAction.fulfilled());
 };
 
