@@ -129,8 +129,12 @@ const clearAccountSpecificSubscriptions = ({ dispatch }) => {
   subscriptions.userMarketHistoryEventSubs = fromJS({});
 };
 
-const init = () => {
-  if (web3 && window.web3) {
+const init = async () => {
+  if (window.ethereum) {
+    web3.setProvider(window.ethereum);
+    web3p = new window.Proxy(web3, proxiedWeb3Handler);
+    await window.ethereum.enable();
+  } else if (window.web3) {
     web3.setProvider(window.web3.currentProvider);
     web3p = new window.Proxy(web3, proxiedWeb3Handler);
   } else {

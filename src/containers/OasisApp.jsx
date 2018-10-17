@@ -38,16 +38,6 @@ export class OasisAppWrapper extends PureComponent {
     return <OasisYourNodeIsSyncingWrapper />;
   }
 
-  accountLocked() {
-    const { isAccountLocked, activeNodeType } = this.props;
-    return isAccountLocked ? (
-      <div styleName="container" className="container">
-        {" "}
-        <Locked activeNodeType={activeNodeType}/>{" "}
-      </div>
-    ) : null;
-  }
-
   mainContent() {
     const { isNodeSyncing } = this.props;
     if (isNodeSyncing) {
@@ -76,16 +66,22 @@ export class OasisAppWrapper extends PureComponent {
 
   render() {
     const { noProviderConnected, isAppLoading, globalFormLock } = this.props;
-    if (noProviderConnected) {
+    if (noProviderConnected)
       return <NoConnection />;
-    }
-    return (
-      this.accountLocked() || (
-        <div className={classes({ isAppLoading, globalFormLock })}>
-          <BrowserRouter>{this.mainContent()}</BrowserRouter>
-          <div>{OasisAppWrapper.versionInfo()}</div>
+
+    const { isAccountLocked, activeNodeType } = this.props;
+    if (isAccountLocked)
+      return (
+        <div styleName="container" className="container">
+          <Locked activeNodeType={activeNodeType} />
         </div>
-      )
+      );
+
+    return (
+      <div className={classes({ isAppLoading, globalFormLock })}>
+        <BrowserRouter>{this.mainContent()}</BrowserRouter>
+        <div>{OasisAppWrapper.versionInfo()}</div>
+      </div>
     );
   }
 }

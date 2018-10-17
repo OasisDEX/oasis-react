@@ -47,7 +47,7 @@ const bootstrap = async () => {
 
   await dispatch(
     platformReducer.actions.web3Initialized(
-      web3.init()
+      await web3.init()
     )
   );
   const onSuccessfulCheck = async ({ dispatch, getState }) => {
