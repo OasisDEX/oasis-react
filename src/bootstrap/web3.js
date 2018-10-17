@@ -1,5 +1,6 @@
 import Web3 from "web3";
 import { fromJS } from "immutable";
+import networkReducer from "../store/reducers/network";
 import platformReducer from "../store/reducers/platform";
 import {
   SUBSCRIPTIONS_TOKEN_TRANSFER_EVENTS,
@@ -129,11 +130,18 @@ const clearAccountSpecificSubscriptions = ({ dispatch }) => {
   subscriptions.userMarketHistoryEventSubs = fromJS({});
 };
 
-const init = async () => {
+const init = async (dispatch) => {
   if (window.ethereum) {
     web3.setProvider(window.ethereum);
     web3p = new window.Proxy(web3, proxiedWeb3Handler);
-    await window.ethereum.enable();
+    await dispatch(
+      networkReducer.actions.setWaitingForNetworkAccess(true)
+    );
+    window.ethereum.enable().finally(() => {
+      dispatch(
+        networkReducer.actions.setWaitingForNetworkAccess(false)
+      );
+    });
   } else if (window.web3) {
     web3.setProvider(window.web3.currentProvider);
     web3p = new window.Proxy(web3, proxiedWeb3Handler);

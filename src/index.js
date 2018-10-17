@@ -45,11 +45,19 @@ const bootstrap = async () => {
   period.init(getState);
   conversion.init(getState);
 
-  await dispatch(
-    platformReducer.actions.web3Initialized(
-      await web3.init()
-    )
-  );
+  try {
+    await dispatch(
+      platformReducer.actions.web3Initialized(
+        await web3.init(dispatch)
+      )
+    );
+  } catch (e) {
+    await dispatch(
+      networkReducer.actions.setNoProviderConnected(true)
+    );
+    throw e;
+  }
+
   const onSuccessfulCheck = async ({ dispatch, getState }) => {
     const accountsList = await promisify(web3p.eth.getAccounts).call();
     dispatch(

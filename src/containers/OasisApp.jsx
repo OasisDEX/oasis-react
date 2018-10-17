@@ -13,6 +13,7 @@ import OasisMainContentWrapper from "./OasisMainContent";
 import OasisMessagesSectionWrapper from "./OasisMessagesSection";
 import Locked from "../components/Locked";
 import NoConnection from "../components/NoConnection";
+import WaitingForAccess from "../components/WaitingForAccess";
 
 import styles from "./OasisApp.scss";
 import CSSModules from "react-css-modules";
@@ -65,11 +66,19 @@ export class OasisAppWrapper extends PureComponent {
   }
 
   render() {
-    const { noProviderConnected, isAppLoading, globalFormLock } = this.props;
+    const {
+      noProviderConnected,
+      waitingForNetworkAccess,
+      isAccountLocked, activeNodeType,
+      isAppLoading, globalFormLock,
+    } = this.props;
+
     if (noProviderConnected)
       return <NoConnection />;
 
-    const { isAccountLocked, activeNodeType } = this.props;
+    if (waitingForNetworkAccess)
+      return <WaitingForAccess />;
+
     if (isAccountLocked)
       return (
         <div styleName="container" className="container">
@@ -92,6 +101,7 @@ export function mapStateToProps(state) {
     isAppLoading: platform.isAppLoading(state),
     isAccountLocked: platform.isAccountLocked(state),
     noProviderConnected: network.noProviderConnected(state),
+    waitingForNetworkAccess: network.waitingForNetworkAccess(state),
     globalFormLock: platform.globalFormLock(state),
     isNodeSyncing: network.isNodeSyncing(state)
   };

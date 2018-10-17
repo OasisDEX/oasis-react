@@ -77,6 +77,10 @@ const noProviderConnected = createSelector(network, s =>
   s.get("noProviderConnected")
 );
 
+const waitingForNetworkAccess = createSelector(network, s =>
+  s.get("waitingForNetworkAccess")
+);
+
 const isNodeSyncing = createSelector(network, s =>
   s.getIn(["sync", "isPending"])
 );
@@ -97,6 +101,7 @@ export default {
   hasDefaultAccountChanged,
   lastCheckTotalTimeMs,
   noProviderConnected,
+  waitingForNetworkAccess,
   isNodeSyncing,
   latestBlock
 };
