@@ -23,3 +23,12 @@ export const checkConnectivity = () =>
       }
     });
   })();
+
+let lastNetworkId;
+export const detectNetworkChange = () => {
+  const networkId = web3.version.network;
+  if (lastNetworkId && networkId != lastNetworkId) {
+    window.location.reload();
+  }
+  lastNetworkId = networkId;
+}

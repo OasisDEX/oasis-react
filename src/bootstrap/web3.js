@@ -1,5 +1,6 @@
 import Web3 from "web3";
 import { fromJS } from "immutable";
+import { detectNetworkChange } from "./network";
 import networkReducer from "../store/reducers/network";
 import platformReducer from "../store/reducers/platform";
 import {
@@ -142,9 +143,11 @@ const init = async (dispatch) => {
         networkReducer.actions.setWaitingForNetworkAccess(false)
       );
     });
+    setInterval(detectNetworkChange, 500);
   } else if (window.web3) {
     web3.setProvider(window.web3.currentProvider);
     web3p = new window.Proxy(web3, proxiedWeb3Handler);
+    setInterval(detectNetworkChange, 500);
   } else {
     console.info("Cant connect to inPage Provider!");
     fetch(settings.nodeURL)
