@@ -21,8 +21,7 @@ const NoConnection = () => {
       <p className={styles.PNotFound}>
         OasisDEX requires an Ethereum client to be running and current. OasisDEX
         could not detect a client running which probably means it&#39;s not
-        installed, running or is misconfigured.<br />
-        Also ensure that your account is being exposed to this website.
+        installed, running or is misconfigured.
       </p>
       <p className={styles.PUseClients}>
         Please use one of the following clients to connect to Ethereum:
