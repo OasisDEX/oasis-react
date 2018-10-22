@@ -397,7 +397,7 @@ const updateTransactionGasCostEstimateEpic = (
     const gasLimitInWeiBN = web3.toBigNumber(
       transactions.defaultGasLimit(getState())
     );
-    if (gasLimitInWeiBN.lt(transactionGasCostEstimate)) {
+    if (!!transactionGasCostEstimate && gasLimitInWeiBN.lt(transactionGasCostEstimate)) {
       dispatch(setGasExceedsTheLimitEnabled());
     } else {
       dispatch(setGasExceedsTheLimitDisabled());

@@ -1,7 +1,7 @@
 import React from "react";
 import CSSModules from "react-css-modules";
 import styles from "./NoConnection.scss";
-import MakerLogo from "./../assets/logo.svg";
+// import MakerLogo from "./../assets/logo.svg";
 import EthereumLogo from "./../assets/ethereum-logo.svg";
 import MetamaskLogo from "./../assets/metamask-logo.svg";
 import MistLogo from "./../assets/mist-logo.svg";
@@ -10,8 +10,8 @@ import CoinbaseWalletLogo from "./../assets/coinbase-icon-512px.png";
 const NoConnection = () => {
   return (
     <div className={styles.NoEthereumSection}>
-      <img className={styles.ImgHeaderLogo} alt="Maker" src={MakerLogo} />
-      <hr className={styles.HorizontalLine} />
+      {/*<img className={styles.ImgHeaderLogo} alt="Maker" src={MakerLogo} />*/}
+      {/*<hr className={styles.HorizontalLine} />*/}
       <img
         className={styles.ImgEthereumLogo}
         alt="Ethereum"
