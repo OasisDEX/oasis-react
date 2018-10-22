@@ -3,7 +3,7 @@ import { configure } from 'enzyme';
 import {Map} from 'immutable';
 import Adapter from 'enzyme-adapter-react-16';
 
-jest.mock('./src/bootstrap/contracts');
+// jest.mock('./src/bootstrap/contracts');
 import  contractBootstrap from './src/bootstrap/contracts';
 
 configure({ adapter: new Adapter() });

@@ -9,6 +9,7 @@ import OasisAppWrapper from "./containers/OasisApp";
 
 import * as web3 from "./bootstrap/web3";
 import * as Network from "./bootstrap/network";
+import { HEALTHCHECK_INTERVAL_MS } from "../../../bootstrap/network";
 import configureStore from "./store";
 import platformReducer from "./store/reducers/platform";
 import networkReducer from "./store/reducers/network";
@@ -29,7 +30,6 @@ if (version.env === "production" && version.branch !== "master") {
     environment: version.env
   }).install();
 }
-export const HEALTHCHECK_INTERVAL_MS = 6000;
 
 const { store, history } = configureStore();
 const PENDING_INITIAL_NETWORK_CHECK = "PENDING_INITIAL_NETWORK_CHECK";

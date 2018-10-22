@@ -1,8 +1,8 @@
 import balancesReducer from "../balances";
 import { areContractsInitialized, getTokenContractsList } from '../../../bootstrap/contracts';
-import { HEALTHCHECK_INTERVAL_MS } from "../../../index";
 import { createPromiseActions } from "../../../utils/createPromiseActions";
 import transactionsReducer from "../transactions";
+import { HEALTHCHECK_INTERVAL_MS } from "../../../bootstrap/network";
 import web3, { web3p } from "../../../bootstrap/web3";
 import accounts from "../../selectors/accounts";
 import offersReducer from "../offers";

@@ -5,6 +5,8 @@ import {
   PROVIDER_TYPE_MIST,
 } from '../constants';
 
+export const HEALTHCHECK_INTERVAL_MS = 6000;
+
 export const checkConnectivity = () =>
   (() => {
     return new Promise((resolve, reject) => {
