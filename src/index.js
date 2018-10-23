@@ -9,7 +9,7 @@ import OasisAppWrapper from "./containers/OasisApp";
 
 import * as web3 from "./bootstrap/web3";
 import * as Network from "./bootstrap/network";
-import { HEALTHCHECK_INTERVAL_MS } from "../../../bootstrap/network";
+import { HEALTHCHECK_INTERVAL_MS } from "./bootstrap/network";
 import configureStore from "./store";
 import platformReducer from "./store/reducers/platform";
 import networkReducer from "./store/reducers/network";
