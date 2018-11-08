@@ -13,32 +13,32 @@ const propTypes = PropTypes && {
 
 
 const sections = [
-  {
-    header: "Information",
-    links: [
-      {
-        label: 'Documentation',
-        url: 'https://github.com/MakerDAO/maker-market/wiki',
-      },
-      {
-        label: 'Market Data',
-        url: 'https://makerdao.github.io/markets/',
-      },
-    ]
-  },
-  {
-    header: "MakerDAO",
-    links: [
-      {
-        label: 'Chat',
-        url: 'https://chat.makerdao.com/',
-      },
-      {
-        label: 'Reddit',
-        url: 'https://www.reddit.com/r/MakerDAO/',
-      },
-    ]
-  },
+  // {
+  //   header: "Information",
+  //   links: [
+  //     {
+  //       label: 'Documentation',
+  //       url: 'https://github.com/MakerDAO/maker-market/wiki',
+  //     },
+  //     {
+  //       label: 'Market Data',
+  //       url: 'https://makerdao.github.io/markets/',
+  //     },
+  //   ]
+  // },
+  // {
+  //   header: "MakerDAO",
+  //   links: [
+  //     {
+  //       label: 'Chat',
+  //       url: 'https://chat.makerdao.com/',
+  //     },
+  //     {
+  //       label: 'Reddit',
+  //       url: 'https://www.reddit.com/r/MakerDAO/',
+  //     },
+  //   ]
+  // },
   {
     header: "OasisDex",
     links: [
