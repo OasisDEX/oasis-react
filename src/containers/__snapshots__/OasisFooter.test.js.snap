@@ -12,64 +12,6 @@ exports[`(Container) OasisFooter should render 1`] = `
     >
       <div>
         <h4>
-          Information
-        </h4>
-        <a
-          href="https://github.com/MakerDAO/maker-market/wiki"
-          key="0"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://makerdao.github.io/markets/"
-          key="1"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Market Data
-        </a>
-      </div>
-    </div>
-  </div>
-  <div
-    key="1"
-  >
-    <div
-      className="row"
-    >
-      <div>
-        <h4>
-          MakerDAO
-        </h4>
-        <a
-          href="https://chat.makerdao.com/"
-          key="0"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Chat
-        </a>
-        <a
-          href="https://www.reddit.com/r/MakerDAO/"
-          key="1"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Reddit
-        </a>
-      </div>
-    </div>
-  </div>
-  <div
-    key="2"
-  >
-    <div
-      className="row"
-    >
-      <div>
-        <h4>
           OasisDex
         </h4>
         <a
