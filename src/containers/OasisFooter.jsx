@@ -13,42 +13,46 @@ const propTypes = PropTypes && {
 
 
 const sections = [
-  // {
-  //   header: "Information",
-  //   links: [
-  //     {
-  //       label: 'Documentation',
-  //       url: 'https://github.com/MakerDAO/maker-market/wiki',
-  //     },
-  //     {
-  //       label: 'Market Data',
-  //       url: 'https://makerdao.github.io/markets/',
-  //     },
-  //   ]
-  // },
-  // {
-  //   header: "MakerDAO",
-  //   links: [
-  //     {
-  //       label: 'Chat',
-  //       url: 'https://chat.makerdao.com/',
-  //     },
-  //     {
-  //       label: 'Reddit',
-  //       url: 'https://www.reddit.com/r/MakerDAO/',
-  //     },
-  //   ]
-  // },
   {
-    header: "OasisDex",
+    // header: "Information",
+    links: [
+      {
+        label: 'Project',
+        url: 'https://github.com/OasisDEX/oasis-react',
+      },
+      // {
+      //   label: 'Documentation',
+      //   url: 'https://github.com/MakerDAO/maker-market/wiki',
+      // },
+      // {
+      //   label: 'Market Data',
+      //   url: 'https://makerdao.github.io/markets/',
+      // },
+    ]
+  },
+  {
+    // header: "MakerDAO",
+    links: [
+      {
+        label: 'Legal',
+        url: '/OasisToS.pdf',
+      },
+      // {
+      //   label: 'Chat',
+      //   url: 'https://chat.makerdao.com/',
+      // },
+      // {
+      //   label: 'Reddit',
+      //   url: 'https://www.reddit.com/r/MakerDAO/',
+      // },
+    ]
+  },
+  {
+    // header: "OasisDex",
     links: [
       {
         label: 'Report Issues',
-        url: 'https://github.com/OasisDEX/oasis/issues/new',
-      },
-      {
-        label: 'Project',
-        url: 'https://github.com/OasisDEX/oasis/projects/1',
+        url: 'https://github.com/OasisDEX/oasis-react/issues/new',
       },
     ]
   },
@@ -63,7 +67,7 @@ export class OasisFooterWrapper extends PureComponent {
           <div key={index}>
             <div className="row">
               <div className={styles.LinksSection}>
-                <h4 className={styles.Heading}>{section.header}</h4>
+                {/*<h4 className={styles.Heading}>{section.header}</h4>*/}
                 {
                   section.links.map((link, index) =>
                     <a

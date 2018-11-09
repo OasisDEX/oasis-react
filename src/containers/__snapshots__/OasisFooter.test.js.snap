@@ -11,24 +11,49 @@ exports[`(Container) OasisFooter should render 1`] = `
       className="row"
     >
       <div>
-        <h4>
-          OasisDex
-        </h4>
         <a
-          href="https://github.com/OasisDEX/oasis/issues/new"
+          href="https://github.com/OasisDEX/oasis-react"
+          key="0"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Project
+        </a>
+      </div>
+    </div>
+  </div>
+  <div
+    key="1"
+  >
+    <div
+      className="row"
+    >
+      <div>
+        <a
+          href="/OasisToS.pdf"
+          key="0"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Legal
+        </a>
+      </div>
+    </div>
+  </div>
+  <div
+    key="2"
+  >
+    <div
+      className="row"
+    >
+      <div>
+        <a
+          href="https://github.com/OasisDEX/oasis-react/issues/new"
           key="0"
           rel="noopener noreferrer"
           target="_blank"
         >
           Report Issues
-        </a>
-        <a
-          href="https://github.com/OasisDEX/oasis/projects/1"
-          key="1"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Project
         </a>
       </div>
     </div>
