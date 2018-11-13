@@ -138,10 +138,16 @@ const init = async (dispatch) => {
     await dispatch(
       networkReducer.actions.setWaitingForNetworkAccess(true)
     );
-    window.ethereum.enable().finally(() => {
+    window.ethereum.enable().then(() => {
       dispatch(
         networkReducer.actions.setWaitingForNetworkAccess(false)
       );
+    }).catch(e => {
+      console.log(e);
+      dispatch(
+        networkReducer.actions.setWaitingForNetworkAccess(false)
+      );
+      dispatch(platformReducer.actions.accountLocked());
     });
     setInterval(detectNetworkChange, 500);
   } else if (window.web3) {
