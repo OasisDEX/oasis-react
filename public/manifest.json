@@ -1,13 +1,6 @@
 {
   "short_name": "OasisDEX",
   "name": "OasisDEX",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "192x192",
-      "type": "image/png"
-    }
-  ],
   "start_url": "./200.html",
   "display": "standalone",
   "theme_color": "#000000",
