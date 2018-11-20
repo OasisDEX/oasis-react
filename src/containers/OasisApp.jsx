@@ -21,6 +21,7 @@ import CSSModules from "react-css-modules";
 import version from "../version";
 import network from "../store/selectors/network";
 import OasisYourNodeIsSyncingWrapper from "./OasisYourNodeIsSyncing";
+import ClickWarp from "../components/ClickWarp";
 
 const propTypes = PropTypes && {};
 
@@ -72,6 +73,10 @@ export class OasisAppWrapper extends PureComponent {
       isAccountLocked, activeNodeType,
       isAppLoading, globalFormLock,
     } = this.props;
+
+    if(!localStorage.getItem('clickWarp')) {
+      return <ClickWarp/>;
+    }
 
     if (noProviderConnected)
       return <NoConnection />;
