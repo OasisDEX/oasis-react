@@ -1,0 +1,41 @@
+@import "../styles/modules/breakpoints";
+@import "../styles/modules/constants";
+
+.NoEthereumSection {
+  max-width: 980px;
+  margin: 0 auto;
+  @media (max-width: $xxs) {
+    max-width: 100%;
+  }
+
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  color: $blue-darkish;
+  font-size: 24px;
+
+  h2 {
+    max-width: 100%;
+    font-weight: 700;
+    opacity: 0.8;
+    color: #222228;
+  }
+
+  .ImgHeaderLogo {
+    width: 264px;
+    padding-bottom: 30px;
+  }
+
+  .ImgEthereumLogo {
+    width: 61px;
+    padding-top: 30px;
+    margin-bottom: 40px;
+  }
+
+  .HorizontalLine {
+    color: $lightgray;
+    border: 0;
+    border-top: solid 1px $lightgray;
+  }
+
+}
