@@ -20,7 +20,7 @@ class OasisTestingWarningMessage extends PureComponent {
               </span>
               <span styleName="Text">
                 <div>
-                  This is a new contract deploment.
+                  This is a new contract deployment.
                   Old contract is still <a href="https://old.oasisdex.com">available</a>.
                   Read more <a href="https://en.reddit.com/r/MakerDAO/comments/9z7h2x/an_announcement_from_the_oasis_team/">
                     here.
