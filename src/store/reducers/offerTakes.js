@@ -22,7 +22,7 @@ import {
   getMarketContractInstance,
   getMarketNoProxyContractInstance
 } from "../../bootstrap/contracts";
-import transactions from "../selectors/transactions";
+// import transactions from "../selectors/transactions";
 import isNumericAndGreaterThanZero from "../../utils/numbers/isNumericAndGreaterThanZero";
 import { convertToTokenPrecision } from "../../utils/conversion";
 
@@ -394,14 +394,14 @@ const getTransactionGasCostEstimateEpic = (
     })
   )).value;
 
-  const gasLimitInWeiBN = web3.toBigNumber(
-    transactions.defaultGasLimit(getState())
-  );
-  if (gasLimitInWeiBN.lt(transactionGasCostEstimate)) {
-    dispatch(setGasExceedsTheLimitEnabled());
-  } else {
-    dispatch(setGasExceedsTheLimitDisabled());
-  }
+  // const gasLimitInWeiBN = web3.toBigNumber(
+  //   transactions.defaultGasLimit(getState())
+  // );
+  // if (gasLimitInWeiBN.lt(transactionGasCostEstimate)) {
+  //   dispatch(setGasExceedsTheLimitEnabled());
+  // } else {
+  //   dispatch(setGasExceedsTheLimitDisabled());
+  // }
   return transactionGasCostEstimate;
 };
 

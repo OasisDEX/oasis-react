@@ -21,12 +21,13 @@ import {
   getMarketContractInstance,
   getMarketNoProxyContractInstance
 } from "../../bootstrap/contracts";
-import transactions from "../selectors/transactions";
+// import transactions from "../selectors/transactions";
 import isNumericAndGreaterThanZero from "../../utils/numbers/isNumericAndGreaterThanZero";
 import getTokenByAddress from "../../utils/tokens/getTokenByAddress";
 import {
   convertToTokenPrecision
 } from "../../utils/conversion";
+// import {transactionGasCostEstimate} from "../selectors";
 
 const initialState = fromJS({
   makeBuyOffer: {
@@ -95,7 +96,6 @@ const makeOfferTransaction = createAction(
     rankIndex,
     gasPrice = DEFAULT_GAS_PRICE
   }) => {
-
     const offer = getMarketNoProxyContractInstance().offer['uint256,address,uint256,address,uint256,bool'];
 
     return new Promise((resolve, reject) =>
@@ -147,7 +147,8 @@ const makeOfferEpic = (offerMakeType, withCallbacks = {}) => async (
     ),
     payToken: activeOfferMake.get("sellTokenAddress"),
     buyToken: activeOfferMake.get("buyTokenAddress"),
-    isCloseMatchingEnabled: true
+    isCloseMatchingEnabled: true,
+    // gas: transactionGasCostEstimate(getState(), TX_OFFER_MAKE) * 1.1,
   };
 
   return handleTransaction({
@@ -394,14 +395,14 @@ const updateTransactionGasCostEstimateEpic = (
       )
     )).value;
 
-    const gasLimitInWeiBN = web3.toBigNumber(
-      transactions.defaultGasLimit(getState())
-    );
-    if (!!transactionGasCostEstimate && gasLimitInWeiBN.lt(transactionGasCostEstimate)) {
-      dispatch(setGasExceedsTheLimitEnabled());
-    } else {
-      dispatch(setGasExceedsTheLimitDisabled());
-    }
+    // const gasLimitInWeiBN = web3.toBigNumber(
+    //   transactions.defaultGasLimit(getState())
+    // );
+    // if (!!transactionGasCostEstimate && gasLimitInWeiBN.lt(transactionGasCostEstimate)) {
+    //   dispatch(setGasExceedsTheLimitEnabled());
+    // } else {
+    //   dispatch(setGasExceedsTheLimitDisabled());
+    // }
     return transactionGasCostEstimate;
   }
 };
