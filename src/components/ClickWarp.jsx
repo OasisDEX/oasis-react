@@ -14,6 +14,7 @@ const ClickWarp = () => {
     <div className={styles.NoEthereumSection}>
       <h2>IMPORTANT</h2>
       <div>OasisDex UI has been shut down.</div>
+      <div>New UI is <a href="https://eth2dai.com/">here</a></div>
       <div>Only order cancellation is enabled.</div>
       <div>Read more <a href="">here. [add link!]</a></div>
       <OasisButton

@@ -30,6 +30,17 @@ class OasisTestingWarningMessage extends PureComponent {
                 <span styleName="FilledCircle" />
               </span>
               <span styleName="Text">
+                <div>
+                  New UI is <a href="https://eth2dai.com/">here</a>
+                </div>
+              </span>
+            </li>
+
+            <li>
+              <span styleName="Circle Circle--Red">
+                <span styleName="FilledCircle" />
+              </span>
+              <span styleName="Text">
                   Old contract is still <a href="https://old.oasisdex.com">available</a>.
                   Read more <a href="https://en.reddit.com/r/MakerDAO/comments/9z7h2x/an_announcement_from_the_oasis_team/">
                     here.

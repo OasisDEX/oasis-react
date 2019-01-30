@@ -40,6 +40,27 @@ exports[`(Component) OasisTestingWarningMessage should render 1`] = `
         <span
           styleName="Text"
         >
+          <div>
+            New UI is 
+            <a
+              href="https://eth2dai.com/"
+            >
+              here
+            </a>
+          </div>
+        </span>
+      </li>
+      <li>
+        <span
+          styleName="Circle Circle--Red"
+        >
+          <span
+            styleName="FilledCircle"
+          />
+        </span>
+        <span
+          styleName="Text"
+        >
           Old contract is still 
           <a
             href="https://old.oasisdex.com"
