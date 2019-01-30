@@ -20,7 +20,7 @@ class OasisTestingWarningMessage extends PureComponent {
               </span>
               <span styleName="Text">
                 <div>
-                  OasisDex has been shut down. Only order canceling is enabled.
+                  OasisDex UI has been shut down. Only order canceling is enabled.
                   Read more <a href="">here [add link!].</a>
                 </div>
               </span>

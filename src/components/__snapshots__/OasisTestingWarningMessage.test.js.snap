@@ -20,7 +20,7 @@ exports[`(Component) OasisTestingWarningMessage should render 1`] = `
           styleName="Text"
         >
           <div>
-            OasisDex has been shut down. Only order canceling is enabled. Read more 
+            OasisDex UI has been shut down. Only order canceling is enabled. Read more 
             <a
               href=""
             >
