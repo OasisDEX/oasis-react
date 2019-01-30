@@ -47,7 +47,7 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
     const {
       activeTradingPair: { baseToken, quoteToken },
       hasSufficientTokenAmount,
-      canMakeOffer,
+      // canMakeOffer,
       globalFormLock,
       isModalOpen,
       isTotalOverTheTokenMax,
@@ -93,7 +93,7 @@ export class OasisMakeSellOfferWrapper extends PureComponent {
             className={styles.callToAction}
             color="danger"
             size="md"
-            disabled={!canMakeOffer}
+            disabled="true"
             onClick={this.onModalOpen}
           >
             Sell

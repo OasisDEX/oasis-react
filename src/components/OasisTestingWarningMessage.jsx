@@ -20,22 +20,20 @@ class OasisTestingWarningMessage extends PureComponent {
               </span>
               <span styleName="Text">
                 <div>
-                  This is a new contract deployment.
-                  Old contract is still <a href="https://old.oasisdex.com">available</a>.
-                  Read more <a href="https://en.reddit.com/r/MakerDAO/comments/9z7h2x/an_announcement_from_the_oasis_team/">
-                    here.
-                  </a>
+                  OasisDex has been shut down. Only order canceling is enabled.
+                  Read more <a href="">here [add link!].</a>
                 </div>
               </span>
             </li>
-
             <li>
               <span styleName="Circle Circle--Red">
                 <span styleName="FilledCircle" />
               </span>
               <span styleName="Text">
-                Oasis is undergoing alpha testing: Any funds deposited on the
-                exchange could be lost in the event of a security breach.
+                  Old contract is still <a href="https://old.oasisdex.com">available</a>.
+                  Read more <a href="https://en.reddit.com/r/MakerDAO/comments/9z7h2x/an_announcement_from_the_oasis_team/">
+                    here.
+                  </a>
               </span>
             </li>
           </ul>

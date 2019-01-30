@@ -5,7 +5,7 @@ import styles from "./WaitingForAccess.scss";
 import OasisButton from "./OasisButton";
 
 function dismiss() {
-  localStorage.setItem('announcement', 'true');
+  localStorage.setItem('shutdownAnnouncement', 'true');
   location.reload();
 }
 
@@ -13,9 +13,9 @@ const ClickWarp = () => {
   return (
     <div className={styles.NoEthereumSection}>
       <h2>IMPORTANT</h2>
-      <div>This is a new contract deployment.</div>
-      <div>Old contract is still <a href="https://old.oasisdex.com">available</a>.</div>
-      <div>Read more <a href="https://en.reddit.com/r/MakerDAO/comments/9z7h2x/an_announcement_from_the_oasis_team/">here.</a></div>
+      <div>OasisDex has been shut down.</div>
+      <div>Only order cancellation is enabled.</div>
+      <div>Read more <a href="">here. [add link!]</a></div>
       <OasisButton
         // className={tableStyles.inputBtn}
         type="button"
