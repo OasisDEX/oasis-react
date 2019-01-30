@@ -39,7 +39,7 @@ exports[`(Container) OasisMakeBuyOffer should render 1`] = `
     <OasisButton
       btnType="button"
       color="success"
-      disabled={true}
+      disabled="true"
       onClick={[Function]}
       size="md"
     >
