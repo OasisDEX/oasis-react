@@ -20,38 +20,19 @@ exports[`(Component) OasisTestingWarningMessage should render 1`] = `
           styleName="Text"
         >
           <div>
-            OasisDex UI has been shut down. Only order cancellation is enabled. Read more 
+            OasisDEX.com is shutting down. To trade ETH and DAI, go to 
+            <a
+              href="https://eth2dai.com"
+            >
+              eth2dai.com
+            </a>
+            . Other pairs at oasisdex.com only support cancellation of orders. Read more 
             <a
               href="https://medium.com/makerdao/a-new-oasis-5b9539a64adf"
             >
               here.
             </a>
           </div>
-        </span>
-      </li>
-      <li>
-        <span
-          styleName="Circle Circle--Red"
-        >
-          <span
-            styleName="FilledCircle"
-          />
-        </span>
-        <span
-          styleName="Text"
-        >
-          Old contract is still 
-          <a
-            href="https://old.oasisdex.com"
-          >
-            available
-          </a>
-          . Read more 
-          <a
-            href="https://en.reddit.com/r/MakerDAO/comments/9z7h2x/an_announcement_from_the_oasis_team/"
-          >
-            here.
-          </a>
         </span>
       </li>
     </ul>
