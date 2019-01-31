@@ -60,7 +60,7 @@ const ClickWarp = () => {
         size="md"
         onClick={dismiss}
       >
-        Dismiss
+        Continue
       </OasisButton>
     </div>
   );
