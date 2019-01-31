@@ -39,7 +39,7 @@ const ClickWarp = () => {
       <div>OasisDEX.com is shutting down.</div>
 
       <div style={{ marginTop: '1em', fontSize: '80%' }}>
-        To trade ETH and DAI, checkout our new marketplace: <a href="https://eth2dai.com/">eth2dai.com</a>.
+        To trade ETH and DAI, check out our new marketplace: <a href="https://eth2dai.com/">eth2dai.com</a>
       </div>
       <div style={{ marginTop: '1em' }}>
         <a href="https://eth2dai.com/">
@@ -47,7 +47,7 @@ const ClickWarp = () => {
         </a>
       </div>
       <div style={{ marginTop: '1em', fontSize: '80%' }}>
-        Other pairs at oasisdex.com only support cancellation of orders.
+        For other pairs you can still use oasisdex.com to cancel your orders
       </div>
       <div style={{ marginTop: '1em', fontSize: '80%' }}>
         Read more <a href="https://medium.com/makerdao/a-new-oasis-5b9539a64adf">here</a>.
