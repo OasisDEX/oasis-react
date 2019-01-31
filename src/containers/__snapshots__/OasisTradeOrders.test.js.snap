@@ -9,8 +9,6 @@ exports[`(Container) OasisTradeOrders should render 1`] = `
   vertical={false}
   wrap={true}
 >
-  <Connect(OasisMakeBuyOffer) />
-  <Connect(OasisMakeSellOffer) />
   <div>
     <Connect(OasisTakeOfferModal)
       offerTakeType="OFFER_TAKES/TAKE_SELL_OFFER"

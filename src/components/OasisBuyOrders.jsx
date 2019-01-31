@@ -99,7 +99,7 @@ class OasisBuyOrders extends PureComponent {
       >
         <OasisTable
           className={styles.table}
-          onRowClick={this.onTableRowClick}
+          // onRowClick={this.onTableRowClick}
           rows={rows}
           col={colsDefinition(baseToken, quoteToken, orderActions)}
         />

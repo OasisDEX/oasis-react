@@ -14,8 +14,6 @@ import offersReducer from "../store/reducers/offers";
 import offerTakesReducer from "../store/reducers/offerTakes";
 import OasisTakeOfferModalWrapper from "./OasisTakeOfferModal";
 import offerTakes from "../store/selectors/offerTakes";
-import OasisMakeBuyOfferWrapper from "./OasisMakeBuyOffer";
-import OasisMakeSellOfferWrapper from "./OasisMakeSellOffer";
 import network from "../store/selectors/network";
 import { FlexBox } from "../components/FlexBox";
 import accounts from "../store/selectors/accounts";
@@ -63,8 +61,6 @@ export class OasisTradeOrdersWrapper extends PureComponent {
 
     return (
       <FlexBox wrap>
-        <OasisMakeBuyOfferWrapper />
-        <OasisMakeSellOfferWrapper />
         <div>{this.offerTakeModal()}</div>
         <OasisBuyOrders
           loadingBuyOffers={loadingBuyOffers}

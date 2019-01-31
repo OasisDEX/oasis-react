@@ -39,7 +39,6 @@ exports[`(Component) OasisSellOrders should render 1`] = `
     collapseEnabled={false}
     collapseInitial={false}
     collapseRowNumber={4}
-    onRowClick={[Function]}
     rowHoverText=""
     rows={
       Immutable.List [
