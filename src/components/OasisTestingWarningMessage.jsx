@@ -20,22 +20,11 @@ class OasisTestingWarningMessage extends PureComponent {
               </span>
               <span styleName="Text">
                 <div>
-                  OasisDex UI has been shut down. Only order canceling is enabled.
-                  Read more <a href="">here [add link!].</a>
+                  OasisDex UI has been shut down. Only order cancellation is enabled.
+                  Read more <a href="https://medium.com/makerdao/a-new-oasis-5b9539a64adf">here.</a>
                 </div>
               </span>
             </li>
-            <li>
-              <span styleName="Circle Circle--Red">
-                <span styleName="FilledCircle" />
-              </span>
-              <span styleName="Text">
-                <div>
-                  New UI is <a href="https://eth2dai.com/">here</a>
-                </div>
-              </span>
-            </li>
-
             <li>
               <span styleName="Circle Circle--Red">
                 <span styleName="FilledCircle" />
